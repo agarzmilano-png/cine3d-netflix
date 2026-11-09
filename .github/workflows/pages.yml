@@ -31,10 +31,16 @@ jobs:
       - name: Pages ayarları
         uses: actions/configure-pages@v5
 
+      - name: Siteyi hazırla (ses dosyaları CDN'den servis edilir)
+        run: |
+          mkdir -p site
+          rsync -a --exclude '.git' --exclude 'audio' --exclude 'scripts' --exclude '.github' --exclude 'server.js' --exclude 'render.yaml' --exclude 'test_*.js' --exclude '.env*' ./ site/
+          du -sh site
+
       - name: Siteyi paketle
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'site'
 
       - name: Yayınla
         id: deployment

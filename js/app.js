@@ -4206,6 +4206,12 @@ class Cine3DApp {
   }
 
   // --- ORİJİNAL DİZİ & FİLM MÜZİĞİ (OST) YÖNETİMİ ---
+  getAudioBaseUrl() {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') return '';
+    return 'https://cdn.jsdelivr.net/gh/agarzmilano-png/cine3d-netflix@master/';
+  }
+
   async toggleMovieOriginalOst(movie) {
     const slot = document.getElementById('modal-ost-slot');
     const btn = document.getElementById('modal-theme-song-btn');
@@ -4234,8 +4240,9 @@ class Cine3DApp {
           description: 'Resmi film müziği ve tema parçası.'
         };
 
-    // Göreli yol: alt dizin barındırmada (ör. GitHub Pages /cine3d-netflix/) da çalışır.
-    const localAudioUrl = `audio/ost/${movie.id}.mp3`;
+    // OST dosyaları Pages paketinden çıkarılıp jsDelivr CDN'den servis edilir
+    // (yayın artefaktı ~52 MB yerine ~2 MB kalır). Yerelde sunucu kendi servis eder.
+    const localAudioUrl = `${this.getAudioBaseUrl()}audio/ost/${movie.id}.mp3`;
     const streamAudioUrl = `api/stream-ost?id=${encodeURIComponent(movie.id)}&title=${encodeURIComponent(movie.title)}&originalTitle=${encodeURIComponent(movie.originalTitle || '')}&composer=${encodeURIComponent(ostData.composer || movie.director || '')}`;
     const initialAudioUrl = movie.isOnlineFetched ? streamAudioUrl : localAudioUrl;
     const fallbackAudioUrl = movie.isOnlineFetched ? localAudioUrl : streamAudioUrl;
