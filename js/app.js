@@ -4217,7 +4217,8 @@ class Cine3DApp {
           description: 'Resmi film müziği ve tema parçası.'
         };
 
-    const localAudioUrl = `/audio/ost/${movie.id}.mp3`;
+    // Göreli yol: alt dizin barındırmada (ör. GitHub Pages /cine3d-netflix/) da çalışır.
+    const localAudioUrl = `audio/ost/${movie.id}.mp3`;
     const streamAudioUrl = `api/stream-ost?id=${encodeURIComponent(movie.id)}&title=${encodeURIComponent(movie.title)}&originalTitle=${encodeURIComponent(movie.originalTitle || '')}&composer=${encodeURIComponent(ostData.composer || movie.director || '')}`;
     const initialAudioUrl = movie.isOnlineFetched ? streamAudioUrl : localAudioUrl;
     const fallbackAudioUrl = movie.isOnlineFetched ? localAudioUrl : streamAudioUrl;
