@@ -91,11 +91,21 @@ git push
 
 Push sonrası GitHub Pages ~1-2 dakika içinde yeni sürümü yayınlar.
 
-### Statik mod (sunucusuz)
+### Sunucusuz canlı arama (gömülü katalog indeksi)
 
-`/api/*` uç noktaları olmadığı için istemci otomatik olarak **statik moda** geçer:
-- Katalog (109 yapım), afişler, gömülü YouTube fragmanları, OST sesleri, PWA ve tüm oyunlar çalışır.
-- OMDb canlı arama ve JustWatch canlı yayıncı verisi kapalıdır; "İnternetten film çek" düğmesi gizlenir.
+JustWatch verisi tarayıcıdan CORS nedeniyle okunamaz. Bu yüzden GitHub Actions haftalık olarak
+`data/catalog.json` dosyasını üretir (bkz. `.github/workflows/catalog-refresh.yml` ve `scripts/build-catalog.js`).
+
+- **İndeks:** ~456 güncel yapım (Türkiye popüler listesi): başlık, yıl, IMDb puanı/oyu, afiş, konu, türler, TR yayıncıları.
+- **Arama:** katalogda olmayan bir başlık arandığında indeksten sonuç gelir; modal, afiş ve "Nerede İzlenir?" bölümü çalışır.
+- **"Güncel Katalogdan Yeni Yapımlar Ekle":** indeksten her tıklamada farklı 8 yapım ekler.
+- **Fragman:** indekste doğrulanmış YouTube kimliği varsa gömülü oynar, yoksa YouTube arama bağlantısı verilir.
+
+İndeksi elle tazelemek için:
+
+```bash
+node scripts/build-catalog.js 450
+```
 
 ### Canlı arama özellikleri de istenirse (opsiyonel)
 

@@ -88,6 +88,112 @@ function mapPlatform(tech, name) {
   return null;
 }
 
+function fetchTrailerId(title, year) {
+  return new Promise((resolve) => {
+    const query = encodeURIComponent(`${title} ${year || ''} official trailer fragman`);
+    const req = https.get(`https://www.youtube.com/results?search_query=${query}&hl=tr`, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept-Language': 'tr-TR,tr;q=0.9,en;q=0.8',
+        'Accept': 'text/html'
+      }
+    }, (res) => {
+      let body = '';
+      res.on('data', (c) => { if (body.length < 2_500_000) body += c; });
+      res.on('end', () => {
+        const m = body.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
+        resolve(m ? m[1] : null);
+      });
+    });
+    req.setTimeout(15000, () => req.destroy(new Error('timeout')));
+    req.on('error', () => resolve(null));
+  });
+}
+
+/** Dizeleri karşılaştırmak için sadeleştirir (Türkçe karakter/tırnak farkları). */
+function normTitle(text) {
+  return String(text || '')
+    .toLocaleLowerCase('tr')
+    .replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+/** Elle doğrulanmış 109 yapımın fragman kimliklerini indekse taşır (ücretsiz, anında). */
+function curatedTrailerMap() {
+  const map = new Map();
+  try {
+    const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'movies-data.js'), 'utf8');
+    const block = src.match(/const MOVIES_DATA = (\[[\s\S]*?\n\];)/);
+    if (!block) return map;
+    const data = eval(block[1].replace(/;$/, '')); // yerel, güvenilir dosya
+    for (const m of data) {
+      if (!m.trailerYoutubeId) continue;
+      if (m.originalTitle) map.set(normTitle(m.originalTitle), m.trailerYoutubeId);
+      if (m.title) map.set(normTitle(m.title), m.trailerYoutubeId);
+    }
+  } catch (e) {
+    console.warn('movies-data.js okunamadı:', e.message);
+  }
+  return map;
+}
+
+/** Mevcut indeksten fragman kimliklerini koru, eksikleri sınırlı eşzamanlılıkla çek. */
+async function attachTrailers(items) {
+  const previous = new Map();
+  try {
+    const old = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+    for (const it of old.items || []) if (it.yt) previous.set(it.id, it.yt);
+  } catch (e) { /* ilk çalıştırma */ }
+
+  const curated = curatedTrailerMap();
+  let reused = 0;
+  let fromCurated = 0;
+  const missing = [];
+
+  for (const it of items) {
+    const known = previous.get(it.id);
+    if (known) {
+      it.yt = known;
+      reused++;
+      continue;
+    }
+    const curatedId = curated.get(normTitle(it.o)) || curated.get(normTitle(it.t));
+    if (curatedId) {
+      it.yt = curatedId;
+      fromCurated++;
+      continue;
+    }
+    missing.push(it);
+  }
+
+  if (fromCurated) console.log(`\n✓ Fragman: ${fromCurated} yapım doğrulanmış katalogdan eşleşti`);
+
+  if (missing.length === 0) {
+    console.log(`\n✓ Fragmanlar: ${reused} kayıt önceki indeksten korundu`);
+    return;
+  }
+
+  console.log(`  fragman aranıyor: ${missing.length} yapım (${reused} devralınan)`);
+  const CONCURRENCY = 3;
+  let index = 0;
+  let done = 0;
+
+  async function worker() {
+    while (index < missing.length) {
+      const item = missing[index++];
+      item.yt = await fetchTrailerId(item.o || item.t, item.y);
+      done++;
+      if (done % 25 === 0) process.stdout.write(`\r  ${done}/${missing.length}`);
+      await new Promise((r) => setTimeout(r, 350));
+    }
+  }
+
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  const found = missing.filter((i) => i.yt).length;
+  console.log(`\n✓ Fragman: ${found}/${missing.length} bulundu, ${reused} devralındı`);
+}
+
 function slugify(text) {
   return String(text || '')
     .toLowerCase()
@@ -154,6 +260,7 @@ function slugify(text) {
   }
 
   const list = [...out.values()];
+  await attachTrailers(list);
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, JSON.stringify({
     generatedAt: new Date().toISOString(),

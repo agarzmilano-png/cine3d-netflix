@@ -97,7 +97,7 @@
         summary: item.plot || 'Bu yapım için henüz ayrıntılı konu özeti girilmemiş.',
         posterUrl: item.poster,
         backdropUrl: item.poster,
-        trailerYoutubeId: null,
+        trailerYoutubeId: item.yt || null,
         platforms: item.platforms || [],
         isFeatured: false,
         isOnlineFetched: true,
