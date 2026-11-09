@@ -2535,10 +2535,13 @@ class Cine3DApp {
   // Statik barındırma (sunucusuz) modunda arayüzü sadeleştir
   applyStaticMode() {
     this.staticMode = true;
+    // Sunucu yok ama gömülü katalog indeksi (data/catalog.json) var:
+    // düğme gizlenmez, güncel indeksten yeni yapımlar ekler.
     const fetchMoreBtn = document.getElementById('fetch-more-online-btn');
     if (fetchMoreBtn) {
-      fetchMoreBtn.hidden = true;
-      fetchMoreBtn.setAttribute('aria-hidden', 'true');
+      const label = fetchMoreBtn.querySelector('span');
+      if (label) label.textContent = 'Güncel Katalogdan Yeni Yapımlar Ekle';
+      fetchMoreBtn.title = 'Haftalık güncellenen yapım indeksinden öneriler getir';
     }
   }
 
@@ -2557,7 +2560,7 @@ class Cine3DApp {
       const items = await this.apiService.fetchCuratedOnlineBatch(category);
       if (items && items.length > 0) {
         const added = this.integrateOnlineMovies(items, true);
-        this.showToast(`✨ İnternetten ${added} yeni yapım kataloğa eklendi!`, 'success');
+        this.showToast(`✨ ${added} yeni yapım kataloğa eklendi!`, 'success');
         if (window.cinemaAudio) window.cinemaAudio.playTaDum();
       } else {
         this.showToast('İnternet bağlantısı sağlandı, yeni filmler güncel.', 'info');
@@ -2567,9 +2570,12 @@ class Cine3DApp {
     } finally {
       if (btn) {
         btn.classList.remove('loading');
+        const etiket = this.staticMode
+          ? 'Güncel Katalogdan Yeni Yapımlar Ekle'
+          : 'İnternetten Yeni Filmler/Diziler Çek';
         btn.innerHTML = `
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-          <span>İnternetten Yeni Filmler/Diziler Çek</span>
+          <span>${etiket}</span>
         `;
       }
     }
@@ -3383,8 +3389,8 @@ class Cine3DApp {
       const staticBilgi = `
           <div class="no-results">
             <div class="no-results-icon">🔍</div>
-            <h3>"${escapeHtmlText(this.searchQuery)}" katalogda bulunamadı</h3>
-            <p>Bu sürümde arama, katalogdaki 109 yapım içinde yapılır (canlı internet taraması kapalı).</p>
+            <h3>"${escapeHtmlText(this.searchQuery)}" bulunamadı</h3>
+            <p>Katalog ve haftalık güncellenen yapım indeksinde eşleşme yok.</p>
             <p style="color:#a3a3b2;font-size:0.85rem;">Farklı bir başlık deneyin veya filtreleri sıfırlayın.</p>
             <button class="btn btn-secondary" style="margin-top: 14px;" id="reset-filters-btn">Filtreleri Sıfırla</button>
           </div>`;
@@ -3915,7 +3921,7 @@ class Cine3DApp {
                   <span id="modal-vs-text">${this.isMovieInVS(movie.id) ? 'Düellodan Çıkar' : 'Filmle Kıyasla (VS)'}</span>
                 </button>
                 <!-- Orijinal Dizi / Film Müziği (OST) ve Bilet Butonları -->
-                <button class="btn btn-secondary btn-ambient-sound" id="modal-theme-song-btn" title="Orijinal Film / Dizi Müziğini (OST) Çal">
+                <button class="btn btn-secondary btn-ambient-sound ${movie.isIndexEntry ? 'hidden' : ''}" id="modal-theme-song-btn" title="Orijinal Film / Dizi Müziğini (OST) Çal" ${movie.isIndexEntry ? 'aria-hidden="true"' : ''}>
                   <span>🎵</span>
                   <span id="modal-theme-song-text">Tema Müziği</span>
                 </button>

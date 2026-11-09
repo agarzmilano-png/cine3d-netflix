@@ -334,6 +334,16 @@ class CinemaApiService {
     this.isFetching = true;
 
     try {
+      // Sunucu yoksa (statik yayın): gömülü katalog indeksinde ara.
+      // İndeks GitHub Actions tarafından haftalık olarak JustWatch verisiyle yenilenir.
+      if (!(await this.isApiAvailable())) {
+        this.isFetching = false;
+        const index = window.cine3dCatalog;
+        if (!index) return [];
+        await index.ensureLoaded();
+        return index.search(query, maxResults);
+      }
+
       const searchItems = await this.searchOmdb(query);
       if (!searchItems || searchItems.length === 0) {
         this.isFetching = false;
@@ -354,6 +364,14 @@ class CinemaApiService {
 
   // Sürekli film çeken hazır çevrimiçi paketler (Kullanıcı dilediğinde ya da açılışta zenginleştirmek için)
   async fetchCuratedOnlineBatch(category = 'trending') {
+    // Sunucu yoksa: gömülü indeksten günlük paket döndür.
+    if (!(await this.isApiAvailable())) {
+      const index = window.cine3dCatalog;
+      if (!index) return [];
+      await index.ensureLoaded();
+      return index.batch(category, 8);
+    }
+
     const queryMap = {
       trending: ['The Penguin', 'Shogun', 'House of the Dragon', 'Dune: Prophecy', 'Silo', 'Baby Reindeer'],
       masterpieces: ['Goodfellas', 'Casablanca', '12 Angry Men', 'Taxi Driver', 'Apocalypse Now', 'Rear Window'],

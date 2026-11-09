@@ -7,7 +7,7 @@
  * - `ignoreSearch`: asset'ler `?v=3.1` sorgusuyla istendiği için eşleşme sorunu yok.
  * - Önbellekte karşılık bulunamayan isteklerde `respondWith(undefined)` hatası giderildi.
  */
-const CACHE_VERSION = '3.1';
+const CACHE_VERSION = '3.3';
 const CACHE_NAME = `cine3d-cache-v${CACHE_VERSION}`;
 
 // Service worker'ın bulunduğu dizin (site kökü veya alt dizin)
@@ -25,6 +25,7 @@ const PRECACHE_PATHS = [
   'js/vendor/three.min.js',
   'js/movies-data.js',
   'js/movie-soundtracks.js',
+  'js/catalog-index.js',
   'js/api-service.js',
   'js/audio.js',
   'js/three-scene.js',
