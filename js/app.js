@@ -3,6 +3,16 @@
  * Netflix, HBO Max, Disney+, Prime Video Arayüz Dönüşümü
  */
 
+// Arama metni sadeleştirici: aksan/uzatma işaretlerini atar ("Shōgun" -> "shogun",
+// "Amélie" -> "amelie", "Şogun" -> "sogun").
+function foldSearchText(value) {
+  return String(value == null ? '' : value)
+    .replace(/[ıİ]/g, 'i')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('tr');
+}
+
 // HTML kaçış yardımcısı: dinamik metinler innerHTML/attribute içine girerken
 // tırnak veya `<` karakteri taşırsa markup'ı (ve inline onerror JS'ini) bozuyordu.
 function escapeHtmlText(value) {
@@ -3159,17 +3169,18 @@ class Cine3DApp {
     }
 
     // 4. Arama sorgusu (Başlık, orijinal başlık, yönetmen, oyuncular, konu)
+    // DÜZELTME: Aksan/uzatma işaretleri (Shōgun, Amélie, Şogun) aramayı bozuyordu;
+    // karşılaştırma öncesi metin sadeleştirilir.
     if (this.searchQuery.trim() !== "") {
-      const q = this.searchQuery.toLowerCase().trim();
+      const q = foldSearchText(this.searchQuery).trim();
       result = result.filter(m =>
-        // searchText: internetten gelen filmler için escape'siz ham arama alanı
-        (m.searchText && m.searchText.includes(q)) ||
-        (m.title && m.title.toLowerCase().includes(q)) ||
-        (m.originalTitle && m.originalTitle.toLowerCase().includes(q)) ||
-        (m.director && m.director.toLowerCase().includes(q)) ||
-        (Array.isArray(m.cast) && m.cast.some(c => c.toLowerCase().includes(q))) ||
-        (m.summary && m.summary.toLowerCase().includes(q)) ||
-        (Array.isArray(m.genres) && m.genres.some(g => g.toLowerCase().includes(q)))
+        foldSearchText(m.searchText).includes(q) ||
+        foldSearchText(m.title).includes(q) ||
+        foldSearchText(m.originalTitle).includes(q) ||
+        foldSearchText(m.director).includes(q) ||
+        (Array.isArray(m.cast) && m.cast.some(c => foldSearchText(c).includes(q))) ||
+        foldSearchText(m.summary).includes(q) ||
+        (Array.isArray(m.genres) && m.genres.some(g => foldSearchText(g).includes(q)))
       );
     }
 
