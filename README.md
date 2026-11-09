@@ -75,44 +75,31 @@ Anahtar tanımlanmazsa yalnızca OMDb'nin herkese açık demo anahtarı kullanı
 
 ---
 
-## 🌐 Cloudflare Tüneli ile Yayınlama
+## ☁️ Yayın — GitHub Pages (bilgisayar gerektirmez)
 
-### Hızlı tünel (deneme / geçici)
+🌍 **Canlı site:** https://agarzmilano-png.github.io/cine3d-netflix/
 
-```bat
-start.bat
-```
+Site GitHub Pages üzerinde **statik** olarak barınır: 7/24 açıktır, hiçbir bilgisayar veya sunucu çalışması gerekmez.
 
-Bu betik Node sunucusunu başlatır, ardından `cloudflared tunnel --url http://127.0.0.1:3300` ile tüneli açar ve canlı `https://....trycloudflare.com` adresini ekrana yazar (`tunnel-url.txt` dosyasına da kaydeder).
-
-> ⚠️ Ücretsiz `trycloudflare.com` adresi **her başlatmada değişir**; kurulu PWA ve paylaşılan linkler kırılır. Kalıcı bir adres için aşağıdaki adımları kullanın.
-
-### Kalıcı (named) tünel — sabit alan adı
+### Güncelleme
 
 ```bash
-cloudflared tunnel login
-cloudflared tunnel create cine3d
-cloudflared tunnel route dns cine3d cine3d.ornek-domain.com
+git add -A
+git commit -m "aciklama"
+git push
 ```
 
-`%USERPROFILE%\.cloudflared\config.yml`:
+Push sonrası GitHub Pages ~1-2 dakika içinde yeni sürümü yayınlar.
 
-```yaml
-tunnel: cine3d
-credentials-file: C:\Users\<kullanıcı>\.cloudflared\<tunnel-id>.json
-ingress:
-  - hostname: cine3d.ornek-domain.com
-    service: http://127.0.0.1:3300
-  - service: http_status:404
-```
+### Statik mod (sunucusuz)
 
-Ardından tüneli servis olarak kurun (bilgisayar açılışında kendiliğinden başlar):
+`/api/*` uç noktaları olmadığı için istemci otomatik olarak **statik moda** geçer:
+- Katalog (109 yapım), afişler, gömülü YouTube fragmanları, OST sesleri, PWA ve tüm oyunlar çalışır.
+- OMDb canlı arama ve JustWatch canlı yayıncı verisi kapalıdır; "İnternetten film çek" düğmesi gizlenir.
 
-```bash
-cloudflared service install
-```
+### Canlı arama özellikleri de istenirse (opsiyonel)
 
-Sunucuyu da kalıcı hale getirmek için `pm2 start server.js --name cine3d` veya Windows Görev Zamanlayıcı kullanın.
+Node sunucusunu Render gibi ücretsiz bir Node hostinge koyun (`render.yaml` hazır). Orada `OMDB_API_KEYS` ortam değişkenini girin; istemci `/api/health` gördüğü an canlı moda döner, kod değişikliği gerekmez.
 
 ---
 
@@ -149,7 +136,7 @@ Tarayıcınızda açın:
 - **Service Worker v3**: Sürümlü cache, gezinmelerde network-first, `ignoreSearch` eşleşmesi, offline fallback; güncelleme sonrası eski arayüz görünmüyor.
 - **PWA/manifest**: İkon `purpose` değerleri düzeltildi (`any maskable` uyarısı kalktı), `id` eklendi, favicon tanımlandı (`/favicon.ico` 204).
 - **CSS**: `modal.css` içindeki fazladan `}` ve sahipsiz `text-overflow` kaldırıldı (212/212 denge).
-- **`start.bat`**: Sunucu + Cloudflare tünelini birlikte başlatır, canlı adresi yazar.
+- **GitHub Pages yayını**: Site bilgisayardan bağımsız, kalıcı adreste yayınlanır.
 
 ---
 
