@@ -198,6 +198,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "godfather",
+    "platforms": ["tvplus"],
     "title": "Baba",
     "originalTitle": "The Godfather",
     "year": 1972,
@@ -269,6 +270,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-matrix",
+    "platforms": ["prime","tvplus","hbo"],
     "title": "Matrix",
     "originalTitle": "The Matrix",
     "year": 1999,
@@ -303,6 +305,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "parasite",
+    "platforms": ["tvplus","tod","hbo"],
     "title": "Parazit",
     "originalTitle": "Parasite (Gisaengchung)",
     "year": 2019,
@@ -408,6 +411,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "dune-2",
+    "platforms": ["tvplus","hbo"],
     "title": "Dune: Çöl Gezegeni Bölüm İki",
     "originalTitle": "Dune: Part Two",
     "year": 2024,
@@ -482,6 +486,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "prestige",
+    "platforms": ["netflix","tvplus"],
     "title": "Prestij",
     "originalTitle": "The Prestige",
     "year": 2006,
@@ -589,6 +594,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "seven",
+    "platforms": ["netflix"],
     "title": "Yedi",
     "originalTitle": "Se7en",
     "year": 1995,
@@ -622,6 +628,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "alien",
+    "platforms": ["disney"],
     "title": "Yaratık",
     "originalTitle": "Alien",
     "year": 1979,
@@ -688,6 +695,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "blade-runner-2049",
+    "platforms": ["prime","mubi","tvplus"],
     "title": "Bıçak Sırtı 2049",
     "originalTitle": "Blade Runner 2049",
     "year": 2017,
@@ -3606,6 +3614,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "severance",
+    "platforms": ["apple"],
     "title": "Severance",
     "originalTitle": "Severance",
     "year": 2022,
@@ -3634,7 +3643,6 @@ const MOVIES_DATA = [
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDI5YzJhODQtMzQyNy00YWNmLWIxMjUtNDBjNjA5YWRjMzExXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
     "trailerYoutubeId": "xEQP4VVuyrY",
     "isFeatured": true,
-    "platforms": [],
     "globalPlatforms": [
       "apple"
     ],

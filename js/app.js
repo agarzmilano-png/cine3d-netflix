@@ -3378,10 +3378,20 @@ class Cine3DApp {
     if (!grid) return;
 
     if (this.filteredMovies.length === 0) {
-      grid.innerHTML = `
+      // DÜZELTME: Statik barındırmada (sunucu yok) "Çevrimiçi Veritabanı Taranıyor"
+      // spinner'ı hiçbir zaman bitmiyordu; kullanıcıya sonsuz yükleme gibi görünüyordu.
+      const staticBilgi = `
+          <div class="no-results">
+            <div class="no-results-icon">🔍</div>
+            <h3>"${escapeHtmlText(this.searchQuery)}" katalogda bulunamadı</h3>
+            <p>Bu sürümde arama, katalogdaki 109 yapım içinde yapılır (canlı internet taraması kapalı).</p>
+            <p style="color:#a3a3b2;font-size:0.85rem;">Farklı bir başlık deneyin veya filtreleri sıfırlayın.</p>
+            <button class="btn btn-secondary" style="margin-top: 14px;" id="reset-filters-btn">Filtreleri Sıfırla</button>
+          </div>`;
+      const onlineBilgi = `
         <div class="no-results">
           <div class="no-results-icon">🌐</div>
-          <h3>"${this.searchQuery}" katalogda bulunamadı</h3>
+          <h3>"${escapeHtmlText(this.searchQuery)}" katalogda bulunamadı</h3>
           <p>İnternet bağlantınız üzerinden IMDb ve fragman verileri taranıyor...</p>
           <div class="search-loading-spinner" style="position: static; margin: 16px auto; display: inline-flex;">
             <div class="spinner-ring"></div>
@@ -3389,8 +3399,9 @@ class Cine3DApp {
           </div>
           <br />
           <button class="btn btn-secondary" style="margin-top: 14px;" id="reset-filters-btn">Filtreleri Sıfırla</button>
-        </div>
-      `;
+        </div>`;
+
+      grid.innerHTML = this.staticMode ? staticBilgi : onlineBilgi;
       document.getElementById('reset-filters-btn')?.addEventListener('click', () => {
         this.resetFilters();
       });
