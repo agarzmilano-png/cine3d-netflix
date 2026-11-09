@@ -96,7 +96,7 @@ Push sonrası GitHub Pages ~1-2 dakika içinde yeni sürümü yayınlar.
 JustWatch verisi tarayıcıdan CORS nedeniyle okunamaz. Bu yüzden GitHub Actions haftalık olarak
 `data/catalog.json` dosyasını üretir (bkz. `.github/workflows/catalog-refresh.yml` ve `scripts/build-catalog.js`).
 
-- **İndeks:** ~456 güncel yapım (Türkiye popüler listesi): başlık, yıl, IMDb puanı/oyu, afiş, konu, türler, TR yayıncıları.
+- **İndeks:** ~750 güncel yapım (Türkiye popüler listesi): başlık, yıl, IMDb puanı/oyu, afiş, konu, türler, TR yayıncıları.
 - **Arama:** katalogda olmayan bir başlık arandığında indeksten sonuç gelir; modal, afiş ve "Nerede İzlenir?" bölümü çalışır.
 - **"Güncel Katalogdan Yeni Yapımlar Ekle":** indeksten her tıklamada farklı 8 yapım ekler.
 - **Fragman:** indekste doğrulanmış YouTube kimliği varsa gömülü oynar, yoksa YouTube arama bağlantısı verilir.

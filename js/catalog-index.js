@@ -36,11 +36,14 @@
     return h > 0 ? `${h}s ${rest}dk` : `${rest}dk`;
   }
 
+  // Tüm aksanları sadeleştirir: "Shōgun" -> "shogun", "Amélie" -> "amelie",
+  // "Şogun" -> "sogun" gibi yazım farkları aramayı bozmasın.
   function normalize(text) {
     return String(text || '')
+      .replace(/[ıİ]/g, 'i')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
       .toLocaleLowerCase('tr')
-      .replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g')
-      .replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c')
       .replace(/[^a-z0-9 ]+/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
@@ -83,7 +86,7 @@
         imdbID: null,
         title: item.t,
         originalTitle: item.o,
-        searchText: `${item.t} ${item.o}`.toLocaleLowerCase('tr'),
+        searchText: `${item.t} ${item.o} ${item.e || ''}`.toLocaleLowerCase('tr'),
         year: item.y,
         imdbRating: item.imdb,
         imdbVotes: formatVotes(item.votes),
@@ -115,13 +118,14 @@
 
       const scored = [];
       for (const item of this.items) {
-        const title = normalize(item.t);
-        const original = normalize(item.o);
+        // Yerelleştirilmiş ad (t), özgün ad (o) ve İngilizce ad (e) birlikte aranır:
+        // "Parasite" -> "Parazit", "Shōgun" -> "shogun", "Tutsak" -> "prisoners".
+        const names = [normalize(item.t), normalize(item.o), normalize(item.e || '')].filter(Boolean);
         let score = 0;
-        if (title === q || original === q) score = 100;
-        else if (title.startsWith(q) || original.startsWith(q)) score = 80;
-        else if (title.includes(q) || original.includes(q)) score = 60;
-        else if (q.split(' ').every((w) => title.includes(w) || original.includes(w))) score = 40;
+        if (names.some((n) => n === q)) score = 100;
+        else if (names.some((n) => n.startsWith(q))) score = 80;
+        else if (names.some((n) => n.includes(q))) score = 60;
+        else if (q.split(' ').every((w) => names.some((n) => n.includes(w)))) score = 40;
         if (!score) continue;
         score += Math.min(15, (Number(item.imdb) || 0)); // eşitlikte yüksek puan öne
         scored.push({ item, score });
