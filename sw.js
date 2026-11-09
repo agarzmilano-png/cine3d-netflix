@@ -25,6 +25,7 @@ const PRECACHE_PATHS = [
   'js/vendor/three.min.js',
   'js/movies-data.js',
   'js/movie-soundtracks.js',
+  'js/config.js',
   'js/catalog-index.js',
   'js/api-service.js',
   'js/audio.js',

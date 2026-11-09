@@ -2616,6 +2616,11 @@ class Cine3DApp {
         try {
           const onlineResults = await this.apiService.searchAndEnrich(cleanQuery, 6);
           if (onlineResults && onlineResults.length > 0) {
+            // DÜZELTME: Online sonuçların başlığı sorguyu birebir içermeyebilir
+            // ("Primer 2004" -> "Primer"). Izgara filtresi bu yüzden sonuçları
+            // gizliyordu; hangi sorguyla geldiklerini işaretliyoruz.
+            const qFold = foldSearchText(cleanQuery);
+            onlineResults.forEach((m, i) => { m.matchedQuery = qFold; m.searchRank = i; });
             const addedCount = this.integrateOnlineMovies(onlineResults, true);
             if (addedCount > 0) {
               this.showToast(`🌐 İnternetten "${cleanQuery}" için ${addedCount} sonuç çekildi!`, 'success');
@@ -2887,11 +2892,18 @@ class Cine3DApp {
         addedCount++;
 
         // Yeni türler geldiyse tür listesine ekle
-        item.genres.forEach(g => {
+        (item.genres || []).forEach(g => {
           if (!GENRES_LIST.includes(g)) {
             GENRES_LIST.push(g);
           }
         });
+      } else if (item.matchedQuery) {
+        // Zaten katalogda olan yapım da bu sorguyla eşleşsin
+        const mevcut = this.movies.find(m =>
+          (m.imdbID && item.imdbID && m.imdbID === item.imdbID) ||
+          (m.title && item.title && m.title.toLowerCase() === item.title.toLowerCase())
+        );
+        if (mevcut) mevcut.matchedQuery = item.matchedQuery;
       }
     });
 
@@ -3174,6 +3186,8 @@ class Cine3DApp {
     if (this.searchQuery.trim() !== "") {
       const q = foldSearchText(this.searchQuery).trim();
       result = result.filter(m =>
+        // Bu yapım zaten bu arama için internetten çekildi
+        foldSearchText(m.matchedQuery) === q ||
         foldSearchText(m.searchText).includes(q) ||
         foldSearchText(m.title).includes(q) ||
         foldSearchText(m.originalTitle).includes(q) ||
@@ -3185,7 +3199,15 @@ class Cine3DApp {
     }
 
     // Sıralama
+    // Arama sırasında: internetten gelen sonuçlar alaka sırasını korur
+    // (aksi halde “A Wednesday” gibi alakasız yüksek puanlı yapım başa geçiyordu).
+    const activeQuery = foldSearchText(this.searchQuery).trim();
     result.sort((a, b) => {
+      if (activeQuery) {
+        const ra = a.matchedQuery === activeQuery ? (a.searchRank ?? 900) : 900;
+        const rb = b.matchedQuery === activeQuery ? (b.searchRank ?? 900) : 900;
+        if (ra !== rb) return ra - rb;
+      }
       if (this.sortBy === 'imdb-desc') return b.imdbRating - a.imdbRating;
       if (this.sortBy === 'imdb-asc') return a.imdbRating - b.imdbRating;
       if (this.sortBy === 'year-desc') return (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0);

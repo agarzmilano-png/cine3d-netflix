@@ -91,27 +91,41 @@ git push
 
 Push sonrası GitHub Pages ~1-2 dakika içinde yeni sürümü yayınlar.
 
-### Sunucusuz canlı arama (gömülü katalog indeksi)
+### Sunucusuz canlı veri (tarayıcıdan doğrudan)
 
-JustWatch verisi tarayıcıdan CORS nedeniyle okunamaz. Bu yüzden GitHub Actions haftalık olarak
-`data/catalog.json` dosyasını üretir (bkz. `.github/workflows/catalog-refresh.yml` ve `scripts/build-catalog.js`).
+Site sunucu olmadan da internetten veri çeker. Kullanılan kaynaklar ve nedenleri:
 
-- **İndeks:** ~750 güncel yapım (Türkiye popüler listesi): başlık, yıl, IMDb puanı/oyu, afiş, konu, türler, TR yayıncıları.
-- **Arama:** katalogda olmayan bir başlık arandığında indeksten sonuç gelir; modal, afiş ve "Nerede İzlenir?" bölümü çalışır.
-- **"Güncel Katalogdan Yeni Yapımlar Ekle":** indeksten her tıklamada farklı 8 yapım ekler.
-- **Fragman:** indekste doğrulanmış YouTube kimliği varsa gömülü oynar, yoksa YouTube arama bağlantısı verilir.
+| Kaynak | Ne için | CORS |
+|---|---|---|
+| **OMDb API** (`omdbapi.com`) | Arama, detay, IMDb puanı/oy, kadro, yönetmen, afiş | ✅ `*` |
+| **Türkçe Vikipedi REST** | Türkçe konu özeti | ✅ `*` |
+| **data/catalog.json** | TR yayıncıları + yedek arama indeksi (haftalık, GitHub Actions) | ✅ (kendi dosyamız) |
+| JustWatch GraphQL | Canlı yayıncı sorgusu | ❌ (tarayıcıdan engelli → haftalık indekse yazılıyor) |
 
-İndeksi elle tazelemek için:
+Yani `sunucu.js` olmadan da arama/detay canlı çalışır; yayıncı bilgisi haftalık indeksten gelir.
+
+### OMDb anahtarı
+
+Varsayılan olarak herkese açık demo anahtar (`trilogy`) kullanılır; günlük kotası dolabilir.
+Kendi ücretsiz anahtarınızı iki şekilde ekleyebilirsiniz:
+
+1. Adres çubuğuna bir kez: `.../?omdbkey=ANAHTARINIZ` (localStorage'a yazılır)
+2. Konsolda: `localStorage.setItem('cine3d_omdb_keys', 'anahtar1,anahtar2')`
+3. Kalıcı varsayılan için `js/config.js` içindeki `omdbKeys` dizisi
+
+Kota dolarsa site otomatik olarak gömülü indekse düşer ve kullanıcıya bilgi verir.
+
+### Gömülü indeks (yedek + yayıncı verisi)
+
+`data/catalog.json` GitHub Actions tarafından her pazartesi JustWatch verisiyle yenilenir
+(`.github/workflows/catalog-refresh.yml` + `scripts/build-catalog.js`): ~750 yapım, TR yayıncıları,
+varsa doğrulanmış YouTube fragman kimliği.
+
+Elle tazelemek için:
 
 ```bash
-node scripts/build-catalog.js 450
+node scripts/build-catalog.js 600
 ```
-
-### Canlı arama özellikleri de istenirse (opsiyonel)
-
-Node sunucusunu Render gibi ücretsiz bir Node hostinge koyun (`render.yaml` hazır). Orada `OMDB_API_KEYS` ortam değişkenini girin; istemci `/api/health` gördüğü an canlı moda döner, kod değişikliği gerekmez.
-
----
 
 ## 🎮 Faz 5 Özellikleri (Cine3D Features Motoru)
 
