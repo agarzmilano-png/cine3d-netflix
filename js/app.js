@@ -3954,7 +3954,7 @@ class Cine3DApp {
                   <span id="modal-vs-text">${this.isMovieInVS(movie.id) ? 'Düellodan Çıkar' : 'Filmle Kıyasla (VS)'}</span>
                 </button>
                 <!-- Orijinal Dizi / Film Müziği (OST) ve Bilet Butonları -->
-                <button class="btn btn-secondary btn-ambient-sound ${movie.isIndexEntry ? 'hidden' : ''}" id="modal-theme-song-btn" title="Orijinal Film / Dizi Müziğini (OST) Çal" ${movie.isIndexEntry ? 'aria-hidden="true"' : ''}>
+                <button class="btn btn-secondary btn-ambient-sound" id="modal-theme-song-btn" title="Orijinal Film / Dizi Müziğini (OST) Çal">
                   <span>🎵</span>
                   <span id="modal-theme-song-text">Tema Müziği</span>
                 </button>
@@ -4245,6 +4245,82 @@ class Cine3DApp {
     return 'https://cdn.jsdelivr.net/gh/agarzmilano-png/cine3d-netflix@master/';
   }
 
+  /**
+   * İnternetten çekilen yapımlar için OST çözücü.
+   * Apple iTunes Search API CORS'a açık olduğu için tarayıcıdan doğrudan
+   * çağrılır; 30 saniyelik resmi önizleme döner (sunucudaki mantığın aynısı).
+   */
+  async resolveOnlineOst(movie) {
+    if (!this._ostCache) this._ostCache = new Map();
+    const cacheKey = movie.id || `${movie.title}_${movie.year}`;
+    if (this._ostCache.has(cacheKey)) return this._ostCache.get(cacheKey);
+
+    const titles = [movie.originalTitle, movie.title].filter(Boolean);
+    const composer = movie.director && movie.director !== 'Belirtilmemiş' ? movie.director : '';
+
+    // Aksan/uzatma bağımsız karşılaştırma (Shōgun -> shogun)
+    const fold = (s) => String(s || '')
+      .replace(/[ıİ]/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    const titleKeys = titles.map(fold).filter((k) => k.length > 2);
+
+    const queries = [];
+    for (const t of titles) {
+      queries.push(`${t} soundtrack`);
+      queries.push(`${t} original motion picture soundtrack`);
+      queries.push(`${t} theme`);
+      if (composer) queries.push(`${t} ${composer}`);
+    }
+
+    const seen = new Set();
+    for (const q of queries) {
+      const k = q.toLowerCase().trim();
+      if (!k || seen.has(k)) continue;
+      seen.add(k);
+      try {
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(k)}&media=music&entity=song&limit=10`, { cache: 'no-store' });
+        if (!res.ok) continue;
+        const data = await res.json();
+
+        // Sadece başlığı gerçekten eşleşen parçaları kabul et:
+        // aksi halde "Francis Ford Coppola" araması alakasız bir parça döndürüyordu.
+        const scored = (data.results || [])
+          .filter((r) => r.previewUrl)
+          .map((r) => {
+            const hay = fold(`${r.trackName || ''} ${r.collectionName || ''} ${r.artistName || ''}`);
+            const titleHit = titleKeys.some((tk) => hay.includes(tk));
+            const artistHit = composer && fold(r.artistName || '').includes(fold(composer));
+            const albumHit = /soundtrack|original|score|theme|music/i.test(`${r.collectionName || ''}`);
+            let score = 0;
+            if (titleHit) score += 60;
+            if (artistHit) score += 25;
+            if (albumHit) score += 15;
+            return { r, score };
+          })
+          .filter((x) => x.score >= 60)
+          .sort((a, b) => b.score - a.score);
+
+        if (scored.length) {
+          const hit = scored[0].r;
+          const result = {
+            audioUrl: hit.previewUrl,
+            trackTitle: hit.trackName,
+            composer: hit.artistName,
+            artworkUrl: hit.artworkUrl100,
+            source: 'itunes'
+          };
+          this._ostCache.set(cacheKey, result);
+          return result;
+        }
+      } catch (e) {
+        // sonraki sorguya geç
+      }
+    }
+
+    this._ostCache.set(cacheKey, null);
+    return null;
+  }
+
   async toggleMovieOriginalOst(movie) {
     const slot = document.getElementById('modal-ost-slot');
     const btn = document.getElementById('modal-theme-song-btn');
@@ -4264,23 +4340,45 @@ class Cine3DApp {
     if (txt) txt.textContent = 'Müzik Başlatılıyor...';
 
     // 1. OST verisini al
-    let ostData = (typeof MOVIE_SOUNDTRACKS !== 'undefined' && MOVIE_SOUNDTRACKS[movie.id]) 
-      ? { ...MOVIE_SOUNDTRACKS[movie.id] } 
-      : {
-          track: `${movie.title} Orijinal Tema`,
-          composer: movie.director || 'Film Müziği',
-          youtubeId: movie.trailerYoutubeId || '',
-          description: 'Resmi film müziği ve tema parçası.'
-        };
+    const curated = (typeof MOVIE_SOUNDTRACKS !== 'undefined') ? MOVIE_SOUNDTRACKS[movie.id] : null;
+    let ostData;
+    let onlineOst = null;
 
-    // OST dosyaları Pages paketinden çıkarılıp jsDelivr CDN'den servis edilir
-    // (yayın artefaktı ~52 MB yerine ~2 MB kalır). Yerelde sunucu kendi servis eder.
+    if (curated) {
+      ostData = { ...curated };
+    } else {
+      // İnternetten gelen yapım: Apple Music/iTunes önizlemesini çöz
+      onlineOst = await this.resolveOnlineOst(movie);
+      if (!onlineOst) {
+        if (btn) btn.classList.remove('loading');
+        if (txt) txt.textContent = 'Tema Müziği';
+        this.showToast(`🎵 "${movie.title}" için OST kaydı bulunamadı.`, 'info');
+        return;
+      }
+      ostData = {
+        track: onlineOst.trackTitle,
+        composer: onlineOst.composer,
+        youtubeId: '',
+        description: 'Apple Music resmi önizleme (30 sn).'
+      };
+    }
+
+    // OST dosyaları Pages paketinden çıkarılıp jsDelivr CDN'den servis edilir.
     const localAudioUrl = `${this.getAudioBaseUrl()}audio/ost/${movie.id}.mp3`;
     const streamAudioUrl = `api/stream-ost?id=${encodeURIComponent(movie.id)}&title=${encodeURIComponent(movie.title)}&originalTitle=${encodeURIComponent(movie.originalTitle || '')}&composer=${encodeURIComponent(ostData.composer || movie.director || '')}`;
-    const initialAudioUrl = movie.isOnlineFetched ? streamAudioUrl : localAudioUrl;
-    const fallbackAudioUrl = movie.isOnlineFetched ? localAudioUrl : streamAudioUrl;
 
-    const watchUrl = ostData.youtubeId 
+    // Sırayla denenecek kaynaklar: yerel dosya → (sunucu varsa) akış → iTunes önizleme
+    const candidates = [];
+    if (curated) {
+      candidates.push(localAudioUrl);
+      if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
+    } else {
+      if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
+      candidates.push(localAudioUrl);
+      if (onlineOst) candidates.push(onlineOst.audioUrl);
+    }
+
+    const watchUrl = ostData.youtubeId
       ? `https://www.youtube.com/watch?v=${ostData.youtubeId}`
       : `https://www.youtube.com/results?search_query=${encodeURIComponent(movie.title + ' ' + ostData.track + ' soundtrack')}`;
 
@@ -4292,24 +4390,26 @@ class Cine3DApp {
     }
     if (txt) txt.textContent = 'Müziği Durdur';
 
-    // 2. Doğrudan HTML5 Ses Oynatıcısını Başlat (Yerel/Akış Çift Katmanlı Yedeklilik)
+    // 2. HTML5 ses oynatıcı: kaynak sırayla denenir
     const audio = new Audio();
     audio.preload = 'auto';
     audio.volume = 0.85;
     this.currentOstAudio = audio;
 
-    let fallbackTried = false;
+    let candidateIndex = 0;
     audio.onerror = () => {
-      console.warn("Müzik yükleme uyarısı, alternatif kaynak deneniyor...");
-      if (!fallbackTried) {
-        fallbackTried = true;
-        audio.src = fallbackAudioUrl;
+      candidateIndex++;
+      if (candidateIndex < candidates.length) {
+        audio.src = candidates[candidateIndex];
         audio.load();
-        audio.play().catch(e => console.warn("Fallback ses çalma hatası:", e));
+        audio.play().catch(() => {});
+      } else {
+        this.stopMovieOst();
+        this.showToast(`🎵 "${movie.title}" için ses kaynağı açılamadı.`, 'info');
       }
     };
 
-    audio.src = initialAudioUrl;
+    audio.src = candidates[0];
     audio.load();
 
     const playPromise = audio.play();

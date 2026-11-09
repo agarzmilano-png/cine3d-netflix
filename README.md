@@ -101,6 +101,7 @@ Site sunucu olmadan da internetten veri çeker. Kullanılan kaynaklar ve nedenle
 | **Türkçe Vikipedi REST** | Türkçe konu özeti | ✅ `*` |
 | **data/catalog.json** | TR yayıncıları + yedek arama indeksi (haftalık, GitHub Actions) | ✅ (kendi dosyamız) |
 | JustWatch GraphQL | Canlı yayıncı sorgusu | ❌ (tarayıcıdan engelli → haftalık indekse yazılıyor) |
+| **iTunes Search API** | İnternetten gelen yapımların OST önizlemesi (30 sn) | ✅  |
 
 Yani `sunucu.js` olmadan da arama/detay canlı çalışır; yayıncı bilgisi haftalık indeksten gelir.
 
