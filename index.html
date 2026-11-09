@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin-when-cross-origin" />
+  <title>Cine3D Netflix | IMDb Puanlı 3D Sinema & Film Keşif Platformu</title>
+  <meta name="description" content="Netflix tarzı 3D tasarıma sahip, IMDb puanları bazlı, film türleri ve detaylı konuları açıklayan sinema platformu." />
+  <meta name="theme-color" content="#e50914" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Cine3D" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- Google Yazı Tipleri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Stiller -->
+  <link rel="stylesheet" href="css/style.css?v=3.1" />
+  <link rel="stylesheet" href="css/modal.css?v=3.1" />
+  <link rel="stylesheet" href="css/vs-duel.css?v=3.1" />
+  <link rel="stylesheet" href="css/features.css?v=3.1" />
+</head>
+<body>
+
+  <!-- Three.js 3D Arka Plan Tuvali -->
+  <canvas id="cinema-3d-canvas"></canvas>
+
+  <div class="app-container">
+
+    <!-- Üst Menü (Navbar - Sade ve Şık Tasarım) -->
+    <header class="navbar" id="navbar">
+      <div class="nav-left">
+        <div class="logo-brand" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+          <span class="logo-icon-wrap" id="logo-icon-wrap">
+            <svg class="logo-icon" id="logo-icon" viewBox="0 0 24 24">
+              <path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+            </svg>
+          </span>
+          <span class="logo-text" id="logo-text">CINE3D</span>
+          <span class="logo-badge" id="logo-theme-badge">NETFLIX 3D</span>
+        </div>
+
+        <nav class="main-nav">
+          <ul class="nav-links">
+            <li><a class="nav-link active" id="nav-link-home" href="#hero-section">Ana Sayfa</a></li>
+            <li><a class="nav-link" id="nav-link-hubs" href="#discovery-hub-section" data-tab="platform-hubs-section">Öne Çıkanlar</a></li>
+            <li><a class="nav-link" id="nav-link-mood" href="#discovery-hub-section" data-tab="mood-section">🎭 Ruh Hali</a></li>
+            <li><a class="nav-link" id="nav-link-palette" href="#discovery-hub-section" data-tab="palette-section">🎨 Renk Paleti</a></li>
+            <li><a class="nav-link" id="nav-link-story" href="#discovery-hub-section" data-tab="story-adventure-section">🎲 Kendi Hikayen</a></li>
+            <li><a class="nav-link" id="nav-link-roulette" href="#discovery-hub-section" data-tab="roulette-section">🎡 Rulet</a></li>
+            <li><a class="nav-link" id="nav-link-top10" href="#top10-anchor">Top 10</a></li>
+            <li><a class="nav-link" id="nav-link-movies" href="#controls-section">Katalog</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="nav-right">
+        <!-- Platform Tema Seçici (Kompakt ve Zarif) -->
+        <div class="theme-switcher-bar compact-theme-bar" id="theme-switcher-bar" role="radiogroup" aria-label="Platform Teması">
+          <button class="theme-pill-btn active" data-theme="netflix" title="Netflix Teması" aria-checked="true">
+            <span class="theme-pill-logo">N</span>
+            <span class="theme-pill-text">Netflix</span>
+          </button>
+          <button class="theme-pill-btn" data-theme="hbo" title="HBO Max Teması" aria-checked="false">
+            <span class="theme-pill-logo">MAX</span>
+            <span class="theme-pill-text">HBO</span>
+          </button>
+          <button class="theme-pill-btn" data-theme="disney" title="Disney+ Teması" aria-checked="false">
+            <span class="theme-pill-logo">D+</span>
+            <span class="theme-pill-text">Disney</span>
+          </button>
+          <button class="theme-pill-btn" data-theme="prime" title="Prime Video Teması" aria-checked="false">
+            <span class="theme-pill-logo">PRIME</span>
+            <span class="theme-pill-text">Prime</span>
+          </button>
+        </div>
+
+        <!-- Canlı Görsel Arama Kutusu -->
+        <div class="search-box" id="search-box-container">
+          <div class="search-box-inner" id="search-box-inner">
+            <div class="search-visual-bg" id="search-visual-bg"></div>
+            <canvas class="search-fx-canvas" id="search-fx-canvas"></canvas>
+            <div class="search-icon-box" id="search-icon-box">
+              <svg class="search-icon" id="search-default-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <span class="search-theme-emblem hidden" id="search-theme-emblem"></span>
+            </div>
+            <input 
+              type="text" 
+              id="search-input" 
+              class="search-input" 
+              placeholder="Ara" 
+              autocomplete="off"
+            />
+            <span class="search-atmosphere-tag hidden" id="search-atmosphere-tag"></span>
+            <div class="search-loading-spinner hidden" id="search-spinner" title="İnternetten çekiliyor...">
+              <div class="spinner-ring"></div>
+              <span>Aranıyor</span>
+            </div>
+          </div>
+          <div class="search-spotlight-dropdown hidden" id="search-spotlight-dropdown"></div>
+        </div>
+
+        <!-- Sağ Hızlı Eylem Butonları Grubu -->
+        <div class="nav-actions-group">
+          <!-- Platform Ses Efekti Butonu -->
+          <button class="btn-tadum" id="play-tadum-btn" title="Platform Sesini Dinle">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <span id="tadum-btn-text">Ta-Dum</span>
+          </button>
+
+          <!-- Ses Aç/Kapa Butonu -->
+          <button class="nav-icon-btn" id="audio-toggle-btn" title="Sesi Aç/Kapat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+
+          <!-- VS Düello Kıyaslama Butonu (Faz 2) -->
+          <button class="nav-icon-btn nav-vs-btn" id="open-vs-btn" title="Sinematik Düello (Film Kıyaslama)">
+            <span class="nav-vs-icon">⚔️</span>
+            <span class="nav-badge-count" id="vs-badge">0</span>
+          </button>
+
+          <!-- Şampiyonluk Turnuvası Butonu (Faz 5) -->
+          <button class="nav-icon-btn nav-tournament-btn" id="open-tournament-nav" title="Şampiyonluk Turnuvası (8 Film)">
+            <span>🏆</span>
+          </button>
+
+          <!-- PWA Uygulamayı Yükle Butonu -->
+          <button class="nav-icon-btn nav-pwa-btn hidden" id="btn-pwa-install" title="Cine3D Uygulamasını Cihazına Yükle">
+            <span>📲</span>
+          </button>
+
+          <!-- İzleme Listesi Butonu -->
+          <button class="nav-icon-btn nav-watchlist-btn" id="open-watchlist-btn" title="İzleme Listem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span class="nav-badge-count" id="watchlist-badge">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Vitrini (Seçili Platforma Göre Dinamik 3D Vitrin) -->
+    <section class="hero-section" id="hero-section"></section>
+
+    <!-- Keşif & Mod Merkezi: Sadeleştirilmiş Sekmeli Düzen (Her Şey Alt Alta Değil!) -->
+    <div class="discovery-hub-wrapper" id="discovery-hub-section">
+      <!-- Sekme Seçim Çubuğu (Tabs Bar) -->
+      <div class="discovery-nav-sticky-wrap">
+        <div class="discovery-nav-container">
+          <div class="discovery-nav-header-row">
+            <div class="discovery-title-pill">
+              <span class="d-pulse-dot"></span>
+              <span class="d-title-text">KEŞİF & MOD MERKEZİ</span>
+            </div>
+
+            <!-- Sekmeler / Mod Seçici Butonları -->
+            <div class="discovery-tabs-bar" role="tablist">
+              <button class="discovery-tab-btn active" data-tab-panel="platform-hubs-section" role="tab" aria-selected="true">
+                <span class="d-tab-icon">✨</span>
+                <span class="d-tab-title" id="d-tab-hubs-title">Öne Çıkanlar</span>
+              </button>
+              <button class="discovery-tab-btn" data-tab-panel="mood-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🎭</span>
+                <span class="d-tab-title" id="d-tab-mood-title">Ruh Hali & Mod</span>
+              </button>
+              <button class="discovery-tab-btn" data-tab-panel="palette-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🎨</span>
+                <span class="d-tab-title" id="d-tab-palette-title">Renk Paleti</span>
+              </button>
+              <button class="discovery-tab-btn" data-tab-panel="story-adventure-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🎲</span>
+                <span class="d-tab-title">Kendi Hikayen</span>
+                <span class="d-tab-sparkle-badge">5 Adım</span>
+              </button>
+              <button class="discovery-tab-btn" data-tab-panel="roulette-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🎡</span>
+                <span class="d-tab-title">Film Ruleti</span>
+                <span class="d-tab-sparkle-badge" style="background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff;">ŞANS</span>
+              </button>
+              <button class="discovery-tab-btn" data-tab-panel="guess-game-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🎯</span>
+                <span class="d-tab-title">Tahmin Oyunu</span>
+                <span class="d-tab-sparkle-badge" style="background:linear-gradient(135deg, #22c55e, #0ea5e9); color:#fff;">OYUN</span>
+              </button>
+              <button class="discovery-tab-btn" data-tab-panel="duo-match-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🍿</span>
+                <span class="d-tab-title">Birlikte Ne İzleyelim?</span>
+                <span class="d-tab-sparkle-badge" style="background:linear-gradient(135deg, #ec4899, #8b5cf6); color:#fff;">İKİ KİŞİ</span>
+              </button>
+              <button class="discovery-tab-btn d-tab-collapse" data-tab-panel="collapse" role="tab" aria-selected="false" title="Keşif kartlarını gizleyip doğrudan kataloğu gör">
+                <span class="d-tab-icon">✕</span>
+                <span class="d-tab-title">Paneli Kapat</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tek seferde yalnızca seçili panel görüntülenir -->
+      <div class="discovery-panels-container">
+        <!-- Platform Marka & Hub Barı (Disney+, HBO Max, Prime Video, Netflix Özel Hubları) -->
+        <section class="platform-hubs-section discovery-panel" id="platform-hubs-section"></section>
+
+        <!-- Moda & Ruh Haline Göre Keşfet Bölümü (Mood Matcher) -->
+        <section class="mood-section discovery-panel hidden" id="mood-section">
+      <div class="mood-container">
+        <div class="mood-header-row">
+          <div class="mood-title-wrap">
+            <div class="mood-pill-badge">
+              <span class="mood-badge-dot"></span>
+              <span id="mood-badge-text">RUH HALİ & MOD MATRİKSİ</span>
+            </div>
+            <h3 class="mood-main-title">
+              <span id="mood-main-title-text">Bugün Ne İzlemek İstiyorsun?</span>
+            </h3>
+            <p class="mood-subtitle-text" id="mood-subtitle-text">Anlık moduna göre seç: İster gözyaşı dök, ister kahkaha at, ister beynini yak!</p>
+          </div>
+          <div class="mood-action-buttons">
+            <button class="btn-surprise-mood" id="btn-surprise-mood" title="Rastgele bir ruh hali seç ve şaşırt!">
+              <span class="dice-icon">🎲</span>
+              <span>Beni Şaşırt (Rastgele Mood)</span>
+            </button>
+            <button class="btn-clear-mood hidden" id="btn-clear-mood-top" title="Aktif ruh hali filtresini sıfırla">
+              <span>✕ Filtreyi Kaldır</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Ruh Hali Kartları / Çipleri -->
+        <div class="mood-cards-grid" id="mood-cards-container"></div>
+      </div>
+    </section>
+
+    <!-- Görsel Ton ve Renk Paleti Filtresi Bölümü (Visual Palette Studio) -->
+    <section class="palette-section discovery-panel hidden" id="palette-section">
+      <div class="palette-container">
+        <div class="palette-header-row">
+          <div class="palette-title-wrap">
+            <div class="palette-pill-badge">
+              <span class="palette-badge-dot"></span>
+              <span id="palette-badge-text">GÖRSEL TON & RENK PALETİ</span>
+            </div>
+            <h3 class="palette-main-title">
+              <span id="palette-main-title-text">Filmleri Renk Paletine Göre Keşfet</span>
+            </h3>
+            <p class="palette-subtitle-text" id="palette-subtitle-text">
+              Wes Anderson'ın pastel tonlarından, David Fincher'ın karanlık zümrüt tonlarına ve Mad Max'in sıcak çöl ışığına kadar dilediğin görsel atmosferi seç.
+            </p>
+          </div>
+          <div class="palette-action-buttons">
+            <button class="btn-surprise-palette" id="btn-surprise-palette" title="Rastgele bir renk paleti seç!">
+              <span class="dice-icon">🎨</span>
+              <span>Rastgele Palet</span>
+            </button>
+            <button class="btn-clear-palette hidden" id="btn-clear-palette-top" title="Aktif renk paleti filtresini sıfırla">
+              <span>✕ Paleti Temizle</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Renk Paleti Kartları Izgarası -->
+        <div class="palette-cards-grid" id="palette-cards-container"></div>
+      </div>
+    </section>
+
+    <!-- Kendi Seçimini Kendin Yarat: İnteraktif Hikaye Akışı Bölümü -->
+    <section class="story-adventure-section discovery-panel hidden" id="story-adventure-section">
+      <div class="story-container">
+        <!-- Bölüm Başlığı & Giriş Bilgisi -->
+        <div class="story-section-header">
+          <div class="story-title-wrap">
+            <div class="story-pill-badge">
+              <span class="story-badge-pulse"></span>
+              <span>İNTERAKTİF HİKAYE AKIŞI • 5 ADIMDA KADERİN</span>
+            </div>
+            <h2 class="story-main-title">Kendi Seçimini Kendin Yarat</h2>
+            <p class="story-subtitle-desc">
+              Karşına çıkan sinematik dönemeçlerde kendi hikayeni şekillendir. 5 adımda yapacağın kritik seçimler seni 109 başyapıt arasından ruhuna en uygun <strong>tek bir filme</strong> götürsün!
+            </p>
+          </div>
+        </div>
+
+        <!-- 1. Karşılama & Başlangıç Kartı (Intro Card) -->
+        <div class="story-intro-card" id="story-intro-card">
+          <div class="story-intro-glow"></div>
+          <div class="story-intro-content">
+            <div class="story-intro-icon-row">
+              <span class="intro-floating-icon icon-1">🔦</span>
+              <span class="intro-floating-icon icon-2">🚀</span>
+              <span class="intro-floating-icon icon-3">👑</span>
+              <span class="intro-floating-icon icon-4">⚡</span>
+            </div>
+            <h3 class="story-intro-title">Maceraya Başlamaya Hazır mısın?</h3>
+            <p class="story-intro-text">
+              Karanlık, sisli bir sokakta yürüyorsun... Önüne ne çıksın? Geleceğin siberpunk metropolüne mi yoksa bir uzay gemisine mi binmek istersin?
+              Verdiğin her karar sinematik DNA'nı hesaplayacak ve finalde seni büyüleyecek o tek filmi karşına çıkaracak.
+            </p>
+            <div class="story-intro-features">
+              <div class="intro-feature-pill">
+                <span class="feature-icon">❓</span>
+                <span>5 Kısa Sinematik Soru</span>
+              </div>
+              <div class="intro-feature-pill">
+                <span class="feature-icon">🎯</span>
+                <span>Sana Özel Tek Film Eşleşmesi</span>
+              </div>
+              <div class="intro-feature-pill">
+                <span class="feature-icon">📺</span>
+                <span>Doğrudan Fragman & Türkiye Yayıncısı</span>
+              </div>
+            </div>
+            <button class="btn-start-story" id="btn-start-story">
+              <span class="btn-start-icon">🎲</span>
+              <span>Hikayemi Yaratmaya Başla</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. İnteraktif Oyun Tahtası (Game Board) -->
+        <div class="story-game-board hidden" id="story-game-board">
+          <!-- Üst İlerleme ve Navigasyon Çubuğu -->
+          <div class="story-board-header">
+            <button class="btn-story-back hidden" id="btn-story-back" title="Önceki karara dön">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <span>Önceki Adım</span>
+            </button>
+            <div class="story-step-indicator">
+              <span class="story-step-label" id="story-step-label">ADIM 1 / 5</span>
+              <div class="story-progress-bar-track">
+                <div class="story-progress-bar-fill" id="story-progress-bar-fill" style="width: 20%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Soru ve Senaryo Alanı -->
+          <div class="story-scenario-box">
+            <span class="scenario-badge" id="scenario-badge">1. SAHNE: KARANLIK SOKAK</span>
+            <h3 class="scenario-question" id="scenario-question">Gece yarısı terk edilmiş, sisli ve karanlık bir sokaktasın. Sislerin arasından bir silüet yaklaşıyor. Önüne ne çıksın?</h3>
+            <p class="scenario-hint" id="scenario-hint">İlk kararın, yaşayacağın maceranın türünü ve gerilim dozunu belirleyecek.</p>
+          </div>
+
+          <!-- Seçenek Kartları Izgarası -->
+          <div class="story-options-grid" id="story-options-container"></div>
+        </div>
+
+        <!-- 3. Sinematik DNA Analizi Kartı (Analyzing Loader) -->
+        <div class="story-analyzing-card hidden" id="story-analyzing-card">
+          <div class="analyzing-spinner-wrap">
+            <div class="analyzing-ring ring-outer"></div>
+            <div class="analyzing-ring ring-middle"></div>
+            <div class="analyzing-ring ring-inner"></div>
+            <div class="analyzing-center-icon">🎬</div>
+          </div>
+          <h3 class="analyzing-title">Sinematik Kaderin Hesaplanıyor...</h3>
+          <p class="analyzing-sub">5 kritik seçimin, 109 başyapıtlık veri tabanımızdaki tür genleri, yönetmen vizyonları ve IMDb puanlarıyla harmanlanıyor.</p>
+          <div class="analyzing-steps-ticker">
+            <span class="ticker-item active">✦ Tercih ettiğin atmosfer inceleniyor</span>
+            <span class="ticker-item">✦ Kahramanının motivasyonu taranıyor</span>
+            <span class="ticker-item">✦ En kusursuz tek yapım eşleştiriliyor</span>
+          </div>
+        </div>
+
+        <!-- 4. Kader Filmi Açılış Kartı (Destiny Reveal Card) -->
+        <div class="story-destiny-card hidden" id="story-destiny-card"></div>
+      </div>
+    </section>
+
+    <!-- 5. Sinematik Film Ruleti Bölümü (Faz 4) -->
+    <section class="roulette-section discovery-panel hidden" id="roulette-section">
+      <div class="roulette-container">
+        <div class="roulette-header-row">
+          <div class="roulette-title-wrap">
+            <div class="roulette-pill-badge">
+              <span class="roulette-badge-dot"></span>
+              <span>SİNEMATİK FİLM RULETİ</span>
+            </div>
+            <h3 class="roulette-main-title">Kararsız mısın? Şans Makarasına Bırak!</h3>
+            <p class="roulette-subtitle-text">
+              Kategorini seç, makarayı döndür; sinematik sesler ve görsel şölen eşliğinde bu akşamın filmi karşına çıksın.
+            </p>
+          </div>
+          <div class="roulette-filter-pills" id="roulette-filter-pills">
+            <button class="roulette-filter-pill active" data-rfilter="all">Tümü (109 Yapım)</button>
+            <button class="roulette-filter-pill" data-rfilter="masterpiece">🏆 8.8+ Başyapıt</button>
+            <button class="roulette-filter-pill" data-rfilter="scifi">🚀 Bilim Kurgu</button>
+            <button class="roulette-filter-pill" data-rfilter="mind-bending">🧠 Zihin Açıcı</button>
+            <button class="roulette-filter-pill" data-rfilter="series">📺 Dizi Zirvesi</button>
+          </div>
+        </div>
+
+        <!-- Rulet Dönen Slot Sahnesi -->
+        <div class="roulette-stage">
+          <div class="roulette-pointer">▼</div>
+          <div class="roulette-window" id="roulette-window">
+            <div class="roulette-strip" id="roulette-strip"></div>
+          </div>
+          <div class="roulette-glow-fx"></div>
+        </div>
+
+        <!-- Eylem Butonu -->
+        <div class="roulette-controls">
+          <button class="btn-spin-roulette" id="btn-spin-roulette">
+            <span class="btn-spin-icon">🎰</span>
+            <span>Makarayı Döndür (Şansımı Dene)</span>
+          </button>
+        </div>
+
+        <!-- Kazanan Kartı Açılışı -->
+        <div class="roulette-reveal-card hidden" id="roulette-reveal-card"></div>
+      </div>
+    </section>
+
+    <!-- 6. IMDb Puan Tahmin Oyunu (Faz 5) -->
+    <section class="guess-game-section discovery-panel hidden" id="guess-game-section">
+      <div class="guess-container">
+        <div class="guess-header-row">
+          <div class="guess-title-wrap">
+            <div class="guess-pill-badge">
+              <span class="guess-badge-dot"></span>
+              <span>IMDB TAHMİN OYUNU</span>
+            </div>
+            <h3 class="guess-main-title">Puanını Tahmin Et, Sinefil Ligine Tırman!</h3>
+            <p class="guess-subtitle-text">
+              Ekrana çıkan yapımın IMDb puanını 0.1 hassasiyetle tahmin et; yakaladıkça puan kap.
+              5 tur sonunda rekorunu kır — Cine3D sana gerçek bir film insanı olup olmadığını söyleyecek!
+            </p>
+          </div>
+          <div class="guess-score-board">
+            <div class="guess-score-chip">
+              <span class="gsc-label">TUR</span>
+              <span class="gsc-val" id="guess-round-indicator">1/5</span>
+            </div>
+            <div class="guess-score-chip">
+              <span class="gsc-label">SKOR</span>
+              <span class="gsc-val" id="guess-total-score">0</span>
+            </div>
+            <div class="guess-score-chip gold">
+              <span class="gsc-label">REKOR</span>
+              <span class="gsc-val" id="guess-best-score">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="guess-difficulty-row">
+          <span class="guess-diff-label">ZORLUK:</span>
+          <button class="guess-diff-pill" data-diff="easy">😊 Kolay ×1 <span class="gdp-best">rekor —</span></button>
+          <button class="guess-diff-pill active" data-diff="medium">😐 Orta ×1.5 <span class="gdp-best">rekor —</span></button>
+          <button class="guess-diff-pill" data-diff="hard">🔥 Zor ×2 <span class="gdp-best">rekor —</span></button>
+        </div>
+
+        <div class="guess-stage">
+          <div class="guess-poster-wrap" id="guess-poster-wrap"></div>
+          <div class="guess-controls">
+            <div class="guess-movie-meta" id="guess-movie-meta"></div>
+            <div class="guess-timer-bar">
+              <div class="guess-timer-fill" id="guess-timer-fill"></div>
+              <span class="guess-timer-sec" id="guess-timer-sec">—</span>
+            </div>
+            <div class="guess-slider-wrap">
+              <span class="guess-slider-min">6.0</span>
+              <input type="range" id="guess-range-slider" class="guess-range-input" min="6" max="9.5" step="0.1" value="7.5" />
+              <span class="guess-slider-max">9.5</span>
+              <span class="guess-range-value" id="guess-range-value">7.5</span>
+            </div>
+            <div class="guess-jokers-row">
+              <span class="guess-jokers-label">🃏 Joker (<span id="guess-hints-left">2</span>):</span>
+              <button class="btn-guess-joker" id="btn-guess-hint-band" title="Puan aralığı ipucu — bu turun puanı yarıya düşer">🎯 Aralık İpucu</button>
+              <button class="btn-guess-joker" id="btn-guess-hint-director" title="Yönetmen + ödül ipucu — bu turun puanı yarıya düşer">🎬 Yönetmen İpucu</button>
+            </div>
+            <div class="guess-hint-chip hidden" id="guess-hint-chip"></div>
+            <div class="guess-actions">
+              <button class="btn-guess-submit" id="btn-guess-submit">
+                <span>🎯 Tahmini Kilitle</span>
+              </button>
+              <button class="btn-guess-new hidden" id="btn-guess-new-game">
+                <span>🎲 Yeni Oyun</span>
+              </button>
+            </div>
+            <div class="guess-result-box hidden" id="guess-result-box"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Birlikte Ne İzleyelim? (Çift / Arkadaş Karar Modu - Faz 6) -->
+    <section class="duo-match-section discovery-panel hidden" id="duo-match-section"></section>
+  </div><!-- /.discovery-panels-container -->
+</div><!-- /#discovery-hub-section -->
+
+    <!-- Kontrol ve Filtreleme Çubuğu -->
+    <section class="controls-section" id="controls-section">
+      <div class="controls-wrapper">
+        <!-- Canlı Senkronizasyon & İnternetten Çekme Barı -->
+        <div class="online-sync-bar">
+          <div class="online-status-info">
+            <span class="online-indicator-dot"></span>
+            <span class="online-status-text">Canlı İnternet Arama & IMDb Bağlantısı Aktif</span>
+          </div>
+          <div class="online-sync-actions">
+            <button class="btn-fetch-more" id="fetch-more-online-btn" title="İnternetten yeni filmler ve diziler getir">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <span>İnternetten Yeni Filmler/Diziler Çek</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Film Türleri Yatay Filtre Çubuğu -->
+        <div class="genre-filter-row" id="genre-filters"></div>
+
+        <!-- Süre & Format Filtreleme Çubuğu (Faz 1) -->
+        <div class="duration-filter-row" id="duration-filters">
+          <span class="duration-label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Süre:
+          </span>
+          <div class="duration-preset-container" id="duration-preset-buttons">
+            <button class="duration-pill active" data-duration="all">⏱️ Tümü</button>
+            <button class="duration-pill" data-duration="quick">⚡ &lt; 100 dk (Çerezlik)</button>
+            <button class="duration-pill" data-duration="standard">🎬 100-140 dk (Standart)</button>
+            <button class="duration-pill" data-duration="epic">🍿 140+ dk (Epik)</button>
+            <button class="duration-pill" data-duration="series">📺 Dizi / Sezon</button>
+          </div>
+        </div>
+
+        <!-- IMDb Puanı Filtreleri, Sıralama ve Görünüm Seçenekleri -->
+        <div class="sub-controls-row">
+          <div class="imdb-filter-group">
+            <span class="filter-label">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              IMDb Puanı:
+            </span>
+
+            <!-- Hızlı Butonlar -->
+            <div class="imdb-preset-container" id="imdb-preset-buttons"></div>
+
+            <!-- Hassas Kaydırıcı -->
+            <div class="imdb-slider-wrap">
+              <input 
+                type="range" 
+                id="imdb-range-slider" 
+                class="imdb-range-input" 
+                min="0" 
+                max="9.3" 
+                step="0.1" 
+                value="0" 
+              />
+              <span class="imdb-range-val" id="imdb-range-value">Tümü</span>
+            </div>
+          </div>
+
+          <div class="view-and-sort-group">
+            <!-- Sıralama -->
+            <div class="sort-select-wrap">
+              <select id="sort-select" class="sort-select">
+                <option value="imdb-desc">IMDb Puanı (Yüksekten Düşüğe)</option>
+                <option value="imdb-asc">IMDb Puanı (Düşükten Yükseğe)</option>
+                <option value="year-desc">Yapım Yılı (Yeniden Eskiye)</option>
+                <option value="title-asc">Film Adı (A - Z)</option>
+              </select>
+            </div>
+
+            <!-- Görünüm Modu Değiştirici (Izgara / 3D Karusel) -->
+            <div class="view-mode-toggle">
+              <button class="view-btn active" id="view-toggle-grid" title="Netflix Standart Izgara Görünümü">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Netflix Izgara
+              </button>
+              <button class="view-btn" id="view-toggle-coverflow" title="3 Boyutlu Sinematik Karusel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+                3D Karusel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ana İçerik -->
+    <main class="main-content">
+      <!-- 0. Sana Özel Öneriler (Cine3D Öneri Motoru — en az 3 izleme sonrası görünür) -->
+      <section class="recommendations-section hidden" id="recommendations-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-title-icon">🧬</span>
+            <span id="rec-title-text">Seni Tanıyoruz — Sana Özel Öneriler</span>
+          </h2>
+          <span class="filter-stats-text">İzlediklerin ve verdiğin puanlardan hesaplandı</span>
+        </div>
+        <div class="rec-scroller" id="rec-scroller"></div>
+      </section>
+
+      <!-- 1. Netflix / HBO / Disney / Prime Top 10 IMDb Başyapıtı Satırı -->
+      <section class="top10-section" id="top10-anchor">
+        <div class="section-header">
+          <h2 class="section-title" id="top10-section-title">
+            <span class="section-title-icon" id="top10-title-icon">👑</span>
+            <span id="top10-title-text">IMDb En Yüksek Puanlı Top 10 Başyapıt</span>
+          </h2>
+          <span class="filter-stats-text" id="top10-subtitle-text">Sinema Tarihinin Zirvesi</span>
+        </div>
+        <div class="top10-scroll-container" id="top10-container"></div>
+      </section>
+
+      <!-- 2. Standart Platform Kart Izgarası Bölümü -->
+      <section id="grid-view-section">
+        <div class="section-header" id="movies-anchor">
+          <h2 class="section-title" id="catalog-section-title">
+            <span class="section-title-icon" id="catalog-title-icon">🎬</span>
+            <span id="catalog-title-text">Film & Dizi Kataloğu</span>
+          </h2>
+          <div class="filter-stats-text" id="filter-stats-text"></div>
+        </div>
+
+        <!-- 3D Tilt Kart Izgarası -->
+        <div class="movies-grid" id="movies-grid"></div>
+      </section>
+
+      <!-- 3. 3D Sinematik Coverflow Karusel Bölümü (Geçiş Yapıldığında Gösterilir) -->
+      <section class="coverflow-section hidden" id="coverflow-view-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-title-icon">🌌</span>
+            3D Sinematik Coverflow Modu
+          </h2>
+          <span class="filter-stats-text">Ok tuşları veya tekerlek ile 3 boyutta gezinin</span>
+        </div>
+        <div id="coverflow-container"></div>
+      </section>
+    </main>
+
+    <!-- Alt Bilgi (Footer) -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="footer-brand" id="footer-brand-title">CINE3D NETFLIX</div>
+        <p class="footer-text" id="footer-brand-desc">
+          Bu platform, sinemaseverlere modern 3D derinlikli bir kullanıcı deneyimi sunmak amacıyla tasarlanmıştır. 
+          Veritabanındaki tüm filmler IMDb puanları, yapım yılları, tür kategorileri ve ayrıntılı film konularıyla 
+          birlikte listelenir.
+        </p>
+        <p class="footer-meta" id="footer-brand-meta">
+          © 2026 Cine3D Sinema Deneyimi • Three.js WebGL & Web Audio API Destekli
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Film Detay ve Fragman Modalı -->
+  <div class="movie-modal" id="movie-modal"></div>
+
+  <!-- İzleme Listesi Sağ Çekmecesi (Faz 3: Çok Sekmeli + Sinema Karnem) -->
+  <div class="drawer-backdrop" id="watchlist-backdrop"></div>
+  <aside class="watchlist-drawer" id="watchlist-drawer">
+    <div class="drawer-header">
+      <h3 class="drawer-title" id="drawer-main-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--netflix-red)" stroke="var(--netflix-red)" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span>Sinema Kulübüm</span>
+      </h3>
+      <button class="drawer-close-btn" id="watchlist-close" aria-label="Kapat">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Çekmece Sekmeleri: Listem / İzlediklerim / Sinema Karnem -->
+    <div class="drawer-tabs-bar" id="drawer-tabs-bar">
+      <button class="drawer-tab-btn active" data-drawer-tab="watchlist">
+        <span>📌 Listem</span>
+        <span class="drawer-tab-badge" id="drawer-tab-wl-count">0</span>
+      </button>
+      <button class="drawer-tab-btn" data-drawer-tab="watched">
+        <span>👁️ İzlediklerim</span>
+        <span class="drawer-tab-badge" id="drawer-tab-watched-count">0</span>
+      </button>
+      <button class="drawer-tab-btn" data-drawer-tab="stats">
+        <span>📊 Sinema Karnem</span>
+      </button>
+    </div>
+
+    <div class="drawer-body" id="watchlist-items-list"></div>
+  </aside>
+
+  <!-- Sinematik VS / Düello Alt Çubuğu (Faz 2) -->
+  <div class="vs-dock hidden" id="vs-dock">
+    <div class="vs-dock-inner">
+      <div class="vs-dock-header">
+        <div class="vs-dock-title">
+          <span class="vs-fire-icon">⚔️</span>
+          <span>SİNEMATİK DÜELLO</span>
+          <span class="vs-dock-count-badge" id="vs-dock-count">0/2</span>
+        </div>
+        <button class="vs-dock-close-btn" id="vs-dock-close" title="Kapat">✕</button>
+      </div>
+      <div class="vs-dock-slots">
+        <div class="vs-slot vs-slot-1" id="vs-slot-1">
+          <div class="vs-slot-empty">1. Film Seçin (Kartlardan ⚔️ VS'ye tıklayın)</div>
+        </div>
+        <div class="vs-slot-divider">
+          <span class="vs-badge-glow">VS</span>
+        </div>
+        <div class="vs-slot vs-slot-2" id="vs-slot-2">
+          <div class="vs-slot-empty">2. Film Seçin (Karşılaştırılacak rakip)</div>
+        </div>
+      </div>
+      <div class="vs-dock-actions">
+        <button class="btn-vs-launch disabled" id="vs-launch-btn">
+          <span>⚔️ DÜELLOYU BAŞLAT</span>
+        </button>
+        <button class="btn-vs-quick-random" id="vs-quick-random-btn" title="Rastgele 2 Başyapıt Seç">
+          <span>🎲 Rastgele VS</span>
+        </button>
+        <button class="btn-vs-tournament" id="open-tournament-btn" title="8 Filmlik Şampiyonluk Turnuvası (Faz 5)">
+          <span>🏆 Turnuva</span>
+        </button>
+        <button class="btn-vs-clear" id="vs-clear-btn" title="Listeyi Temizle">
+          <span>Temizle</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sinematik Düello Büyük Modalı (Faz 2) -->
+  <div class="vs-modal" id="vs-modal">
+    <div class="vs-modal-backdrop" id="vs-modal-backdrop"></div>
+    <div class="vs-modal-dialog">
+      <button class="vs-modal-close" id="vs-modal-close" aria-label="Kapat">✕</button>
+      <div class="vs-modal-content" id="vs-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Şampiyonluk Turnuvası Modalı (Faz 5) -->
+  <div class="tournament-modal" id="tournament-modal">
+    <div class="tournament-backdrop" id="tournament-backdrop"></div>
+    <div class="tournament-dialog">
+      <button class="tournament-close" id="tournament-close" aria-label="Kapat">✕</button>
+      <div class="tournament-content" id="tournament-body"></div>
+    </div>
+  </div>
+
+  <!-- Sinema Bileti Modalı (Faz 4: VIP Pass Generator) -->
+  <div class="ticket-modal" id="ticket-modal">
+    <div class="ticket-modal-backdrop" id="ticket-modal-backdrop"></div>
+    <div class="ticket-modal-dialog">
+      <button class="ticket-modal-close" id="ticket-modal-close" aria-label="Kapat">✕</button>
+      <div class="ticket-modal-header">
+        <div class="ticket-badge">🎟️ CINE3D VIP PASS</div>
+        <h3 class="ticket-modal-title">Özel Sinema Biletiniz Hazırlandı</h3>
+        <p class="ticket-modal-sub">Biletinizi cihazınıza görsel (PNG) olarak kaydedip arkadaşlarınızla paylaşabilirsiniz.</p>
+      </div>
+      <div class="ticket-canvas-container">
+        <canvas id="ticket-canvas" width="680" height="300"></canvas>
+      </div>
+      <div class="ticket-modal-actions">
+        <button class="btn btn-primary" id="btn-download-ticket">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Bileti PNG Olarak İndir
+        </button>
+        <button class="btn btn-secondary" id="btn-close-ticket">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Bildirimi -->
+  <div class="toast-popup" id="toast-notification"></div>
+
+  <!-- JavaScript Dosyaları (Three.js body sonunda: 603 KB'lik parse ilk boyamayı bloklamaz) -->
+  <script src="js/vendor/three.min.js?v=3.1"></script>
+  <script src="js/movies-data.js?v=3.1"></script>
+  <script src="js/movie-soundtracks.js?v=3.1"></script>
+  <script src="js/api-service.js?v=3.1"></script>
+  <script src="js/audio.js?v=3.1"></script>
+  <script src="js/three-scene.js?v=3.1"></script>
+  <script src="js/coverflow3d.js?v=3.1"></script>
+  <script src="js/story-adventure.js?v=3.1"></script>
+  <script src="js/app.js?v=3.1"></script>
+  <script src="js/features.js?v=3.1"></script>
+</body>
+</html>

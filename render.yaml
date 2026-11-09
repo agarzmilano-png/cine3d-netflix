@@ -1,0 +1,17 @@
+# OPSİYONEL: Bu dosya yalnızca projeyi Render.com üzerinde barındırmak isterseniz gerekir.
+# Yayın Cloudflare Tunnel üzerinden yapılıyorsa kullanılmaz (bkz. README -> Cloudflare Tüneli).
+services:
+  - type: web
+    name: cine3d-netflix
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render konteynerinde dışarıdan erişim için 0.0.0.0 şart.
+      - key: HOST
+        value: 0.0.0.0
+      # OMDb anahtarları panelden girilir, repoya yazılmaz.
+      - key: OMDB_API_KEYS
+        sync: false

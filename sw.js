@@ -1,0 +1,144 @@
+/**
+ * Cine3D Netflix Service Worker (PWA v3.1)
+ *
+ * - Alt dizinde barındırmayı destekler (ör. GitHub Pages: /cine3d-netflix/).
+ *   Tüm önbellek yolları service worker'ın kendi konumuna göre çözümlenir.
+ * - Gezinmelerde network-first: güncelleme sonrası eski arayüz görünmez.
+ * - `ignoreSearch`: asset'ler `?v=3.1` sorgusuyla istendiği için eşleşme sorunu yok.
+ * - Önbellekte karşılık bulunamayan isteklerde `respondWith(undefined)` hatası giderildi.
+ */
+const CACHE_VERSION = '3.1';
+const CACHE_NAME = `cine3d-cache-v${CACHE_VERSION}`;
+
+// Service worker'ın bulunduğu dizin (site kökü veya alt dizin)
+const BASE = new URL('./', self.location.href);
+const OFFLINE_URL = new URL('index.html', BASE).href;
+
+const PRECACHE_PATHS = [
+  '',
+  'index.html',
+  'manifest.json',
+  'css/style.css',
+  'css/modal.css',
+  'css/vs-duel.css',
+  'css/features.css',
+  'js/vendor/three.min.js',
+  'js/movies-data.js',
+  'js/movie-soundtracks.js',
+  'js/api-service.js',
+  'js/audio.js',
+  'js/three-scene.js',
+  'js/coverflow3d.js',
+  'js/story-adventure.js',
+  'js/app.js',
+  'js/features.js',
+  'icons/icon-192.png',
+  'icons/icon-512.png',
+  'icons/icon.svg'
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      // Zorunlu olmayan tek bir dosya 404 dönerse tüm kurulum düşmesin.
+      return Promise.allSettled(
+        PRECACHE_PATHS.map((p) => {
+          const url = new URL(p, BASE).href;
+          return cache.add(new Request(url, { cache: 'reload' })).catch((err) => {
+            console.warn('[SW] Precache atlandı:', url, err.message);
+          });
+        })
+      );
+    }).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.map((key) => (key !== CACHE_NAME ? caches.delete(key) : undefined))
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+// Önbelleğe alınmaması gereken istekler (API, ses/video akışı, harici medya)
+function isBypassed(req, url) {
+  return (
+    url.pathname.includes('/api/') ||
+    url.pathname.includes('/audio/') ||
+    /\.(mp3|wav|ogg|m4a|mp4|webm)$/i.test(url.pathname) ||
+    url.hostname.includes('youtube.com') ||
+    url.hostname.includes('youtube-nocookie.com') ||
+    url.hostname.includes('googlevideo.com') ||
+    req.headers.has('range')
+  );
+}
+
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const fresh = await fetch(request);
+    if (fresh && fresh.status === 200) {
+      cache.put(request, fresh.clone()).catch(() => {});
+    }
+    return fresh;
+  } catch (err) {
+    const cached = await cache.match(request, { ignoreSearch: true });
+    if (cached) return cached;
+    const offline = await cache.match(OFFLINE_URL, { ignoreSearch: true });
+    if (offline) return offline;
+    return new Response('Çevrimdışısınız ve bu sayfa önbellekte yok.', {
+      status: 503,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+  }
+}
+
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(request, { ignoreSearch: true });
+
+  const network = fetch(request)
+    .then((res) => {
+      // Yalnızca kendi origin'imizden gelen 200 yanıtları sakla (opaque 0 hariç).
+      if (res && res.status === 200 && new URL(request.url).origin === self.location.origin) {
+        cache.put(request, res.clone()).catch(() => {});
+      }
+      return res;
+    })
+    .catch(() => null);
+
+  if (cached) return cached;
+
+  const fresh = await network;
+  if (fresh) return fresh;
+
+  return new Response('Kaynak yüklenemedi.', {
+    status: 504,
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+  });
+}
+
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin && url.protocol !== 'https:') return;
+  if (isBypassed(req, url)) return;
+
+  // Sayfa gezinmeleri: her zaman önce ağ (taze index.html), sonra önbellek.
+  if (req.mode === 'navigate') {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  event.respondWith(staleWhileRevalidate(req));
+});
+
+// Yeni sürüm hazır olduğunda açık sekmeleri bilgilendir (arayüz isterse kullanır).
+self.addEventListener('message', (event) => {
+  if (event.data === 'SKIP_WAITING') self.skipWaiting();
+});

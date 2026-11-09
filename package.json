@@ -1,0 +1,14 @@
+{
+  "name": "cine3d-netflix",
+  "version": "3.0.0",
+  "description": "Cine3D Netflix - 3D Sinematik Film & Dizi Keşif Platformu (Three.js + OMDb + JustWatch entegrasyonlu)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "license": "MIT",
+  "private": true
+}

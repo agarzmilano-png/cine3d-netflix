@@ -1,0 +1,1597 @@
+/* ==========================================================================
+   CINE3D NETFLIX - FİLM DETAY & FRAGMAN MODAL STİLLERİ
+   IMDb Puan Vitrini, Film Konusu, Türler ve Fragman Oynatıcı
+   ========================================================================== */
+
+.movie-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+}
+
+.movie-modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 12, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.modal-window {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 960px;
+  max-height: 90vh;
+  background: #141419;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(229, 9, 20, 0.25);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  scrollbar-width: thin;
+  scrollbar-color: var(--netflix-red) rgba(255, 255, 255, 0.05);
+}
+
+.movie-modal.open .modal-window {
+  transform: scale(1) translateY(0);
+}
+
+.modal-window::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-window::-webkit-scrollbar-thumb {
+  background: var(--netflix-red);
+  border-radius: 4px;
+}
+
+/* Kapat Butonu */
+.modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(15, 15, 20, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+  transition: var(--transition);
+  backdrop-filter: blur(8px);
+}
+
+.modal-close-btn:hover {
+  background: var(--netflix-red);
+  border-color: var(--netflix-red);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 0 16px var(--netflix-red-glow);
+}
+
+/* Üst Medya Başlığı (Fragman / Backdrop) */
+.modal-media-header {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background: #000;
+  overflow: hidden;
+}
+
+.modal-backdrop-img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.modal-play-trailer-trigger {
+  background: transparent;
+  border: none;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition);
+}
+
+.play-pulse-circle {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--netflix-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7);
+  animation: trailerPulse 2s infinite;
+  transition: var(--transition);
+}
+
+.modal-play-trailer-trigger:hover .play-pulse-circle {
+  transform: scale(1.15);
+  background: #ff1e27;
+}
+
+.modal-play-trailer-trigger span {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes trailerPulse {
+  0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); }
+  70% { box-shadow: 0 0 0 22px rgba(229, 9, 20, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
+}
+
+.trailer-iframe-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+}
+
+.trailer-iframe-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Fragman Yükleniyor Kutusu */
+.trailer-loading-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(180deg, #181822 0%, #0d0d12 100%);
+  text-align: center;
+  padding: 20px;
+}
+
+/* Fragman Alt Şeridi (Olası YouTube Telif / Embed Engellerine Karşı) */
+.trailer-fallback-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 10, 14, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.strip-link {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(229, 9, 20, 0.25);
+  border: 1px solid var(--border-red);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.strip-link:hover {
+  background: var(--netflix-red);
+  color: #fff;
+  box-shadow: 0 0 10px var(--netflix-red-glow);
+}
+
+/* Tam Boyutlu Fragman Fallback Kutusu */
+.trailer-fallback-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(229, 9, 20, 0.15) 0%, rgba(14, 14, 18, 0.95) 100%);
+  padding: 24px;
+  text-align: center;
+}
+
+/* Modal İçerik Gövdesi */
+.modal-body-content {
+  padding: 32px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.modal-grid-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Sol Kolon: Poster ve IMDb Rozeti */
+.modal-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.modal-poster-wrap {
+  width: 100%;
+  height: 380px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+}
+
+.modal-poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* IMDb Süper Vitrini */
+.modal-imdb-showcase {
+  background: linear-gradient(135deg, rgba(245, 197, 24, 0.12), rgba(20, 20, 26, 0.8));
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.imdb-score-circle {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: var(--imdb-gold);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px var(--imdb-gold-glow);
+}
+
+.imdb-score-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem;
+  line-height: 0.9;
+  font-weight: 900;
+}
+
+.imdb-score-label {
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.imdb-votes-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.stars-row {
+  color: var(--imdb-gold);
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.imdb-quality {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+/* --- MODAL IMDb PUANI ALTINDAKİ YAYIN PLATFORMLARI VİTRİNİ --- */
+.modal-streaming-showcase {
+  background: rgba(20, 20, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.modal-streaming-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.streaming-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulseGreen 2s infinite ease-in-out;
+}
+
+.streaming-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.modal-streaming-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-plat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modal-plat-btn:hover {
+  transform: translateX(4px) scale(1.02);
+}
+
+.plat-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plat-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+}
+
+.plat-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  margin-left: 12px;
+}
+
+.plat-action-hint {
+  font-size: 0.65rem;
+  opacity: 0.8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plat-service-name {
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.plat-arrow-icon {
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.modal-plat-btn:hover .plat-arrow-icon {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+/* Sağ Kolon: Başlık, Konu, Türler, Künye */
+.modal-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.modal-title-bar {
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 12px;
+}
+
+.modal-title {
+  font-family: 'Bebas Neue', 'Outfit', sans-serif;
+  font-size: 2.8rem;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.modal-original-title {
+  font-size: 1.05rem;
+  color: var(--imdb-gold);
+  font-weight: 500;
+}
+
+.modal-pill-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modal-duration-tag, .modal-age-tag, .modal-awards-tag {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  font-size: 0.84rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  color: #d1d1db;
+}
+
+.modal-awards-tag {
+  border-color: rgba(245, 197, 24, 0.4);
+  color: var(--imdb-gold);
+  background: rgba(245, 197, 24, 0.08);
+  font-weight: 600;
+}
+
+/* Film Türleri */
+.modal-genre-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.genre-box-label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.genre-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-genre-pill {
+  background: rgba(229, 9, 20, 0.15);
+  border: 1px solid var(--border-red);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-genre-pill:hover {
+  background: var(--netflix-red);
+  box-shadow: 0 0 12px var(--netflix-red-glow);
+  transform: translateY(-2px);
+}
+
+/* Film Konusu & Hikayesi (Vurgulu Alan) */
+.modal-plot-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+.section-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.section-heading svg {
+  color: var(--netflix-red);
+}
+
+.modal-plot-text {
+  font-size: 0.98rem;
+  color: #d8d8e5;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.modal-quote-box {
+  position: relative;
+  background: rgba(245, 197, 24, 0.06);
+  border-left: 3px solid var(--imdb-gold);
+  padding: 10px 16px 10px 32px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.quote-symbol {
+  position: absolute;
+  top: -6px;
+  left: 8px;
+  font-family: Georgia, serif;
+  font-size: 2.2rem;
+  color: var(--imdb-gold);
+  opacity: 0.6;
+}
+
+.quote-content {
+  font-style: italic;
+  font-size: 0.94rem;
+  color: #e5e5f0;
+}
+
+/* Künye */
+.modal-credits {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-glass);
+  padding-top: 16px;
+}
+
+.credit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.credit-label {
+  color: var(--text-dim);
+  min-width: 130px;
+  font-weight: 600;
+  padding-top: 4px;
+}
+
+.credit-value {
+  color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.credit-pills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.credit-pill-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f1f5f9;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.credit-pill-btn:hover {
+  background: rgba(229, 9, 20, 0.15);
+  border-color: rgba(229, 9, 20, 0.5);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.25);
+}
+
+.credit-pill-btn:active {
+  transform: translateY(0);
+}
+
+/* Buton Sırası */
+.modal-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#modal-watchlist-btn.active {
+  background: var(--netflix-red);
+  color: #fff;
+  border-color: var(--netflix-red);
+  box-shadow: 0 4px 16px var(--netflix-red-glow);
+}
+
+/* Responsive Modal */
+@media (max-width: 820px) {
+  .modal-grid-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .modal-col-left {
+    align-items: center;
+  }
+  .modal-poster-wrap {
+    width: 220px;
+    height: 320px;
+  }
+  .modal-imdb-showcase {
+    width: 100%;
+    max-width: 320px;
+  }
+  .modal-streaming-showcase {
+    width: 100%;
+    max-width: 320px;
+  }
+  .modal-media-header {
+    height: 250px;
+  }
+  .modal-title {
+    font-size: 2.2rem;
+  }
+}
+
+/* ==========================================================================
+   MODAL STREAMING PLATFORMS SHOWCASE (IMDb Puanının Hemen Altı)
+   ========================================================================== */
+.modal-streaming-showcase {
+  width: 100%;
+  margin-top: 14px;
+  background: rgba(25, 25, 32, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.modal-streaming-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-streaming-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--imdb-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.modal-streaming-title svg {
+  width: 16px;
+  height: 16px;
+}
+
+.modal-streaming-badge {
+  font-size: 0.7rem;
+  background: rgba(245, 197, 24, 0.15);
+  color: var(--imdb-gold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.modal-plat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-plat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.plat-icon-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plat-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.plat-name {
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.plat-watch-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  opacity: 0.9;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modal-plat-btn:hover .plat-watch-action {
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+}
+
+/* Modal İçi "TR Yayıncısı Bulunamadı" ve Küresel Yayıncı Bölümü */
+.badge-warn {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+.modal-no-tr-box {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.no-tr-status-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.no-tr-warn-icon {
+  font-size: 1.15rem;
+}
+
+.no-tr-warn-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #f87171;
+  letter-spacing: 0.3px;
+}
+
+.no-tr-warn-desc {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modal-global-section {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+  padding-top: 10px;
+}
+
+.modal-global-header {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--imdb-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   MODAL TEMA UYARLAMALARI (DISNEY+, HBO MAX, PRIME VIDEO, NETFLIX)
+   ========================================================================== */
+
+/* Disney+ Modalı */
+[data-theme="disney"] .modal-window {
+  border-radius: 24px;
+  border: 2px solid rgba(0, 210, 255, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(0, 210, 255, 0.35);
+  background: #060b1c;
+}
+
+[data-theme="disney"] .modal-btn-play {
+  border-radius: 50px;
+  background: linear-gradient(135deg, #00d2ff 0%, #0284c7 100%);
+  color: #040714;
+  font-weight: 800;
+}
+
+[data-theme="disney"] .modal-btn-close-action,
+[data-theme="disney"] .modal-btn-watchlist {
+  border-radius: 50px;
+}
+
+/* HBO Max Modalı */
+[data-theme="hbo"] .modal-window {
+  border-radius: 10px;
+  border: 1px solid rgba(153, 69, 255, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(153, 69, 255, 0.35);
+  background: #0a0714;
+}
+
+[data-theme="hbo"] .modal-title {
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+[data-theme="hbo"] .modal-btn-play {
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7928ca 0%, #9945ff 100%);
+  color: #fff;
+  letter-spacing: 0.8px;
+}
+
+/* Prime Video Modalı */
+[data-theme="prime"] .modal-window {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 168, 225, 0.35);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(0, 168, 225, 0.35);
+  background: #090e18;
+}
+
+[data-theme="prime"] .modal-btn-play {
+  border-radius: 8px;
+  background: #00a8e1;
+  color: #050b14;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   ORİJİNAL DİZİ & FİLM MÜZİKLERİ (OST) OYNATICI ŞERİDİ
+   ========================================================================== */
+.modal-ost-slot {
+  width: 100%;
+  margin-top: 18px;
+}
+
+.modal-ost-ribbon {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, rgba(24, 24, 32, 0.96) 0%, rgba(38, 14, 20, 0.94) 50%, rgba(18, 18, 24, 0.96) 100%);
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(229, 9, 20, 0.2);
+  animation: ostSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+@keyframes ostSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Plak (Vinyl Disc) */
+.ost-vinyl-disc {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #222 25%, #111 65%, #050505 100%);
+  border: 2px solid #333;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ost-vinyl-disc.spinning {
+  animation: spinVinyl 5s linear infinite;
+}
+
+@keyframes spinVinyl {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.ost-vinyl-grooves {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.ost-vinyl-art {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  z-index: 2;
+}
+
+.ost-vinyl-hole {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #141419;
+  border-radius: 50%;
+  border: 1px solid #555;
+  z-index: 3;
+}
+
+/* Meta Bilgileri */
+.ost-meta-info {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ost-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(229, 9, 20, 0.2);
+  color: #ff4d58;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  width: fit-content;
+}
+
+.ost-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff4d58;
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+}
+
+.ost-track-title {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.ost-composer-row {
+  color: #a3a3b2;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.ost-composer-row strong {
+  color: #f5c518;
+}
+
+.ost-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  margin: 2px 0 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Ses Dalgaları (Equalizer) */
+.ost-sound-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+  margin-top: 4px;
+}
+
+.ost-sound-wave .bar {
+  width: 3px;
+  background: linear-gradient(to top, var(--netflix-red), #f5c518);
+  border-radius: 2px;
+  animation: eqBounce 1.2s ease-in-out infinite alternate;
+}
+
+.ost-sound-wave .bar-1 { height: 4px; animation-delay: 0.1s; }
+.ost-sound-wave .bar-2 { height: 14px; animation-delay: 0.3s; }
+.ost-sound-wave .bar-3 { height: 8px; animation-delay: 0.2s; }
+.ost-sound-wave .bar-4 { height: 16px; animation-delay: 0.4s; }
+.ost-sound-wave .bar-5 { height: 10px; animation-delay: 0.15s; }
+.ost-sound-wave .bar-6 { height: 15px; animation-delay: 0.35s; }
+.ost-sound-wave .bar-7 { height: 6px; animation-delay: 0.25s; }
+.ost-sound-wave .bar-8 { height: 12px; animation-delay: 0.45s; }
+
+@keyframes eqBounce {
+  0% { height: 3px; }
+  100% { height: 16px; }
+}
+
+/* Player Progress & Kontroller */
+.ost-player-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.ost-timeline-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.ost-timeline-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--netflix-red), #f5c518);
+  border-radius: 3px;
+  transition: width 0.15s linear;
+}
+
+.ost-timer-text {
+  font-size: 0.75rem;
+  color: #a3a3b2;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  min-width: 75px;
+  text-align: right;
+}
+
+.ost-play-pause-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ost-play-pause-btn:hover {
+  background: var(--netflix-red);
+  border-color: var(--netflix-red);
+  transform: scale(1.08);
+}
+
+/* Player & Kontroller */
+.ost-controls-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.ost-extra-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ost-external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.ost-external-link:hover {
+  background: rgba(229, 9, 20, 0.25);
+  border-color: var(--netflix-red);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.ost-ribbon-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #a3a3b2;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ost-ribbon-close-btn:hover {
+  background: rgba(229, 9, 20, 0.25);
+  border-color: var(--netflix-red);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Modal Media Header İçinde Canlı OST Banner'ı */
+.ost-media-now-playing-banner {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(14, 14, 20, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  border-radius: 10px;
+  padding: 8px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+}
+
+.ost-media-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ost-banner-label {
+  color: var(--netflix-red);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.ost-banner-track {
+  color: #fff;
+}
+
+.ost-banner-sep {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ost-banner-composer {
+  color: #e5a00d;
+}
+
+.ost-media-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.ost-media-back-btn:hover {
+  background: var(--netflix-red);
+  border-color: var(--netflix-red);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .modal-ost-ribbon {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ost-controls-box {
+    width: 100%;
+    align-items: stretch;
+  }
+  .ost-media-now-playing-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+  }
+  .ost-media-banner-left {
+    white-space: normal;
+    font-size: 0.78rem;
+  }
+}
+
+/* =========================================================================
+   KİŞİSEL FİLM NOTU & İNCELEME (FAZ 6)
+   ========================================================================= */
+.modal-review-section {
+  margin-top: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.modal-review-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(18, 18, 26, 0.75) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 18px 20px;
+  backdrop-filter: blur(12px);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  transition: border-color 0.25s ease;
+}
+
+.modal-review-box:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.review-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.review-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.review-box-icon {
+  font-size: 1.2rem;
+}
+
+.review-date-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Kayıtlı İnceleme Kartı */
+.saved-review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.saved-review-tag {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.saved-review-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  margin: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.saved-review-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-review-sm {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-review-sm:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-review-sm.danger {
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.btn-review-sm.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #fff;
+}
+
+/* Düzenleyici Formu */
+.review-editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-tags-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rtp-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.rtp-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.review-tag-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.review-tag-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.review-tag-chip.active {
+  background: linear-gradient(135deg, #e50914, #b20710);
+  border-color: #e50914;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(229, 9, 20, 0.4);
+}
+
+.review-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(10, 10, 15, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #fff;
+  resize: vertical;
+  min-height: 72px;
+  max-height: 200px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-textarea:focus {
+  border-color: var(--netflix-red, #e50914);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2);
+}
+
+.review-textarea::placeholder {
+  color: #64748b;
+}
+
+.review-editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review-char-count {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.review-footer-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-review-cancel {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-review-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.btn-review-save {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: 1px solid #10b981;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-review-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+}
+
+/* Çekmece İnceleme Rozeti */
+.wl-review-snippet {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin-top: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wl-review-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+

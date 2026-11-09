@@ -1,0 +1,20 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Cloudflare tünel ikilisi ve yerel yapılandırma (asla repoya girmesin)
+cloudflared.exe
+cloudflared
+.cloudflared/
+cloudflared-*.log
+tunnel-url.txt
+
+# Ortam değişkenleri / API anahtarları
+.env
+.env.local
+
+# Yerel test ve yedek dosyaları
+chrome-*-profile/
+test_*.js
+server.js.bak
