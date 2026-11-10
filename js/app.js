@@ -4239,6 +4239,95 @@ class Cine3DApp {
   }
 
   // --- ORİJİNAL DİZİ & FİLM MÜZİĞİ (OST) YÖNETİMİ ---
+
+  /** Kütüphane OST'leri CDN'den (Pages paketinde ses yok), yerelde sunucudan servis edilir. */
+  getAudioBaseUrl() {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') return '';
+    return 'https://cdn.jsdelivr.net/gh/agarzmilano-png/cine3d-netflix@master/';
+  }
+
+  /**
+   * Deezer araması — JSONP ile (CORS engeli yok).
+   * Sunucudaki /api/stream-ost uç noktasının tarayıcıdaki karşılığı.
+   */
+  deezerSearch(query) {
+    return new Promise((resolve) => {
+      const cb = `dzcb_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
+      const script = document.createElement('script');
+      let done = false;
+      const finish = (value) => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        try { delete window[cb]; } catch (e) { window[cb] = undefined; }
+        script.remove();
+        resolve(value);
+      };
+      const timer = setTimeout(() => finish(null), 9000);
+      window[cb] = (data) => finish(data);
+      script.onerror = () => finish(null);
+      script.src = `https://api.deezer.com/search?q=${encodeURIComponent(query)}&limit=10&output=jsonp&callback=${cb}`;
+      document.head.appendChild(script);
+    });
+  }
+
+  /** Deezer'dan 30 sn'lik resmî önizleme bulur (başlık/albüm doğrulamalı). */
+  async resolveDeezerOst(movie, curatedTrack = '', curatedComposer = '') {
+    const fold = (s) => String(s || '')
+      .replace(/[ıİ]/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+    const titles = [movie.originalTitle, movie.title].filter(Boolean);
+    const keys = [...titles, curatedTrack]
+      .map(fold)
+      .filter((k) => k.length > 2 && k.split(' ').length <= 6);
+    const artistKey = curatedComposer ? fold(curatedComposer) : '';
+
+    const queries = [];
+    for (const t of titles) {
+      if (curatedTrack) queries.push(`${t} ${curatedTrack}`);
+      queries.push(`${t} soundtrack`);
+      if (curatedComposer) queries.push(`${t} ${curatedComposer}`);
+    }
+
+    for (const q of queries) {
+      const data = await this.deezerSearch(q);
+      const list = (data && data.data) || [];
+      const hit = list.find((x) => {
+        if (!x.preview) return false;
+        const hay = fold(`${x.title || ''} ${(x.album && x.album.title) || ''} ${(x.artist && x.artist.name) || ''}`);
+        const ok = keys.some((k) => hay.includes(k)) || (artistKey && hay.includes(artistKey));
+        return ok;
+      });
+      if (hit) {
+        return {
+          preview: hit.preview,
+          title: hit.title,
+          artist: (hit.artist && hit.artist.name) || '',
+          album: (hit.album && hit.album.title) || ''
+        };
+      }
+    }
+
+    // Son çare (sunucudaki eski davranış): doğrulanmış eşleşme yoksa
+    // ilk önizlemeli sonucu çal — hiç müzik çalmamasındansa yaklaşık eşleşme.
+    if (titles.length) {
+      const last = await this.deezerSearch(`${titles[0]} soundtrack`);
+      const any = (last && last.data || []).find((x) => x.preview);
+      if (any) {
+        return {
+          preview: any.preview,
+          title: any.title,
+          artist: (any.artist && any.artist.name) || '',
+          album: (any.album && any.album.title) || '',
+          loose: true
+        };
+      }
+    }
+    return null;
+  }
+
   /**
    * İnternetten çekilen yapımlar için OST çözücü.
    * Apple iTunes Search API CORS'a açık olduğu için tarayıcıdan doğrudan
@@ -4348,17 +4437,23 @@ class Cine3DApp {
     // 1. OST verisini al
     const curated = (typeof MOVIE_SOUNDTRACKS !== 'undefined') ? MOVIE_SOUNDTRACKS[movie.id] : null;
     let ostData;
-    let onlineOst = null;
 
     if (curated) {
       ostData = { ...curated };
     }
 
-    // Ses kaynağı: Apple Music / iTunes resmî önizlemesi (orijinal kayıt, 30 sn).
-    // Küratörlü parça adı varsa sorguya eklenir → doğru parça bulunur.
-    onlineOst = await this.resolveOnlineOst(movie, curated ? curated.track : '', curated ? curated.composer : '');
+    // Ses kaynakları (kullanıcının eski sistemiyle aynı sıra):
+    //  1) yerel OST arşivi (110 parça, CDN)
+    //  2) Apple Music / iTunes resmî önizlemesi
+    //  3) Deezer akışı (sunucudaki /api/stream-ost karşılığı, JSONP ile)
+    const localAudioUrl = `${this.getAudioBaseUrl()}audio/ost/${movie.id}.mp3`;
 
-    if (!onlineOst) {
+    const [onlineOst, deezerOst] = await Promise.all([
+      this.resolveOnlineOst(movie, curated ? curated.track : '', curated ? curated.composer : ''),
+      this.resolveDeezerOst(movie, curated ? curated.track : '', curated ? curated.composer : '')
+    ]);
+
+    if (!curated && !onlineOst && !deezerOst) {
       if (btn) btn.classList.remove('loading');
       if (txt) txt.textContent = 'Tema Müziği';
       this.showToast(`🎵 "${movie.title}" için OST kaydı bulunamadı.`, 'info');
@@ -4367,19 +4462,21 @@ class Cine3DApp {
 
     if (!ostData) {
       ostData = {
-        track: onlineOst.trackTitle,
-        composer: onlineOst.composer,
+        track: (onlineOst && onlineOst.trackTitle) || (deezerOst && deezerOst.title) || `${movie.title} Tema`,
+        composer: (onlineOst && onlineOst.composer) || (deezerOst && deezerOst.artist) || 'Film Müziği',
         youtubeId: '',
-        description: 'Apple Music resmî önizleme (30 sn).'
+        description: 'Resmî önizleme (30 sn).'
       };
     }
 
-    // Sunucu modunda canlı akış varsa o da denenir (Node sunucusu + Deezer)
+    // Sunucu modunda canlı akış varsa en başta denenir
     const streamAudioUrl = `api/stream-ost?id=${encodeURIComponent(movie.id)}&title=${encodeURIComponent(movie.title)}&originalTitle=${encodeURIComponent(movie.originalTitle || '')}&composer=${encodeURIComponent(ostData.composer || movie.director || '')}`;
 
     const candidates = [];
     if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
-    candidates.push(onlineOst.audioUrl);
+    if (curated) candidates.push(localAudioUrl);
+    if (onlineOst) candidates.push(onlineOst.audioUrl);
+    if (deezerOst) candidates.push(deezerOst.preview);
 
     const watchUrl = ostData.youtubeId
       ? `https://www.youtube.com/watch?v=${ostData.youtubeId}`

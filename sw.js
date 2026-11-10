@@ -7,7 +7,7 @@
  * - `ignoreSearch`: asset'ler `?v=3.1` sorgusuyla istendiği için eşleşme sorunu yok.
  * - Önbellekte karşılık bulunamayan isteklerde `respondWith(undefined)` hatası giderildi.
  */
-const CACHE_VERSION = '3.3';
+const CACHE_VERSION = '4.0';
 const CACHE_NAME = `cine3d-cache-v${CACHE_VERSION}`;
 
 // Service worker'ın bulunduğu dizin (site kökü veya alt dizin)
@@ -98,29 +98,25 @@ async function networkFirst(request) {
   }
 }
 
-async function staleWhileRevalidate(request) {
+// Aynı kökenli varlıklar için network-first + önbellek yedeği.
+// (Eskiden stale-while-revalidate idi; güncelleme sonrası kullanıcılar bir süre
+//  eski JS ile kalıyordu → "OST çalışmıyor" gibi görünen hatalar.)
+async function networkFirstAsset(request) {
   const cache = await caches.open(CACHE_NAME);
-  const cached = await cache.match(request, { ignoreSearch: true });
-
-  const network = fetch(request)
-    .then((res) => {
-      // Yalnızca kendi origin'imizden gelen 200 yanıtları sakla (opaque 0 hariç).
-      if (res && res.status === 200 && new URL(request.url).origin === self.location.origin) {
-        cache.put(request, res.clone()).catch(() => {});
-      }
-      return res;
-    })
-    .catch(() => null);
-
-  if (cached) return cached;
-
-  const fresh = await network;
-  if (fresh) return fresh;
-
-  return new Response('Kaynak yüklenemedi.', {
-    status: 504,
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-  });
+  try {
+    const fresh = await fetch(request);
+    if (fresh && fresh.status === 200) {
+      cache.put(request, fresh.clone()).catch(() => {});
+    }
+    return fresh;
+  } catch (err) {
+    const cached = await cache.match(request, { ignoreSearch: true });
+    if (cached) return cached;
+    return new Response('Kaynak yüklenemedi.', {
+      status: 504,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
+  }
 }
 
 self.addEventListener('fetch', (event) => {
@@ -137,7 +133,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith(staleWhileRevalidate(req));
+  event.respondWith(networkFirstAsset(req));
 });
 
 // Yeni sürüm hazır olduğunda açık sekmeleri bilgilendir (arayüz isterse kullanır).
