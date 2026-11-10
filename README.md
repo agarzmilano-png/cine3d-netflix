@@ -121,8 +121,8 @@ node scripts/fix-ost.js
 
 Site, tarayıcıdan **uygulama olarak yüklenebilir** (ana ekrana ekleme) ve çevrimdışı açılır.
 
-- Manifest:  —  görünüm, 192/512 px + **maskable** ikon
-- Service worker:  — kabuk önbelleği, ağ-öncelikli varlıklar, çevrimdışı fallback
+- Manifest: `manifest.json` — `standalone` görünüm, 192/512 px + **maskable** ikon
+- Service worker: `sw.js` — kabuk önbelleği, ağ-öncelikli varlıklar, çevrimdışı fallback
 - Kurulum: üst çubuktaki 📲 butonu (Chrome/Edge gerçek kurulum penceresi; iOS Safari için talimat gösterir)
 
 ### OMDb anahtarı
