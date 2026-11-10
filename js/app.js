@@ -5576,22 +5576,40 @@ class Cine3DApp {
       }
 
       const prefs = this.getWatchlistPrefs();
+
+      // DÜZELTME (R006b): watchlist içinde { id } biçiminde (eski kayıt / farklı akış)
+      // girişler olabiliyor; şablon title/imdbRating/genres beklediği için öğeler
+      // önce katalogdaki film objesine çözülür. Aksi halde "undefined ⭐ undefined"
+      // görünüyor ve tür listesi boş kaldığı için filtre "Tümü"ye düşüyordu.
+      const resolvedItems = (this.watchlist || [])
+        .map(w => {
+          if (!w) return null;
+          if (w.id == null) return null;
+          // Zaten dolu film objesi mi?
+          if (w.title && w.imdbRating != null) return w;
+          const rawId = (typeof w === 'string') ? w : w.id;
+          return this.movies.find(m => m.id === rawId) || null;
+        })
+        .filter(Boolean);
+
       const allGenres = [...new Set(
-        this.watchlist.flatMap(m => (Array.isArray(m.genres) ? m.genres : []))
+        resolvedItems.flatMap(m => (Array.isArray(m.genres) ? m.genres : []))
       )].sort((a, b) => a.localeCompare(b, 'tr'));
-      // Kayıtlı tür listede yoksa "Tümü"ye düş
+
+      // Kayıtlı tür gerçekten listede yoksa "Tümü"ye düş (select sıfırlanması buradan geliyordu)
       if (prefs.genre !== 'all' && !allGenres.includes(prefs.genre)) {
         prefs.genre = 'all';
         this.saveWatchlistPrefs(prefs);
       }
-      const viewList = this.getWatchlistView(this.watchlist, prefs);
+
+      const viewList = this.getWatchlistView(resolvedItems, prefs);
 
       const controlsHtml = `
         <div class="wl-controls">
           <label class="wl-control">
             <span class="wl-control-label">Tür</span>
             <select id="wl-genre-filter" class="wl-select" aria-label="İzleme listesini türe göre filtrele">
-              <option value="all"${prefs.genre === 'all' ? ' selected' : ''}>Tümü (${this.watchlist.length})</option>
+              <option value="all"${prefs.genre === 'all' ? ' selected' : ''}>Tümü (${resolvedItems.length})</option>
               ${allGenres.map(g => `<option value="${escapeHtmlText(g)}"${prefs.genre === g ? ' selected' : ''}>${escapeHtmlText(g)}</option>`).join('')}
             </select>
           </label>
@@ -5604,7 +5622,7 @@ class Cine3DApp {
               <option value="title"${prefs.sort === 'title' ? ' selected' : ''}>Alfabetik (A-Z)</option>
             </select>
           </label>
-          <span class="wl-control-count">${viewList.length}/${this.watchlist.length}</span>
+          <span class="wl-control-count">${viewList.length}/${resolvedItems.length}</span>
         </div>
       `;
 
