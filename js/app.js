@@ -24,6 +24,15 @@ function escapeHtmlText(value) {
     .replace(/'/g, '&#39;');
 }
 
+// Inline onerror JS'i için başlık kaçış yardımcısı: kesme işareti olan
+// başlıklar (ör. "Ocean's Eleven") JS dizesini kırıyordu; features.js'teki
+// posterFallback deseniyle aynı davranış.
+function posterFallbackTitle(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'");
+}
+
 const PLATFORM_HUBS = {
   disney: [
     {
@@ -1754,7 +1763,7 @@ class Cine3DApp {
       if (m1) {
         slot1.className = 'vs-slot vs-slot-1 filled';
         slot1.innerHTML = `
-          <img src="${m1.posterUrl}" class="vs-slot-thumb" alt="${m1.title}" onerror="this.src=getFallbackPoster('${m1.title}', '${m1.genres[0]}', '${m1.imdbRating}');" />
+          <img src="${m1.posterUrl}" class="vs-slot-thumb" alt="${escapeHtmlText(m1.title)}" onerror="this.src=getFallbackPoster('${posterFallbackTitle(m1.title)}', '${posterFallbackTitle(m1.genres[0])}', '${m1.imdbRating}');" />
           <div class="vs-slot-meta">
             <div class="vs-slot-title" title="${m1.title}">${m1.title}</div>
             <div class="vs-slot-info">★ ${m1.imdbRating} • ${m1.year}</div>
@@ -1773,7 +1782,7 @@ class Cine3DApp {
       if (m2) {
         slot2.className = 'vs-slot vs-slot-2 filled';
         slot2.innerHTML = `
-          <img src="${m2.posterUrl}" class="vs-slot-thumb" alt="${m2.title}" onerror="this.src=getFallbackPoster('${m2.title}', '${m2.genres[0]}', '${m2.imdbRating}');" />
+          <img src="${m2.posterUrl}" class="vs-slot-thumb" alt="${escapeHtmlText(m2.title)}" onerror="this.src=getFallbackPoster('${posterFallbackTitle(m2.title)}', '${posterFallbackTitle(m2.genres[0])}', '${m2.imdbRating}');" />
           <div class="vs-slot-meta">
             <div class="vs-slot-title" title="${m2.title}">${m2.title}</div>
             <div class="vs-slot-info">★ ${m2.imdbRating} • ${m2.year}</div>
@@ -1914,7 +1923,7 @@ class Cine3DApp {
         <div class="vs-fighter-card ${!isTie && winner.id === m1.id ? 'is-winner' : ''}">
           ${!isTie && winner.id === m1.id ? '<div class="fighter-crown-badge">👑 KAZANAN</div>' : ''}
           <div class="vs-fighter-top">
-            <img src="${m1.posterUrl}" class="vs-fighter-poster" alt="${m1.title}" onerror="this.src=getFallbackPoster('${m1.title}', '${m1.genres[0]}', '${m1.imdbRating}');" />
+            <img src="${m1.posterUrl}" class="vs-fighter-poster" alt="${escapeHtmlText(m1.title)}" onerror="this.src=getFallbackPoster('${posterFallbackTitle(m1.title)}', '${posterFallbackTitle(m1.genres[0])}', '${m1.imdbRating}');" />
             <div class="vs-fighter-info">
               <h3 class="vs-fighter-title">${m1.title}</h3>
               <div class="vs-fighter-meta">${m1.originalTitle} • ${m1.year} • ${m1.director}</div>
@@ -1942,7 +1951,7 @@ class Cine3DApp {
         <div class="vs-fighter-card ${!isTie && winner.id === m2.id ? 'is-winner' : ''}">
           ${!isTie && winner.id === m2.id ? '<div class="fighter-crown-badge">👑 KAZANAN</div>' : ''}
           <div class="vs-fighter-top">
-            <img src="${m2.posterUrl}" class="vs-fighter-poster" alt="${m2.title}" onerror="this.src=getFallbackPoster('${m2.title}', '${m2.genres[0]}', '${m2.imdbRating}');" />
+            <img src="${m2.posterUrl}" class="vs-fighter-poster" alt="${escapeHtmlText(m2.title)}" onerror="this.src=getFallbackPoster('${posterFallbackTitle(m2.title)}', '${posterFallbackTitle(m2.genres[0])}', '${m2.imdbRating}');" />
             <div class="vs-fighter-info">
               <h3 class="vs-fighter-title">${m2.title}</h3>
               <div class="vs-fighter-meta">${m2.originalTitle} • ${m2.year} • ${m2.director}</div>

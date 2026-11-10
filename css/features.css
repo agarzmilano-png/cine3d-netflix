@@ -160,6 +160,26 @@
   color: var(--text-muted, #94a3b8);
 }
 
+/* "Neden önerildi" gerekçesi — tek satır, taşma ellipsis, tam metin title'da */
+.rec-reason {
+  display: block;
+  margin: 5px 0 0;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba(203, 213, 225, 0.82);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: help;
+}
+
+.rec-card:hover .rec-reason {
+  color: rgba(245, 197, 24, 0.95);
+}
+
 /* =========================================================================
    2) ŞAMPİYONLUK TURNUVASI
    ========================================================================= */
@@ -1808,4 +1828,21 @@
   border: 1px solid rgba(16, 185, 129, 0.45);
   border-radius: 999px;
   padding: 2px 9px;
+}
+
+/* Öneri kartı: uyum yüzdesi + gerekçe satırı */
+.rec-why-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.rec-match {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #0a0a0c;
+  background: linear-gradient(135deg, #34d399, #10b981);
+  border-radius: 999px;
+  padding: 1px 7px;
+  white-space: nowrap;
 }

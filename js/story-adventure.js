@@ -3,6 +3,23 @@
  * Kullanıcının 5 adımda yaptığı tercihlere göre tek bir sinematik başyapıt belirler.
  */
 
+// HTML özniteliği (alt="...") için kaçış yardımcısı — features.js'teki esc() davranışı
+function escAttr(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Inline onerror JS'i için başlık kaçışı — features.js'teki posterFallback deseni
+function posterFallbackTitle(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'");
+}
+
 const STORY_STEPS = [
   {
     stepIndex: 1,
@@ -549,7 +566,7 @@ class StoryAdventureEngine {
         <!-- Ana Film Vitrini (Büyük Kart) -->
         <div class="destiny-movie-hero-grid">
           <div class="destiny-poster-side">
-            <img src="${movie.posterUrl}" alt="${movie.title}" class="destiny-poster-img" onerror="this.onerror=null; this.src=getFallbackPoster('${movie.title.replace(/'/g, "\\'")}', '${movie.genres[0]}', '${movie.imdbRating}');" />
+            <img src="${movie.posterUrl}" alt="${escAttr(movie.title)}" class="destiny-poster-img" onerror="this.onerror=null; this.src=getFallbackPoster('${posterFallbackTitle(movie.title)}', '${posterFallbackTitle(movie.genres[0])}', '${movie.imdbRating}');" />
             <div class="destiny-poster-glare"></div>
             <span class="destiny-imdb-badge">
               <span class="badge-star">★</span>

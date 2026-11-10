@@ -203,9 +203,11 @@
       watched.forEach(w => {
         const m = getMovieById(w.id);
         if (!m) return;
-        totalRating += w.userRating;
+        // Puan verilmemişse nötr kabul et (aksi halde null toplamı NaN/0 üretiyordu)
+        const rating = (typeof w.userRating === 'number' && w.userRating > 0) ? w.userRating : 7.5;
+        totalRating += rating;
         (m.genres || []).forEach(g => {
-          genreSum[g] = (genreSum[g] || 0) + w.userRating;
+          genreSum[g] = (genreSum[g] || 0) + rating;
           genreCount[g] = (genreCount[g] || 0) + 1;
         });
         if (m.director) directors[m.director] = (directors[m.director] || 0) + 1;
@@ -232,6 +234,62 @@
       const dirBonus = dna.directors[movie.director] ? 0.6 : 0;
       const imdbBonus = (movie.imdbRating - 8) * 0.8; // 8.0→0, 9.0→+0.8
       return genreScore + dirBonus + imdbBonus;
+    },
+
+    // "Neden önerildi?" gerekçesi: score() içindeki katkıları ayrıştırır,
+    // en yüksek 3 etkeni kısa metne çevirir. Veri yoksa yüzde uydurmaz,
+    // yalnızca katalogdaki gerçek alanları (tür/IMDb) bildirir.
+    explain(movie, dna) {
+      const gs = movie.genres || [];
+      const perGenre = gs.length || 1;
+      const parts = [];
+
+      // 1) Tür ilgisi: genreScore'un bu filme düşen payı
+      gs.forEach(g => {
+        const aff = dna && dna.affinity ? dna.affinity[g] : null;
+        if (aff != null && aff > 0) {
+          parts.push({
+            w: aff / perGenre,
+            // Ham sayı yerine okunur ifade: "Sevdiğin tür: Dram · 8.4/10"
+            text: aff >= 8 ? `Çok sevdiğin tür: ${g}` : `Sevdiğin tür: ${g}`
+          });
+        }
+      });
+
+      // 2) Yönetmen geçmişi (score'daki dirBonus = 0.6)
+      if (dna && dna.directors && dna.directors[movie.director]) {
+        parts.push({
+          w: 0.6,
+          text: `Geçmişin: ${movie.director} (${dna.directors[movie.director]} yapım)`
+        });
+      }
+
+      // 3) IMDb katkısı (yalnızca 8.0 üzeri pozitif katkı üretir)
+      const imdbRating = Number(movie.imdbRating) || 0;
+      if (imdbRating > 8) {
+        parts.push({
+          w: (imdbRating - 8) * 0.8,
+          text: `IMDb'si yüksek: ${imdbRating.toFixed(1)}`
+        });
+      }
+
+      parts.sort((a, b) => b.w - a.w);
+      const picked = parts.slice(0, 3).map(p => p.text);
+
+      // Kullanıcı verisi henüz açıklama üretemiyorsa: doğrulanabilir katalog bilgisi
+      if (!picked.length) {
+        const genre = gs[0] || 'Sinema';
+        picked.push(imdbRating >= 7
+          ? `Katalog seçkisi: ${genre} · IMDb ${imdbRating.toFixed(1)}`
+          : `Kataloğun popüler yapımı: ${genre}`);
+      }
+
+      const short = picked.join(' · ');
+      const rest = parts.length - picked.length;
+      return {
+        short,
+        long: rest > 0 ? `${short} · +${rest} etken daha` : short
+      };
     },
 
     refresh() {
@@ -263,9 +321,18 @@
 
       const scroller = document.getElementById('rec-scroller');
       if (!scroller) return;
+      // Uyum yüzdesi: skorları bu liste içinde 60-99 aralığına normalize et.
+      // (Sabit formül herkese aynı "%85"i veriyordu, ayırt edici değildi.)
+      const scores = scored.map(x => x.s);
+      const minS = Math.min(...scores);
+      const maxS = Math.max(...scores);
+      const span = maxS - minS;
+      const toPct = (val) => span < 0.001 ? 85 : Math.round(60 + ((val - minS) / span) * 39);
+
       scroller.innerHTML = scored.map(({ m, s }) => {
-        const matchPct = Math.min(99, Math.round(60 + s * 3));
+        const matchPct = toPct(s);
         const safeTitle = posterFallback(m.title);
+        const why = Reco.explain(m, dna);
         return `
           <div class="movie-card rec-card" data-movie-id="${m.id}" data-rec-id="${m.id}">
             <div class="card-inner">
@@ -277,7 +344,11 @@
               </div>
               <div class="rec-card-info">
                 <h4 class="rec-card-title">${m.title}</h4>
-                <span class="rec-card-meta">★ ${m.imdbRating} • ${m.year} • ${m.duration || ''}</span>
+                <span class="rec-why-row">
+                  <span class="rec-match">%${matchPct} uyum</span>
+                  <span class="rec-card-meta">★ ${m.imdbRating} • ${m.year}</span>
+                </span>
+                <p class="rec-reason" title="Neden önerildi? ${esc(why.long)}">✨ ${esc(why.short)}</p>
               </div>
             </div>
           </div>`;
