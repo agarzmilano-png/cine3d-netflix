@@ -1003,6 +1003,9 @@ class Cine3DApp {
       this.storyAdventure = new StoryAdventureEngine(this);
     }
 
+    // Sunucu var mı? (bir kez algıla; yoksa "canlı internet" vaatlerini kapat)
+    this.serverModePromise = this.applyServerMode();
+
     // Arka planda ilk çevrimiçi film/dizi paketini yükle (Katalog zenginleştirme)
     this.fetchInitialOnlineBatch();
 
@@ -2633,6 +2636,11 @@ class Cine3DApp {
   async fetchInitialOnlineBatch() {
     if (!this.apiService) return;
 
+    // Sunucu algılaması bitmeden ikinci bir /api probu atılmasın
+    if (this.serverModePromise) {
+      try { await this.serverModePromise; } catch (err) { /* yoksay */ }
+    }
+
     // Statik barındırmada (ör. GitHub Pages) /api yok: canlı çekimi atla.
     if (!(await this.apiService.isApiAvailable())) {
       this.applyStaticMode();
@@ -2685,18 +2693,97 @@ class Cine3DApp {
   // Statik barındırma (sunucusuz) modunda arayüzü sadeleştir
   applyStaticMode() {
     this.staticMode = true;
-    // Sunucu yok ama gömülü katalog indeksi (data/catalog.json) var:
-    // düğme gizlenmez, güncel indeksten yeni yapımlar ekler.
+
+    // R005/8: Sunucu yokken "Canlı İnternet Arama & IMDb Bağlantısı Aktif" yanıltıcıydı.
+    // Banner nötr metne çevrilir, /api'ye dayanan "yeni yapım ekle" düğmesi gizlenir.
+    const statusInfo = document.querySelector('.online-sync-bar .online-status-info');
+    const statusText = document.querySelector('.online-sync-bar .online-status-text');
+    if (statusText) {
+      statusText.textContent = 'Çevrimdışı katalog modu — arama ve güncelleme için uygulama sunucusu gerekir';
+    }
+    if (statusInfo) {
+      statusInfo.classList.add('offline');
+      statusInfo.style.opacity = '0.85';
+      const dot = statusInfo.querySelector('.online-indicator-dot');
+      if (dot) dot.style.background = '#94a3b8';
+    }
+
     const fetchMoreBtn = document.getElementById('fetch-more-online-btn');
     if (fetchMoreBtn) {
-      const label = fetchMoreBtn.querySelector('span');
-      if (label) label.textContent = 'Güncel Katalogdan Yeni Yapımlar Ekle';
-      fetchMoreBtn.title = 'Haftalık güncellenen yapım indeksinden öneriler getir';
+      fetchMoreBtn.hidden = true;
+      fetchMoreBtn.setAttribute('aria-hidden', 'true');
+      fetchMoreBtn.tabIndex = -1;
+    }
+  }
+
+  /**
+   * Sunucu modu algılama: /api/health bir kez sorgulanır.
+   * 200 + JSON + {ok:true} → sunucu VAR (tunnel/yerel kurulum etkilenmez)
+   * 404 / ağ hatası / HTML yanıtı → sunucu YOK (statik katalog modu)
+   * Hata yakalanır; konsola hata fırlatılmaz.
+   */
+  async detectServerMode() {
+    if (this._serverMode !== undefined) return this._serverMode;
+    if (this._detectPromise) return this._detectPromise;
+    this._detectPromise = this._detectServerModeOnce();
+    return this._detectPromise;
+  }
+
+  async _detectServerModeOnce() {
+    if (this._serverMode !== undefined) return this._serverMode;
+
+    // Bilinen statik barındırmalarda boşa 404 isteği atmayız (önceki fazın
+    // "temiz konsol" hedefini korumak için). Diğer tüm hostlarda gerçek prob yapılır.
+    const host = window.location.hostname || '';
+    const knownStatic = ['github.io', 'pages.dev', 'netlify.app', 'vercel.app', 'surge.sh']
+      .some(h => host === h || host.endsWith('.' + h));
+
+    if (knownStatic) {
+      this._serverMode = false;
+      return false;
+    }
+
+    // Servis daha önce prob yaptıysa onu kullan (çift istek olmasın)
+    const svc = this.apiService;
+    if (svc && svc.apiAvailable !== null && svc.apiAvailable !== undefined) {
+      this._serverMode = !!svc.apiAvailable;
+      return this._serverMode;
+    }
+
+    let hasServer = false;
+    try {
+      const res = await fetch('api/health', { cache: 'no-store' });
+      const type = res.headers.get('content-type') || '';
+      if (res.ok && type.includes('application/json')) {
+        const data = await res.json();
+        hasServer = !!(data && data.ok);
+      }
+    } catch (err) {
+      hasServer = false; // ağ hatası / 404 → sessizce statik mod
+    }
+
+    this._serverMode = hasServer;
+    if (svc) svc.apiAvailable = hasServer; // servis ikinci kez prob yapmasın
+    return hasServer;
+  }
+
+  async applyServerMode() {
+    try {
+      const hasServer = await this.detectServerMode();
+      if (hasServer) return; // sunucu varsa arayüz bugünkü gibi kalır
+      this.applyStaticMode();
+    } catch (err) {
+      // algılama asla sayfayı bozmasın
+      this.applyStaticMode();
     }
   }
 
   async fetchMoreOnline() {
     if (!this.apiService) return;
+    if (this.staticMode) {
+      this.showToast('Bu sürümde yeni yapım ekleme kapalı; katalog çevrimdışı modda çalışıyor.', 'info');
+      return;
+    }
     const btn = document.getElementById('fetch-more-online-btn');
     if (btn) {
       btn.classList.add('loading');
