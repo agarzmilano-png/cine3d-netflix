@@ -3,6 +3,15 @@
  * Kartların 3 boyutlu silindirik perspektifte döndüğü interaktif mod
  */
 
+function escHtmlCover(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 class Coverflow3D {
   constructor(containerId, movies, onSelectMovie) {
     this.container = document.getElementById(containerId);
@@ -25,9 +34,9 @@ class Coverflow3D {
       <div class="coverflow-stage">
         <div class="coverflow-track" id="coverflow-track">
           ${this.movies.map((movie, index) => `
-            <div class="coverflow-card" data-index="${index}" data-movie-id="${movie.id}">
+            <div class="coverflow-card" data-index="${index}" data-movie-id="${movie.id}" role="button" tabindex="${index === this.currentIndex ? '0' : '-1'}" aria-label="${escHtmlCover(movie.title)} — detayları aç">
               <div class="coverflow-card-inner">
-                <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.onerror=null; this.src=getFallbackPoster('${(movie.title || '').replace(/'/g, "\\'")}', '${(movie.genres && movie.genres[0]) || 'Sinema'}', '${movie.imdbRating || '8.0'}');" />
+                <img src="${movie.posterUrl}" alt="${escHtmlCover(movie.title)}" loading="lazy" onerror="this.onerror=null; this.src=getFallbackPoster('${(movie.title || '').replace(/'/g, "\\'")}', '${(movie.genres && movie.genres[0]) || 'Sinema'}', '${movie.imdbRating || '8.0'}');" />
                 <div class="coverflow-reflection"></div>
                 <div class="coverflow-overlay">
                   <div class="coverflow-imdb-badge">
@@ -75,6 +84,9 @@ class Coverflow3D {
     this.cards.forEach((card, i) => {
       const diff = i - this.currentIndex;
       const absDiff = Math.abs(diff);
+
+      // Klavye: yalnızca aktif kart Tab sırasına girer
+      card.setAttribute('tabindex', i === this.currentIndex ? '0' : '-1');
 
       card.classList.remove('active', 'prev', 'next', 'hidden');
 
@@ -208,6 +220,14 @@ class Coverflow3D {
 
     // Kart tıklamaları
     this.cards.forEach((card, index) => {
+      // Klavye: Enter/Space kartın tıklama davranışını tetikler
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+
       card.addEventListener('click', (e) => {
         // Sürükleme sonrası gelen tıklamayı yoksay
         if (this._suppressClickUntil && Date.now() < this._suppressClickUntil) {

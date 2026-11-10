@@ -5900,3 +5900,12 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
   .hide-watched-btn { margin: 8px 0 0; }
   .hide-watched-btn .hw-text { display: none; }
 }
+
+/* Klavye odağı görünürlüğü (kartlar) */
+.movie-card:focus-visible,
+.rec-card:focus-visible,
+.coverflow-card:focus-visible {
+  outline: 2px solid #f5c518;
+  outline-offset: 3px;
+}
+.coverflow-card[tabindex="-1"]:focus-visible { outline: none; }

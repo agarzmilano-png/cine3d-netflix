@@ -345,7 +345,7 @@
         const safeTitle = posterFallback(m.title);
         const why = Reco.explain(m, dna);
         return `
-          <div class="movie-card rec-card" data-movie-id="${m.id}" data-rec-id="${m.id}">
+          <div class="movie-card rec-card" data-movie-id="${m.id}" data-rec-id="${m.id}" role="button" tabindex="0" aria-label="${esc(m.title)} — detayları aç">
             <div class="card-inner">
               <div class="card-poster">
                 <img src="${m.posterUrl}" alt="${esc(m.title)}" loading="lazy"
@@ -373,6 +373,16 @@
         section.addEventListener('click', (e) => {
           const card = e.target.closest('.rec-card');
           if (!card) return;
+          const m = getMovieById(card.dataset.recId);
+          if (m && F.app) F.app.openModal(m);
+        });
+
+        // Klavye: Enter/Space öneri kartını açar
+        section.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+          const card = e.target.closest('.rec-card');
+          if (!card) return;
+          e.preventDefault();
           const m = getMovieById(card.dataset.recId);
           if (m && F.app) F.app.openModal(m);
         });

@@ -3619,7 +3619,7 @@ class Cine3DApp {
       else if (movie.imdbRating >= 8.7) imdbClass = "imdb-master";
 
       return `
-        <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}">
+        <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}" role="button" tabindex="0" aria-label="${escapeHtmlText(movie.title)} — detayları aç">
           <div class="card-inner">
             <div class="card-poster">
               <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
@@ -3772,6 +3772,14 @@ class Cine3DApp {
 
     // Olay dinleyicilerini bağla
     grid.querySelectorAll('.movie-card').forEach(card => {
+      // Klavye: Enter/Space kartın tıklama davranışını tetikler
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+
       card.addEventListener('click', (e) => {
         if (e.target.closest('.card-fav-btn') || e.target.closest('.card-vs-btn') || e.target.closest('.card-watched-btn')) return;
         const id = card.dataset.movieId;
@@ -5674,6 +5682,26 @@ class Cine3DApp {
     this.applyFilters();
   }
 
+  /**
+   * Açık olan en üstteki modal/çekmece katmanını döndürür (odak tuzağı için).
+   * Sıra: sonradan açılan üstte olduğu için listede sona doğru öncelik artar.
+   */
+  getActiveFocusLayer() {
+    const selectors = [
+      '.movie-modal.open',
+      '#vs-modal.open',
+      '#watchlist-drawer.open',
+      '#tournament-modal.open',
+      '#ticket-modal.open'
+    ];
+    let layer = null;
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el) layer = el;
+    }
+    return layer;
+  }
+
   updateHideWatchedButton() {
     const btn = document.getElementById('btn-hide-watched');
     if (!btn) return;
@@ -5945,20 +5973,29 @@ class Cine3DApp {
     });
 
     // Tarayıcı İleri / Geri Tuşları (Deep Linking & History API)
-    // Modal içinde Tab/Shift+Tab odak tuzağı
+    // Tüm katmanlarda Tab/Shift+Tab odak tuzağı (en üstteki katman kazanır)
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Tab') return;
-      const modal = document.querySelector('.movie-modal.open');
-      if (!modal) return;
-      const focusables = [...modal.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
-        .filter(el => !el.disabled && el.offsetParent !== null);
+      const layer = this.getActiveFocusLayer();
+      if (!layer) return;
+
+      const focusables = [...layer.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.disabled && el.getAttribute('aria-hidden') !== 'true' && el.offsetParent !== null);
       if (!focusables.length) return;
+
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
-      if (e.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) {
+      const active = document.activeElement;
+      const outside = !layer.contains(active) || active === document.body;
+
+      if (outside) {
+        // Odak katman dışındaysa: yönüne göre içeri çek (ileri Tab → ilk, Shift+Tab → son)
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && active === first) {
         e.preventDefault();
         last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
+      } else if (!e.shiftKey && active === last) {
         e.preventDefault();
         first.focus();
       }
