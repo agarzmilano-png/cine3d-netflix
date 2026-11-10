@@ -199,17 +199,26 @@
       const genreCount = {};
       const directors = {};
       let totalRating = 0;
+      let ratedCount = 0;
 
       watched.forEach(w => {
         const m = getMovieById(w.id);
         if (!m) return;
-        // Puan verilmemişse nötr kabul et (aksi halde null toplamı NaN/0 üretiyordu)
-        const rating = (typeof w.userRating === 'number' && w.userRating > 0) ? w.userRating : 7.5;
-        totalRating += rating;
-        (m.genres || []).forEach(g => {
-          genreSum[g] = (genreSum[g] || 0) + rating;
-          genreCount[g] = (genreCount[g] || 0) + 1;
-        });
+
+        // R005/1: Puan verilmemiş izleme afiniteyi etkilemez. Önceden nötr 7.5
+        // varsayılıyordu; bu da puansız izlemelerin zevk DNA'sını şişirmesine yol açıyordu.
+        const rating = (typeof w.userRating === 'number' && w.userRating > 0) ? w.userRating : null;
+
+        if (rating != null) {
+          totalRating += rating;
+          ratedCount++;
+          (m.genres || []).forEach(g => {
+            genreSum[g] = (genreSum[g] || 0) + rating;
+            genreCount[g] = (genreCount[g] || 0) + 1;
+          });
+        }
+
+        // Yönetmen geçmişi izleme kaydından gelir (puan şartı yok)
         if (m.director) directors[m.director] = (directors[m.director] || 0) + 1;
       });
 
@@ -219,7 +228,9 @@
       return {
         affinity,
         directors,
-        avgRating: totalRating / Math.max(watched.length, 1),
+        // Puanlı izleme yoksa null: okuyan taraf "—" gösterir, 0/NaN üretilmez
+        avgRating: ratedCount > 0 ? totalRating / ratedCount : null,
+        ratedCount,
         count: watched.length
       };
     },
@@ -244,13 +255,17 @@
       const perGenre = gs.length || 1;
       const parts = [];
 
+      // R005/2: "Sevdiğin tür" diyebilmek için en az 6/10 ortalama puan gerekir.
+      // 6 altındaki türler gerekçe metnine hiç girmez (yoksa 2/10'luk ilgi bile
+      // "Sevdiğin tür" olarak sunulup yanıltıcı oluyordu).
+      const MIN_GENRE_AFFINITY = 6;
+
       // 1) Tür ilgisi: genreScore'un bu filme düşen payı
       gs.forEach(g => {
         const aff = dna && dna.affinity ? dna.affinity[g] : null;
-        if (aff != null && aff > 0) {
+        if (aff != null && aff >= MIN_GENRE_AFFINITY) {
           parts.push({
             w: aff / perGenre,
-            // Ham sayı yerine okunur ifade: "Sevdiğin tür: Dram · 8.4/10"
             text: aff >= 8 ? `Çok sevdiğin tür: ${g}` : `Sevdiğin tür: ${g}`
           });
         }
@@ -321,13 +336,9 @@
 
       const scroller = document.getElementById('rec-scroller');
       if (!scroller) return;
-      // Uyum yüzdesi: skorları bu liste içinde 60-99 aralığına normalize et.
-      // (Sabit formül herkese aynı "%85"i veriyordu, ayırt edici değildi.)
-      const scores = scored.map(x => x.s);
-      const minS = Math.min(...scores);
-      const maxS = Math.max(...scores);
-      const span = maxS - minS;
-      const toPct = (val) => span < 0.001 ? 85 : Math.round(60 + ((val - minS) / span) * 39);
+      // R005/4: Sabit ölçek (göreli normalize değil) — skor 0 → %40, 12+ → %99.
+      // Aynı film her listede aynı yüzdeyi alır; skor arttıkça yüzde kesin artar.
+      const toPct = (val) => Math.max(40, Math.min(99, Math.round(40 + val * 5)));
 
       scroller.innerHTML = scored.map(({ m, s }) => {
         const matchPct = toPct(s);
@@ -337,7 +348,7 @@
           <div class="movie-card rec-card" data-movie-id="${m.id}" data-rec-id="${m.id}">
             <div class="card-inner">
               <div class="card-poster">
-                <img src="${m.posterUrl}" alt="${m.title}" loading="lazy"
+                <img src="${m.posterUrl}" alt="${esc(m.title)}" loading="lazy"
                      onerror="this.onerror=null; this.src=getFallbackPoster('${safeTitle}', '${(m.genres && m.genres[0]) || 'Sinema'}', '${m.imdbRating || 8.0}');" />
                 <div class="card-glare"></div>
                 <div class="rec-match-badge">🎯 %${matchPct} Eşleşme</div>
