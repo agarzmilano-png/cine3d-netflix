@@ -1919,6 +1919,18 @@ body {
   transform-style: preserve-3d;
 }
 
+/* Drag-follow: şerit parmağı canlı takip eder (Faz 3) */
+.coverflow-track {
+  will-change: transform;
+  touch-action: pan-y;
+}
+.is-dragging .coverflow-track {
+  cursor: grabbing;
+}
+.is-dragging .coverflow-card {
+  transition: none !important;
+}
+
 .coverflow-card {
   position: absolute;
   width: 290px;

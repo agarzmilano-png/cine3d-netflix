@@ -23,6 +23,7 @@ class Coverflow3D {
     this.dragOffset = 0;
 
     this.render();
+    this.track = document.getElementById('coverflow-track');
     this.bindEvents();
     this.updateCarousel();
   }
@@ -247,17 +248,24 @@ class Coverflow3D {
       });
     });
 
-    // Klavye yön tuşları
-    window.addEventListener('keydown', (e) => {
-      const coverflowWrapper = document.getElementById('coverflow-view-section');
-      if (coverflowWrapper && !coverflowWrapper.classList.contains('hidden')) {
-        if (e.key === 'ArrowRight') this.next();
-        if (e.key === 'ArrowLeft') this.prev();
-      }
-    });
+    // Klavye yön tuşları — pencere genelinde yalnızca BİR kez bağlanır.
+    // (updateData() her filtre değişiminde bindEvents() çağırdığı için dinleyici
+    //  birikiyordu; tek ArrowRight 2-3 kart birden atlıyordu.)
+    if (!Coverflow3D._keysBound) {
+      Coverflow3D._keysBound = true;
+      window.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        const wrapper = document.getElementById('coverflow-view-section');
+        if (!wrapper || wrapper.classList.contains('hidden')) return;
+        const inst = (window.app && window.app.coverflowInstance) || null;
+        if (!inst) return;
+        if (e.key === 'ArrowRight') inst.next();
+        else inst.prev();
+      });
+    }
 
-    // Fare tekerleğiyle geçiş
-    if (this.container) {
+    // Fare tekerleğiyle geçiş (container kalıcı: yalnızca bir kez bağla)
+    if (this.container && !this._containerEventsBound) {
       this.container.addEventListener('wheel', (e) => {
         if (Math.abs(e.deltaY) > 25 || Math.abs(e.deltaX) > 25) {
           if (e.deltaY > 0 || e.deltaX > 0) {
@@ -269,16 +277,41 @@ class Coverflow3D {
       }, { passive: true });
     }
 
-    // --- Sürükle / kaydır (fare + dokunmatik) ---
+    // (wheel + drag tek bayrakta: ikisi de container'a bağlanır)
+    if (this.container && this._containerEventsBound) return;
+    if (this.container) this._containerEventsBound = true;
+
+    // --- Sürükle / kaydır (fare + dokunmatik) — parmağı CANLI takip eder ---
+    // Mekanik: pointermove sırasında şeridin tamamına translateX(dx) uygulanır
+    // (kart transform'larına dokunulmaz). Bırakınca offset sıfırlanır ve mevcut
+    // updateCarousel() animasyonu en yakın kartı merkeze getirir.
     if (this.container) {
       let startX = null;
       let startY = null;
       let moved = false;
+      const MAX_FOLLOW = 360;   // aşırı sürüklemede şerit ekrandan çıkmasın
+      const STEP_PX = 170;      // bırakışta kaç kart ilerleyeceğini belirleyen mesafe
 
-      const reset = () => {
+      const setTrackOffset = (dx, animate) => {
+        if (!this.track) return;
+        if (animate) {
+          this.track.style.transition = 'transform 0.2s ease-out';
+          this.track.style.transform = 'translateX(0px)';
+          clearTimeout(this._trackResetTimer);
+          this._trackResetTimer = setTimeout(() => {
+            if (this.track) this.track.style.transition = '';
+          }, 230);
+        } else {
+          this.track.style.transition = '';
+          this.track.style.transform = dx ? 'translateX(' + dx + 'px)' : '';
+        }
+      };
+
+      const reset = (animate) => {
         startX = null;
         startY = null;
         this.container.classList.remove('is-dragging');
+        setTrackOffset(0, !!animate);
       };
 
       this.container.addEventListener('pointerdown', (e) => {
@@ -292,23 +325,41 @@ class Coverflow3D {
 
       this.container.addEventListener('pointermove', (e) => {
         if (startX == null) return;
-        if (Math.abs(e.clientX - startX) > 10 || Math.abs(e.clientY - startY) > 10) moved = true;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) moved = true;
+
+        // Dikey kaydırma niyeti varsa yatay takibi bırak (sayfa kaydırma bozulmasın)
+        if (Math.abs(dy) > Math.abs(dx) * 1.2) return;
+        if (!moved) return;
+
+        const clamped = Math.max(-MAX_FOLLOW, Math.min(MAX_FOLLOW, dx));
+        setTrackOffset(clamped, false);
       });
 
       const finish = (e) => {
         if (startX == null) return;
         const dx = (e.clientX != null) ? e.clientX - startX : 0;
         const dy = (e.clientY != null) ? e.clientY - startY : 0;
-        reset();
-        if (moved && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-          this._suppressClickUntil = Date.now() + 350;
-          if (dx < 0) this.next(); else this.prev();
-        }
+        const wasDrag = moved && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy);
+
+        reset(false);
+        setTrackOffset(0, true);
+
+        if (!wasDrag) return;
+
+        this._suppressClickUntil = Date.now() + 350;
+        // En yakın kartı merkezle: 40px eşik üstünde mesafeye göre 1-3 kart
+        const steps = Math.max(1, Math.min(3, Math.round(Math.abs(dx) / STEP_PX)));
+        const target = this.currentIndex + (dx < 0 ? steps : -steps);
+        this.goTo(target);
       };
 
       this.container.addEventListener('pointerup', finish);
-      this.container.addEventListener('pointercancel', reset);
-      this.container.addEventListener('pointerleave', (e) => { if (e.buttons === 0) reset(); });
+      this.container.addEventListener('pointercancel', () => reset(true));
+      this.container.addEventListener('pointerleave', (e) => { if (e.buttons === 0) reset(true); });
+      this.container.addEventListener('lostpointercapture', () => { if (startX != null) reset(true); });
     }
   }
 
