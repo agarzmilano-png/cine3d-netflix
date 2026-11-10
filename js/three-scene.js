@@ -213,6 +213,20 @@ class Cinema3DScene {
   }
 
   animate() {
+    // Sekme gizliyken çizim yapma (pil/CPU tasarrufu), görünür olunca devam et.
+    if (document.hidden) {
+      if (!this._visibilityBound) {
+        this._visibilityBound = true;
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+            if (this.clock) this.clock.getDelta(); // geçen süreyi at, ani zıplama olmasın
+            this.animate();
+          }
+        });
+      }
+      return;
+    }
+
     requestAnimationFrame(() => this.animate());
 
     const elapsedTime = this.clock ? this.clock.getElapsedTime() : 0;

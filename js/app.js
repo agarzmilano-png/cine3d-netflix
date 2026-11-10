@@ -941,8 +941,14 @@ class Cine3DApp {
   }
 
   init() {
+    // Hareket azaltma tercihi: 3D sahneyi hiç başlatma (erişilebilirlik + performans)
+    const reducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (reducedMotion) {
+      document.body.classList.add('reduced-motion');
+    }
+
     // 3D Canvas başlat
-    if (window.initThreeScene) {
+    if (window.initThreeScene && !reducedMotion) {
       try {
         window.initThreeScene();
       } catch (err) {

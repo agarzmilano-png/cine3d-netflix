@@ -5837,3 +5837,22 @@ body {
 }
 
 
+
+/* ==========================================================================
+   ERİŞİLEBİLİRLİK: Hareket azaltma tercihi (prefers-reduced-motion)
+   Animasyonlar/geçişler kapatılır; 3D sahne JS tarafında hiç başlatılmaz.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ost-vinyl-disc.spinning { animation: none !important; }
+  .ost-pulse-dot, .ost-sound-wave .bar { animation: none !important; }
+}
+
+/* Reduced-motion sınıfı JS ile de eklenebilir (matchMedia desteklemeyen tarayıcılar) */
+body.reduced-motion #cinema-3d-canvas { display: none !important; }
+body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
