@@ -4064,7 +4064,19 @@ class Cine3DApp {
         }
         this.showToast('📋 Bağlantı panoya kopyalandı.', 'success');
       } catch (err) {
-        this.showToast('Bağlantı: ' + shareUrl, 'info');
+        // Pano izni yoksa eski yöntemle dene, o da olmazsa bağlantıyı göster
+        let copied = false;
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = shareUrl;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          copied = document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e2) { copied = false; }
+        this.showToast(copied ? '📋 Bağlantı panoya kopyalandı.' : 'Bağlantı: ' + shareUrl, copied ? 'success' : 'info');
       }
     });
 
