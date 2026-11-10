@@ -942,7 +942,8 @@ class Cine3DApp {
 
   init() {
     // Hareket azaltma tercihi: 3D sahneyi hiç başlatma (erişilebilirlik + performans)
-    const reducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
+    const reducedMotion = saveData || !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     if (reducedMotion) {
       document.body.classList.add('reduced-motion');
     }
