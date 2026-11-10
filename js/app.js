@@ -39,6 +39,20 @@ const SEARCH_HISTORY_LIMIT = 6;
 
 // İzleme listesi görünüm tercihleri (localStorage) — veri sırası değişmez
 const WATCHLIST_PREFS_KEY = 'cine3d_watchlist_prefs';
+// R007b: Koleksiyon hub'ları (katalog verisinden türetilir, harici veri yok)
+const COLLECTIONS = {
+  nolan: { title: 'Christopher Nolan', icon: '🎬', desc: 'Zaman, rüya ve zihin labirentleri', test: m => m.director === 'Christopher Nolan' },
+  fincher: { title: 'David Fincher', icon: '🔍', desc: 'Soğuk, kusursuz gerilim', test: m => m.director === 'David Fincher' },
+  villeneuve: { title: 'Denis Villeneuve', icon: '🏜️', desc: 'Görkemli bilim kurgu', test: m => m.director === 'Denis Villeneuve' },
+  marvel: { title: 'Marvel', icon: '🦸', desc: 'Süper kahraman evreni', test: m => Array.isArray(m.hubTags) && m.hubTags.includes('marvel') },
+  starwars: { title: 'Star Wars', icon: '🌌', desc: 'Uzak galakside bir macera', test: m => Array.isArray(m.hubTags) && m.hubTags.includes('starwars') },
+  pixar: { title: 'Pixar', icon: '💡', desc: 'Duygusal animasyon başyapıtları', test: m => Array.isArray(m.hubTags) && m.hubTags.includes('pixar') },
+  disney: { title: 'Disney', icon: '🏰', desc: 'Aile ve masal dünyası', test: m => Array.isArray(m.hubTags) && m.hubTags.includes('disney') },
+  'netflix-original': { title: 'Netflix Orijinal', icon: '🇳', desc: 'Platformun kendi yapımları', test: m => Array.isArray(m.hubTags) && m.hubTags.includes('netflix-originals') },
+  'turk-komedi': { title: 'Türk Komedi', icon: '😂', desc: 'Yerli güldürü klasikleri', test: m => ['gora', 'arog', 'olumlu-dunya', 'olumlu-dunya-2', 'cinayet-susu'].includes(m.id) },
+  ghibli: { title: 'Ghibli Ruhu', icon: '🍃', desc: 'Elde çizilmiş büyü', test: m => ['spirited-away', 'grave-of-the-fireflies'].includes(m.id) }
+};
+
 const NIGHT_PLAN_KEY = 'cine3d_night_plan';
 const NIGHT_BREAK_MINUTES = 10;
 const WATCHLIST_SORTS = ['added', 'imdb', 'duration', 'title'];
@@ -1024,6 +1038,12 @@ class Cine3DApp {
 
     // Sinema Gecesi planlayıcısı
     this.initNightPlanner();
+
+    // A11Y: katman açıkken arka planı inert yap
+    this.initBackgroundInertWatcher();
+
+    // Koleksiyon hub'ları
+    this.renderCollectionHubs();
 
     // PWA (Progressive Web App) Servis Çalışanı ve Kurulum Desteği
     this.initPWA();
@@ -2924,6 +2944,7 @@ class Cine3DApp {
     });
 
     document.getElementById('np-copy-btn')?.addEventListener('click', () => this.copyNightPlan());
+    document.getElementById('np-dna-fill-btn')?.addEventListener('click', () => this.autoFillNightPlan());
 
     this.renderNightPlan();
   }
@@ -2932,6 +2953,14 @@ class Cine3DApp {
     return this.loadNightPlan()
       .map(id => this.movies.find(m => m.id === id))
       .filter(Boolean);
+  }
+
+  /** Gece planı için güvenli süre (dizi → bölüm başına ~50 dk, bilinmeyen → 0). */
+  nightPlanMinutes(movie) {
+    const v = this.parseDurationMinutes(movie && movie.duration);
+    if (v === 'series') return 50;
+    if (typeof v === 'number' && Number.isFinite(v)) return v;
+    return 0;
   }
 
   formatMinutes(total) {
@@ -2954,7 +2983,7 @@ class Cine3DApp {
     }
 
     list.innerHTML = movies.map((m, i) => {
-      const mins = this.parseDurationMinutes(m.duration);
+      const mins = this.nightPlanMinutes(m);
       return `
         ${i > 0 ? '<div class="np-break">☕ ' + NIGHT_BREAK_MINUTES + ' dk mola</div>' : ''}
         <div class="np-item" data-movie-id="${escapeHtmlText(m.id)}">
@@ -2972,7 +3001,7 @@ class Cine3DApp {
         </div>`;
     }).join('');
 
-    const totalMovies = movies.reduce((sum, m) => sum + this.parseDurationMinutes(m.duration), 0);
+    const totalMovies = movies.reduce((sum, m) => sum + this.nightPlanMinutes(m), 0);
     const breaks = (movies.length - 1) * NIGHT_BREAK_MINUTES;
     summary.innerHTML = `
       <span class="np-total">Bu gece: <strong>${this.formatMinutes(totalMovies + breaks)}</strong></span>
@@ -2994,13 +3023,49 @@ class Cine3DApp {
     });
   }
 
+  /**
+   * R007b: Zevk DNA'sına göre gece planını otomatik doldurur.
+   * Yeterli veri yoksa (computeDNA null) hiçbir şey yapmaz, yönlendirici toast gösterir.
+   */
+  autoFillNightPlan() {
+    const reco = window.cine3dFeatures && window.cine3dFeatures.reco;
+    if (!reco || typeof reco.computeDNA !== 'function') {
+      this.showToast('Öneri motoru yüklenmedi.', 'info');
+      return;
+    }
+
+    let dna = null;
+    try { dna = reco.computeDNA(); } catch (err) { dna = null; }
+    if (!dna) {
+      this.showToast('✨ DNA için en az 3 yapımı "İzledim" olarak işaretle.', 'info');
+      return;
+    }
+
+    const watchedIds = new Set((this.watchedList || []).map(w => (typeof w === 'string' ? w : w.id)));
+    const ranked = this.movies
+      .filter(m => !watchedIds.has(m.id))
+      .map(m => ({ m, s: reco.score(m, dna) }))
+      .sort((a, b) => b.s - a.s)
+      .slice(0, 3)
+      .map(x => x.m.id);
+
+    if (!ranked.length) {
+      this.showToast('Önerilecek yapım bulunamadı.', 'info');
+      return;
+    }
+
+    this.saveNightPlan(ranked);
+    this.renderNightPlan();
+    this.showToast('✨ Plan zevk DNA\'na göre dolduruldu (' + ranked.length + ' film).', 'success');
+  }
+
   async copyNightPlan() {
     const movies = this.getNightPlanMovies();
     if (!movies.length) {
       this.showToast('Kopyalanacak plan yok.', 'info');
       return;
     }
-    const totalMovies = movies.reduce((sum, m) => sum + this.parseDurationMinutes(m.duration), 0);
+    const totalMovies = movies.reduce((sum, m) => sum + this.nightPlanMinutes(m), 0);
     const breaks = (movies.length - 1) * NIGHT_BREAK_MINUTES;
 
     const lines = ['🌙 Cine3D Sinema Gecesi Planı', ''];
@@ -3026,6 +3091,43 @@ class Cine3DApp {
     } catch (err) {
       this.showToast('Plan kopyalanamadı.', 'error');
     }
+  }
+
+  // --- KOLEKSİYON HUB'LARI ---
+  renderCollectionHubs() {
+    const box = document.getElementById('collection-hubs-container');
+    if (!box) return;
+
+    box.innerHTML = Object.entries(COLLECTIONS).map(([key, col]) => {
+      let count = 0;
+      try { count = this.movies.filter(col.test).length; } catch (err) { count = 0; }
+      if (count === 0) return '';
+      const active = this.activeCollection === key ? ' active' : '';
+      return `
+        <button type="button" class="collection-card${active}" data-collection="${escapeHtmlText(key)}" aria-pressed="${this.activeCollection === key}">
+          <span class="collection-icon">${col.icon}</span>
+          <span class="collection-info">
+            <span class="collection-name">${escapeHtmlText(col.title)}</span>
+            <span class="collection-desc">${escapeHtmlText(col.desc)}</span>
+          </span>
+          <span class="collection-count">${count} yapım</span>
+        </button>`;
+    }).join('');
+
+    box.querySelectorAll('.collection-card').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.collection;
+        this.activeCollection = (this.activeCollection === key) ? null : key;
+        this.renderCollectionHubs();
+        this.applyFilters();
+        if (this.activeCollection) {
+          const col = COLLECTIONS[key];
+          this.showToast('🎞️ Koleksiyon: ' + col.title + ' — filtre uygulandı.', 'info');
+        } else {
+          this.showToast('Koleksiyon filtresi kaldırıldı.', 'info');
+        }
+      });
+    });
   }
 
   // --- İZLEME LİSTESİ GÖRÜNÜM TERCİHLERİ (filtre + sıralama) ---
@@ -3690,6 +3792,14 @@ class Cine3DApp {
     // 3. IMDb puanı filtresi
     if (this.minImdb > 0) {
       result = result.filter(m => m.imdbRating >= this.minImdb);
+    }
+
+    // 3.4 Koleksiyon filtresi
+    if (this.activeCollection && COLLECTIONS[this.activeCollection]) {
+      const col = COLLECTIONS[this.activeCollection];
+      result = result.filter(m => {
+        try { return col.test(m); } catch (err) { return false; }
+      });
     }
 
     // 3.5 İzlediklerimi gizle
@@ -6411,6 +6521,7 @@ class Cine3DApp {
       searchInput.setAttribute('placeholder', 'Ara');
     }
     if (this.hideWatched) { this.hideWatched = false; try { localStorage.setItem('cine3d_hide_watched', '0'); } catch (e) {} }
+    if (this.activeCollection) { this.activeCollection = null; this.renderCollectionHubs(); }
     this.setMinImdb(0);
     this.renderGenreFilters();
     this.renderMoodSection();
@@ -6422,6 +6533,55 @@ class Cine3DApp {
    * Açık olan en üstteki modal/çekmece katmanını döndürür (odak tuzağı için).
    * Sıra: sonradan açılan üstte olduğu için listede sona doğru öncelik artar.
    */
+  /**
+   * R007b: Bir katman (modal/çekmece) açıkken arka planı ekran okuyucu ve Tab
+   * sırasından çıkarır (inert + aria-hidden). Katmanlar main/footer dışında.
+   */
+  updateBackgroundInert() {
+    const overlaySelectors = [
+      '.movie-modal.open',
+      '#vs-modal.open',
+      '#watchlist-drawer.open',
+      '#ticket-modal.open',
+      '#tournament-modal.open',
+      '.import-choice-overlay'
+    ];
+    const anyOpen = overlaySelectors.some(sel => document.querySelector(sel));
+    const background = [document.getElementById('navbar'), document.querySelector('main.main-content'), document.querySelector('footer.app-footer')];
+
+    background.forEach(el => {
+      if (!el) return;
+      if (anyOpen) {
+        el.setAttribute('inert', '');
+        el.setAttribute('aria-hidden', 'true');
+      } else {
+        el.removeAttribute('inert');
+        el.removeAttribute('aria-hidden');
+      }
+    });
+  }
+
+  /** Katman sınıf değişimlerini izleyip arka plan durumunu günceller. */
+  initBackgroundInertWatcher() {
+    this.updateBackgroundInert();
+    if (this._inertObserver || !window.MutationObserver) return;
+    let scheduled = false;
+    this._inertObserver = new MutationObserver(() => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        scheduled = false;
+        this.updateBackgroundInert();
+      });
+    });
+    this._inertObserver.observe(document.body, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+      childList: true
+    });
+  }
+
   getActiveFocusLayer() {
     const selectors = [
       '.movie-modal.open',

@@ -35,12 +35,15 @@ jobs:
       - name: İndeksi oluştur
         run: node scripts/build-catalog.js ${{ github.event.inputs.count || '450' }}
 
+      - name: Sitemap'i tazele
+        run: node scripts/generate-seo.js
+
       - name: Değişiklikleri işle
         id: commit
         run: |
           git config user.name "cine3d-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/catalog.json
+          git add data/catalog.json sitemap.xml
           if git diff --cached --quiet; then
             echo "Değişiklik yok, indeks güncel."
             echo "changed=false" >> "$GITHUB_OUTPUT"

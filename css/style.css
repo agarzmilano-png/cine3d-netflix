@@ -6413,3 +6413,101 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
 .np-detail { font-size: 0.76rem; color: #8a8a99; }
 .np-actions { display: flex; gap: 8px; }
 .np-copy-btn { width: 100%; }
+
+/* ==========================================================================
+   A11Y: "İçeriğe atla" bağlantısı (yalnızca klavye odağında görünür)
+   ========================================================================== */
+.skip-link {
+  position: fixed;
+  top: -60px;
+  left: 12px;
+  z-index: 20000;
+  padding: 10px 16px;
+  border-radius: 0 0 10px 10px;
+  background: #f5c518;
+  color: #0a0a0c;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: top 0.16s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.np-header-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.np-dna-btn {
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  background: rgba(167, 139, 250, 0.14);
+  color: #c4b5fd;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.np-dna-btn:hover { background: rgba(167, 139, 250, 0.24); color: #fff; }
+
+/* ==========================================================================
+   R007b: KOLEKSİYON HUB'LARI
+   ========================================================================== */
+.collection-section { padding: 20px 0 30px; }
+.collection-container { max-width: 760px; margin: 0 auto; }
+.collection-header { margin-bottom: 14px; }
+.collection-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #f5c518;
+  text-transform: uppercase;
+}
+.collection-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #f5c518; box-shadow: 0 0 8px rgba(245, 197, 24, 0.8);
+}
+.collection-title { margin: 4px 0 2px; font-size: 1.25rem; color: #fff; }
+.collection-subtitle { margin: 0; font-size: 0.82rem; color: #8a8a99; }
+.collection-hubs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.collection-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e8e8ee;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.collection-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 197, 24, 0.5);
+  background: rgba(245, 197, 24, 0.08);
+}
+.collection-card:focus-visible { outline: 2px solid #f5c518; outline-offset: 2px; }
+.collection-card.active {
+  border-color: #f5c518;
+  background: rgba(245, 197, 24, 0.14);
+  box-shadow: 0 0 18px rgba(245, 197, 24, 0.2);
+}
+.collection-icon { font-size: 1.4rem; flex: 0 0 auto; }
+.collection-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.collection-name { font-size: 0.9rem; font-weight: 800; }
+.collection-desc { font-size: 0.72rem; color: #8a8a99; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.collection-count { font-size: 0.68rem; font-weight: 800; color: #f5c518; flex: 0 0 auto; }

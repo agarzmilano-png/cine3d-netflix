@@ -1,0 +1,38 @@
+name: Smoke test
+
+# Her push ve PR'da kritik akışları doğrular (tests/smoke.js, bağımlılıksız).
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Depoyu al
+        uses: actions/checkout@v4
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Chrome sürümü
+        run: google-chrome --version || chromium --version || true
+
+      - name: Smoke test
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node tests/smoke.js
+
+      - name: Sitemap bütünlüğü
+        run: |
+          COUNT=$(grep -c '<loc>' sitemap.xml)
+          echo "sitemap URL sayısı: $COUNT"
+          test "$COUNT" -ge 110
