@@ -105,6 +105,7 @@
         isFeatured: false,
         isOnlineFetched: true,
         isIndexEntry: true,
+        indexSlug: item.id,
         mediaType: isSeries ? 'series' : 'movie',
         isSeries
       };

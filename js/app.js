@@ -3739,7 +3739,7 @@ class Cine3DApp {
     if (!modal) return;
 
     if (updateUrl) {
-      this.updateUrlForMovie(movie.id);
+      this.updateUrlForMovie(movie);
     }
 
     if (window.cinemaAudio) window.cinemaAudio.playWhoosh();
@@ -4036,7 +4036,21 @@ class Cine3DApp {
     });
 
     document.getElementById('modal-share-btn')?.addEventListener('click', async () => {
-      const shareUrl = `${window.location.origin}${window.location.pathname}?movie=${encodeURIComponent(movie.id)}`;
+      // Kalıcı bağlantı: internetten çekilen yapımlar için ?imdb= / ?cat= kullanılır,
+      // böylece link başka bir tarayıcıda da doğrudan açılır.
+      const shareUrl = this.buildShareUrl(movie);
+      const shareTitle = movie.title + (movie.year ? ' (' + movie.year + ')' : '') + ' — Cine3D';
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareTitle, text: shareTitle, url: shareUrl });
+          this.showToast('📤 Paylaşım menüsü açıldı.', 'success');
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(shareUrl);
@@ -4048,7 +4062,7 @@ class Cine3DApp {
           document.execCommand('copy');
           document.body.removeChild(ta);
         }
-        this.showToast('📋 Film bağlantısı panoya kopyalandı!', 'success');
+        this.showToast('📋 Bağlantı panoya kopyalandı.', 'success');
       } catch (err) {
         this.showToast('Bağlantı: ' + shareUrl, 'info');
       }
@@ -4685,65 +4699,144 @@ class Cine3DApp {
   }
 
   // --- DEEP LINKING & PAYLAŞILABİLİR URL YÖNETİMİ ---
-  updateUrlForMovie(movieId) {
-    if (!window.history || !window.history.pushState) return;
-    try {
-      const url = new URL(window.location.href);
-      if (url.searchParams.get('movie') !== movieId) {
-        url.searchParams.set('movie', movieId);
-        window.history.pushState({ movieId }, '', url.toString());
-      }
-    } catch (e) {
-      // ignore
+  /**
+   * Yapım için kalıcı, paylaşılabilir URL üretir.
+   *  - Yerel katalog:   ?movie=<id>
+   *  - OMDb yapımı:     ?imdb=tt1234567
+   *  - İndeks yapımı:   ?cat=<slug>
+   * Her durumda ?t= (başlık) ve ?y= (yıl) ipucu eklenir; böylece link başka
+   * bir tarayıcıda açıldığında yapım bulunamazsa bile başlıkla aranabilir.
+   */
+  buildShareUrl(movie) {
+    const base = window.location.origin + window.location.pathname;
+    const p = new URLSearchParams();
+    const imdbId = movie.imdbID || (String(movie.id || '').match(/^tt\d+$/) ? movie.id : null);
+
+    if (imdbId && /^tt\d+$/.test(String(imdbId))) {
+      p.set('imdb', imdbId);
+    } else if (movie.isIndexEntry && movie.indexSlug) {
+      p.set('cat', movie.indexSlug);
+    } else if (movie.id && !String(movie.id).startsWith('online_')) {
+      p.set('movie', movie.id);
     }
+
+    const title = movie.originalTitle || movie.title;
+    if (title) p.set('t', title);
+    if (movie.year) p.set('y', String(movie.year));
+
+    const qs = p.toString();
+    return qs ? base + '?' + qs : base;
+  }
+
+  updateUrlForMovie(movie) {
+    if (!window.history || !window.history.replaceState) return;
+    try {
+      const next = this.buildShareUrl(movie);
+      if (window.location.href !== next) {
+        window.history.replaceState({ movieId: movie && movie.id }, '', next);
+      }
+    } catch (e) { /* yoksay */ }
   }
 
   clearUrlMovieParam() {
     if (!window.history || !window.history.replaceState) return;
     try {
       const url = new URL(window.location.href);
-      if (url.searchParams.has('movie')) {
-        url.searchParams.delete('movie');
-        const search = url.searchParams.toString();
-        const newUrl = url.pathname + (search ? '?' + search : '') + url.hash;
-        window.history.replaceState({}, '', newUrl);
-      }
-    } catch (e) {
-      // ignore
+      ['movie', 'imdb', 'cat', 't', 'y'].forEach((k) => url.searchParams.delete(k));
+      const search = url.searchParams.toString();
+      window.history.replaceState({}, '', url.pathname + (search ? '?' + search : '') + url.hash);
+    } catch (e) { /* yoksay */ }
+  }
+
+  /** Paylaşılan bağlantıyı çözer: yerel katalog → OMDb → gömülü indeks → başlık araması. */
+  async resolveSharedMovie() {
+    const params = new URLSearchParams(window.location.search);
+    const movieId = (params.get('movie') || '').trim();
+    const imdbParam = (params.get('imdb') || '').trim();
+    const catParam = (params.get('cat') || '').trim();
+    const titleHint = (params.get('t') || '').trim();
+    const yearHint = (params.get('y') || '').trim();
+
+    if (!movieId && !imdbParam && !catParam && !titleHint) return false;
+
+    const lower = (v) => String(v || '').toLowerCase();
+    const open = (m) => {
+      if (!m) return false;
+      if (!this.movies.includes(m)) this.integrateOnlineMovies([m]);
+      this.openModal(m);
+      return true;
+    };
+
+    // 1) Yerel katalog (109 yapım)
+    let found = this.movies.find((m) => m.id && lower(m.id) === lower(movieId));
+    if (!found && imdbParam) found = this.movies.find((m) => m.imdbID === imdbParam);
+    if (!found && /^tt\d+$/.test(movieId)) found = this.movies.find((m) => m.imdbID === movieId);
+    if (found) return open(found);
+
+    // 2) IMDb kimliği → OMDb doğrudan detay
+    const imdbId = imdbParam || (/^tt\d+$/.test(movieId) ? movieId : '');
+    if (imdbId) {
+      const item = await this.apiService.fetchMovieFullDetails(imdbId, titleHint);
+      if (item) return open(item);
     }
+
+    // 3) Gömülü katalog indeksi (haftalık güncellenen ~750 yapım)
+    const slug = catParam || (movieId.startsWith('idx_') ? movieId.slice(4) : '');
+    const index = window.cine3dCatalog;
+    if (index) {
+      await index.ensureLoaded();
+      let item = slug ? index.items.find((i) => i.id === slug) : null;
+      if (!item && titleHint) {
+        const hits = index.search(titleHint, 1);
+        if (hits.length) return open(hits[0]);
+      }
+      if (item) return open(index.toMovie(item));
+    }
+
+    // 4) Son çare: başlıkla canlı arama (OMDb)
+    if (titleHint) {
+      const results = await this.apiService.searchAndEnrich(titleHint, 3);
+      if (results && results.length) {
+        const exact = results.find((m) => lower(m.originalTitle) === lower(titleHint) || lower(m.title) === lower(titleHint));
+        const byYear = yearHint ? results.find((m) => String(m.year) === String(yearHint)) : null;
+        return open(byYear || exact || results[0]);
+      }
+    }
+
+    return false;
   }
 
   handleInitialUrlParams() {
     try {
       const params = new URLSearchParams(window.location.search);
-      const movieId = params.get('movie');
-      if (movieId) {
-        const normalized = movieId.toLowerCase().trim();
-        const findAndOpen = () => {
-          const found = this.movies.find(m => 
-            (m.id && m.id.toLowerCase() === normalized) ||
-            (m.imdbId && m.imdbId.toLowerCase() === normalized) ||
-            (m.title && m.title.toLowerCase() === normalized) ||
-            (m.originalTitle && m.originalTitle.toLowerCase() === normalized)
-          );
-          if (found) {
-            this.openModal(found, false, false);
-            return true;
-          }
-          return false;
-        };
-
-        if (!findAndOpen()) {
-          setTimeout(findAndOpen, 600);
-        }
-      }
-
       const tabId = params.get('tab');
+
+      const run = async () => {
+        const opened = await this.resolveSharedMovie();
+        if (!opened && (params.get('movie') || params.get('imdb') || params.get('cat'))) {
+          this.showToast('🔎 Paylaşılan yapım bulunamadı; katalog gösteriliyor.', 'info');
+          this.clearUrlMovieParam();
+        }
+      };
+
+      // Katalog ve indeks hazır olduktan sonra çöz
+      run();
+
       if (tabId) {
-        setTimeout(() => {
-          this.switchDiscoveryTab(tabId);
-        }, 300);
+        setTimeout(() => this.switchDiscoveryTab(tabId), 350);
       }
+
+      // Geri/ileri tuşları: URL'deki yapımı aç/kapat
+      window.addEventListener('popstate', () => {
+        const hasTarget = new URLSearchParams(window.location.search).get('movie') ||
+                          new URLSearchParams(window.location.search).get('imdb') ||
+                          new URLSearchParams(window.location.search).get('cat');
+        if (hasTarget) {
+          this.resolveSharedMovie();
+        } else if (this.activeMovieForModal) {
+          this.closeModal(false);
+        }
+      });
     } catch (e) {
       console.warn('URL parametre çözümleme hatası:', e);
     }
@@ -5616,25 +5709,14 @@ class Cine3DApp {
     });
 
     // Tarayıcı İleri / Geri Tuşları (Deep Linking & History API)
+    // Tarayıcı İleri / Geri (paylaşılan bağlantılar dahil)
     window.addEventListener('popstate', () => {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const movieId = params.get('movie');
-        const modal = document.getElementById('movie-modal');
-        if (movieId) {
-          const normalized = movieId.toLowerCase().trim();
-          const found = this.movies.find(m => 
-            (m.id && m.id.toLowerCase() === normalized) ||
-            (m.imdbId && m.imdbId.toLowerCase() === normalized)
-          );
-          if (found && (!this.activeMovieForModal || this.activeMovieForModal.id !== found.id)) {
-            this.openModal(found, false, false);
-          }
-        } else if (modal && modal.classList.contains('open')) {
-          this.closeModal(false);
-        }
-      } catch (err) {
-        // ignore
+      const params = new URLSearchParams(window.location.search);
+      const hasTarget = params.get('movie') || params.get('imdb') || params.get('cat');
+      if (hasTarget) {
+        this.resolveSharedMovie();
+      } else if (this.activeMovieForModal) {
+        this.closeModal(false);
       }
     });
 
