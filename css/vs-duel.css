@@ -1022,7 +1022,14 @@
 
 .reveal-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+}
+
+.reveal-actions .btn {
+  flex: 1 1 auto;
+  min-width: 140px;
+  white-space: nowrap;
 }
 
 /* --- 2. Sinema Bileti Modalı (VIP Pass Generator) --- */

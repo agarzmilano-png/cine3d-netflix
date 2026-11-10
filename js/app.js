@@ -2095,33 +2095,75 @@ class Cine3DApp {
   // =========================================================================
   // --- SİNEMATİK FİLM RULETİ & BİLET OLUŞTURUCU (FAZ 4) ---
   // =========================================================================
+  getRoulettePool() {
+    const f = this.activeRouletteFilter || 'all';
+    let pool = [...this.movies];
+    if (f === 'masterpiece') pool = pool.filter(m => Number(m.imdbRating) >= 8.8);
+    else if (f === 'scifi') pool = pool.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu'));
+    else if (f === 'mind-bending') pool = pool.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending'));
+    else if (f === 'series') pool = pool.filter(m => m.isSeries);
+    if (pool.length < 5) pool = [...this.movies];
+    return pool;
+  }
+
+  shuffleRoulette(list) {
+    const a = [...list];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  updateRouletteCounts() {
+    const countFor = (f) => {
+      if (f === 'masterpiece') return this.movies.filter(m => Number(m.imdbRating) >= 8.8).length;
+      if (f === 'scifi') return this.movies.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu')).length;
+      if (f === 'mind-bending') return this.movies.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending')).length;
+      if (f === 'series') return this.movies.filter(m => m.isSeries).length;
+      return this.movies.length;
+    };
+    document.querySelectorAll('#roulette-filter-pills .roulette-filter-pill').forEach(pill => {
+      const f = pill.dataset.rfilter || 'all';
+      const base = (pill.textContent || '').replace(/\s*\(\d+[^)]*\)\s*$/, '').trim();
+      pill.textContent = base + ' (' + countFor(f) + ')';
+    });
+  }
+
   initRoulette() {
     const strip = document.getElementById('roulette-strip');
     if (!strip) return;
 
-    let pool = [...this.movies];
-    if (this.activeRouletteFilter === 'masterpiece') pool = pool.filter(m => m.imdbRating >= 8.8);
-    else if (this.activeRouletteFilter === 'scifi') pool = pool.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu'));
-    else if (this.activeRouletteFilter === 'mind-bending') pool = pool.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending'));
-    else if (this.activeRouletteFilter === 'series') pool = pool.filter(m => m.isSeries);
+    const pool = this.getRoulettePool();
+    this.updateRouletteCounts();
 
-    if (pool.length < 5) pool = [...this.movies];
-
-    const repeated = [];
-    while (repeated.length < 32) {
-      repeated.push(...pool);
+    // 64 kartlık dizilim: havuz karıştırılıp doldurulur; hedef her zaman son 12 karttan
+    // seçildiği için 109 yapımın tamamı (filtreye göre hepsi) çıkabilir.
+    const TOTAL = 64;
+    const seq = [];
+    while (seq.length < TOTAL) {
+      const chunk = this.shuffleRoulette(pool);
+      for (const m of chunk) {
+        if (seq.length >= TOTAL) break;
+        if (seq.length && seq[seq.length - 1].id === m.id) continue;
+        seq.push(m);
+      }
     }
-    this.roulettePool = repeated.slice(0, 36);
-
-    strip.innerHTML = this.roulettePool.map((m, idx) => `
-      <div class="roulette-card-item" data-index="${idx}" data-movie-id="${m.id}">
-        <img src="${m.posterUrl}" alt="${m.title}" onerror="this.src=getFallbackPoster('${m.title.replace(/'/g, "\\'")}', '${m.genres[0]}', '${m.imdbRating}');" />
-        <div class="item-badge">★ ${m.imdbRating} ${m.title}</div>
-      </div>
-    `).join('');
+    this.rouletteSequence = seq;
 
     strip.style.transition = 'none';
     strip.style.transform = 'translateX(0px)';
+    strip.innerHTML = seq.map((m, idx) => {
+      const safeTitle = escapeHtmlText(m.title);
+      const safeGenre = escapeHtmlText((m.genres && m.genres[0]) || 'Sinema');
+      return `
+      <div class="roulette-card-item" data-index="${idx}" data-movie-id="${escapeHtmlText(m.id)}">
+        <img src="${escapeHtmlText(m.posterUrl)}" alt="${safeTitle}" loading="lazy" decoding="async"
+             data-title="${safeTitle}" data-genre="${safeGenre}" data-rating="${escapeHtmlText(m.imdbRating)}"
+             onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
+        <div class="item-badge">★ ${escapeHtmlText(m.imdbRating)} ${safeTitle}</div>
+      </div>`;
+    }).join('');
   }
 
   spinRoulette() {
@@ -2131,71 +2173,136 @@ class Cine3DApp {
     const revealCard = document.getElementById('roulette-reveal-card');
     if (!strip || !spinBtn) return;
 
+    if (!this.rouletteSequence || this.rouletteSequence.length < 10) this.initRoulette();
+    if (!this.rouletteSequence || !this.rouletteSequence.length) return;
+
     this.isSpinningRoulette = true;
     spinBtn.disabled = true;
     revealCard?.classList.add('hidden');
 
-    if (!this.roulettePool || this.roulettePool.length === 0) {
-      this.initRoulette();
+    // Aynı yapımın üst üste gelmemesi için son 10 seçim hatırlanır
+    this.recentRoulettePicks = this.recentRoulettePicks || [];
+    const seq = this.rouletteSequence;
+    const tailStart = Math.max(0, seq.length - 12);
+    let targetIdx = tailStart + Math.floor(Math.random() * (seq.length - tailStart));
+    for (let k = 0; k < 12 && this.recentRoulettePicks.includes(seq[targetIdx].id); k++) {
+      targetIdx = tailStart + Math.floor(Math.random() * (seq.length - tailStart));
     }
+    const targetMovie = seq[targetIdx];
+    this.recentRoulettePicks.unshift(targetMovie.id);
+    this.recentRoulettePicks = this.recentRoulettePicks.slice(0, 10);
 
-    const targetIdx = 20 + Math.floor(Math.random() * (this.roulettePool.length - 22));
-    const targetMovie = this.roulettePool[targetIdx];
+    // Geometriyi DOM'dan ölç (responsive kart/genişlik değişimlerine dayanıklı)
+    const firstCard = strip.querySelector('.roulette-card-item');
+    const cardW = firstCard ? firstCard.getBoundingClientRect().width : 130;
+    const gap = parseFloat(getComputedStyle(strip).gap) || 16;
+    const stride = cardW + gap;
+    const padLeft = parseFloat(getComputedStyle(strip).paddingLeft) || 0;
 
-    const cardWidth = 146;
     const windowEl = document.getElementById('roulette-window');
     const windowWidth = windowEl ? windowEl.offsetWidth : 800;
-    const centerOffset = (windowWidth / 2) - 65 - 20;
-    const targetTranslateX = -((targetIdx * cardWidth) - centerOffset);
+    const targetX = -((padLeft + targetIdx * stride + cardW / 2) - windowWidth / 2);
 
-    // Rulet dönüş ses döngüsü
-    let tickCount = 0;
-    const maxTicks = 24;
-    const tickInterval = setInterval(() => {
-      if (window.cinemaAudio) window.cinemaAudio.playReelTick();
-      tickCount++;
-      if (tickCount >= maxTicks) clearInterval(tickInterval);
-    }, 130);
+    const reduced = document.body.classList.contains('reduced-motion') ||
+      (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const duration = reduced ? 320 : 3800;
 
-    strip.style.transition = 'transform 3.8s cubic-bezier(0.12, 0.8, 0.18, 1)';
-    strip.style.transform = `translateX(${targetTranslateX}px)`;
+    const run = () => {
+      strip.style.transition = 'none';
+      strip.style.transform = 'translateX(0px)';
 
-    setTimeout(() => {
-      this.isSpinningRoulette = false;
-      spinBtn.disabled = false;
+      const startTime = performance.now();
+      let lastCardIdx = -1;
 
-      if (window.cinemaAudio) window.cinemaAudio.playTaDum();
+      const frame = (now) => {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+        const x = targetX * eased;
+        strip.style.transform = 'translateX(' + x + 'px)';
 
-      if (revealCard && targetMovie) {
-        revealCard.innerHTML = `
-          <img src="${targetMovie.posterUrl}" class="roulette-reveal-thumb" alt="${targetMovie.title}" onerror="this.src=getFallbackPoster('${targetMovie.title}', '${targetMovie.genres[0]}', '${targetMovie.imdbRating}');" />
-          <div class="roulette-reveal-info">
-            <div class="reveal-crown-line">👑 ŞANSININ SEÇTİĞİ BAŞYAPIT</div>
-            <h3 class="reveal-title">${targetMovie.title}</h3>
-            <div class="reveal-meta">⭐ ${targetMovie.imdbRating} IMDb • ${targetMovie.year} • ${targetMovie.duration} • ${targetMovie.director}</div>
-            <div class="reveal-tagline">“${targetMovie.tagline || targetMovie.summary.slice(0, 100) + '...'}”</div>
-            <div class="reveal-actions">
-              <button class="btn btn-primary" id="roulette-open-modal-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                Hemen İncele & Fragman İzle
-              </button>
-              <button class="btn btn-secondary" id="roulette-re-spin-btn">
-                🔄 Tekrar Döndür
-              </button>
-            </div>
-          </div>
-        `;
-        revealCard.classList.remove('hidden');
+        // Tık sesi gerçekten geçen kartlarla senkron
+        if (!reduced && window.cinemaAudio) {
+          const cardAt = Math.floor((-x + windowWidth / 2) / stride);
+          if (cardAt !== lastCardIdx) {
+            lastCardIdx = cardAt;
+            window.cinemaAudio.playReelTick();
+          }
+        }
 
-        document.getElementById('roulette-open-modal-btn')?.addEventListener('click', () => {
-          this.openModal(targetMovie);
-        });
+        if (t < 1) requestAnimationFrame(frame);
+        else this.finishRouletteSpin(targetMovie);
+      };
+      requestAnimationFrame(frame);
+    };
 
-        document.getElementById('roulette-re-spin-btn')?.addEventListener('click', () => {
-          this.spinRoulette();
-        });
+    // Şerit başa dönerken zıplama görünmesin: kısa bir soluklanma ile sıfırla
+    if (reduced) {
+      run();
+    } else {
+      strip.style.transition = 'opacity 0.16s ease';
+      strip.style.opacity = '0';
+      setTimeout(() => {
+        strip.style.opacity = '1';
+        run();
+      }, 170);
+    }
+  }
+
+  finishRouletteSpin(targetMovie) {
+    const spinBtn = document.getElementById('btn-spin-roulette');
+    const revealCard = document.getElementById('roulette-reveal-card');
+    this.isSpinningRoulette = false;
+    if (spinBtn) spinBtn.disabled = false;
+    if (window.cinemaAudio) window.cinemaAudio.playTaDum();
+    if (!revealCard || !targetMovie) return;
+
+    const inList = this.isMovieInWatchlist(targetMovie.id);
+    const safeTitle = escapeHtmlText(targetMovie.title);
+    const safeGenre = escapeHtmlText((targetMovie.genres && targetMovie.genres[0]) || 'Sinema');
+
+    revealCard.innerHTML = `
+      <img src="${escapeHtmlText(targetMovie.posterUrl)}" class="roulette-reveal-thumb" alt="${safeTitle}" loading="eager"
+           data-title="${safeTitle}" data-genre="${safeGenre}" data-rating="${escapeHtmlText(targetMovie.imdbRating)}"
+           onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
+      <div class="roulette-reveal-info">
+        <div class="reveal-crown-line">👑 ŞANSININ SEÇTİĞİ BAŞYAPIT</div>
+        <h3 class="reveal-title">${safeTitle}</h3>
+        <div class="reveal-meta">⭐ ${escapeHtmlText(targetMovie.imdbRating)} IMDb • ${escapeHtmlText(targetMovie.year)} • ${escapeHtmlText(targetMovie.duration)} • ${escapeHtmlText(targetMovie.director)}</div>
+        <div class="reveal-tagline">“${escapeHtmlText((targetMovie.tagline || targetMovie.summary || '').slice(0, 110))}…”</div>
+        <div class="reveal-actions">
+          <button class="btn btn-primary" id="roulette-open-modal-btn">▶ Hemen İncele &amp; Fragman</button>
+          <button class="btn btn-secondary" id="roulette-watchlist-btn">${inList ? '💔 Listemden Çıkar' : '❤ Listeme Ekle'}</button>
+          <button class="btn btn-secondary" id="roulette-ticket-btn">🎟️ Bilet</button>
+          <button class="btn btn-secondary" id="roulette-share-btn">🔗 Paylaş</button>
+          <button class="btn btn-secondary" id="roulette-re-spin-btn">🔄 Tekrar Döndür</button>
+        </div>
+      </div>`;
+    revealCard.classList.remove('hidden');
+    revealCard.setAttribute('aria-live', 'polite');
+
+    document.getElementById('roulette-open-modal-btn')?.addEventListener('click', () => this.openModal(targetMovie));
+
+    document.getElementById('roulette-watchlist-btn')?.addEventListener('click', (e) => {
+      this.toggleWatchlist(targetMovie);
+      const btn = e.currentTarget;
+      if (btn) btn.textContent = this.isMovieInWatchlist(targetMovie.id) ? '💔 Listemden Çıkar' : '❤ Listeme Ekle';
+      this.updateRouletteCounts();
+    });
+
+    document.getElementById('roulette-ticket-btn')?.addEventListener('click', () => this.openTicketModal(targetMovie));
+
+    document.getElementById('roulette-share-btn')?.addEventListener('click', async () => {
+      const url = this.buildShareUrl(targetMovie);
+      try {
+        if (navigator.share) { await navigator.share({ title: targetMovie.title + ' — Cine3D', url }); return; }
+        await navigator.clipboard.writeText(url);
+        this.showToast('📋 Bağlantı kopyalandı.', 'success');
+      } catch (err) {
+        this.showToast('Bağlantı: ' + url, 'info');
       }
-    }, 3900);
+    });
+
+    document.getElementById('roulette-re-spin-btn')?.addEventListener('click', () => this.spinRoulette());
   }
 
   openTicketModal(movie) {
