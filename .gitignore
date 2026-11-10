@@ -18,3 +18,5 @@ tunnel-url.txt
 chrome-*-profile/
 test_*.js
 server.js.bak
+# OST doğrulama önbelleği (üretilen çalışma dosyası)
+scripts/.ost-cache.json
