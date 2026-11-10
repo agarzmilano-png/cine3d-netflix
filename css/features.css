@@ -1786,3 +1786,26 @@
     justify-content: center;
   }
 }
+
+/* --- Duo eşleşme: ortak tür rozetleri --- */
+.drc-shared-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 4px;
+}
+.drc-shared-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #a3a3b2;
+}
+.drc-shared-chip {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  border-radius: 999px;
+  padding: 2px 9px;
+}

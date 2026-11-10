@@ -1121,13 +1121,30 @@
     currentIndex: 0,
 
     genresList: [
-      'Bilim Kurgu', 'Aksiyon', 'Dram', 'Gerilim', 'Suç', 'Macera', 
+      'Bilim Kurgu', 'Aksiyon', 'Dram', 'Gerilim', 'Suç', 'Macera',
       'Gizem', 'Komedi', 'Animasyon', 'Fantastik', 'Biyografi', 'Korku'
     ],
+
+    /** Katalogdaki gerçek türleri sıklığa göre çıkarır (Romantik, Tarih, Aile... dahil). */
+    buildGenreList() {
+      const movies = (window.app && Array.isArray(window.app.movies)) ? window.app.movies : [];
+      const counts = {};
+      for (const m of movies) {
+        for (const g of (m.genres || [])) counts[g] = (counts[g] || 0) + 1;
+      }
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([g]) => g);
+      if (sorted.length >= 6) this.genresList = sorted.slice(0, 18);
+
+      // Seçili türler yeni listede yoksa korunmalı: listeye geri ekle
+      for (const g of [...this.p1.genres, ...this.p2.genres]) {
+        if (!this.genresList.includes(g)) this.genresList.push(g);
+      }
+    },
 
     init() {
       if (this.inited) return;
       this.inited = true;
+      this.buildGenreList();
       this.render();
       this.bindEvents();
     },
@@ -1371,7 +1388,8 @@
           score -= 25;
         }
 
-        const matchPct = Math.min(99, Math.max(78, Math.round(75 + (score / 11))));
+        // Skoru 40-99 aralığına yay (paylaşılan tür yoksa düşük, tam uyumda yüksek)
+        const matchPct = Math.min(99, Math.max(40, Math.round(52 + score / 4.2)));
 
         return {
           movie: m,
@@ -1407,7 +1425,8 @@
         ? `${p2Name}'ın sevdiği ${item.p2Genres.join(', ')} tonlarına mükemmel uyuyor.` 
         : `${p2Name}'ın yüksek sinema zevkine hitap eden bir kurguya sahip.`;
 
-      const posterFallback = `getFallbackPoster('${esc(m.title)}', '${(m.genres && m.genres[0]) || 'Sinema'}', '${m.imdbRating}')`;
+      const safeTitle = esc(m.title);
+      const safeGenre = esc((m.genres && m.genres[0]) || 'Sinema');
 
       box.classList.remove('hidden');
       box.innerHTML = `
@@ -1432,7 +1451,7 @@
 
         <div class="drc-movie-showcase">
           <div class="drc-poster-wrap">
-            <img class="drc-poster-img" src="${m.posterUrl}" alt="${esc(m.title)}" onerror="this.onerror=null; this.src=${posterFallback};" />
+            <img class="drc-poster-img" src="${esc(m.posterUrl)}" alt="${safeTitle}" data-title="${safeTitle}" data-genre="${safeGenre}" data-rating="${esc(m.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
           </div>
           <div class="drc-movie-info">
             <h4 class="drc-movie-title">${esc(m.title)}</h4>
@@ -1443,10 +1462,14 @@
               ${(Array.isArray(m.genres) ? m.genres : []).map(g => `<span class="drc-meta-chip">${esc(g)}</span>`).join('')}
             </div>
             <p class="drc-summary">${esc(m.summary || m.tagline || 'Muhteşem bir yapım.')}</p>
+            ${item.sharedGenres.length ? `<div class="drc-shared-row"><span class="drc-shared-label">🤝 Ortak türler:</span>${item.sharedGenres.map(g => `<span class="drc-shared-chip">${esc(g)}</span>`).join('')}</div>` : ''}
             <div class="drc-actions">
               <button class="btn-drc-play" id="btn-duo-open-movie">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 <span>Fragmanı Başlat & Detaylar</span>
+              </button>
+              <button class="btn-drc-alt" id="btn-duo-watchlist">
+                <span>${(window.app && window.app.isMovieInWatchlist && window.app.isMovieInWatchlist(m.id)) ? '💔 Listemden Çıkar' : '❤ Listeme Ekle'}</span>
               </button>
               ${this.candidates.length > 1 ? `
                 <button class="btn-drc-alt" id="btn-duo-next-alt">
@@ -1464,6 +1487,17 @@
       box.querySelector('#btn-duo-open-movie')?.addEventListener('click', () => {
         if (window.app && typeof window.app.openModal === 'function') {
           window.app.openModal(m, true);
+        }
+      });
+
+      box.querySelector('#btn-duo-watchlist')?.addEventListener('click', (e) => {
+        if (window.app && typeof window.app.toggleWatchlist === 'function') {
+          window.app.toggleWatchlist(m);
+          const btn = e.currentTarget;
+          if (btn) {
+            const inList = window.app.isMovieInWatchlist(m.id);
+            btn.querySelector('span').textContent = inList ? '💔 Listemden Çıkar' : '❤ Listeme Ekle';
+          }
         }
       });
 

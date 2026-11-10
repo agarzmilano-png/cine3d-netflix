@@ -1578,7 +1578,7 @@ class Cine3DApp {
     return this.watchedList.find(item => item.id === movieId) || null;
   }
 
-  toggleWatched(movie, userRating = 10) {
+  toggleWatched(movie, userRating = null) {
     if (!movie) return;
     const exists = this.isMovieWatched(movie.id);
 
@@ -1588,7 +1588,7 @@ class Cine3DApp {
     } else {
       this.watchedList.push({
         id: movie.id,
-        userRating: Number(userRating) || 10,
+        userRating: (userRating == null) ? null : Math.max(1, Math.min(10, Number(userRating) || 10)),
         watchedAt: Date.now()
       });
       this.showToast(`👁️ "${movie.title}" izlendi olarak işaretlendi!`, 'success');
@@ -1604,7 +1604,14 @@ class Cine3DApp {
   setMovieUserRating(movieId, rating) {
     const record = this.getMovieWatchedRecord(movieId);
     if (record) {
-      record.userRating = Math.max(1, Math.min(10, Number(rating) || 10));
+      if (rating == null || rating === '' || Number.isNaN(Number(rating))) {
+        record.userRating = null;
+        this.saveWatchedList();
+        this.renderWatchlistDrawer();
+        this.showToast('Puan kaldırıldı.', 'info');
+        return;
+      }
+      record.userRating = Math.max(1, Math.min(10, Number(rating)));
       this.saveWatchedList();
       this.renderWatchlistDrawer();
       this.showToast(`⭐ Kişisel puanınız güncellendi: ${record.userRating}/10`, 'success');
@@ -3502,7 +3509,7 @@ class Cine3DApp {
         <div class="top10-card" data-movie-id="${movie.id}">
           <span class="top10-rank">${rankText}</span>
           <div class="top10-poster-wrap card-3d-tilt">
-            <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.onerror=null; this.src=getFallbackPoster('${movie.title.replace(/'/g, "\\'")}', '${movie.genres[0]}', '${movie.imdbRating}');" />
+            <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
             <div class="top10-rating-badge">⭐ ${movie.imdbRating}</div>
           </div>
           <div class="top10-info">
@@ -3590,7 +3597,7 @@ class Cine3DApp {
         <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}">
           <div class="card-inner">
             <div class="card-poster">
-              <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" onerror="this.onerror=null; this.src=getFallbackPoster('${movie.title.replace(/'/g, "\\'")}', '${movie.genres[0]}', '${movie.imdbRating}');" />
+              <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
               <div class="card-glare"></div>
 
               <!-- Platform Marka Rozeti -->
@@ -3906,7 +3913,7 @@ class Cine3DApp {
             <!-- Sol Kolon: Poster ve IMDb Rozeti -->
             <div class="modal-col-left">
               <div class="modal-poster-wrap card-3d-tilt">
-                <img src="${movie.posterUrl}" alt="${movie.title}" onerror="this.onerror=null; this.src=getFallbackPoster('${movie.title.replace(/'/g, "\\'")}', '${movie.genres[0]}', '${movie.imdbRating}');" />
+                <img src="${movie.posterUrl}" alt="${movie.title}" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
               </div>
 
               <!-- IMDb Süper Rozeti -->
@@ -5234,7 +5241,7 @@ class Cine3DApp {
 
       container.innerHTML = this.watchlist.map(movie => `
         <div class="watchlist-item-card" data-movie-id="${movie.id}">
-          <img class="wl-thumb" src="${movie.posterUrl}" alt="${movie.title}" onerror="this.onerror=null; this.src=getFallbackPoster('${movie.title.replace(/'/g, "\\'")}', '${movie.genres[0]}', '${movie.imdbRating}');" />
+          <img class="wl-thumb" src="${movie.posterUrl}" alt="${movie.title}" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
           <div class="wl-details">
             <h4 class="wl-title">${movie.title}</h4>
             <div class="wl-meta">
@@ -5301,11 +5308,11 @@ class Cine3DApp {
           posterUrl: ''
         };
 
-        const ratingVal = record.userRating || 10;
+        const ratingVal = (record.userRating == null) ? null : record.userRating;
 
         return `
           <div class="watchlist-item-card" data-movie-id="${movie.id}">
-            <img class="wl-thumb" src="${movie.posterUrl}" alt="${movie.title}" onerror="this.onerror=null; this.src=getFallbackPoster('${movie.title.replace(/'/g, "\\'")}', '${movie.genres[0]}', '${movie.imdbRating}');" />
+            <img class="wl-thumb" src="${movie.posterUrl}" alt="${movie.title}" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
             <div class="wl-details">
               <h4 class="wl-title">${movie.title}</h4>
               <div class="wl-meta">
@@ -5316,6 +5323,7 @@ class Cine3DApp {
               <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
                 <span style="font-size:0.75rem; color:#34d399; font-weight:700;">Puanın:</span>
                 <select class="user-rating-select" data-movie-id="${movie.id}" onclick="event.stopPropagation();" style="background:rgba(16, 185, 129, 0.15); border:1px solid #10b981; color:#34d399; border-radius:6px; padding:1px 4px; font-size:0.75rem; font-weight:700;">
+                  <option value="" ${ratingVal == null ? 'selected' : ''}>— Puanla</option>
                   ${[10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map(score => `
                     <option value="${score}" ${score === ratingVal ? 'selected' : ''}>★ ${score}</option>
                   `).join('')}
@@ -5368,8 +5376,8 @@ class Cine3DApp {
       container.querySelectorAll('.user-rating-select').forEach(sel => {
         sel.addEventListener('change', (e) => {
           const id = sel.dataset.movieId;
-          const score = parseInt(e.target.value, 10);
-          this.setMovieUserRating(id, score);
+          const raw = e.target.value;
+          this.setMovieUserRating(id, raw === '' ? null : parseInt(raw, 10));
         });
       });
       return;
@@ -5398,6 +5406,7 @@ class Cine3DApp {
       const totalCount = this.watchedList.length;
       let totalMinutes = 0;
       let totalUserRating = 0;
+      let ratedCount = 0;
       let totalImdb = 0;
       const genreCounts = {};
       const directorCounts = {};
@@ -5421,12 +5430,15 @@ class Cine3DApp {
             directorCounts[movie.director] = (directorCounts[movie.director] || 0) + 1;
           }
         }
-        totalUserRating += (item.userRating || 10);
+        if (typeof item.userRating === 'number' && item.userRating > 0) {
+          totalUserRating += item.userRating;
+          ratedCount++;
+        }
       });
 
       const hours = Math.floor(totalMinutes / 60);
       const remainingMins = totalMinutes % 60;
-      const avgUser = (totalUserRating / totalCount).toFixed(1);
+      const avgUser = ratedCount > 0 ? (totalUserRating / ratedCount).toFixed(1) : null;
       const avgImdb = (totalImdb / totalCount).toFixed(1);
 
       // En popüler türler ve DNA oranı
@@ -5475,8 +5487,8 @@ class Cine3DApp {
               <span class="report-tile-label">Toplam Süre</span>
             </div>
             <div class="report-stat-tile">
-              <span class="report-tile-val">★ ${avgUser}</span>
-              <span class="report-tile-label">Ort. Puanın (IMDb: ${avgImdb})</span>
+              <span class="report-tile-val">${avgUser ? '★ ' + avgUser : '—'}</span>
+              <span class="report-tile-label">Ort. Puanın${ratedCount ? ` (${ratedCount} puan)` : ''} · IMDb: ${avgImdb}</span>
             </div>
             <div class="report-stat-tile">
               <span class="report-tile-val" style="font-size:1.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${topGenre}</span>
