@@ -117,6 +117,14 @@ Doğrulama / yenileme:
 node scripts/fix-ost.js
 ```
 
+### Uygulama olarak yükleme (PWA)
+
+Site, tarayıcıdan **uygulama olarak yüklenebilir** (ana ekrana ekleme) ve çevrimdışı açılır.
+
+- Manifest:  —  görünüm, 192/512 px + **maskable** ikon
+- Service worker:  — kabuk önbelleği, ağ-öncelikli varlıklar, çevrimdışı fallback
+- Kurulum: üst çubuktaki 📲 butonu (Chrome/Edge gerçek kurulum penceresi; iOS Safari için talimat gösterir)
+
 ### OMDb anahtarı
 
 Varsayılan olarak herkese açık demo anahtar (`trilogy`) kullanılır; günlük kotası dolabilir.

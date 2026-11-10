@@ -10,7 +10,10 @@
   "theme_color": "#e50914",
   "orientation": "any",
   "lang": "tr",
-  "categories": ["entertainment", "movies"],
+  "categories": [
+    "entertainment",
+    "movies"
+  ],
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -23,6 +26,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icons/icon.svg",

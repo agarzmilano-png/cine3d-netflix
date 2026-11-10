@@ -4866,32 +4866,49 @@ class Cine3DApp {
       });
     }
 
-    let deferredPrompt = null;
     const installBtn = document.getElementById('btn-pwa-install');
+    this.deferredInstallPrompt = null;
+
+    const isStandalone = () =>
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      window.navigator.standalone === true;
+
+    // Butonu yalnızca uygulama zaten yüklüyse gizle. beforeinstallprompt
+    // yalnızca Chrome/Edge'de tetiklenir; iOS Safari ve Firefox'ta hiç gelmez,
+    // bu yüzden talimat gösteren bir yedek akış gerekiyor.
+    if (installBtn && !isStandalone()) installBtn.classList.remove('hidden');
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      deferredPrompt = e;
-      if (installBtn) {
-        installBtn.classList.remove('hidden');
-      }
+      this.deferredInstallPrompt = e;
+      if (installBtn) installBtn.classList.remove('hidden');
     });
 
     if (installBtn) {
       installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) {
-          this.showToast('ℹ️ Tarayıcınızın menüsünden "Uygulamayı Yükle" diyebilirsiniz.', 'info');
+        if (isStandalone()) {
+          this.showToast('✅ Cine3D zaten uygulama olarak yüklü.', 'info');
           return;
         }
-        deferredPrompt.prompt();
-        try {
-          const { outcome } = await deferredPrompt.userChoice;
-          if (outcome === 'accepted') {
-            this.showToast('🎉 Cine3D uygulaması yükleniyor!', 'success');
-          }
-        } catch (err) {}
-        deferredPrompt = null;
-        installBtn.classList.add('hidden');
+        const prompt = this.deferredInstallPrompt;
+        if (prompt) {
+          prompt.prompt();
+          try {
+            const { outcome } = await prompt.userChoice;
+            if (outcome === 'accepted') this.showToast('🎉 Cine3D uygulaması yükleniyor!', 'success');
+          } catch (err) { /* yoksay */ }
+          this.deferredInstallPrompt = null;
+          return;
+        }
+
+        // Yedek: tarayıcıya özel kurulum talimatı
+        const ua = navigator.userAgent || '';
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (isIOS) {
+          this.showToast('📲 iPhone/iPad: Paylaş ➜ "Ana Ekrana Ekle" ile yükleyin.', 'info');
+        } else {
+          this.showToast('📲 Tarayıcı menüsünden "Uygulamayı yükle / Ana ekrana ekle" seçin.', 'info');
+        }
       });
     }
 
