@@ -5868,3 +5868,35 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
 #coverflow-container.is-dragging {
   cursor: grabbing;
 }
+
+/* "İzlemediklerim" filtresi */
+.hide-watched-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+.hide-watched-btn:hover { border-color: rgba(52, 211, 153, 0.6); color: #fff; }
+.hide-watched-btn.active {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #34d399;
+  color: #34d399;
+}
+.hide-watched-btn .hw-count {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+@media (max-width: 720px) {
+  .hide-watched-btn { margin: 8px 0 0; }
+  .hide-watched-btn .hw-text { display: none; }
+}

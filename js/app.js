@@ -887,6 +887,8 @@ class Cine3DApp {
     this.vsList = [];
     this.activeMovieForModal = null;
     this.coverflowInstance = null;
+    // "İzlemediklerim" filtresi (kalıcı)
+    this.hideWatched = localStorage.getItem('cine3d_hide_watched') === '1';
     this.heroMovieIndex = 0;
     this.featuredMovies = this.movies.filter(m => m.isFeatured);
 
@@ -1605,6 +1607,7 @@ class Cine3DApp {
     }
 
     this.saveWatchedList();
+    this.updateHideWatchedButton();
     this.updateWatchedCardButtons();
     this.updateWatchedModalBtn(movie.id);
     this.renderWatchlistDrawer();
@@ -3310,6 +3313,11 @@ class Cine3DApp {
       result = result.filter(m => m.imdbRating >= this.minImdb);
     }
 
+    // 3.5 İzlediklerimi gizle
+    if (this.hideWatched) {
+      result = result.filter(m => !this.isMovieWatched(m.id));
+    }
+
     // 4. Arama sorgusu (Başlık, orijinal başlık, yönetmen, oyuncular, konu)
     // DÜZELTME: Aksan/uzatma işaretleri (Shōgun, Amélie, Şogun) aramayı bozuyordu;
     // karşılaştırma öncesi metin sadeleştirilir.
@@ -3351,6 +3359,7 @@ class Cine3DApp {
     this.renderMoviesGrid();
     this.renderTop10Row();
     this.updateStatsBar();
+    this.updateHideWatchedButton();
     this.updateCatalogHeader();
 
     // 3D Coverflow açıksa onu da güncelle
@@ -5634,11 +5643,48 @@ class Cine3DApp {
       searchInput.value = "";
       searchInput.setAttribute('placeholder', 'Ara');
     }
+    if (this.hideWatched) { this.hideWatched = false; try { localStorage.setItem('cine3d_hide_watched', '0'); } catch (e) {} }
     this.setMinImdb(0);
     this.renderGenreFilters();
     this.renderMoodSection();
     this.renderPaletteSection();
     this.applyFilters();
+  }
+
+  updateHideWatchedButton() {
+    const btn = document.getElementById('btn-hide-watched');
+    if (!btn) return;
+    const count = this.watchedList.length;
+    btn.classList.toggle('active', !!this.hideWatched);
+    btn.setAttribute('aria-pressed', this.hideWatched ? 'true' : 'false');
+    const txt = btn.querySelector('.hw-text');
+    if (txt) txt.textContent = this.hideWatched ? 'İzlenenler gizli' : 'İzlemediklerim';
+    let badge = btn.querySelector('.hw-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'hw-count';
+      btn.appendChild(badge);
+    }
+    badge.textContent = count ? '(' + count + ')' : '';
+    btn.title = this.hideWatched
+      ? 'İzlenen ' + count + ' yapım gizli — göstermek için tıkla'
+      : 'İzlediklerini katalogdan gizle';
+  }
+
+  toggleHideWatched() {
+    this.hideWatched = !this.hideWatched;
+    try { localStorage.setItem('cine3d_hide_watched', this.hideWatched ? '1' : '0'); } catch (e) { /* yoksay */ }
+    this.applyFilters();
+    this.updateHideWatchedButton();
+    if (window.cinemaAudio) window.cinemaAudio.playHover();
+    const total = this.movies.length;
+    const hidden = this.watchedList.length;
+    this.showToast(
+      this.hideWatched
+        ? `👁️ İzlenen ${hidden} yapım gizlendi (${Math.max(0, total - hidden)} kaldı).`
+        : `👁️ İzlenen yapımlar tekrar gösteriliyor.`,
+      'info'
+    );
   }
 
   updateAudioButtonState() {
@@ -5692,6 +5738,9 @@ class Cine3DApp {
         }
       });
     }
+
+    // İzlemediklerim filtresi
+    document.getElementById('btn-hide-watched')?.addEventListener('click', () => this.toggleHideWatched());
 
     // Süre & Format Filtre Butonları (Faz 1)
     document.querySelectorAll('#duration-preset-buttons .duration-pill').forEach(btn => {
