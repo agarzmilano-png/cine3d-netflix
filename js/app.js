@@ -33,6 +33,14 @@ function posterFallbackTitle(value) {
     .replace(/'/g, "\\'");
 }
 
+// Arama geçmişi ayarları (localStorage)
+const SEARCH_HISTORY_KEY = 'cine3d_search_history';
+const SEARCH_HISTORY_LIMIT = 6;
+
+// İzleme listesi görünüm tercihleri (localStorage) — veri sırası değişmez
+const WATCHLIST_PREFS_KEY = 'cine3d_watchlist_prefs';
+const WATCHLIST_SORTS = ['added', 'imdb', 'duration', 'title'];
+
 const PLATFORM_HUBS = {
   disney: [
     {
@@ -2866,6 +2874,127 @@ class Cine3DApp {
     }
   }
 
+  // --- İZLEME LİSTESİ GÖRÜNÜM TERCİHLERİ (filtre + sıralama) ---
+  getWatchlistPrefs() {
+    let prefs = { genre: 'all', sort: 'added' };
+    try {
+      const raw = JSON.parse(localStorage.getItem(WATCHLIST_PREFS_KEY) || '{}');
+      if (raw && typeof raw === 'object') {
+        if (typeof raw.genre === 'string' && raw.genre) prefs.genre = raw.genre;
+        if (WATCHLIST_SORTS.includes(raw.sort)) prefs.sort = raw.sort;
+      }
+    } catch (err) { /* bozuk kayıt → varsayılan */ }
+    return prefs;
+  }
+
+  saveWatchlistPrefs(prefs) {
+    try { localStorage.setItem(WATCHLIST_PREFS_KEY, JSON.stringify(prefs)); } catch (err) { /* yoksay */ }
+  }
+
+  /** Listeyi yalnızca GÖRÜNÜM için filtreler/sıralar; this.watchlist'e dokunmaz. */
+  getWatchlistView(items, prefs) {
+    let list = Array.isArray(items) ? items.slice() : [];
+    if (prefs.genre !== 'all') {
+      list = list.filter(m => Array.isArray(m.genres) && m.genres.includes(prefs.genre));
+    }
+    if (prefs.sort === 'imdb') {
+      list.sort((a, b) => (Number(b.imdbRating) || 0) - (Number(a.imdbRating) || 0));
+    } else if (prefs.sort === 'duration') {
+      list.sort((a, b) => this.parseDurationMinutes(b.duration) - this.parseDurationMinutes(a.duration));
+    } else if (prefs.sort === 'title') {
+      list.sort((a, b) => String(a.title || '').localeCompare(String(b.title || ''), 'tr'));
+    }
+    // 'added' → eklenme sırası (dizi sırası korunur)
+    return list;
+  }
+
+  // --- ARAMA GEÇMİŞİ (son 6 arama, localStorage) ---
+  loadSearchHistory() {
+    try {
+      const raw = localStorage.getItem(SEARCH_HISTORY_KEY) || '[]';
+      const list = JSON.parse(raw);
+      return Array.isArray(list) ? list.filter(q => typeof q === 'string' && q.trim()).slice(0, SEARCH_HISTORY_LIMIT) : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  saveSearchHistory(list) {
+    try {
+      localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(list.slice(0, SEARCH_HISTORY_LIMIT)));
+    } catch (err) { /* kota dolu olabilir */ }
+  }
+
+  addSearchHistory(query) {
+    const q = String(query || '').trim().replace(/\s+/g, ' ');
+    if (q.length < 2) return;
+    const list = this.loadSearchHistory().filter(item => item.toLowerCase() !== q.toLowerCase());
+    list.unshift(q);
+    this.saveSearchHistory(list);
+  }
+
+  removeSearchHistory(query) {
+    const q = String(query || '').toLowerCase();
+    this.saveSearchHistory(this.loadSearchHistory().filter(item => item.toLowerCase() !== q));
+    this.renderSearchHistory();
+  }
+
+  clearSearchHistory() {
+    try { localStorage.removeItem(SEARCH_HISTORY_KEY); } catch (err) { /* yoksay */ }
+    this.hideSearchHistory();
+  }
+
+  renderSearchHistory() {
+    const box = document.getElementById('search-history-dropdown');
+    if (!box) return;
+    const list = this.loadSearchHistory();
+    if (!list.length) { box.innerHTML = ''; box.classList.add('hidden'); return; }
+
+    box.innerHTML = `
+      <div class="sh-header"><span>Son aramalar</span><span>${list.length}/${SEARCH_HISTORY_LIMIT}</span></div>
+      ${list.map(q => `
+        <div class="sh-row">
+          <button type="button" class="sh-query" role="option" data-query="${escapeHtmlText(q)}" aria-label="Ara: ${escapeHtmlText(q)}">
+            <span class="sh-icon">🕘</span>
+            <span class="sh-text">${escapeHtmlText(q)}</span>
+          </button>
+          <button type="button" class="sh-del" data-query="${escapeHtmlText(q)}" title="Bu aramayı sil" aria-label="${escapeHtmlText(q)} aramasını geçmişten sil">🗑</button>
+        </div>`).join('')}
+      <button type="button" class="sh-clear" id="sh-clear-btn">Geçmişi temizle</button>
+    `;
+    box.classList.remove('hidden');
+
+    box.querySelectorAll('.sh-query').forEach(btn => {
+      btn.addEventListener('click', () => this.applySearchHistory(btn.dataset.query));
+    });
+    box.querySelectorAll('.sh-del').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.removeSearchHistory(btn.dataset.query);
+      });
+    });
+    box.querySelector('#sh-clear-btn')?.addEventListener('click', () => this.clearSearchHistory());
+  }
+
+  applySearchHistory(query) {
+    const input = document.getElementById('search-input');
+    if (!input) return;
+    input.value = query;
+    this.addSearchHistory(query);
+    this.handleLiveSearch(query);
+    this.hideSearchHistory();
+  }
+
+  showSearchHistory() {
+    const list = this.loadSearchHistory();
+    if (!list.length) { this.hideSearchHistory(); return; }
+    this.renderSearchHistory();
+  }
+
+  hideSearchHistory() {
+    document.getElementById('search-history-dropdown')?.classList.add('hidden');
+  }
+
   initSearchVisualInteractions() {
     const searchInput = document.getElementById('search-input');
     const container = document.getElementById('search-box-container');
@@ -2880,11 +3009,13 @@ class Cine3DApp {
       }
     });
 
-    // Sayfa dışına tıklandığında spotlight dropdown'ı kapat
+    // Sayfa dışına tıklandığında spotlight ve arama geçmişi kapanır
     document.addEventListener('click', (e) => {
       if (!container) return;
+      const historyBox = document.getElementById('search-history-dropdown');
       if (!container.contains(e.target)) {
         if (spotlight) spotlight.classList.add('hidden');
+        if (historyBox) historyBox.classList.add('hidden');
       }
     });
 
@@ -5112,11 +5243,80 @@ class Cine3DApp {
   }
 
   // --- PWA (PROGRESSIVE WEB APP) YÖNETİMİ ---
+  /**
+   * Yeni service worker bekliyorsa/kuruluyorsa tek seferlik "Yenile" bildirimi gösterir.
+   * Sayfa her açılışta değil, yalnızca gerçekten bekleyen bir worker varsa görünür.
+   */
+  watchForPwaUpdates(reg) {
+    if (!reg) return;
+    try {
+      // Açılışta zaten bekleyen worker varsa
+      if (reg.waiting && navigator.serviceWorker.controller) this.showPwaUpdateToast(reg);
+
+      // Kurulum sürerken yakala
+      reg.addEventListener('updatefound', () => {
+        const installing = reg.installing;
+        if (!installing) return;
+        installing.addEventListener('statechange', () => {
+          if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+            this.showPwaUpdateToast(reg);
+          }
+        });
+      });
+    } catch (err) { /* PWA desteklenmiyorsa sessizce geç */ }
+  }
+
+  showPwaUpdateToast(reg) {
+    if (this._pwaToastShown) return; // aynı oturumda tek bildirim
+    this._pwaToastShown = true;
+
+    const box = document.createElement('div');
+    box.className = 'toast-popup show info pwa-update-toast';
+    box.setAttribute('role', 'status');
+    box.setAttribute('aria-live', 'polite');
+    box.innerHTML = `
+      <span class="pwa-update-msg">✨ Yeni sürüm hazır</span>
+      <button type="button" class="pwa-update-btn" id="pwa-update-btn">Yenile</button>
+      <button type="button" class="pwa-update-close" id="pwa-update-close" aria-label="Bildirimi kapat">✕</button>
+    `;
+    document.body.appendChild(box);
+
+    // Yeni worker devreye girince sayfayı bir kez yenile
+    if (!this._swControllerChangeBound) {
+      this._swControllerChangeBound = true;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (this._swReloadedOnce) return;
+        this._swReloadedOnce = true;
+        this.reloadForUpdate();
+      });
+    }
+
+    box.querySelector('#pwa-update-btn')?.addEventListener('click', () => {
+      try {
+        const waiting = reg && (reg.waiting || reg.installing);
+        if (waiting && typeof waiting.postMessage === 'function') waiting.postMessage('SKIP_WAITING');
+      } catch (err) { /* yoksay */ }
+      box.classList.remove('show');
+      box.remove();
+    });
+
+    box.querySelector('#pwa-update-close')?.addEventListener('click', () => {
+      box.classList.remove('show');
+      box.remove();
+    });
+  }
+
+  /** Test edilebilirlik için ayrı metot: güncelleme sonrası sayfa yenileme. */
+  reloadForUpdate() {
+    window.location.reload();
+  }
+
   initPWA() {
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
           console.log('[PWA] Service Worker aktif:', reg.scope);
+          this.watchForPwaUpdates(reg);
         }).catch((err) => {
           console.warn('[PWA] Service Worker kaydedilemedi:', err);
         });
@@ -5375,7 +5575,42 @@ class Cine3DApp {
         return;
       }
 
-      container.innerHTML = this.watchlist.map(movie => `
+      const prefs = this.getWatchlistPrefs();
+      const allGenres = [...new Set(
+        this.watchlist.flatMap(m => (Array.isArray(m.genres) ? m.genres : []))
+      )].sort((a, b) => a.localeCompare(b, 'tr'));
+      // Kayıtlı tür listede yoksa "Tümü"ye düş
+      if (prefs.genre !== 'all' && !allGenres.includes(prefs.genre)) {
+        prefs.genre = 'all';
+        this.saveWatchlistPrefs(prefs);
+      }
+      const viewList = this.getWatchlistView(this.watchlist, prefs);
+
+      const controlsHtml = `
+        <div class="wl-controls">
+          <label class="wl-control">
+            <span class="wl-control-label">Tür</span>
+            <select id="wl-genre-filter" class="wl-select" aria-label="İzleme listesini türe göre filtrele">
+              <option value="all"${prefs.genre === 'all' ? ' selected' : ''}>Tümü (${this.watchlist.length})</option>
+              ${allGenres.map(g => `<option value="${escapeHtmlText(g)}"${prefs.genre === g ? ' selected' : ''}>${escapeHtmlText(g)}</option>`).join('')}
+            </select>
+          </label>
+          <label class="wl-control">
+            <span class="wl-control-label">Sırala</span>
+            <select id="wl-sort" class="wl-select" aria-label="İzleme listesini sırala">
+              <option value="added"${prefs.sort === 'added' ? ' selected' : ''}>Eklenme tarihi</option>
+              <option value="imdb"${prefs.sort === 'imdb' ? ' selected' : ''}>IMDb puanı (azalan)</option>
+              <option value="duration"${prefs.sort === 'duration' ? ' selected' : ''}>Süre (azalan)</option>
+              <option value="title"${prefs.sort === 'title' ? ' selected' : ''}>Alfabetik (A-Z)</option>
+            </select>
+          </label>
+          <span class="wl-control-count">${viewList.length}/${this.watchlist.length}</span>
+        </div>
+      `;
+
+      container.innerHTML = controlsHtml + (viewList.length === 0
+        ? `<div class="wl-empty-filter">Bu filtreye uygun yapım yok.</div>`
+        : viewList.map(movie => `
         <div class="watchlist-item-card" data-movie-id="${movie.id}">
           <img class="wl-thumb" src="${movie.posterUrl}" alt="${movie.title}" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
           <div class="wl-details">
@@ -5390,7 +5625,20 @@ class Cine3DApp {
             ✕
           </button>
         </div>
-      `).join('');
+      `).join(''));
+
+      container.querySelector('#wl-genre-filter')?.addEventListener('change', (e) => {
+        const next = this.getWatchlistPrefs();
+        next.genre = e.target.value || 'all';
+        this.saveWatchlistPrefs(next);
+        this.renderWatchlistDrawer();
+      });
+      container.querySelector('#wl-sort')?.addEventListener('change', (e) => {
+        const next = this.getWatchlistPrefs();
+        next.sort = WATCHLIST_SORTS.includes(e.target.value) ? e.target.value : 'added';
+        this.saveWatchlistPrefs(next);
+        this.renderWatchlistDrawer();
+      });
 
       container.querySelectorAll('.watchlist-item-card').forEach(item => {
         item.addEventListener('click', (e) => {
@@ -5840,6 +6088,28 @@ class Cine3DApp {
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
         this.handleLiveSearch(e.target.value);
+      });
+
+      // Enter: sorguyu geçmişe kaydet + ara
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const q = searchInput.value.trim();
+          if (q.length >= 2) {
+            this.addSearchHistory(q);
+            this.handleLiveSearch(q);
+          }
+          this.hideSearchHistory();
+        } else if (e.key === 'Escape') {
+          this.hideSearchHistory();
+        }
+      });
+
+      // Odaklanınca geçmiş varsa göster, boşsa hiçbir şey gösterme
+      searchInput.addEventListener('focus', () => {
+        this.showSearchHistory();
+      });
+      searchInput.addEventListener('blur', () => {
+        setTimeout(() => this.hideSearchHistory(), 150);
       });
     }
 

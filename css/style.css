@@ -5921,3 +5921,205 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
   outline-offset: 3px;
 }
 .coverflow-card[tabindex="-1"]:focus-visible { outline: none; }
+
+/* ==========================================================================
+   ARAMA GEÇMİŞİ (son 6 arama)
+   ========================================================================== */
+.search-history-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  background: rgba(18, 18, 24, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+  padding: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  backdrop-filter: blur(12px);
+}
+.search-history-dropdown.hidden { display: none; }
+
+.sh-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #8a8a99;
+  text-transform: uppercase;
+}
+.sh-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 0 4px 0 0;
+}
+.sh-row:hover,
+.sh-row:focus-visible {
+  background: rgba(229, 9, 20, 0.14);
+  outline: none;
+}
+.sh-query {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sh-query:focus-visible { outline: 2px solid #f5c518; outline-offset: -2px; }
+.sh-query .sh-icon { opacity: 0.55; font-size: 0.8rem; }
+.sh-del {
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 8px;
+  flex: 0 0 auto;
+}
+.sh-del:hover, .sh-del:focus-visible { color: #ef4444; background: rgba(239, 68, 68, 0.14); outline: none; }
+.sh-clear {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: #a3a3b2;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 0 0 8px 8px;
+}
+.sh-clear:hover, .sh-clear:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.06); outline: none; }
+
+/* ==========================================================================
+   İZLEME LİSTESİ: tür filtresi + sıralama kontrolleri
+   ========================================================================== */
+.wl-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.wl-control {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 130px;
+  flex: 1 1 130px;
+}
+.wl-control-label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: #8a8a99;
+}
+.wl-select {
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #1a1a22;
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wl-select:focus-visible {
+  outline: 2px solid #f5c518;
+  outline-offset: 1px;
+}
+.wl-control-count {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8a8a99;
+  padding-bottom: 7px;
+}
+.wl-empty-filter {
+  padding: 22px 10px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #a3a3b2;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+/* PWA güncelleme bildirimi */
+.pwa-update-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #1b1b23;
+  border: 1px solid rgba(245, 197, 24, 0.5);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+  color: #f1f1f5;
+  font-family: inherit;
+  font-size: 0.85rem;
+  opacity: 1;
+}
+.pwa-update-toast .pwa-update-msg { font-weight: 700; white-space: nowrap; }
+.pwa-update-btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 12px;
+  background: #f5c518;
+  color: #111;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.pwa-update-btn:hover { filter: brightness(1.08); }
+.pwa-update-close {
+  border: 0;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+.pwa-update-close:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+.pwa-update-btn:focus-visible,
+.pwa-update-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (max-width: 480px) {
+  .pwa-update-toast { left: 10px; right: 10px; transform: none; justify-content: space-between; }
+  .pwa-update-toast .pwa-update-msg { white-space: normal; }
+}
