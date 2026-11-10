@@ -2335,6 +2335,13 @@ class Cine3DApp {
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
 
+    // Erişilebilirlik: modal açılınca odak içeri girsin, kapanınca geri dönsün
+    this._preModalFocus = document.activeElement;
+    const focusTarget = modal.querySelector('.modal-close-btn') || modal.querySelector('button, a[href], input');
+    if (focusTarget && focusTarget.focus) {
+      try { focusTarget.focus({ preventScroll: true }); } catch (err) { focusTarget.focus(); }
+    }
+
     const ctx = canvas.getContext('2d');
     const w = canvas.width;
     const h = canvas.height;
@@ -4121,6 +4128,18 @@ class Cine3DApp {
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
 
+    // Erişilebilirlik: film modalı açılınca odak içeri girsin (kapanınca geri döner)
+    this._preModalFocus = document.activeElement;
+    const focusIntoModal = () => {
+      const t = modal.querySelector('.modal-close-btn') || modal.querySelector('button, a[href], input');
+      if (!t) return;
+      try { t.focus({ preventScroll: true }); } catch (err) { t.focus(); }
+    };
+    // Animasyon/görünürlük tamamlanmadan odak reddedilebiliyor: bir kez daha dene
+    focusIntoModal();
+    setTimeout(() => { if (!modal.contains(document.activeElement)) focusIntoModal(); }, 90);
+    setTimeout(() => { if (!modal.contains(document.activeElement)) focusIntoModal(); }, 260);
+
     // Modal penceresinin daima en üstten başlamasını ve asla yatay kaymamasını garanti et
     const modalWindow = modal.querySelector('.modal-window');
     if (modalWindow) {
@@ -4843,6 +4862,10 @@ class Cine3DApp {
     modal.classList.remove('open');
     modal.innerHTML = '';
     document.body.style.overflow = '';
+    if (this._preModalFocus && this._preModalFocus.focus) {
+      try { this._preModalFocus.focus({ preventScroll: true }); } catch (err) { /* yoksay */ }
+      this._preModalFocus = null;
+    }
     this.activeMovieForModal = null;
     if (updateUrl) {
       this.clearUrlMovieParam();
@@ -5922,6 +5945,25 @@ class Cine3DApp {
     });
 
     // Tarayıcı İleri / Geri Tuşları (Deep Linking & History API)
+    // Modal içinde Tab/Shift+Tab odak tuzağı
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const modal = document.querySelector('.movie-modal.open');
+      if (!modal) return;
+      const focusables = [...modal.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.disabled && el.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
     // Tarayıcı İleri / Geri (paylaşılan bağlantılar dahil)
     window.addEventListener('popstate', () => {
       const params = new URLSearchParams(window.location.search);
