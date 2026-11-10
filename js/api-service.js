@@ -93,6 +93,15 @@ class CinemaApiService {
    */
   async isApiAvailable() {
     if (this.apiAvailable !== null) return this.apiAvailable;
+
+    // Statik barındırmada (GitHub Pages) /api yok; gereksiz 404 isteği atmayalım.
+    const host = window.location.hostname;
+    const cfg = window.CINE3D_CONFIG || {};
+    if (cfg.staticHosting === true || host.endsWith('.github.io') || host.endsWith('.pages.dev')) {
+      this.apiAvailable = false;
+      return false;
+    }
+
     try {
       const res = await fetch('api/health', { cache: 'no-store' });
       const type = res.headers.get('content-type') || '';
@@ -149,29 +158,31 @@ class CinemaApiService {
   async fetchTurkishSummary(title) {
     if (!title) return null;
     const cleanTitle = title.trim();
-    if (this.wikiCache.has(cleanTitle)) {
-      return this.wikiCache.get(cleanTitle);
-    }
+    if (this.wikiCache.has(cleanTitle)) return this.wikiCache.get(cleanTitle);
 
-    const queries = [
-      cleanTitle,
-      `${cleanTitle} (film)`,
-      `${cleanTitle} (dizi)`
-    ];
+    // DÜZELTME: REST /summary uç noktası olmayan başlıklarda 404 döndürüyordu
+    // (konsolda 404 yağmuru). MediaWiki action=query API'si her zaman 200 döner
+    // ve sayfa yoksa "missing" alanı verir.
+    const queries = [cleanTitle, cleanTitle + ' (film)', cleanTitle + ' (dizi)'];
 
     for (const q of queries) {
       try {
-        const url = `https://tr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`;
-        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.extract && data.extract.length > 50 && data.type !== 'disambiguation') {
-            this.wikiCache.set(cleanTitle, data.extract);
-            return data.extract;
+        const url = 'https://tr.wikipedia.org/w/api.php?action=query&format=json&origin=*' +
+          '&redirects=1&prop=extracts&explaintext=1&exintro=1&titles=' + encodeURIComponent(q);
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        const data = await res.json();
+        const pages = (data && data.query && data.query.pages) || {};
+        for (const key of Object.keys(pages)) {
+          const page = pages[key];
+          if (page && !page.missing && page.extract && page.extract.trim().length > 50) {
+            const text = page.extract.trim();
+            this.wikiCache.set(cleanTitle, text);
+            return text;
           }
         }
       } catch (err) {
-        // Sessizce sonraki aramaya geç
+        // sessizce sonraki sorguya geç
       }
     }
 
@@ -378,24 +389,29 @@ class CinemaApiService {
       }
     }
 
-    // 3. Doğrudan Vikipedi Summary API'si üzerinden kontrol et (en ve tr)
+    // 3. Vikipedi afişi (MediaWiki API — 404 üretmez)
     const cleanTitle = (title || '').replace(/\(.*?\)/g, '').trim();
-    const wikiQueries = [cleanTitle, `${cleanTitle} (film)`, `${cleanTitle} (TV series)`];
+    const wikiQueries = [cleanTitle, cleanTitle + ' (film)', cleanTitle + ' (TV series)'];
 
     for (const lang of ['en', 'tr']) {
       for (const q of wikiQueries) {
         try {
-          const wikiUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`;
+          const wikiUrl = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&origin=*' +
+            '&redirects=1&prop=pageimages&piprop=original|thumbnail&pithumbsize=500&titles=' + encodeURIComponent(q);
           const res = await fetch(wikiUrl);
-          if (res.ok) {
-            const data = await res.json();
-            const img = (data.originalimage && data.originalimage.source) || (data.thumbnail && data.thumbnail.source);
+          if (!res.ok) continue;
+          const data = await res.json();
+          const pages = (data && data.query && data.query.pages) || {};
+          for (const key of Object.keys(pages)) {
+            const page = pages[key];
+            if (!page || page.missing) continue;
+            const img = (page.original && page.original.source) || (page.thumbnail && page.thumbnail.source);
             if (img && img.startsWith('http')) {
               this.cache.set(cacheKey, img);
               return img;
             }
           }
-        } catch (err) {}
+        } catch (err) { /* sonraki */ }
       }
     }
 

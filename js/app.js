@@ -4312,7 +4312,8 @@ class Cine3DApp {
 
     // Son çare (sunucudaki eski davranış): doğrulanmış eşleşme yoksa
     // ilk önizlemeli sonucu çal — hiç müzik çalmamasındansa yaklaşık eşleşme.
-    if (titles.length) {
+    // Küratörlü (elle doğrulanmış) parçası olanlarda uygulanmaz: yanlış müzik çalmasın.
+    if (!curatedTrack && titles.length) {
       const last = await this.deezerSearch(`${titles[0]} soundtrack`);
       const any = (last && last.data || []).find((x) => x.preview);
       if (any) {
@@ -4474,9 +4475,11 @@ class Cine3DApp {
 
     const candidates = [];
     if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
-    if (curated) candidates.push(localAudioUrl);
+    // Resmî kaynaklar önce: iTunes (etiket önizlemesi) → Deezer → yerel arşiv (son yedek).
+    // Yerel dosyaların bir kısmının kaynağı doğrulanamadığı için en sona alındı.
     if (onlineOst) candidates.push(onlineOst.audioUrl);
     if (deezerOst) candidates.push(deezerOst.preview);
+    candidates.push(localAudioUrl);
 
     const watchUrl = ostData.youtubeId
       ? `https://www.youtube.com/watch?v=${ostData.youtubeId}`
