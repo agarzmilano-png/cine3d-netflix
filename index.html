@@ -26,6 +26,24 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Cine3D" />
+  <!-- Yapısal veri: WebSite (SEO) -->
+  <script type="application/ld+json" id="website-jsonld">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Cine3D Netflix",
+    "alternateName": "Cine3D",
+    "url": "https://agarzmilano-png.github.io/cine3d-netflix/",
+    "description": "Netflix tarzı 3D sinema ve dizi keşif platformu; IMDb puanları, fragmanlar ve Türkiye yayıncıları.",
+    "inLanguage": "tr-TR",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://agarzmilano-png.github.io/cine3d-netflix/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
@@ -46,10 +64,10 @@
   <link rel="dns-prefetch" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Stiller -->
-  <link rel="stylesheet" href="css/style.css?v=5.7" />
-  <link rel="stylesheet" href="css/modal.css?v=5.7" />
-  <link rel="stylesheet" href="css/vs-duel.css?v=5.7" />
-  <link rel="stylesheet" href="css/features.css?v=5.7" />
+  <link rel="stylesheet" href="css/style.css?v=5.8" />
+  <link rel="stylesheet" href="css/modal.css?v=5.8" />
+  <link rel="stylesheet" href="css/vs-duel.css?v=5.8" />
+  <link rel="stylesheet" href="css/features.css?v=5.8" />
 </head>
 <body>
 
@@ -214,6 +232,11 @@
                 <span class="d-tab-title">Kendi Hikayen</span>
                 <span class="d-tab-sparkle-badge">5 Adım</span>
               </button>
+              <button class="discovery-tab-btn" data-tab-panel="night-plan-section" role="tab" aria-selected="false">
+                <span class="d-tab-icon">🌙</span>
+                <span class="d-tab-title">Sinema Gecesi</span>
+                <span class="d-tab-sparkle-badge">Plan</span>
+              </button>
               <button class="discovery-tab-btn" data-tab-panel="roulette-section" role="tab" aria-selected="false">
                 <span class="d-tab-icon">🎡</span>
                 <span class="d-tab-title">Film Ruleti</span>
@@ -306,6 +329,36 @@
     </section>
 
     <!-- Kendi Seçimini Kendin Yarat: İnteraktif Hikaye Akışı Bölümü -->
+    <!-- R007/5: Sinema Gecesi Planlayıcısı -->
+    <section class="night-plan-section discovery-panel hidden" id="night-plan-section">
+      <div class="np-container">
+        <div class="np-header">
+          <div>
+            <div class="np-badge"><span class="np-dot"></span> SİNEMA GECESİ PLANLAYICI</div>
+            <h3 class="np-title">Bu gece ne izliyoruz?</h3>
+            <p class="np-subtitle">Filmleri sıraya ekle; molalar ve toplam süre otomatik hesaplansın.</p>
+          </div>
+          <button class="np-clear-btn" id="np-clear-btn" type="button">🗑️ Planı temizle</button>
+        </div>
+
+        <div class="np-picker">
+          <label class="np-picker-label" for="np-movie-select">Film ekle</label>
+          <div class="np-picker-row">
+            <select id="np-movie-select" class="np-select" aria-label="Plan için film seç"></select>
+            <button class="np-add-btn" id="np-add-btn" type="button">＋ Ekle</button>
+          </div>
+        </div>
+
+        <div class="np-list" id="np-list" aria-live="polite"></div>
+
+        <div class="np-summary" id="np-summary"></div>
+
+        <div class="np-actions">
+          <button class="np-copy-btn" id="np-copy-btn" type="button">📋 Planı kopyala</button>
+        </div>
+      </div>
+    </section>
+
     <section class="story-adventure-section discovery-panel hidden" id="story-adventure-section">
       <div class="story-container">
         <!-- Bölüm Başlığı & Giriş Bilgisi -->
@@ -827,17 +880,17 @@
   <div class="toast-popup" id="toast-notification"></div>
 
   <!-- JavaScript Dosyaları (Three.js body sonunda: 603 KB'lik parse ilk boyamayı bloklamaz) -->
-  <script src="js/vendor/three.min.js?v=5.7"></script>
-  <script src="js/movies-data.js?v=5.7"></script>
-  <script src="js/movie-soundtracks.js?v=5.7"></script>
-  <script src="js/config.js?v=5.7"></script>
-  <script src="js/catalog-index.js?v=5.7"></script>
-  <script src="js/api-service.js?v=5.7"></script>
-  <script src="js/audio.js?v=5.7"></script>
-  <script src="js/three-scene.js?v=5.7"></script>
-  <script src="js/coverflow3d.js?v=5.7"></script>
-  <script src="js/story-adventure.js?v=5.7"></script>
-  <script src="js/app.js?v=5.7"></script>
-  <script src="js/features.js?v=5.7"></script>
+  <script src="js/vendor/three.min.js?v=5.8"></script>
+  <script src="js/movies-data.js?v=5.8"></script>
+  <script src="js/movie-soundtracks.js?v=5.8"></script>
+  <script src="js/config.js?v=5.8"></script>
+  <script src="js/catalog-index.js?v=5.8"></script>
+  <script src="js/api-service.js?v=5.8"></script>
+  <script src="js/audio.js?v=5.8"></script>
+  <script src="js/three-scene.js?v=5.8"></script>
+  <script src="js/coverflow3d.js?v=5.8"></script>
+  <script src="js/story-adventure.js?v=5.8"></script>
+  <script src="js/app.js?v=5.8"></script>
+  <script src="js/features.js?v=5.8"></script>
 </body>
 </html>

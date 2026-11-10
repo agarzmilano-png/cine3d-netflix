@@ -834,6 +834,33 @@
     totalScore: 0,
     answered: false,
     streak: 0,
+    // R007/6: kalıcı lig istatistikleri
+    STATS_KEY: 'cine3d_prediction_stats',
+    STATS_BADGES: [5, 10, 15],
+    stats: { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 },
+
+    loadStats() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(this.STATS_KEY) || '{}');
+        return {
+          totalCorrect: Math.max(0, parseInt(raw.totalCorrect, 10) || 0),
+          bestStreak: Math.max(0, parseInt(raw.bestStreak, 10) || 0),
+          gamesPlayed: Math.max(0, parseInt(raw.gamesPlayed, 10) || 0)
+        };
+      } catch (err) {
+        return { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 };
+      }
+    },
+
+    saveStats() {
+      try { localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats)); } catch (err) { /* yoksay */ }
+    },
+
+    /** Kazanılan seri rozetleri (5/10/15). */
+    earnedBadges() {
+      const best = Math.max(this.stats.bestStreak || 0, this.streak || 0);
+      return this.STATS_BADGES.filter(limit => best >= limit);
+    },
     hintsLeft: 2,
     hintedThisRound: false,
     timerId: null,
@@ -847,6 +874,7 @@
     init() {
       if (GuessGame.inited) return;
       GuessGame.inited = true;
+      GuessGame.stats = GuessGame.loadStats();
 
       const slider = document.getElementById('guess-range-slider');
       if (slider) {
@@ -1100,6 +1128,13 @@
         streakNote = GuessGame.streak === 0 && diff > 0.6 ? '💥 Seri sıfırlandı' : '';
       }
 
+      // R007/6: lig istatistikleri (isabet = fark <= 0.3)
+      if (diff <= 0.3) {
+        GuessGame.stats.totalCorrect = (GuessGame.stats.totalCorrect || 0) + 1;
+      }
+      GuessGame.stats.bestStreak = Math.max(GuessGame.stats.bestStreak || 0, GuessGame.streak || 0);
+      GuessGame.saveStats();
+
       GuessGame.totalScore += pts + bonus;
       const scoreEl = document.getElementById('guess-total-score');
       if (scoreEl) scoreEl.textContent = GuessGame.totalScore;
@@ -1162,6 +1197,12 @@
 
     finish() {
       GuessGame.stopTimer();
+      // R007/6: oynanan oyun + en iyi seri kaydı
+      GuessGame.stats = GuessGame.loadStats();
+      GuessGame.stats.gamesPlayed = (GuessGame.stats.gamesPlayed || 0) + 1;
+      GuessGame.stats.bestStreak = Math.max(GuessGame.stats.bestStreak || 0, GuessGame.streak || 0);
+      GuessGame.saveStats();
+
       const cfg = GuessGame.DIFFS[GuessGame.diff];
       const posterWrap = document.getElementById('guess-poster-wrap');
       const meta = document.getElementById('guess-movie-meta');
@@ -1192,8 +1233,19 @@
           </div>
           <div class="guess-genre-tags">
             <span>🔥 Son serin: ${GuessGame.streak}x</span>
+            <span>🏆 En iyi seri: ${GuessGame.stats.bestStreak || 0}x</span>
+            <span>✅ Toplam doğru: ${GuessGame.stats.totalCorrect || 0}</span>
             <span>🃏 Kalan joker: ${GuessGame.hintsLeft}</span>
-          </div>`;
+          </div>
+          ${(() => {
+            const badges = GuessGame.earnedBadges();
+            const labels = { 5: '🥉 5 SERİ', 10: '🥈 10 SERİ', 15: '🥇 15 SERİ' };
+            return `<div class="guess-league-badges">
+              <span class="glb-title">Cine3D Tahmin Ligi</span>
+              ${GuessGame.STATS_BADGES.map(limit => `<span class="glb-badge ${badges.includes(limit) ? 'earned' : ''}">${labels[limit]}</span>`).join('')}
+              <span class="glb-games">${GuessGame.stats.gamesPlayed || 0} oyun</span>
+            </div>`;
+          })()}`;
       }
       const submitBtn = document.getElementById('btn-guess-submit');
       if (submitBtn) submitBtn.classList.add('hidden');
@@ -1646,6 +1698,7 @@
   // Dışarıdan erişim köprüsü (konsol / diğer modüller için)
   window.cine3dFeatures = {
     refreshRecommendations: () => Reco.refresh(),
+    reco: Reco, // modal DNA benzerliği için
     tournament: Tournament,
     guessGame: GuessGame,
     duoMatcher: DuoMatcher,

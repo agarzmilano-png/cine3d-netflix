@@ -39,6 +39,8 @@ const SEARCH_HISTORY_LIMIT = 6;
 
 // İzleme listesi görünüm tercihleri (localStorage) — veri sırası değişmez
 const WATCHLIST_PREFS_KEY = 'cine3d_watchlist_prefs';
+const NIGHT_PLAN_KEY = 'cine3d_night_plan';
+const NIGHT_BREAK_MINUTES = 10;
 const WATCHLIST_SORTS = ['added', 'imdb', 'duration', 'title'];
 
 const PLATFORM_HUBS = {
@@ -1019,6 +1021,9 @@ class Cine3DApp {
 
     // URL Parametrelerini Çözümle (Deep Linking: ?movie=... & ?tab=...)
     this.handleInitialUrlParams();
+
+    // Sinema Gecesi planlayıcısı
+    this.initNightPlanner();
 
     // PWA (Progressive Web App) Servis Çalışanı ve Kurulum Desteği
     this.initPWA();
@@ -2874,6 +2879,155 @@ class Cine3DApp {
     }
   }
 
+  // --- R007/5: SİNEMA GECESİ PLANLAYICISI ---
+  loadNightPlan() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(NIGHT_PLAN_KEY) || '[]');
+      return Array.isArray(raw) ? raw.filter(id => typeof id === 'string') : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  saveNightPlan(ids) {
+    try { localStorage.setItem(NIGHT_PLAN_KEY, JSON.stringify(ids)); } catch (err) { /* yoksay */ }
+  }
+
+  initNightPlanner() {
+    const select = document.getElementById('np-movie-select');
+    if (!select) return;
+
+    // Seçenekler: katalogdaki tüm yapımlar (alfabetik)
+    const options = [...this.movies]
+      .sort((a, b) => String(a.title).localeCompare(String(b.title), 'tr'))
+      .map(m => '<option value="' + escapeHtmlText(m.id) + '">' + escapeHtmlText(m.title) + ' · ' + escapeHtmlText(m.year) + '</option>')
+      .join('');
+    select.innerHTML = options;
+
+    document.getElementById('np-add-btn')?.addEventListener('click', () => {
+      const id = select.value;
+      if (!id) return;
+      const plan = this.loadNightPlan();
+      if (plan.includes(id)) {
+        this.showToast('Bu yapım planda zaten var.', 'info');
+        return;
+      }
+      plan.push(id);
+      this.saveNightPlan(plan);
+      this.renderNightPlan();
+    });
+
+    document.getElementById('np-clear-btn')?.addEventListener('click', () => {
+      this.saveNightPlan([]);
+      this.renderNightPlan();
+      this.showToast('🌙 Gece planı temizlendi.', 'info');
+    });
+
+    document.getElementById('np-copy-btn')?.addEventListener('click', () => this.copyNightPlan());
+
+    this.renderNightPlan();
+  }
+
+  getNightPlanMovies() {
+    return this.loadNightPlan()
+      .map(id => this.movies.find(m => m.id === id))
+      .filter(Boolean);
+  }
+
+  formatMinutes(total) {
+    const h = Math.floor(total / 60);
+    const m = total % 60;
+    return h > 0 ? h + 's ' + m + 'dk' : m + 'dk';
+  }
+
+  renderNightPlan() {
+    const list = document.getElementById('np-list');
+    const summary = document.getElementById('np-summary');
+    if (!list || !summary) return;
+
+    const movies = this.getNightPlanMovies();
+
+    if (!movies.length) {
+      list.innerHTML = '<div class="np-empty">Henüz film eklenmedi. Yukarıdan seçip “Ekle”ye bas.</div>';
+      summary.innerHTML = '<span class="np-total">Bu gece: <strong>0dk</strong></span>';
+      return;
+    }
+
+    list.innerHTML = movies.map((m, i) => {
+      const mins = this.parseDurationMinutes(m.duration);
+      return `
+        ${i > 0 ? '<div class="np-break">☕ ' + NIGHT_BREAK_MINUTES + ' dk mola</div>' : ''}
+        <div class="np-item" data-movie-id="${escapeHtmlText(m.id)}">
+          <span class="np-idx">${i + 1}</span>
+          <img class="np-thumb" src="${escapeHtmlText(m.posterUrl)}" alt="${escapeHtmlText(m.title)}" loading="lazy" />
+          <div class="np-info">
+            <div class="np-name">${escapeHtmlText(m.title)}</div>
+            <div class="np-meta">⭐ ${escapeHtmlText(m.imdbRating)} · ${escapeHtmlText(m.year)} · ${escapeHtmlText(m.duration || '')}</div>
+          </div>
+          <div class="np-item-actions">
+            <button type="button" class="np-icon-btn" data-act="up" data-id="${escapeHtmlText(m.id)}" title="Yukarı taşı" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button type="button" class="np-icon-btn" data-act="down" data-id="${escapeHtmlText(m.id)}" title="Aşağı taşı" ${i === movies.length - 1 ? 'disabled' : ''}>↓</button>
+            <button type="button" class="np-icon-btn danger" data-act="remove" data-id="${escapeHtmlText(m.id)}" title="Plandan çıkar">✕</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    const totalMovies = movies.reduce((sum, m) => sum + this.parseDurationMinutes(m.duration), 0);
+    const breaks = (movies.length - 1) * NIGHT_BREAK_MINUTES;
+    summary.innerHTML = `
+      <span class="np-total">Bu gece: <strong>${this.formatMinutes(totalMovies + breaks)}</strong></span>
+      <span class="np-detail">${movies.length} film · ${this.formatMinutes(totalMovies)} film + ${breaks}dk mola</span>`;
+
+    list.querySelectorAll('.np-icon-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const act = btn.dataset.act;
+        let plan = this.loadNightPlan();
+        const idx = plan.indexOf(id);
+        if (idx < 0) return;
+        if (act === 'remove') plan.splice(idx, 1);
+        else if (act === 'up' && idx > 0) { [plan[idx - 1], plan[idx]] = [plan[idx], plan[idx - 1]]; }
+        else if (act === 'down' && idx < plan.length - 1) { [plan[idx + 1], plan[idx]] = [plan[idx], plan[idx + 1]]; }
+        this.saveNightPlan(plan);
+        this.renderNightPlan();
+      });
+    });
+  }
+
+  async copyNightPlan() {
+    const movies = this.getNightPlanMovies();
+    if (!movies.length) {
+      this.showToast('Kopyalanacak plan yok.', 'info');
+      return;
+    }
+    const totalMovies = movies.reduce((sum, m) => sum + this.parseDurationMinutes(m.duration), 0);
+    const breaks = (movies.length - 1) * NIGHT_BREAK_MINUTES;
+
+    const lines = ['🌙 Cine3D Sinema Gecesi Planı', ''];
+    movies.forEach((m, i) => {
+      if (i > 0) lines.push('   ☕ ' + NIGHT_BREAK_MINUTES + ' dk mola');
+      lines.push((i + 1) + '. ' + m.title + ' (' + (m.duration || '') + ')');
+    });
+    lines.push('', 'Toplam: ' + this.formatMinutes(totalMovies + breaks) + ' (' + movies.length + ' film + ' + breaks + ' dk mola)');
+
+    const text = lines.join('\n');
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      this.showToast('📋 Gece planı panoya kopyalandı.', 'success');
+    } catch (err) {
+      this.showToast('Plan kopyalanamadı.', 'error');
+    }
+  }
+
   // --- İZLEME LİSTESİ GÖRÜNÜM TERCİHLERİ (filtre + sıralama) ---
   getWatchlistPrefs() {
     let prefs = { genre: 'all', sort: 'added' };
@@ -4303,7 +4457,7 @@ class Cine3DApp {
                 </div>
               </div>
 
-              <!-- Alt Butonlar -->
+          <!-- Alt Butonlar -->
               <div class="modal-action-row">
                 <button class="btn btn-primary" id="modal-toggle-video-btn">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -4353,6 +4507,12 @@ class Cine3DApp {
 
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    // SEO: gerçek IMDb kimliği varsa Movie/TVSeries JSON-LD'si ekle (uydurma veri yok)
+    this.injectMovieJsonLd(movie);
+
+    // Zevk DNA benzerliği rozeti (yeterli veri yoksa hiç eklenmez)
+    this.attachDnaBadge(movie);
 
     // Erişilebilirlik: film modalı açılınca odak içeri girsin (kapanınca geri döner)
     this._preModalFocus = document.activeElement;
@@ -5088,6 +5248,7 @@ class Cine3DApp {
     modal.classList.remove('open');
     modal.innerHTML = '';
     document.body.style.overflow = '';
+    this.removeMovieJsonLd();
     if (this._preModalFocus && this._preModalFocus.focus) {
       try { this._preModalFocus.focus({ preventScroll: true }); } catch (err) { /* yoksay */ }
       this._preModalFocus = null;
@@ -5852,6 +6013,31 @@ class Cine3DApp {
       const sortedDirectors = Object.entries(directorCounts).sort((a, b) => b[1] - a[1]);
       const topDirector = sortedDirectors[0] ? `${sortedDirectors[0][0]} (${sortedDirectors[0][1]} yapım)` : 'Çeşitli';
 
+      // --- R007/4: Zevk DNA grafikleri için veri ---
+      const genreChartRows = sortedGenres.slice(0, 6).map(([g, count]) => {
+        let ratedSum = 0;
+        let ratedN = 0;
+        this.watchedList.forEach(w => {
+          const m = this.movies.find(x => x.id === w.id);
+          if (!m || !Array.isArray(m.genres) || !m.genres.includes(g)) return;
+          const val = (typeof w.userRating === 'number' && w.userRating > 0) ? w.userRating : Number(m.imdbRating) || 0;
+          if (val > 0) { ratedSum += val; ratedN++; }
+        });
+        return { genre: g, count, avg: ratedN ? ratedSum / ratedN : null };
+      });
+
+      const yearCounts = {};
+      this.watchedList.forEach(w => {
+        const d = w.watchedAt ? new Date(w.watchedAt) : null;
+        if (d && !isNaN(d.getTime())) {
+          const y = String(d.getFullYear());
+          yearCounts[y] = (yearCounts[y] || 0) + 1;
+        }
+      });
+      const yearRows = Object.entries(yearCounts).sort((a, b) => a[0].localeCompare(b[0]));
+      const genreSvg = this.buildGenreBarSvg(genreChartRows);
+      const yearSvg = this.buildYearTimelineSvg(yearRows);
+
       // Sinefil Seviyesi & Rütbe
       let rankBadge = '🌱 SİNEMA ÇIRAĞI';
       let rankTitle = 'Keşif Yolculuğunun Başındasın';
@@ -5870,6 +6056,16 @@ class Cine3DApp {
       const segmentColors = ['#38bdf8', '#f59e0b', '#ef4444', '#10b981', '#a855f7'];
 
       container.innerHTML = `
+        <div class="report-tools">
+          <button class="btn-report-demo" id="btn-backup-data" title="İzleme geçmişi, liste ve notlarını JSON olarak indir">
+            <span>💾 Yedekle</span>
+          </button>
+          <button class="btn-report-demo" id="btn-import-data" title="Daha önce aldığın JSON yedeğini geri yükle">
+            <span>📥 İçe Aktar</span>
+          </button>
+          <input type="file" id="import-file-input" accept="application/json,.json" hidden />
+        </div>
+
         <div class="cinema-report-card">
           <!-- Seviye & Rütbe Kutusu -->
           <div class="report-hero-box">
@@ -5928,6 +6124,27 @@ class Cine3DApp {
             <div style="font-size:0.95rem; font-weight:700; color:#fff; margin-top:2px;">🎬 ${topDirector}</div>
           </div>
 
+              <!-- R007/4: Zevk DNA grafikleri (vanilya SVG) -->
+          <div class="report-charts">
+            <div class="report-chart-card">
+              <div class="report-chart-title">📊 Tür Dağılımı <span class="report-chart-sub">film sayısı · ort. puan</span></div>
+              ${genreSvg}
+            </div>
+            <div class="report-chart-card">
+              <div class="report-chart-title">🎬 İlk 3 Yönetmen</div>
+              ${sortedDirectors.length === 0
+                ? '<div class="report-chart-empty">Henüz yönetmen verisi yok.</div>'
+                : `<ol class="report-director-list">
+                    ${sortedDirectors.slice(0, 3).map(([name, cnt], i) => `
+                      <li><span class="dir-rank">${i + 1}</span><span class="dir-name">${escapeHtmlText(name)}</span><span class="dir-count">${cnt} yapım</span></li>`).join('')}
+                  </ol>`}
+            </div>
+            <div class="report-chart-card">
+              <div class="report-chart-title">🗓️ İzleme Yılların</div>
+              ${yearSvg}
+            </div>
+          </div>
+
           <!-- Alt Butonlar -->
           <div style="display:flex; gap:8px;">
             <button class="btn-report-demo" id="btn-reload-demo" style="flex:1;">
@@ -5947,6 +6164,172 @@ class Cine3DApp {
       document.getElementById('btn-clear-history')?.addEventListener('click', () => {
         this.clearWatchedHistory();
       });
+
+      document.getElementById('btn-backup-data')?.addEventListener('click', () => this.exportBackup());
+      document.getElementById('btn-import-data')?.addEventListener('click', () => {
+        document.getElementById('import-file-input')?.click();
+      });
+      document.getElementById('import-file-input')?.addEventListener('change', (e) => this.handleImportFile(e.target));
+    }
+  }
+
+  // --- VERİ YEDEKLEME & İÇE AKTARMA ---
+  buildBackupPayload() {
+    let reviews = {};
+    try { reviews = JSON.parse(localStorage.getItem('cine3d_reviews') || '{}') || {}; } catch (err) { reviews = {}; }
+
+    let dna = null;
+    try {
+      const reco = window.cine3dFeatures && window.cine3dFeatures.reco;
+      if (reco && typeof reco.computeDNA === 'function') dna = reco.computeDNA();
+    } catch (err) { dna = null; }
+
+    return {
+      app: 'cine3d',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      watched: Array.isArray(this.watchedList) ? this.watchedList : [],
+      watchlist: Array.isArray(this.watchlist) ? this.watchlist : [],
+      reviews,
+      prefs: this.getWatchlistPrefs(),
+      dna
+    };
+  }
+
+  exportBackup() {
+    try {
+      const payload = this.buildBackupPayload();
+      const stamp = new Date().toISOString().slice(0, 10);
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cine3d-yedek-' + stamp + '.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      this.showToast('💾 Yedek indirildi: ' + a.download, 'success');
+    } catch (err) {
+      this.showToast('Yedek oluşturulamadı.', 'error');
+    }
+  }
+
+  /** Gelen JSON'un şemasını doğrular; geçersizse null döner. */
+  validateBackup(data) {
+    if (!data || typeof data !== 'object') return null;
+    if (!Array.isArray(data.watched) || !Array.isArray(data.watchlist)) return null;
+    const watchedOk = data.watched.every(w => w && (typeof w === 'string' || (typeof w === 'object' && w.id != null)));
+    const watchlistOk = data.watchlist.every(w => w && (typeof w === 'string' || (typeof w === 'object' && w.id != null)));
+    if (!watchedOk || !watchlistOk) return null;
+    const reviews = (data.reviews && typeof data.reviews === 'object' && !Array.isArray(data.reviews)) ? data.reviews : {};
+    const prefs = (data.prefs && typeof data.prefs === 'object') ? data.prefs : {};
+    return { watched: data.watched, watchlist: data.watchlist, reviews, prefs };
+  }
+
+  handleImportFile(input) {
+    const file = input && input.files && input.files[0];
+    if (input) input.value = '';
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      let parsed = null;
+      try { parsed = JSON.parse(String(reader.result || '')); } catch (err) { parsed = null; }
+      const valid = this.validateBackup(parsed);
+      if (!valid) {
+        this.showToast('❌ Geçersiz yedek dosyası (şema uyuşmuyor).', 'error');
+        return;
+      }
+      this.askImportMode(valid);
+    };
+    reader.onerror = () => this.showToast('Dosya okunamadı.', 'error');
+    reader.readAsText(file);
+  }
+
+  askImportMode(payload) {
+    document.getElementById('import-choice-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'import-choice-overlay';
+    overlay.id = 'import-choice-overlay';
+    overlay.innerHTML = `
+      <div class="import-choice-box" role="dialog" aria-modal="true" aria-label="İçe aktarma seçeneği">
+        <h4>Yedek nasıl yüklensin?</h4>
+        <p>
+          <strong>${payload.watched.length}</strong> izleme, <strong>${payload.watchlist.length}</strong> liste kaydı bulundu.
+        </p>
+        <div class="import-choice-actions">
+          <button type="button" class="btn-report-demo" id="import-merge-btn">Birleştir</button>
+          <button type="button" class="btn-report-demo danger" id="import-overwrite-btn">Üzerine yaz</button>
+          <button type="button" class="btn-report-demo" id="import-cancel-btn">Vazgeç</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    overlay.querySelector('#import-cancel-btn')?.addEventListener('click', close);
+    overlay.querySelector('#import-merge-btn')?.addEventListener('click', () => {
+      close();
+      this.applyImport(payload, 'merge');
+    });
+    overlay.querySelector('#import-overwrite-btn')?.addEventListener('click', () => {
+      close();
+      this.applyImport(payload, 'overwrite');
+    });
+    overlay.querySelector('#import-merge-btn')?.focus();
+  }
+
+  applyImport(payload, mode) {
+    try {
+      const keyOf = (w) => (typeof w === 'string') ? w : String(w.id);
+      const toArray = (arr) => arr.map(w => (typeof w === 'string' ? { id: w } : w));
+
+      if (mode === 'overwrite') {
+        this.watchedList = toArray(payload.watched);
+        this.watchlist = toArray(payload.watchlist);
+        localStorage.setItem('cine3d_reviews', JSON.stringify(payload.reviews || {}));
+        if (payload.prefs && payload.prefs.genre) this.saveWatchlistPrefs({
+          genre: payload.prefs.genre || 'all',
+          sort: WATCHLIST_SORTS.includes(payload.prefs.sort) ? payload.prefs.sort : 'added'
+        });
+      } else {
+        const seenWatched = new Set((this.watchedList || []).map(keyOf));
+        toArray(payload.watched).forEach(w => {
+          if (!seenWatched.has(keyOf(w))) { this.watchedList.push(w); seenWatched.add(keyOf(w)); }
+        });
+
+        const seenList = new Set((this.watchlist || []).map(keyOf));
+        toArray(payload.watchlist).forEach(w => {
+          if (!seenList.has(keyOf(w))) { this.watchlist.push(w); seenList.add(keyOf(w)); }
+        });
+
+        let reviews = {};
+        try { reviews = JSON.parse(localStorage.getItem('cine3d_reviews') || '{}') || {}; } catch (err) { reviews = {}; }
+        Object.entries(payload.reviews || {}).forEach(([k, v]) => {
+          if (!(k in reviews)) reviews[k] = v;
+        });
+        localStorage.setItem('cine3d_reviews', JSON.stringify(reviews));
+
+        const prefs = this.getWatchlistPrefs();
+        if (prefs.genre === 'all' && payload.prefs && payload.prefs.genre) {
+          this.saveWatchlistPrefs({
+            genre: payload.prefs.genre,
+            sort: WATCHLIST_SORTS.includes(payload.prefs.sort) ? payload.prefs.sort : prefs.sort
+          });
+        }
+      }
+
+      this.saveWatchedList();
+      this.saveWatchlist();
+      this.updateWatchedCardButtons();
+      this.updateHideWatchedButton();
+      this.renderWatchlistDrawer();
+      this.applyFilters();
+      this.showToast(mode === 'overwrite' ? '📥 Yedek üzerine yazıldı.' : '📥 Yedek birleştirildi.', 'success');
+    } catch (err) {
+      this.showToast('İçe aktarma başarısız oldu.', 'error');
     }
   }
 
@@ -6053,6 +6436,161 @@ class Cine3DApp {
       if (el) layer = el;
     }
     return layer;
+  }
+
+  /** IMDb oy metnini sayıya çevirir ("2.5M" → 2500000). */
+  parseVotesCount(votes) {
+    if (typeof votes === 'number') return votes;
+    const raw = String(votes || '').trim().toUpperCase().replace(/[.,](?=\d{3}\b)/g, '');
+    const m = /^([\d.]+)\s*([KMB])?$/.exec(raw);
+    if (!m) return null;
+    const base = parseFloat(m[1]);
+    if (!Number.isFinite(base)) return null;
+    const mult = m[2] === 'B' ? 1e9 : m[2] === 'M' ? 1e6 : m[2] === 'K' ? 1e3 : 1;
+    return Math.round(base * mult);
+  }
+
+  /** Tür dağılımı: yatay bar chart (adet + ortalama puan). Vanilya SVG. */
+  buildGenreBarSvg(rows) {
+    const data = Array.isArray(rows) ? rows : [];
+    if (!data.length) return '<div class="report-chart-empty">Henüz tür verisi yok.</div>';
+
+    const rowH = 24;
+    const top = 8;
+    const width = 320;
+    const height = top * 2 + data.length * rowH;
+    const labelW = 86;
+    const barMax = width - labelW - 58;
+    const maxCount = Math.max(...data.map(r => r.count), 1);
+    const colors = ['#ef4444', '#f59e0b', '#38bdf8', '#34d399', '#a855f7', '#f472b6'];
+
+    const bars = data.map((r, i) => {
+      const y = top + i * rowH;
+      const w = Math.max(6, Math.round((r.count / maxCount) * barMax));
+      const avg = r.avg == null ? '—' : r.avg.toFixed(1);
+      return `
+        <text x="0" y="${y + 12}" fill="#cbd5e1" font-size="9" font-family="inherit">${escapeHtmlText(r.genre)}</text>
+        <rect x="${labelW}" y="${y + 2}" width="${barMax}" height="12" rx="6" fill="rgba(255,255,255,0.07)"></rect>
+        <rect x="${labelW}" y="${y + 2}" width="${w}" height="12" rx="6" fill="${colors[i % colors.length]}"></rect>
+        <text x="${labelW + barMax + 6}" y="${y + 12}" fill="#9ca3af" font-size="8.5" font-family="inherit">${r.count} · ⭐${avg}</text>`;
+    }).join('');
+
+    return `<svg class="report-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Tür dağılımı grafiği">${bars}</svg>`;
+  }
+
+  /** İzleme yılları: dikey bar chart. Vanilya SVG. */
+  buildYearTimelineSvg(rows) {
+    const data = Array.isArray(rows) ? rows : [];
+    if (!data.length) return '<div class="report-chart-empty">İzleme tarihi kaydı yok.</div>';
+
+    const width = 320;
+    const height = 120;
+    const padB = 20;
+    const padT = 14;
+    const barW = Math.min(46, Math.floor((width - 20) / data.length) - 8);
+    const maxCount = Math.max(...data.map(r => Number(r[1]) || 0), 1);
+    const usable = height - padT - padB;
+    const gap = data.length > 1 ? (width - 20 - barW * data.length) / (data.length - 1) : 0;
+
+    const bars = data.map(([year, cnt], i) => {
+      const x = 10 + i * (barW + gap);
+      const h = Math.max(6, Math.round((Number(cnt) / maxCount) * usable));
+      const y = padT + (usable - h);
+      return `
+        <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="5" fill="url(#yearGrad)"></rect>
+        <text x="${x + barW / 2}" y="${height - 6}" fill="#8a8a99" font-size="8.5" text-anchor="middle" font-family="inherit">${escapeHtmlText(year)}</text>
+        <text x="${x + barW / 2}" y="${y - 4}" fill="#e5e7eb" font-size="8.5" text-anchor="middle" font-family="inherit">${cnt}</text>`;
+    }).join('');
+
+    return `<svg class="report-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="İzleme yılları grafiği">
+      <defs><linearGradient id="yearGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f59e0b"></stop><stop offset="100%" stop-color="#ef4444"></stop>
+      </linearGradient></defs>
+      ${bars}
+    </svg>`;
+  }
+
+  /** Modalda açılan yapım için schema.org Movie/TVSeries JSON-LD'si (başlığa eklenir). */
+  injectMovieJsonLd(movie) {
+    this.removeMovieJsonLd();
+    if (!movie) return;
+
+    const imdbId = /^tt\d+$/.test(String(movie.imdbID || ''))
+      ? String(movie.imdbID)
+      : (/^tt\d+$/.test(String(movie.id || '')) ? String(movie.id) : '');
+    if (!imdbId) return; // gerçek kimlik yoksa yapısal veri üretmeyiz
+
+    const ld = {
+      '@context': 'https://schema.org',
+      '@type': movie.isSeries ? 'TVSeries' : 'Movie',
+      name: this.decodeHtmlEntities(movie.title || ''),
+      alternateName: movie.originalTitle ? this.decodeHtmlEntities(movie.originalTitle) : undefined,
+      datePublished: movie.year ? String(movie.year) : undefined,
+      description: (this.decodeHtmlEntities(movie.summary || '') || '').slice(0, 300) || undefined,
+      image: movie.posterUrl || undefined,
+      genre: Array.isArray(movie.genres) ? movie.genres : undefined,
+      url: this.buildShareUrl(movie),
+      sameAs: 'https://www.imdb.com/title/' + imdbId + '/'
+    };
+
+    if (movie.director && movie.director !== 'Belirtilmemiş') {
+      ld.director = { '@type': 'Person', name: this.decodeHtmlEntities(movie.director) };
+    }
+
+    const ratingValue = Number(movie.imdbRating);
+    if (Number.isFinite(ratingValue) && ratingValue > 0) {
+      const ratingCount = this.parseVotesCount(movie.imdbVotes);
+      ld.aggregateRating = {
+        '@type': 'AggregateRating',
+        ratingValue: ratingValue,
+        bestRating: 10,
+        worstRating: 1
+      };
+      if (ratingCount) ld.aggregateRating.ratingCount = ratingCount;
+    }
+
+    const clean = Object.fromEntries(Object.entries(ld).filter(([, v]) => v !== undefined));
+
+    const el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.id = 'movie-jsonld';
+    el.textContent = JSON.stringify(clean);
+    document.head.appendChild(el);
+  }
+
+  removeMovieJsonLd() {
+    document.getElementById('movie-jsonld')?.remove();
+  }
+
+  /**
+   * Modal başlığına "%XX DNA benzerliği" rozeti ekler.
+   * computeDNA() null ise (yetersiz veri) HİÇBİR ŞEY eklenmez — uydurma skor yok.
+   */
+  attachDnaBadge(movie) {
+    const pills = document.querySelector('.movie-modal.open .modal-pill-row');
+    if (!pills || !movie) return;
+    const reco = window.cine3dFeatures && window.cine3dFeatures.reco;
+    if (!reco || typeof reco.computeDNA !== 'function') return;
+
+    let dna = null;
+    try { dna = reco.computeDNA(); } catch (err) { dna = null; }
+    if (!dna) return;
+
+    let pct = null;
+    let why = '';
+    try {
+      const score = reco.score(movie, dna);
+      pct = Math.max(40, Math.min(99, Math.round(40 + score * 5)));
+      why = reco.explain(movie, dna).long;
+    } catch (err) { return; }
+    if (pct == null) return;
+
+    const badge = document.createElement('span');
+    badge.className = 'modal-dna-badge';
+    badge.id = 'modal-dna-badge';
+    badge.textContent = '🧬 %' + pct + ' DNA benzerliği';
+    badge.title = 'Neden: ' + why;
+    pills.appendChild(badge);
   }
 
   updateHideWatchedButton() {

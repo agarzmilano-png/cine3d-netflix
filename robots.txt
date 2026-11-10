@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://agarzmilano-png.github.io/cine3d-netflix/sitemap.xml

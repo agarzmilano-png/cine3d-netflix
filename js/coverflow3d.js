@@ -89,6 +89,15 @@ class Coverflow3D {
       // Klavye: yalnızca aktif kart Tab sırasına girer
       card.setAttribute('tabindex', i === this.currentIndex ? '0' : '-1');
 
+      // Odak takibi: odak bir coverflow kartındaysa seçimle birlikte taşınır
+      const focused = document.activeElement;
+      if (focused && focused.classList && focused.classList.contains('coverflow-card')) {
+        const activeCard = this.cards[this.currentIndex];
+        if (activeCard && activeCard !== focused) {
+          try { activeCard.focus({ preventScroll: true }); } catch (e) { activeCard.focus(); }
+        }
+      }
+
       card.classList.remove('active', 'prev', 'next', 'hidden');
 
       if (diff === 0) {

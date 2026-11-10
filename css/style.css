@@ -6123,3 +6123,293 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
   .pwa-update-toast { left: 10px; right: 10px; transform: none; justify-content: space-between; }
   .pwa-update-toast .pwa-update-msg { white-space: normal; }
 }
+
+/* ==========================================================================
+   SİNEMA KARNEM: yedekleme araçları + içe aktarma diyaloğu
+   ========================================================================== */
+.report-tools {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.report-tools .btn-report-demo { flex: 1; margin: 0; }
+
+.import-choice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 13000;
+  background: rgba(6, 6, 10, 0.78);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.import-choice-box {
+  width: min(420px, 100%);
+  background: #17171f;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  color: #e8e8ee;
+}
+.import-choice-box h4 { margin: 0 0 8px; font-size: 1rem; }
+.import-choice-box p { margin: 0 0 14px; font-size: 0.85rem; color: #a3a3b2; }
+.import-choice-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.import-choice-actions .btn-report-demo { flex: 1 1 120px; margin: 0; }
+.import-choice-actions .danger {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* Modal: DNA benzerlik rozeti */
+.modal-dna-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  cursor: help;
+  white-space: nowrap;
+}
+
+/* Zevk DNA grafikleri (Sinema Karnem) */
+.report-charts {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+.report-chart-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px;
+}
+.report-chart-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #e8e8ee;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.report-chart-sub {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #8a8a99;
+}
+.report-svg { width: 100%; height: auto; display: block; }
+.report-director-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.report-director-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+.report-director-list .dir-rank {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: #0a0a0c;
+  background: linear-gradient(135deg, #f5c518, #f59e0b);
+  flex: 0 0 auto;
+}
+.report-director-list .dir-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.report-director-list .dir-count { color: #8a8a99; font-size: 0.72rem; font-weight: 700; }
+.report-chart-empty {
+  font-size: 0.76rem;
+  color: #8a8a99;
+  padding: 10px 2px;
+}
+
+/* Tahmin oyunu: Cine3D Tahmin Ligi rozetleri */
+.guess-league-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.guess-league-badges .glb-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #8a8a99;
+  margin-right: 2px;
+}
+.glb-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #6b7280;
+}
+.glb-badge.earned {
+  color: #0a0a0c;
+  background: linear-gradient(135deg, #f5c518, #f59e0b);
+  border-color: #f5c518;
+  box-shadow: 0 0 12px rgba(245, 197, 24, 0.35);
+}
+.glb-games { margin-left: auto; font-size: 0.68rem; color: #8a8a99; font-weight: 700; }
+
+/* ==========================================================================
+   R007/5: SİNEMA GECESİ PLANLAYICI
+   ========================================================================== */
+.night-plan-section { padding: 20px 0 30px; }
+.np-container { max-width: 760px; margin: 0 auto; }
+.np-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.np-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #a78bfa;
+  text-transform: uppercase;
+}
+.np-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #a78bfa;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.8);
+}
+.np-title { margin: 4px 0 2px; font-size: 1.25rem; color: #fff; }
+.np-subtitle { margin: 0; font-size: 0.82rem; color: #8a8a99; }
+.np-clear-btn {
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.np-picker { margin-bottom: 12px; }
+.np-picker-label {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #8a8a99;
+  margin-bottom: 4px;
+}
+.np-picker-row { display: flex; gap: 8px; }
+.np-select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #1a1a22;
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+.np-add-btn, .np-copy-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #f5c518, #f59e0b);
+  color: #0a0a0c;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.np-list { display: grid; gap: 8px; }
+.np-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #8a8a99;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+}
+.np-break {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #a78bfa;
+  padding: 2px 0 2px 10px;
+  border-left: 2px dashed rgba(167, 139, 250, 0.5);
+}
+.np-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.np-idx {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 800; color: #0a0a0c;
+  background: linear-gradient(135deg, #f5c518, #f59e0b);
+  flex: 0 0 auto;
+}
+.np-thumb { width: 38px; height: 54px; object-fit: cover; border-radius: 6px; flex: 0 0 auto; }
+.np-info { flex: 1; min-width: 0; }
+.np-name { font-size: 0.88rem; font-weight: 700; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.np-meta { font-size: 0.72rem; color: #8a8a99; }
+.np-item-actions { display: flex; gap: 4px; flex: 0 0 auto; }
+.np-icon-btn {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.np-icon-btn:disabled { opacity: 0.35; cursor: default; }
+.np-icon-btn.danger { color: #ef4444; border-color: rgba(239, 68, 68, 0.35); }
+.np-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 14px 0 10px;
+}
+.np-total { font-size: 1rem; color: #e8e8ee; }
+.np-total strong { color: #f5c518; }
+.np-detail { font-size: 0.76rem; color: #8a8a99; }
+.np-actions { display: flex; gap: 8px; }
+.np-copy-btn { width: 100%; }
