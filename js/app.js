@@ -4239,32 +4239,35 @@ class Cine3DApp {
   }
 
   // --- ORİJİNAL DİZİ & FİLM MÜZİĞİ (OST) YÖNETİMİ ---
-  getAudioBaseUrl() {
-    const host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') return '';
-    return 'https://cdn.jsdelivr.net/gh/agarzmilano-png/cine3d-netflix@master/';
-  }
-
   /**
    * İnternetten çekilen yapımlar için OST çözücü.
    * Apple iTunes Search API CORS'a açık olduğu için tarayıcıdan doğrudan
    * çağrılır; 30 saniyelik resmi önizleme döner (sunucudaki mantığın aynısı).
    */
-  async resolveOnlineOst(movie) {
+  async resolveOnlineOst(movie, curatedTrack = '', curatedComposer = '') {
     if (!this._ostCache) this._ostCache = new Map();
     const cacheKey = movie.id || `${movie.title}_${movie.year}`;
     if (this._ostCache.has(cacheKey)) return this._ostCache.get(cacheKey);
 
     const titles = [movie.originalTitle, movie.title].filter(Boolean);
-    const composer = movie.director && movie.director !== 'Belirtilmemiş' ? movie.director : '';
+    const composer = curatedComposer || (movie.director && movie.director !== 'Belirtilmemiş' ? movie.director : '');
 
     // Aksan/uzatma bağımsız karşılaştırma (Shōgun -> shogun)
     const fold = (s) => String(s || '')
       .replace(/[ıİ]/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
     const titleKeys = titles.map(fold).filter((k) => k.length > 2);
+    const trackKeys = String(curatedTrack || '')
+      .split(/[\/&,]|\s-\s/).map(fold).filter((k) => k.length > 3);
 
     const queries = [];
+    // Küratörlü parça adı varsa en isabetli sorgu: "Film Orijinal Adı + Parça"
+    if (curatedTrack) {
+      for (const t of titles) {
+        queries.push(`${t} ${curatedTrack}`);
+        queries.push(`${curatedTrack} ${t}`);
+      }
+    }
     for (const t of titles) {
       queries.push(`${t} soundtrack`);
       queries.push(`${t} original motion picture soundtrack`);
@@ -4278,26 +4281,29 @@ class Cine3DApp {
       if (!k || seen.has(k)) continue;
       seen.add(k);
       try {
-        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(k)}&media=music&entity=song&limit=10`, { cache: 'no-store' });
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(k)}&media=music&entity=song&limit=15`, { cache: 'no-store' });
         if (!res.ok) continue;
         const data = await res.json();
 
-        // Sadece başlığı gerçekten eşleşen parçaları kabul et:
+        // Sadece başlığı/parçayı gerçekten eşleşen kayıtları kabul et:
         // aksi halde "Francis Ford Coppola" araması alakasız bir parça döndürüyordu.
         const scored = (data.results || [])
           .filter((r) => r.previewUrl)
           .map((r) => {
             const hay = fold(`${r.trackName || ''} ${r.collectionName || ''} ${r.artistName || ''}`);
-            const titleHit = titleKeys.some((tk) => hay.includes(tk));
+            const albumHay = fold(r.collectionName || '');
+            const titleHit = titleKeys.some((tk) => albumHay.includes(tk) || hay.includes(tk));
+            const trackHit = trackKeys.some((tk) => fold(r.trackName || '').includes(tk));
             const artistHit = composer && fold(r.artistName || '').includes(fold(composer));
             const albumHit = /soundtrack|original|score|theme|music/i.test(`${r.collectionName || ''}`);
             let score = 0;
             if (titleHit) score += 60;
+            if (trackHit) score += 45;
             if (artistHit) score += 25;
             if (albumHit) score += 15;
-            return { r, score };
+            return { r, score, titleHit, trackHit };
           })
-          .filter((x) => x.score >= 60)
+          .filter((x) => x.score >= 60 && (x.titleHit || x.trackHit))
           .sort((a, b) => b.score - a.score);
 
         if (scored.length) {
@@ -4346,37 +4352,34 @@ class Cine3DApp {
 
     if (curated) {
       ostData = { ...curated };
-    } else {
-      // İnternetten gelen yapım: Apple Music/iTunes önizlemesini çöz
-      onlineOst = await this.resolveOnlineOst(movie);
-      if (!onlineOst) {
-        if (btn) btn.classList.remove('loading');
-        if (txt) txt.textContent = 'Tema Müziği';
-        this.showToast(`🎵 "${movie.title}" için OST kaydı bulunamadı.`, 'info');
-        return;
-      }
+    }
+
+    // Ses kaynağı: Apple Music / iTunes resmî önizlemesi (orijinal kayıt, 30 sn).
+    // Küratörlü parça adı varsa sorguya eklenir → doğru parça bulunur.
+    onlineOst = await this.resolveOnlineOst(movie, curated ? curated.track : '', curated ? curated.composer : '');
+
+    if (!onlineOst) {
+      if (btn) btn.classList.remove('loading');
+      if (txt) txt.textContent = 'Tema Müziği';
+      this.showToast(`🎵 "${movie.title}" için OST kaydı bulunamadı.`, 'info');
+      return;
+    }
+
+    if (!ostData) {
       ostData = {
         track: onlineOst.trackTitle,
         composer: onlineOst.composer,
         youtubeId: '',
-        description: 'Apple Music resmi önizleme (30 sn).'
+        description: 'Apple Music resmî önizleme (30 sn).'
       };
     }
 
-    // OST dosyaları Pages paketinden çıkarılıp jsDelivr CDN'den servis edilir.
-    const localAudioUrl = `${this.getAudioBaseUrl()}audio/ost/${movie.id}.mp3`;
+    // Sunucu modunda canlı akış varsa o da denenir (Node sunucusu + Deezer)
     const streamAudioUrl = `api/stream-ost?id=${encodeURIComponent(movie.id)}&title=${encodeURIComponent(movie.title)}&originalTitle=${encodeURIComponent(movie.originalTitle || '')}&composer=${encodeURIComponent(ostData.composer || movie.director || '')}`;
 
-    // Sırayla denenecek kaynaklar: yerel dosya → (sunucu varsa) akış → iTunes önizleme
     const candidates = [];
-    if (curated) {
-      candidates.push(localAudioUrl);
-      if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
-    } else {
-      if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
-      candidates.push(localAudioUrl);
-      if (onlineOst) candidates.push(onlineOst.audioUrl);
-    }
+    if (await this.apiService?.isApiAvailable?.()) candidates.push(streamAudioUrl);
+    candidates.push(onlineOst.audioUrl);
 
     const watchUrl = ostData.youtubeId
       ? `https://www.youtube.com/watch?v=${ostData.youtubeId}`

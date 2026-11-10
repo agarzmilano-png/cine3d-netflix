@@ -1,6 +1,8 @@
 /**
  * CINE3D NETFLIX - Doğrulanmış Orijinal Dizi & Film Müzikleri Veritabanı (OST)
- * 109 Yapımın Tamamı İçin Gerçek Besteci, Eser Adı ve Resmi YouTube Parça Kimlikleri
+ * 109 Yapımın Tamamı İçin Gerçek Besteci, Eser Adı ve Doğrulanmış YouTube Parça Kimlikleri
+ *
+ * NOT: youtubeId değerleri scripts/fix-ost.js ile oEmbed üzerinden doğrulanmıştır.
  */
 
 const MOVIE_SOUNDTRACKS = {
@@ -13,13 +15,13 @@ const MOVIE_SOUNDTRACKS = {
   "interstellar": {
     "track": "Cornfield Chase & First Step",
     "composer": "Hans Zimmer",
-    "youtubeId": "1V_xRb0x9aw",
+    "youtubeId": "JuSsvM8B4Jc",
     "description": "Londra Temple Kilisesi'ndeki tarihi 1926 yapımı kilise orguyla kaydedilmiş uzay senfonisi."
   },
   "dark-knight": {
     "track": "Why So Serious? (Joker Theme)",
     "composer": "Hans Zimmer & James Newton Howard",
-    "youtubeId": "s2XzoA94Zws",
+    "youtubeId": "1zyhQjJ5UgY",
     "description": "Joker'in anarşik kaosunu temsil eden tek telli, yükselen rahatsız edici çello tınısı."
   },
   "pulp-fiction": {
@@ -43,7 +45,7 @@ const MOVIE_SOUNDTRACKS = {
   "fight-club": {
     "track": "Where Is My Mind?",
     "composer": "The Pixies / Maxence Cyrin",
-    "youtubeId": "90Fpjwctqlw",
+    "youtubeId": "49FB9hhoO6c",
     "description": "Gökdelenlerin yıkılışı eşliğinde modern sinemanın en unutulmaz final müziği."
   },
   "the-matrix": {
@@ -229,7 +231,7 @@ const MOVIE_SOUNDTRACKS = {
   "joker": {
     "track": "Bathroom Dance / Call Me Joker",
     "composer": "Hildur Guðnadóttir",
-    "youtubeId": "7EV-ssMcAwI",
+    "youtubeId": "gSwbYHJYskM",
     "description": "Arthur Fleck'in banyodaki yavaş çekim dönüşüm dansına eşlik eden Oscar ödüllü çello."
   },
   "harry-potter": {
@@ -259,7 +261,7 @@ const MOVIE_SOUNDTRACKS = {
   "reacher": {
     "track": "Reacher Theme / Bad As They Come",
     "composer": "Tony Morales",
-    "youtubeId": "3UDOY62tj60",
+    "youtubeId": "AldmDTTC1x0",
     "description": "Jack Reacher'ın heybetli yumruklarını ve adalet arayışını anlatan güney rock tınıları."
   },
   "no-time-to-die": {
@@ -337,13 +339,13 @@ const MOVIE_SOUNDTRACKS = {
   "olumlu-dunya": {
     "track": "Mermer Ailesi Operasyonu & Kaçış",
     "composer": "Ali Saran / İlkay Akdağlı",
-    "youtubeId": "iga7NCRlK8c",
+    "youtubeId": null,
     "description": "Lokantacı kiralık katil ailesinin absürt kovalamacalarına eşlik eden dinamik Türk yaylıları."
   },
   "olumlu-dunya-2": {
     "track": "Ölümlü Dünya 2 Çete Teması",
     "composer": "Ali Saran",
-    "youtubeId": "OmS4TDo6nJU",
+    "youtubeId": null,
     "description": "Serinin ikinci filmindeki soygun ve rehine krizinin tempolu müzikal kurgusu."
   },
   "gora": {
@@ -355,7 +357,7 @@ const MOVIE_SOUNDTRACKS = {
   "arog": {
     "track": "A.R.O.G: Bir Yontma Taş Macera Teması",
     "composer": "Ozan Çolakoğlu",
-    "youtubeId": "_5qoiAZ0YIM",
+    "youtubeId": null,
     "description": "1 milyon yıl önceye sürgün edilen Arif'in taş devri futbol maçı ve macera tınıları."
   },
   "knives-out": {
@@ -553,7 +555,7 @@ const MOVIE_SOUNDTRACKS = {
   "coherence": {
     "track": "Coherence Theme & Dark Current",
     "composer": "Kristopher Carter",
-    "youtubeId": "9Cqv7iVlKEg",
+    "youtubeId": null,
     "description": "Miller kuyruklu yıldızı geçerken paralel evrenlerin çatışmasını anlatan tekinsiz yaylılar."
   },
   "donnie-darko": {
@@ -571,7 +573,7 @@ const MOVIE_SOUNDTRACKS = {
   "black-mirror": {
     "track": "San Junipero Theme (Heaven Is a Place on Earth) & Bandersnatch",
     "composer": "Clint Mansell / Belinda Carlisle",
-    "youtubeId": "qdp-Gg7e2vc",
+    "youtubeId": "APZpyHD47L0",
     "description": "Teknolojinin karanlık yüzünü ve nostaljik simülasyonları anlatan elektronik tınılar."
   },
   "source-code": {
@@ -643,7 +645,7 @@ const MOVIE_SOUNDTRACKS = {
   "the-intouchables": {
     "track": "Una Mattina & Fly",
     "composer": "Ludovico Einaudi",
-    "youtubeId": "4pKly2JojMw",
+    "youtubeId": "5LRwYKpV-6A",
     "description": "Tekerlekli sandalyedeki aristokrat ile banliyö gencinin dostluğunu anlatan dünyaca ünlü piyano eseri."
   },
   "amelie": {

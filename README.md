@@ -101,9 +101,21 @@ Site sunucu olmadan da internetten veri çeker. Kullanılan kaynaklar ve nedenle
 | **Türkçe Vikipedi REST** | Türkçe konu özeti | ✅ `*` |
 | **data/catalog.json** | TR yayıncıları + yedek arama indeksi (haftalık, GitHub Actions) | ✅ (kendi dosyamız) |
 | JustWatch GraphQL | Canlı yayıncı sorgusu | ❌ (tarayıcıdan engelli → haftalık indekse yazılıyor) |
-| **iTunes Search API** | İnternetten gelen yapımların OST önizlemesi (30 sn) | ✅  |
+| **iTunes Search API** | Tüm yapımların OST önizlemesi (30 sn, orijinal kayıt) | ✅  |
 
 Yani `sunucu.js` olmadan da arama/detay canlı çalışır; yayıncı bilgisi haftalık indeksten gelir.
+
+### OST (film/dizi müziği)
+
+Tema müziği, 110 yapım için elle doğrulanmış parça adı + Apple Music/iTunes resmî önizlemesiyle
+çalınır (30 sn, orijinal kayıt). YouTube kimlikleri `scripts/fix-ost.js` ile oEmbed üzerinden
+doğrulanır; doğrulanamayanlarda yanlış video vermek yerine YouTube arama bağlantısı gösterilir.
+
+Doğrulama / yenileme:
+
+```bash
+node scripts/fix-ost.js
+```
 
 ### OMDb anahtarı
 
