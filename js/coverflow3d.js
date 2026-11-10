@@ -209,6 +209,12 @@ class Coverflow3D {
     // Kart tıklamaları
     this.cards.forEach((card, index) => {
       card.addEventListener('click', (e) => {
+        // Sürükleme sonrası gelen tıklamayı yoksay
+        if (this._suppressClickUntil && Date.now() < this._suppressClickUntil) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         if (index === this.currentIndex) {
           // Ortadaki karta tıklandığında detay aç
           if (this.onSelectMovie) {
@@ -241,6 +247,48 @@ class Coverflow3D {
           }
         }
       }, { passive: true });
+    }
+
+    // --- Sürükle / kaydır (fare + dokunmatik) ---
+    if (this.container) {
+      let startX = null;
+      let startY = null;
+      let moved = false;
+
+      const reset = () => {
+        startX = null;
+        startY = null;
+        this.container.classList.remove('is-dragging');
+      };
+
+      this.container.addEventListener('pointerdown', (e) => {
+        if (e.button != null && e.button !== 0 && e.pointerType === 'mouse') return;
+        startX = e.clientX;
+        startY = e.clientY;
+        moved = false;
+        this.container.classList.add('is-dragging');
+        try { this.container.setPointerCapture(e.pointerId); } catch (err) { /* sentetik olay */ }
+      });
+
+      this.container.addEventListener('pointermove', (e) => {
+        if (startX == null) return;
+        if (Math.abs(e.clientX - startX) > 10 || Math.abs(e.clientY - startY) > 10) moved = true;
+      });
+
+      const finish = (e) => {
+        if (startX == null) return;
+        const dx = (e.clientX != null) ? e.clientX - startX : 0;
+        const dy = (e.clientY != null) ? e.clientY - startY : 0;
+        reset();
+        if (moved && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          this._suppressClickUntil = Date.now() + 350;
+          if (dx < 0) this.next(); else this.prev();
+        }
+      };
+
+      this.container.addEventListener('pointerup', finish);
+      this.container.addEventListener('pointercancel', reset);
+      this.container.addEventListener('pointerleave', (e) => { if (e.buttons === 0) reset(); });
     }
   }
 

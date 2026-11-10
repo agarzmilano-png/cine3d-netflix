@@ -5856,3 +5856,15 @@ body {
 /* Reduced-motion sınıfı JS ile de eklenebilir (matchMedia desteklemeyen tarayıcılar) */
 body.reduced-motion #cinema-3d-canvas { display: none !important; }
 body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
+
+/* Coverflow: sürükleme geri bildirimi (fare + dokunmatik) */
+#coverflow-view-section .coverflow-container,
+#coverflow-container {
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+#coverflow-view-section .coverflow-container.is-dragging,
+#coverflow-container.is-dragging {
+  cursor: grabbing;
+}
