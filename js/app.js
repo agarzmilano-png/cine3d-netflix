@@ -4625,31 +4625,39 @@ class Cine3DApp {
   }
 
   // --- 3D PERSPEKTİF TİLT VE PARLAMA EFEKTİ ---
+  // R010: Eğim 5°'ye indirildi ve 1.04'lük ölçek büyütmesi tamamen kaldırıldı. 12° + ölçek,
+  // dönen kartın görsel/hit-test alanını komşu kartın üzerine taşırıyor ve fare kenara
+  // yaklaşırken hover/tıklama salınımına ("oynak yapı") yol açıyordu.
+  // Fare hareketi requestAnimationFrame ile throttle edilir: kare başına en fazla bir
+  // getBoundingClientRect okuması + bir transform yazımı yapılır.
   bind3DTiltToCards(elements) {
+    const TILT_MAX_DEG = 5; // hafif eğim yeterli — komşuya taşma yok
+
     elements.forEach(card => {
-      let bounds;
+      let frameId = 0;
+      let pendingEvent = null;
+      let bounds = null;
 
-      function rotateToMouse(e) {
+      const applyTilt = () => {
+        frameId = 0;
+        const e = pendingEvent;
+        pendingEvent = null;
+        if (!e || !card.isConnected) return;
+
+        // Layout okuması da RAF içinde: aynı karede tek okuma, tek yazma (layout thrash yok)
         bounds = card.getBoundingClientRect();
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        const leftX = mouseX - bounds.x;
-        const topY = mouseY - bounds.y;
-        const center = {
-          x: leftX - bounds.width / 2,
-          y: topY - bounds.height / 2
-        };
+        if (!bounds.width || !bounds.height) return;
 
-        const maxDeg = 12;
-        const rotateX = (-center.y / (bounds.height / 2)) * maxDeg;
-        const rotateY = (center.x / (bounds.width / 2)) * maxDeg;
+        const leftX = e.clientX - bounds.x;
+        const topY = e.clientY - bounds.y;
+        const centerX = leftX - bounds.width / 2;
+        const centerY = topY - bounds.height / 2;
 
-        card.style.transform = `
-          perspective(1000px)
-          rotateX(${rotateX.toFixed(2)}deg)
-          rotateY(${rotateY.toFixed(2)}deg)
-          scale3d(1.04, 1.04, 1.04)
-        `;
+        const rotateX = (-centerY / (bounds.height / 2)) * TILT_MAX_DEG;
+        const rotateY = (centerX / (bounds.width / 2)) * TILT_MAX_DEG;
+
+        // Yalnızca perspective + rotateX + rotateY — ölçek YOK, kart kendi kutusunda kalır
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
 
         const glare = card.querySelector('.card-glare');
         if (glare) {
@@ -4657,17 +4665,32 @@ class Cine3DApp {
           const posY = (topY / bounds.height) * 100;
           glare.style.background = `radial-gradient(circle at ${posX}% ${posY}%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 60%)`;
         }
+      };
+
+      function rotateToMouse(e) {
+        pendingEvent = e;
+        if (frameId) return; // Bu kare için zaten bir güncelleme planlandı
+        frameId = requestAnimationFrame(applyTilt);
       }
 
       function onMouseEnter() {
         bounds = card.getBoundingClientRect();
-        card.style.transition = 'transform 0.1s ease-out';
+        // Hızlı takip için kısa transition (style.css: .card-3d-tilt.is-tilting)
+        card.classList.add('is-tilting');
         if (window.cinemaAudio) window.cinemaAudio.playHover();
       }
 
       function onMouseLeave() {
-        card.style.transition = 'transform 0.5s ease-out';
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        if (frameId) {
+          cancelAnimationFrame(frameId);
+          frameId = 0;
+        }
+        pendingEvent = null;
+        // Sınıfı kaldırınca style.css'teki yumuşak transition devreye girer
+        card.classList.remove('is-tilting');
+        // Inline transform tamamen temizlenir: geride kalan perspektif bağlamı
+        // (containing block / hit-test) kalmaz, sıfırlama yumuşak animasyonla olur.
+        card.style.transform = '';
         const glare = card.querySelector('.card-glare');
         if (glare) {
           glare.style.background = 'transparent';
@@ -4694,6 +4717,12 @@ class Cine3DApp {
     if (window.cinemaAudio) window.cinemaAudio.playWhoosh();
 
     const isFav = this.isMovieInWatchlist(movie.id);
+
+    // R010: modal başlığındaki sezon sayacı bu değişkeni kullanıyor, ancak tanımı
+    // yalnızca renderMovies kapsamındaydı → dizi kartından modal açılınca
+    // "ReferenceError: watchedSeasons is not defined" fırlıyor ve tıklama akışı yarıda kalıyordu.
+    const modalWatchedRec = this.getMovieWatchedRecord ? this.getMovieWatchedRecord(movie.id) : null;
+    const watchedSeasons = (modalWatchedRec && modalWatchedRec.watchedSeasons) ? Number(modalWatchedRec.watchedSeasons) || 0 : 0;
 
     // Eğer videoId henüz yoksa arka planda hemen çözümle
     // R009/5: Fragman kimliği yoksa gömülü katalog indeksinden bulmayı dene

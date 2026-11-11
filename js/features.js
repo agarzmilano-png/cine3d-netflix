@@ -140,11 +140,20 @@
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=${videoId}&iv_load_policy=3`;
         iframe.allow = 'autoplay; encrypted-media';
         iframe.tabIndex = -1;
+        iframe.setAttribute('aria-hidden', 'true');
+        // R010: önizleme görsel olarak oynasın ama tıklamaları YUTMASIN.
+        // iframe hiçbir zaman pointer hedefi olmaz → karta/butonlara tıklama geçer.
+        iframe.style.pointerEvents = 'none';
+        // Önizleme poster katmanında kalır; kart rozetleri (z-index 5),
+        // glare (3) ve hover-play (7) her zaman üstte kalır.
+        iframe.style.zIndex = '1';
         poster.appendChild(iframe);
 
         const chip = document.createElement('span');
         chip.className = 'card-preview-chip';
         chip.innerHTML = '<span class="preview-dot"></span> ÖNİZLEME';
+        // R010: chip de (sağ üstte, IMDb/favori rozetlerinin üzerinde) tıklamayı geçirir
+        chip.style.pointerEvents = 'none';
         poster.appendChild(chip);
 
         requestAnimationFrame(() => iframe.classList.add('is-playing'));
@@ -183,6 +192,9 @@
       document.addEventListener('mouseout', TrailerPreview.onOut);
       // Sayfa kaydırılınca ekran dışı iframe'leri temizle
       window.addEventListener('scroll', () => TrailerPreview.clear(), { passive: true });
+      // R010: karta tıklanıp modal açılırken önizleme iframe'i anında kaldırılsın.
+      // Capture fazı: kartın kendi click handler'ı (T3 → openModal) çalışmadan önce temizlenir.
+      document.addEventListener('click', () => TrailerPreview.clear(), true);
     }
   };
 

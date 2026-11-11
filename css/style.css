@@ -1573,7 +1573,12 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 28px;
-  perspective: 1200px;
+  /* R010: Izgaranın kendi `perspective: 1200px` değeri, 3D dönen kartın hit-test
+     kutusunu layout kutusuna göre ~%18 büyütüyordu (5° eğimde bile +111px yükseklik).
+     Taşan kutu komşu kartın alanına girip hover/tıklama salınımına yol açıyordu.
+     Derinlik etkisi zaten her kartın kendi transform'undaki perspective(1000px) ile
+     veriliyor; burada düz (flat) bırakmak kartı kendi kutusunda tutar. */
+  perspective: none;
 }
 
 /* 3D TİLT KART TASARIMI */
@@ -1601,6 +1606,20 @@ body {
   height: 360px;
   overflow: hidden;
   background: #141419;
+}
+
+/* R010: 3D tilt — hafif eğim (≤5°), ölçek yok.
+   Girişte hızlı takip, çıkışta yumuşak sıfırlama; böylece kart "oynamaz". */
+.card-3d-tilt {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-3d-tilt.is-tilting {
+  transition: transform 0.08s linear;
+}
+
+.card-3d-tilt:hover {
+  will-change: transform;
 }
 
 .card-poster img {
