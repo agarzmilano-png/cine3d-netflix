@@ -496,6 +496,24 @@
   color: #ffe066;
 }
 
+/* R013 (ZCode): aile yorum duvarı — yazar adı vurgusu + boş durum */
+.review-author {
+  font-weight: 800;
+  color: #fff;
+  font-size: 0.9rem;
+}
+.saved-review-card .review-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.reviews-empty {
+  color: #9a9aa8;
+  font-size: 0.88rem;
+  padding: 10px 4px;
+}
+
 .modal-awards-tag {
   border-color: rgba(245, 197, 24, 0.4);
   color: var(--imdb-gold);

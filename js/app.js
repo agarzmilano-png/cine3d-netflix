@@ -1048,6 +1048,9 @@ class Cine3DApp {
     // R009/1: çoklu profil
     this.initProfiles();
 
+    // R013: eski yorumları paylaşılan aile yorum duvarına taşı (bir kez)
+    this.migrateReviewsToShared();
+
     // R009/3: paylaşılan liste bağlantısı (#wl=...)
     this.openSharedListFromHash();
 
@@ -6025,29 +6028,98 @@ class Cine3DApp {
   }
 
   // --- KİŞİSEL FİLM NOTU & İNCELEME YÖNETİMİ (FAZ 6) ---
+  // --- R013 (ZCode): AİLE YORUM DUVARI ---
+  // Yorumlar artık profil-scoped DEĞİL, paylaşılan depoda: herkes herkesin
+  // yorumunu yazar adıyla görür (örn. "Batuhan: Bu film çok kötü").
+  getActivePid() {
+    return localStorage.getItem('cine3d_active_profile') || 'p1';
+  }
+
+  getProfileName(pid) {
+    try {
+      const p = JSON.parse(localStorage.getItem('cine3d_profiles') || '[]').find(x => x.pid === pid);
+      return p ? p.name : 'Anonim';
+    } catch (e) {
+      return 'Anonim';
+    }
+  }
+
+  getSharedReviews(movieId) {
+    if (!movieId) return {};
+    try {
+      const data = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      return data[movieId] || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  // Tek seferlik migrasyon: eski profil-scoped yorumları (ve R009 öncesi
+  // tek kullanıcılı 'cine3d_reviews' kaydını) paylaşılan depoya yazar adıyla taşır.
+  migrateReviewsToShared() {
+    try {
+      if (localStorage.getItem('cine3d_reviews_migrated') === '1') return;
+      const profiles = JSON.parse(localStorage.getItem('cine3d_profiles') || '[]');
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      const addEntry = (pid, author, data) => {
+        Object.keys(data || {}).forEach(mid => {
+          if (!shared[mid]) shared[mid] = {};
+          if (!shared[mid][pid]) {
+            shared[mid][pid] = {
+              ...data[mid],
+              author,
+              updatedAt: (data[mid] && data[mid].updatedAt) || new Date().toISOString()
+            };
+          }
+        });
+      };
+      const activePid = this.getActivePid();
+      // 1) aktif profile eşlenen eski kayıt (R009 öncesi tek kullanıcılı dönem dahil)
+      addEntry(activePid, this.getProfileName(activePid), JSON.parse(localStorage.getItem('cine3d_reviews') || '{}'));
+      // 2) her profilin scoped eski yorumları
+      profiles.forEach(p => {
+        addEntry(p.pid, p.name, JSON.parse(localStorage.getItem('cine3d_p_' + p.pid + '_reviews') || '{}'));
+      });
+      localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
+      // eski scoped kopyalar temizlenir (silinen yorumların geri dönmemesi için)
+      profiles.forEach(p => localStorage.removeItem('cine3d_p_' + p.pid + '_reviews'));
+      localStorage.setItem('cine3d_reviews_migrated', '1');
+    } catch (e) {
+      console.error('review migration', e);
+    }
+  }
+
   getMovieReview(movieId) {
     if (!movieId) return null;
-    try {
-      const data = JSON.parse(localStorage.getItem('cine3d_reviews') || '{}');
-      return data[movieId] || null;
-    } catch (e) {
-      return null;
-    }
+    const all = this.getSharedReviews(movieId);
+    return all[this.getActivePid()] || null;
+  }
+
+  getAllMovieReviews(movieId) {
+    if (!movieId) return [];
+    const all = this.getSharedReviews(movieId);
+    return Object.entries(all)
+      .map(([pid, rev]) => ({ pid, author: rev.author || this.getProfileName(pid), ...rev }))
+      .sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
   }
 
   saveMovieReview(movieId, reviewData) {
     if (!movieId) return false;
     try {
-      const data = JSON.parse(localStorage.getItem('cine3d_reviews') || '{}');
+      const pid = this.getActivePid();
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      if (!shared[movieId]) shared[movieId] = {};
       if (reviewData) {
-        data[movieId] = {
+        shared[movieId][pid] = {
           ...reviewData,
+          author: this.getProfileName(pid),
           updatedAt: new Date().toISOString()
         };
       } else {
-        delete data[movieId];
+        delete shared[movieId][pid]; // yalnızca KENDİ yorumunu silebilir
+        if (!Object.keys(shared[movieId]).length) delete shared[movieId];
       }
-      localStorage.setItem('cine3d_reviews', JSON.stringify(data));
+      localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
       window.dispatchEvent(new CustomEvent('cine3d-user-data-changed'));
       return true;
     } catch (e) {
@@ -6060,46 +6132,59 @@ class Cine3DApp {
     const container = document.getElementById('modal-review-section');
     if (!container || !movie) return;
 
-    const review = this.getMovieReview(movie.id);
+    const myReview = this.getMovieReview(movie.id);
+    const allReviews = this.getAllMovieReviews(movie.id);
+    const activePid = this.getActivePid();
     const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-    if (review && !isEditing) {
-      const dateStr = review.updatedAt ? new Date(review.updatedAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+    if (!isEditing) {
+      // --- R013: AİLE YORUM DUVARI — herkesin yorumu yazar adıyla ---
+      const dateStr = (rev) => rev.updatedAt ? new Date(rev.updatedAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+      const reviewCards = allReviews.map(rev => `
+        <div class="saved-review-card">
+          <div class="review-box-header">
+            <div class="review-author">👤 ${esc(rev.author)}:</div>
+            ${dateStr(rev) ? `<span class="review-date-badge">${dateStr(rev)}</span>` : ''}
+          </div>
+          ${rev.tag ? `<span class="saved-review-tag">${esc(rev.tag)}</span>` : ''}
+          <p class="saved-review-text">${esc(rev.note)}</p>
+          ${rev.pid === activePid ? `
+          <div class="saved-review-actions">
+            <button class="btn-review-sm" id="btn-edit-review">✏️ Düzenle</button>
+            <button class="btn-review-sm danger" id="btn-delete-review">🗑️ Sil</button>
+          </div>` : ''}
+        </div>`).join('');
+
       container.innerHTML = `
         <div class="modal-review-box">
           <div class="review-box-header">
             <div class="review-box-title">
-              <span class="review-box-icon">📝</span>
-              <span>Kişisel Sinema Notum</span>
+              <span class="review-box-icon">💬</span>
+              <span>Film Yorumları</span>
             </div>
-            ${dateStr ? `<span class="review-date-badge">${dateStr}</span>` : ''}
+            <button type="button" class="btn-review-sm" id="btn-add-review">${myReview ? '✏️ Yorumumu Düzenle' : '＋ Yorum Ekle'}</button>
           </div>
-          <div class="saved-review-card">
-            ${review.tag ? `<span class="saved-review-tag">${esc(review.tag)}</span>` : ''}
-            <p class="saved-review-text">${esc(review.note)}</p>
-            <div class="saved-review-actions">
-              <button class="btn-review-sm" id="btn-edit-review">✏️ Düzenle</button>
-              <button class="btn-review-sm danger" id="btn-delete-review">🗑️ Sil</button>
-            </div>
-          </div>
+          ${reviewCards || `<p class="reviews-empty">Henüz yorum yok — ilk yorumu sen yaz! ✨</p>`}
         </div>
       `;
 
+      container.querySelector('#btn-add-review')?.addEventListener('click', () => {
+        this.renderModalReviewSection(movie, true);
+      });
       container.querySelector('#btn-edit-review')?.addEventListener('click', () => {
         this.renderModalReviewSection(movie, true);
       });
-
       container.querySelector('#btn-delete-review')?.addEventListener('click', () => {
         this.saveMovieReview(movie.id, null);
-        this.showToast('🗑️ Kişisel film notunuz silindi.', 'info');
+        this.showToast('🗑️ Yorumun silindi.', 'info');
         this.renderModalReviewSection(movie, false);
         this.renderWatchlistDrawer();
       });
       return;
     }
 
-    // Düzenleme / Ekleme Modu
-    let selectedTag = review?.tag || '';
+    // Düzenleme / Ekleme Modu (kendi yorumum)
+    let selectedTag = myReview?.tag || '';
     const tags = ['Başyapıt 🏆', 'Kafa Açıcı 🧠', 'Görsel Şölen 🎨', 'Dram / Duygusal 💔', 'Arkadaşla İzlenir 🍿', 'Ters Köşe ⚡', 'Hayal Kırıklığı 🥱'];
 
     container.innerHTML = `
@@ -6107,7 +6192,7 @@ class Cine3DApp {
         <div class="review-box-header">
           <div class="review-box-title">
             <span class="review-box-icon">📝</span>
-            <span>${review ? 'Notu Düzenle' : 'Kişisel Sinema Notu Ekle'}</span>
+            <span>${myReview ? 'Yorumunu Düzenle' : 'Yorum Ekle'}</span>
           </div>
         </div>
         <div class="review-editor-form">
@@ -6119,19 +6204,19 @@ class Cine3DApp {
               `).join('')}
             </div>
           </div>
-          <textarea 
-            id="review-textarea" 
-            class="review-textarea" 
-            placeholder="Bu yapım hakkındaki kişisel düşüncelerin, unutamadığın sahne veya müzikler..." 
-            rows="3" 
+          <textarea
+            id="review-textarea"
+            class="review-textarea"
+            placeholder="Bu yapım hakkındaki düşüncelerin, unutamadığın sahne veya müzikler..."
+            rows="3"
             maxlength="600"
-          >${review ? esc(review.note) : ''}</textarea>
+          >${myReview ? esc(myReview.note) : ''}</textarea>
           <div class="review-editor-footer">
-            <span class="review-char-count"><span id="review-char-num">${review ? review.note.length : 0}</span>/600</span>
+            <span class="review-char-count"><span id="review-char-num">${myReview ? myReview.note.length : 0}</span>/600</span>
             <div class="review-footer-buttons">
-              ${review ? `<button type="button" class="btn-review-cancel" id="btn-cancel-edit-review">İptal</button>` : ''}
+              ${myReview ? `<button type="button" class="btn-review-cancel" id="btn-cancel-edit-review">İptal</button>` : ''}
               <button type="button" class="btn-review-save" id="btn-save-review">
-                <span>💾 Notu Kaydet</span>
+                <span>💾 Yorumu Kaydet</span>
               </button>
             </div>
           </div>
@@ -6173,7 +6258,7 @@ class Cine3DApp {
         note: note || selectedTag,
         tag: selectedTag
       });
-      this.showToast('💾 Kişisel film notunuz kaydedildi!', 'success');
+      this.showToast('💬 Yorumun kaydedildi — profili adıyla görünecek!', 'success');
       this.renderModalReviewSection(movie, false);
       this.renderWatchlistDrawer();
     });
@@ -6670,8 +6755,8 @@ class Cine3DApp {
               <span class="report-tile-label">Baskın Türün</span>
             </div>
             <div class="report-stat-tile">
-              <span class="report-tile-val">${Object.keys(JSON.parse(localStorage.getItem('cine3d_reviews') || '{}')).length} Not</span>
-              <span class="report-tile-label">Kişisel İnceleme</span>
+              <span class="report-tile-val">${Object.values(JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}')).reduce((n, mov) => n + Object.keys(mov).length, 0)} Yorum</span>
+              <span class="report-tile-label">Aile Yorum Duvarı</span>
             </div>
           </div>
 
@@ -6765,9 +6850,25 @@ class Cine3DApp {
   }
 
   // --- VERİ YEDEKLEME & İÇE AKTARMA ---
+  // R013: içe aktarılan yorumları paylaşılan (yazar-bazlı) biçime normalize et.
+  // Eski düz format {movieId:{note,tag}} → aktif profil adına sarılır.
+  normalizeImportedReviews(reviews) {
+    const pid = this.getActivePid();
+    const author = this.getProfileName(pid);
+    const norm = {};
+    Object.entries(reviews || {}).forEach(([mid, v]) => {
+      if (v && typeof v === 'object' && Object.values(v).some(x => x && typeof x === 'object' && ('note' in x || 'author' in x))) {
+        norm[mid] = v; // zaten yazar-bazlı
+      } else if (v && typeof v === 'object') {
+        norm[mid] = { [pid]: { ...v, author, updatedAt: v.updatedAt || new Date().toISOString() } };
+      }
+    });
+    return norm;
+  }
+
   buildBackupPayload() {
     let reviews = {};
-    try { reviews = JSON.parse(localStorage.getItem('cine3d_reviews') || '{}') || {}; } catch (err) { reviews = {}; }
+    try { reviews = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}') || {}; } catch (err) { reviews = {}; }
 
     let dna = null;
     try {
@@ -6880,7 +6981,8 @@ class Cine3DApp {
       if (mode === 'overwrite') {
         this.watchedList = toArray(payload.watched);
         this.watchlist = toArray(payload.watchlist);
-        localStorage.setItem('cine3d_reviews', JSON.stringify(payload.reviews || {}));
+        // R013: yorumlar paylaşılan depoya yazılır (eski düz format da desteklenir)
+        localStorage.setItem('cine3d_reviews_shared', JSON.stringify(this.normalizeImportedReviews(payload.reviews)));
         if (payload.prefs && payload.prefs.genre) this.saveWatchlistPrefs({
           genre: payload.prefs.genre || 'all',
           sort: WATCHLIST_SORTS.includes(payload.prefs.sort) ? payload.prefs.sort : 'added'
@@ -6896,12 +6998,15 @@ class Cine3DApp {
           if (!seenList.has(keyOf(w))) { this.watchlist.push(w); seenList.add(keyOf(w)); }
         });
 
-        let reviews = {};
-        try { reviews = JSON.parse(localStorage.getItem('cine3d_reviews') || '{}') || {}; } catch (err) { reviews = {}; }
-        Object.entries(payload.reviews || {}).forEach(([k, v]) => {
-          if (!(k in reviews)) reviews[k] = v;
+        const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+        const incoming = this.normalizeImportedReviews(payload.reviews);
+        Object.entries(incoming).forEach(([mid, authors]) => {
+          if (!shared[mid]) shared[mid] = {};
+          Object.entries(authors).forEach(([pid, rev]) => {
+            if (!shared[mid][pid]) shared[mid][pid] = rev;
+          });
         });
-        localStorage.setItem('cine3d_reviews', JSON.stringify(reviews));
+        localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
 
         const prefs = this.getWatchlistPrefs();
         if (prefs.genre === 'all' && payload.prefs && payload.prefs.genre) {
