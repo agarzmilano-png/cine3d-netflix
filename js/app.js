@@ -3093,6 +3093,86 @@ class Cine3DApp {
     }
   }
 
+  // --- R009: iOS PWA İPUCU ---
+  initIosPwaHint() {
+    const ua = navigator.userAgent || '';
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    if (!isIOS || standalone) return;
+    try { if (localStorage.getItem('cine3d_ios_pwa_hint') === '1') return; } catch (err) { /* yoksay */ }
+    if (document.getElementById('ios-pwa-hint')) return;
+
+    const bar = document.createElement('div');
+    bar.className = 'ios-pwa-hint';
+    bar.id = 'ios-pwa-hint';
+    bar.innerHTML = `
+      <span class="ios-hint-icon">📲</span>
+      <span class="ios-hint-text">Uygulama gibi kullanmak için: <strong>Paylaş</strong> ➜ <strong>Ana Ekrana Ekle</strong></span>
+      <button type="button" id="ios-hint-close">Anladım</button>`;
+    document.body.appendChild(bar);
+
+    bar.querySelector('#ios-hint-close')?.addEventListener('click', () => {
+      try { localStorage.setItem('cine3d_ios_pwa_hint', '1'); } catch (err) { /* yoksay */ }
+      bar.remove();
+    });
+  }
+
+  // --- R009: FİLM KARŞILAŞTIRMA TABLOSU ---
+  openCompareModal() {
+    const modal = document.getElementById('compare-modal');
+    const body = document.getElementById('compare-body');
+    if (!modal || !body) return;
+
+    const items = this.getWatchlistView(
+      (this.watchlist || []).map(w => {
+        if (w && w.title && w.imdbRating != null) return w;
+        const id = (typeof w === 'string') ? w : w && w.id;
+        return this.movies.find(m => m.id === id);
+      }).filter(Boolean),
+      { genre: 'all', sort: 'added' }
+    ).slice(0, 3);
+
+    if (items.length < 2) {
+      this.showToast('Karşılaştırma için listede en az 2 film olmalı.', 'info');
+      return;
+    }
+
+    const rows = [
+      { label: 'Afiş', cell: m => '<img class="compare-poster" src="' + escapeHtmlText(m.posterUrl) + '" alt="' + escapeHtmlText(m.title) + '" />' },
+      { label: 'Film', cell: m => '<span class="compare-name">' + escapeHtmlText(m.title) + '</span>' },
+      { label: 'IMDb', cell: m => '⭐ ' + escapeHtmlText(m.imdbRating), best: m => Number(m.imdbRating) || 0 },
+      { label: 'Yıl', cell: m => escapeHtmlText(m.year) },
+      { label: 'Süre', cell: m => escapeHtmlText(m.duration || '—'), best: m => this.nightPlanMinutes(m) },
+      { label: 'Türler', cell: m => escapeHtmlText((m.genres || []).join(', ')) },
+      { label: 'Yönetmen', cell: m => escapeHtmlText(m.director || '—') },
+      { label: 'Türkiye Yayıncıları', cell: m => (Array.isArray(m.platforms) && m.platforms.length) ? escapeHtmlText(m.platforms.join(', ')) : '—' }
+    ];
+
+    body.innerHTML = '<div class="compare-grid" style="grid-template-columns: 110px repeat(' + items.length + ', minmax(0,1fr));">' +
+      rows.map(row => {
+        let bestIdx = -1;
+        if (row.best) {
+          const vals = items.map(row.best);
+          const max = Math.max(...vals);
+          bestIdx = vals.indexOf(max);
+        }
+        return '<span class="cg-label">' + row.label + '</span>' +
+          items.map((m, i) => '<span class="cg-cell' + (i === bestIdx ? ' best' : '') + '">' + row.cell(m) + '</span>').join('');
+      }).join('') + '</div>';
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    this.updateBackgroundInert();
+  }
+
+  closeCompareModal() {
+    const modal = document.getElementById('compare-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    this.updateBackgroundInert();
+  }
+
   // --- KOLEKSİYON HUB'LARI ---
   renderCollectionHubs() {
     const box = document.getElementById('collection-hubs-container');
@@ -5640,6 +5720,11 @@ class Cine3DApp {
       });
     }
 
+    this.initIosPwaHint();
+
+    document.getElementById('compare-close')?.addEventListener('click', () => this.closeCompareModal());
+    document.getElementById('compare-backdrop')?.addEventListener('click', () => this.closeCompareModal());
+
     window.addEventListener('appinstalled', () => {
       this.showToast('🚀 Cine3D başarıyla yüklendi!', 'success');
       if (installBtn) installBtn.classList.add('hidden');
@@ -5894,6 +5979,7 @@ class Cine3DApp {
             </select>
           </label>
           <span class="wl-control-count">${viewList.length}/${resolvedItems.length}</span>
+          <button type="button" class="wl-compare-btn" id="wl-compare-btn" title="İlk 3 filmi yan yana karşılaştır" ${this.watchlist.length < 2 ? 'disabled' : ''}>⚖️ Karşılaştır</button>
         </div>
       `;
 
@@ -5922,6 +6008,8 @@ class Cine3DApp {
         this.saveWatchlistPrefs(next);
         this.renderWatchlistDrawer();
       });
+      container.querySelector('#wl-compare-btn')?.addEventListener('click', () => this.openCompareModal());
+
       container.querySelector('#wl-sort')?.addEventListener('change', (e) => {
         const next = this.getWatchlistPrefs();
         next.sort = WATCHLIST_SORTS.includes(e.target.value) ? e.target.value : 'added';
@@ -6544,6 +6632,7 @@ class Cine3DApp {
       '#watchlist-drawer.open',
       '#ticket-modal.open',
       '#tournament-modal.open',
+      '#compare-modal.open',
       '.import-choice-overlay'
     ];
     const anyOpen = overlaySelectors.some(sel => document.querySelector(sel));
@@ -7039,6 +7128,7 @@ class Cine3DApp {
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeModal();
+        this.closeCompareModal();
         this.closeWatchlistDrawer();
         this.closeVSModal();
         this.closeTicketModal();

@@ -64,10 +64,10 @@
   <link rel="dns-prefetch" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Stiller -->
-  <link rel="stylesheet" href="css/style.css?v=5.9" />
-  <link rel="stylesheet" href="css/modal.css?v=5.9" />
-  <link rel="stylesheet" href="css/vs-duel.css?v=5.9" />
-  <link rel="stylesheet" href="css/features.css?v=5.9" />
+  <link rel="stylesheet" href="css/style.css?v=6.0" />
+  <link rel="stylesheet" href="css/modal.css?v=6.0" />
+  <link rel="stylesheet" href="css/vs-duel.css?v=6.0" />
+  <link rel="stylesheet" href="css/features.css?v=6.0" />
 </head>
 <body>
   <a class="skip-link" href="#movies-anchor">İçeriğe atla</a>
@@ -875,6 +875,16 @@
   </div>
 
   <!-- Sinema Bileti Modalı (Faz 4: VIP Pass Generator) -->
+  <!-- R009: Film karşılaştırma tablosu -->
+  <div class="compare-modal" id="compare-modal">
+    <div class="compare-backdrop" id="compare-backdrop"></div>
+    <div class="compare-dialog" role="dialog" aria-modal="true" aria-label="Film karşılaştırma tablosu">
+      <button class="compare-close" id="compare-close" aria-label="Karşılaştırmayı kapat">✕</button>
+      <h3 class="compare-title">⚖️ Film Karşılaştırma</h3>
+      <div class="compare-body" id="compare-body"></div>
+    </div>
+  </div>
+
   <div class="ticket-modal" id="ticket-modal">
     <div class="ticket-modal-backdrop" id="ticket-modal-backdrop"></div>
     <div class="ticket-modal-dialog">
@@ -901,17 +911,17 @@
   <div class="toast-popup" id="toast-notification"></div>
 
   <!-- JavaScript Dosyaları (Three.js body sonunda: 603 KB'lik parse ilk boyamayı bloklamaz) -->
-  <script src="js/vendor/three.min.js?v=5.9"></script>
-  <script src="js/movies-data.js?v=5.9"></script>
-  <script src="js/movie-soundtracks.js?v=5.9"></script>
-  <script src="js/config.js?v=5.9"></script>
-  <script src="js/catalog-index.js?v=5.9"></script>
-  <script src="js/api-service.js?v=5.9"></script>
-  <script src="js/audio.js?v=5.9"></script>
-  <script src="js/three-scene.js?v=5.9"></script>
-  <script src="js/coverflow3d.js?v=5.9"></script>
-  <script src="js/story-adventure.js?v=5.9"></script>
-  <script src="js/app.js?v=5.9"></script>
-  <script src="js/features.js?v=5.9"></script>
+  <script src="js/vendor/three.min.js?v=6.0"></script>
+  <script src="js/movies-data.js?v=6.0"></script>
+  <script src="js/movie-soundtracks.js?v=6.0"></script>
+  <script src="js/config.js?v=6.0"></script>
+  <script src="js/catalog-index.js?v=6.0"></script>
+  <script src="js/api-service.js?v=6.0"></script>
+  <script src="js/audio.js?v=6.0"></script>
+  <script src="js/three-scene.js?v=6.0"></script>
+  <script src="js/coverflow3d.js?v=6.0"></script>
+  <script src="js/story-adventure.js?v=6.0"></script>
+  <script src="js/app.js?v=6.0"></script>
+  <script src="js/features.js?v=6.0"></script>
 </body>
 </html>

@@ -6511,3 +6511,176 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
 .collection-name { font-size: 0.9rem; font-weight: 800; }
 .collection-desc { font-size: 0.72rem; color: #8a8a99; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .collection-count { font-size: 0.68rem; font-weight: 800; color: #f5c518; flex: 0 0 auto; }
+
+/* ==========================================================================
+   A11Y: yüksek kontrast ve zorunlu renk modu desteği
+   ========================================================================== */
+@media (prefers-contrast: more) {
+  :root {
+    --text-muted: #e2e8f0;
+    --text-dim: #cbd5e1;
+    --text-secondary: #e2e8f0;
+  }
+  .movie-card,
+  .card-inner,
+  .watchlist-item-card,
+  .collection-card,
+  .np-item,
+  .report-chart-card,
+  .modal-window {
+    border-color: rgba(255, 255, 255, 0.55) !important;
+  }
+  .wl-control-label,
+  .filter-label,
+  .report-tile-label,
+  .rec-reason,
+  .np-subtitle,
+  .collection-desc {
+    color: #dbe3ee !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .movie-card,
+  .card-inner,
+  .watchlist-item-card,
+  .collection-card,
+  .np-item,
+  .report-chart-card,
+  .modal-window,
+  .skip-link {
+    border: 1px solid CanvasText;
+  }
+  .skip-link:focus,
+  .skip-link:focus-visible { outline: 3px solid Highlight; }
+  .nav-link.active,
+  .collection-card.active,
+  .glb-badge.earned,
+  .rec-match,
+  .modal-dna-badge,
+  .np-item .np-idx {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+  .report-svg rect,
+  .report-svg text { forced-color-adjust: auto; }
+}
+
+/* ==========================================================================
+   R009: Film karşılaştırma tablosu + iOS PWA ipucu
+   ========================================================================== */
+.compare-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+.compare-modal.open { display: flex; }
+.compare-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 6, 10, 0.82);
+  backdrop-filter: blur(4px);
+}
+.compare-dialog {
+  position: relative;
+  width: min(920px, 100%);
+  max-height: 86vh;
+  overflow: auto;
+  background: #15151d;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75);
+}
+.compare-title { margin: 0 0 14px; font-size: 1.05rem; color: #fff; }
+.compare-close {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  cursor: pointer;
+}
+.compare-close:hover { color: #fff; background: rgba(229, 9, 20, 0.25); }
+.compare-grid {
+  display: grid;
+  gap: 8px;
+  align-items: stretch;
+  font-size: 0.82rem;
+}
+.compare-grid .cg-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #8a8a99;
+  align-self: center;
+}
+.compare-grid .cg-cell {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px;
+  color: #e8e8ee;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.compare-grid .cg-cell.best { border-color: #f5c518; box-shadow: 0 0 14px rgba(245, 197, 24, 0.18); }
+.compare-poster { width: 64px; height: 92px; object-fit: cover; border-radius: 8px; }
+.compare-name { font-weight: 800; overflow: hidden; text-overflow: ellipsis; }
+.compare-empty { padding: 26px; text-align: center; color: #8a8a99; font-size: 0.86rem; }
+
+.ios-pwa-hint {
+  position: fixed;
+  left: 10px; right: 10px; bottom: 10px;
+  z-index: 12500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #1b1b23;
+  border: 1px solid rgba(245, 197, 24, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.8rem;
+}
+.ios-pwa-hint .ios-hint-icon { font-size: 1.2rem; }
+.ios-pwa-hint .ios-hint-text { flex: 1; min-width: 0; }
+.ios-pwa-hint button {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 12px;
+  background: #f5c518;
+  color: #111;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.wl-compare-btn {
+  border: 1px solid rgba(245, 197, 24, 0.45);
+  background: rgba(245, 197, 24, 0.12);
+  color: #f5c518;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+.wl-compare-btn:hover { background: rgba(245, 197, 24, 0.2); }
+.wl-compare-btn:disabled { opacity: 0.4; cursor: default; }

@@ -7,6 +7,7 @@
 const MOVIES_DATA = [
 {
     "id": "inception",
+    "imdbID": "tt1375666",
     "title": "Başlangıç",
     "originalTitle": "Inception",
     "year": 2010,
@@ -47,6 +48,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "interstellar",
+    "imdbID": "tt0816692",
     "title": "Yıldızlararası",
     "originalTitle": "Interstellar",
     "year": 2014,
@@ -86,6 +88,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "dark-knight",
+    "imdbID": "tt0468569",
     "title": "Kara Şövalye",
     "originalTitle": "The Dark Knight",
     "year": 2008,
@@ -127,6 +130,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "pulp-fiction",
+    "imdbID": "tt0110912",
     "title": "Ucuz Roman",
     "originalTitle": "Pulp Fiction",
     "year": 1994,
@@ -164,6 +168,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "shawshank",
+    "imdbID": "tt0111161",
     "title": "Esaretin Bedeli",
     "originalTitle": "The Shawshank Redemption",
     "year": 1994,
@@ -198,6 +203,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "godfather",
+    "imdbID": "tt0068646",
     "platforms": ["tvplus"],
     "title": "Baba",
     "originalTitle": "The Godfather",
@@ -232,6 +238,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "fight-club",
+    "imdbID": "tt0137523",
     "title": "Dövüş Kulübü",
     "originalTitle": "Fight Club",
     "year": 1999,
@@ -270,6 +277,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-matrix",
+    "imdbID": "tt0133093",
     "platforms": ["prime","tvplus","hbo"],
     "title": "Matrix",
     "originalTitle": "The Matrix",
@@ -305,6 +313,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "parasite",
+    "imdbID": "tt6751668",
     "platforms": ["tvplus","tod","hbo"],
     "title": "Parazit",
     "originalTitle": "Parasite (Gisaengchung)",
@@ -340,6 +349,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "spirited-away",
+    "imdbID": "tt0245429",
     "title": "Ruhların Kaçışı",
     "originalTitle": "Sen to Chihiro no Kamikakushi",
     "year": 2001,
@@ -376,6 +386,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "oppenheimer",
+    "imdbID": "tt15398776",
     "title": "Oppenheimer",
     "originalTitle": "Oppenheimer",
     "year": 2023,
@@ -411,6 +422,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "dune-2",
+    "imdbID": "tt15239678",
     "platforms": ["tvplus","hbo"],
     "title": "Dune: Çöl Gezegeni Bölüm İki",
     "originalTitle": "Dune: Part Two",
@@ -447,6 +459,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "gladiator",
+    "imdbID": "tt0172495",
     "title": "Gladyatör",
     "originalTitle": "Gladiator",
     "year": 2000,
@@ -486,6 +499,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "prestige",
+    "imdbID": "tt0482571",
     "platforms": ["netflix","tvplus"],
     "title": "Prestij",
     "originalTitle": "The Prestige",
@@ -521,6 +535,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "whiplash",
+    "imdbID": "tt2582802",
     "title": "Whiplash",
     "originalTitle": "Whiplash",
     "year": 2014,
@@ -554,6 +569,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "spider-verse",
+    "imdbID": "tt4633694",
     "title": "Örümcek-Adam: Örümcek Evreninde",
     "originalTitle": "Spider-Man: Into the Spider-Verse",
     "year": 2018,
@@ -594,6 +610,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "seven",
+    "imdbID": "tt25601048",
     "platforms": ["netflix"],
     "title": "Yedi",
     "originalTitle": "Se7en",
@@ -628,6 +645,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "alien",
+    "imdbID": "tt0078748",
     "platforms": ["disney"],
     "title": "Yaratık",
     "originalTitle": "Alien",
@@ -661,6 +679,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "shining",
+    "imdbID": "tt0081505",
     "title": "Cinnet",
     "originalTitle": "The Shining",
     "year": 1980,
@@ -695,6 +714,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "blade-runner-2049",
+    "imdbID": "tt1856101",
     "platforms": ["prime","mubi","tvplus"],
     "title": "Bıçak Sırtı 2049",
     "originalTitle": "Blade Runner 2049",
@@ -735,6 +755,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "star-wars-empire",
+    "imdbID": "tt0080684",
     "title": "Star Wars: Bölüm V - İmparator",
     "originalTitle": "Star Wars: Episode V - The Empire Strikes Back",
     "year": 1980,
@@ -779,6 +800,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-mandalorian",
+    "imdbID": "tt8111088",
     "title": "The Mandalorian",
     "originalTitle": "The Mandalorian",
     "year": 2019,
@@ -821,6 +843,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "star-wars-new-hope",
+    "imdbID": "tt0076759",
     "title": "Star Wars: Bölüm IV - Yeni Bir Umut",
     "originalTitle": "Star Wars: Episode IV - A New Hope",
     "year": 1977,
@@ -863,6 +886,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "avengers-endgame",
+    "imdbID": "tt4154796",
     "title": "Avengers: Endgame",
     "originalTitle": "Avengers: Endgame",
     "year": 2019,
@@ -907,6 +931,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "iron-man",
+    "imdbID": "tt0371746",
     "title": "Demir Adam",
     "originalTitle": "Iron Man",
     "year": 2008,
@@ -948,6 +973,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "loki",
+    "imdbID": "tt9140554",
     "title": "Loki",
     "originalTitle": "Loki",
     "year": 2021,
@@ -989,6 +1015,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "wall-e",
+    "imdbID": "tt0910970",
     "title": "VOL-İ",
     "originalTitle": "WALL·E",
     "year": 2008,
@@ -1031,6 +1058,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "up",
+    "imdbID": "tt1049413",
     "title": "Yukarı Bak",
     "originalTitle": "Up",
     "year": 2009,
@@ -1073,6 +1101,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "coco",
+    "imdbID": "tt2380307",
     "title": "Koko",
     "originalTitle": "Coco",
     "year": 2017,
@@ -1116,6 +1145,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "lion-king",
+    "imdbID": "tt0110357",
     "title": "Aslan Kral",
     "originalTitle": "The Lion King",
     "year": 1994,
@@ -1159,6 +1189,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-bear",
+    "imdbID": "tt14452776",
     "title": "The Bear",
     "originalTitle": "The Bear",
     "year": 2022,
@@ -1200,6 +1231,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "avatar",
+    "imdbID": "tt0499549",
     "title": "Avatar",
     "originalTitle": "Avatar",
     "year": 2009,
@@ -1240,6 +1272,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "free-solo",
+    "imdbID": "tt7775622",
     "title": "Free Solo: İpsiz Tek Başına",
     "originalTitle": "Free Solo",
     "year": 2018,
@@ -1280,6 +1313,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "game-of-thrones",
+    "imdbID": "tt0944947",
     "title": "Taht Oyunları",
     "originalTitle": "Game of Thrones",
     "year": 2011,
@@ -1325,6 +1359,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-last-of-us",
+    "imdbID": "tt3581920",
     "title": "The Last of Us",
     "originalTitle": "The Last of Us",
     "year": 2023,
@@ -1369,6 +1404,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "succession",
+    "imdbID": "tt7660850",
     "title": "Succession",
     "originalTitle": "Succession",
     "year": 2018,
@@ -1410,6 +1446,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "chernobyl",
+    "imdbID": "tt7366338",
     "title": "Çernobil",
     "originalTitle": "Chernobyl",
     "year": 2019,
@@ -1453,6 +1490,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "joker",
+    "imdbID": "tt7286456",
     "title": "Joker",
     "originalTitle": "Joker",
     "year": 2019,
@@ -1496,6 +1534,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "harry-potter",
+    "imdbID": "tt0241527",
     "title": "Harry Potter ve Felsefe Taşı",
     "originalTitle": "Harry Potter and the Sorcerer's Stone",
     "year": 2001,
@@ -1537,6 +1576,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-boys",
+    "imdbID": "tt1190634",
     "title": "The Boys",
     "originalTitle": "The Boys",
     "year": 2019,
@@ -1580,6 +1620,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "fallout",
+    "imdbID": "tt12637874",
     "title": "Fallout",
     "originalTitle": "Fallout",
     "year": 2024,
@@ -1622,6 +1663,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "rings-of-power",
+    "imdbID": "tt7631058",
     "title": "Yüzüklerin Efendisi: Güç Yüzükleri",
     "originalTitle": "The Lord of the Rings: The Rings of Power",
     "year": 2022,
@@ -1662,6 +1704,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "reacher",
+    "imdbID": "tt9288030",
     "title": "Reacher",
     "originalTitle": "Reacher",
     "year": 2022,
@@ -1703,6 +1746,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "no-time-to-die",
+    "imdbID": "tt2382320",
     "title": "007: Ölmek İçin Zaman Yok",
     "originalTitle": "No Time to Die",
     "year": 2021,
@@ -1745,6 +1789,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "stranger-things",
+    "imdbID": "tt4574334",
     "title": "Stranger Things",
     "originalTitle": "Stranger Things",
     "year": 2016,
@@ -1788,6 +1833,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "squid-game",
+    "imdbID": "tt10919420",
     "title": "Squid Game",
     "originalTitle": "Squid Game",
     "year": 2021,
@@ -1829,6 +1875,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "breaking-bad",
+    "imdbID": "tt0903747",
     "title": "Breaking Bad",
     "originalTitle": "Breaking Bad",
     "year": 2008,
@@ -1873,6 +1920,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "dark",
+    "imdbID": "tt5753856",
     "title": "Dark",
     "originalTitle": "Dark",
     "year": 2017,
@@ -1914,6 +1962,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "arcane",
+    "imdbID": "tt11126994",
     "title": "Arcane",
     "originalTitle": "Arcane",
     "year": 2021,
@@ -1958,6 +2007,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-hangover",
+    "imdbID": "tt1119646",
     "title": "Felekten Bir Gece",
     "originalTitle": "The Hangover",
     "year": 2009,
@@ -1998,6 +2048,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "superbad",
+    "imdbID": "tt0829482",
     "title": "Çok Fena",
     "originalTitle": "Superbad",
     "year": 2007,
@@ -2036,6 +2087,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-truman-show",
+    "imdbID": "tt0120382",
     "title": "Truman Show",
     "originalTitle": "The Truman Show",
     "year": 1998,
@@ -2079,6 +2131,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-grand-budapest-hotel",
+    "imdbID": "tt2278388",
     "title": "Büyük Budapeşte Oteli",
     "originalTitle": "The Grand Budapest Hotel",
     "year": 2014,
@@ -2119,6 +2172,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "deadpool",
+    "imdbID": "tt1431045",
     "title": "Deadpool",
     "originalTitle": "Deadpool",
     "year": 2016,
@@ -2160,6 +2214,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "deadpool-wolverine",
+    "imdbID": "tt6263850",
     "title": "Deadpool & Wolverine",
     "originalTitle": "Deadpool & Wolverine",
     "year": 2024,
@@ -2284,6 +2339,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "gora",
+    "imdbID": "tt0384116",
     "title": "G.O.R.A.",
     "originalTitle": "G.O.R.A.",
     "year": 2004,
@@ -2327,6 +2383,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "arog",
+    "imdbID": "tt1286126",
     "title": "A.R.O.G.",
     "originalTitle": "A.R.O.G: Bir Yontma Taş Filmi",
     "year": 2008,
@@ -2366,6 +2423,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "knives-out",
+    "imdbID": "tt8946378",
     "title": "Bıçaklar Çekildi",
     "originalTitle": "Knives Out",
     "year": 2019,
@@ -2407,6 +2465,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-big-lebowski",
+    "imdbID": "tt0118715",
     "title": "Büyük Lebowski",
     "originalTitle": "The Big Lebowski",
     "year": 1998,
@@ -2446,6 +2505,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "brooklyn-nine-nine",
+    "imdbID": "tt2467372",
     "title": "Brooklyn Nine-Nine",
     "originalTitle": "Brooklyn Nine-Nine",
     "year": 2013,
@@ -2486,6 +2546,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-office",
+    "imdbID": "tt0386676",
     "title": "The Office",
     "originalTitle": "The Office (US)",
     "year": 2005,
@@ -2529,6 +2590,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "friends",
+    "imdbID": "tt0108778",
     "title": "Friends",
     "originalTitle": "Friends",
     "year": 1994,
@@ -2572,6 +2634,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "ted",
+    "imdbID": "tt1637725",
     "title": "Ayı Teddy",
     "originalTitle": "Ted",
     "year": 2012,
@@ -2609,6 +2672,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "groundhog-day",
+    "imdbID": "tt0107048",
     "title": "Bugün Aslında Dündü",
     "originalTitle": "Groundhog Day",
     "year": 1993,
@@ -2648,6 +2712,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "modern-family",
+    "imdbID": "tt1442437",
     "title": "Modern Family",
     "originalTitle": "Modern Family",
     "year": 2009,
@@ -2688,6 +2753,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "ted-lasso",
+    "imdbID": "tt10986410",
     "title": "Ted Lasso",
     "originalTitle": "Ted Lasso",
     "year": 2020,
@@ -2728,6 +2794,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "free-guy",
+    "imdbID": "tt6264654",
     "title": "Free Guy",
     "originalTitle": "Free Guy",
     "year": 2021,
@@ -2768,6 +2835,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "jump-street-21",
+    "imdbID": "tt1232829",
     "title": "Liseli Polisler",
     "originalTitle": "21 Jump Street",
     "year": 2012,
@@ -2807,6 +2875,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-mask",
+    "imdbID": "tt0110475",
     "title": "Maske",
     "originalTitle": "The Mask",
     "year": 1994,
@@ -2844,6 +2913,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "rick-and-morty",
+    "imdbID": "tt2861424",
     "title": "Rick and Morty",
     "originalTitle": "Rick and Morty",
     "year": 2013,
@@ -2886,6 +2956,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "cinayet-susu",
+    "imdbID": "tt9675274",
     "title": "Cinayet Süsü",
     "originalTitle": "Cinayet Süsü",
     "year": 2019,
@@ -2926,6 +2997,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "shaun-of-the-dead",
+    "imdbID": "tt0365748",
     "title": "Zombilerin Şafağı",
     "originalTitle": "Shaun of the Dead",
     "year": 2004,
@@ -2964,6 +3036,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-green-mile",
+    "imdbID": "tt0120689",
     "title": "Yeşil Yol",
     "originalTitle": "The Green Mile",
     "year": 1999,
@@ -3007,6 +3080,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "life-is-beautiful",
+    "imdbID": "tt0118799",
     "title": "Hayat Güzeldir",
     "originalTitle": "La Vita è Bella",
     "year": 1997,
@@ -3047,6 +3121,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-pianist",
+    "imdbID": "tt0253474",
     "title": "Piyanist",
     "originalTitle": "The Pianist",
     "year": 2002,
@@ -3088,6 +3163,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "schindlers-list",
+    "imdbID": "tt2709758",
     "title": "Schindler'in Listesi",
     "originalTitle": "Schindler's List",
     "year": 1993,
@@ -3129,6 +3205,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "good-will-hunting",
+    "imdbID": "tt1013648",
     "title": "Can Dostum",
     "originalTitle": "Good Will Hunting",
     "year": 1997,
@@ -3170,6 +3247,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "babam-ve-oglum",
+    "imdbID": "tt0476735",
     "title": "Babam ve Oğlum",
     "originalTitle": "Babam ve Oğlum",
     "year": 2005,
@@ -3210,6 +3288,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "ayla",
+    "imdbID": "tt6316138",
     "title": "Ayla",
     "originalTitle": "Ayla: The Daughter of War",
     "year": 2017,
@@ -3251,6 +3330,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "miracle-in-cell-no-7",
+    "imdbID": "tt10431500",
     "title": "7. Koğuştaki Mucize",
     "originalTitle": "7. Koğuştaki Mucize",
     "year": 2019,
@@ -3288,6 +3368,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "hachiko",
+    "imdbID": "tt1028532",
     "title": "Hachiko: Bir Köpeğin Hikayesi",
     "originalTitle": "Hachi: A Dog's Tale",
     "year": 2009,
@@ -3329,6 +3410,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "grave-of-the-fireflies",
+    "imdbID": "tt0095327",
     "title": "Ateşböceklerinin Mezarı",
     "originalTitle": "Hotaru no Haka (Grave of the Fireflies)",
     "year": 1988,
@@ -3369,6 +3451,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "eternal-sunshine",
+    "imdbID": "tt0338013",
     "title": "Sil Baştan",
     "originalTitle": "Eternal Sunshine of the Spotless Mind",
     "year": 2004,
@@ -3413,6 +3496,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "manchester-by-the-sea",
+    "imdbID": "tt4034228",
     "title": "Yaşamın Kıyısında",
     "originalTitle": "Manchester by the Sea",
     "year": 2016,
@@ -3451,6 +3535,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-father",
+    "imdbID": "tt10409554",
     "title": "Baba",
     "originalTitle": "The Father",
     "year": 2020,
@@ -3491,6 +3576,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "memento",
+    "imdbID": "tt24735934",
     "title": "Akıl Defteri",
     "originalTitle": "Memento",
     "year": 2000,
@@ -3531,6 +3617,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "shutter-island",
+    "imdbID": "tt1130884",
     "title": "Zindan Adası",
     "originalTitle": "Shutter Island",
     "year": 2010,
@@ -3573,6 +3660,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "tenet",
+    "imdbID": "tt6723592",
     "title": "Tenet",
     "originalTitle": "Tenet",
     "year": 2020,
@@ -3614,6 +3702,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "severance",
+    "imdbID": "tt11280740",
     "platforms": ["apple"],
     "title": "Severance",
     "originalTitle": "Severance",
@@ -3656,6 +3745,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "coherence",
+    "imdbID": "tt2866360",
     "title": "Paralel Evren",
     "originalTitle": "Coherence",
     "year": 2013,
@@ -3695,6 +3785,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "donnie-darko",
+    "imdbID": "tt0246578",
     "title": "Donnie Darko",
     "originalTitle": "Donnie Darko",
     "year": 2001,
@@ -3735,6 +3826,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "predestination",
+    "imdbID": "tt4725946",
     "title": "Kader",
     "originalTitle": "Predestination",
     "year": 2014,
@@ -3774,6 +3866,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "black-mirror",
+    "imdbID": "tt2085059",
     "title": "Black Mirror",
     "originalTitle": "Black Mirror",
     "year": 2011,
@@ -3817,6 +3910,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "source-code",
+    "imdbID": "tt0945513",
     "title": "Yaşam Şifresi",
     "originalTitle": "Source Code",
     "year": 2011,
@@ -3858,6 +3952,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "mr-nobody",
+    "imdbID": "tt0485947",
     "title": "Bay Hiçkimse",
     "originalTitle": "Mr. Nobody",
     "year": 2009,
@@ -3899,6 +3994,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "john-wick-4",
+    "imdbID": "tt10366206",
     "title": "John Wick: Bölüm 4",
     "originalTitle": "John Wick: Chapter 4",
     "year": 2023,
@@ -3941,6 +4037,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "mad-max-fury-road",
+    "imdbID": "tt1392190",
     "title": "Mad Max: Öfkeli Yollar",
     "originalTitle": "Mad Max: Fury Road",
     "year": 2015,
@@ -3983,6 +4080,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "top-gun-maverick",
+    "imdbID": "tt1745960",
     "title": "Top Gun: Maverick",
     "originalTitle": "Top Gun: Maverick",
     "year": 2022,
@@ -4024,6 +4122,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "terminator-2",
+    "imdbID": "tt0103064",
     "title": "Terminatör 2: Kıyamet Günü",
     "originalTitle": "Terminator 2: Judgment Day",
     "year": 1991,
@@ -4064,6 +4163,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "mission-impossible-dead-reckoning",
+    "imdbID": "tt9603212",
     "title": "Görevimiz Tehlike: Ölümcül Hesaplaşma",
     "originalTitle": "Mission: Impossible - Dead Reckoning Part One",
     "year": 2023,
@@ -4105,6 +4205,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "silence-of-the-lambs",
+    "imdbID": "tt0102926",
     "title": "Kuzuların Sessizliği",
     "originalTitle": "The Silence of the Lambs",
     "year": 1991,
@@ -4146,6 +4247,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "prisoners",
+    "imdbID": "tt1392214",
     "title": "Tutsak",
     "originalTitle": "Prisoners",
     "year": 2013,
@@ -4188,6 +4290,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "gone-girl",
+    "imdbID": "tt2267998",
     "title": "Kayıp Kız",
     "originalTitle": "Gone Girl",
     "year": 2014,
@@ -4229,6 +4332,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "zodiac",
+    "imdbID": "tt0443706",
     "title": "Zodiac",
     "originalTitle": "Zodiac",
     "year": 2007,
@@ -4270,6 +4374,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "the-intouchables",
+    "imdbID": "tt1675434",
     "title": "Can Dostum (Fransız)",
     "originalTitle": "Intouchables",
     "year": 2011,
@@ -4311,6 +4416,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "amelie",
+    "imdbID": "tt0211915",
     "title": "Amélie",
     "originalTitle": "Le Fabuleux Destin d'Amélie Poulain",
     "year": 2001,
@@ -4351,6 +4457,7 @@ const MOVIES_DATA = [
   },
   {
     "id": "ratatouille",
+    "imdbID": "tt0382932",
     "title": "Ratatuy",
     "originalTitle": "Ratatouille",
     "year": 2007,

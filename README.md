@@ -148,6 +148,28 @@ Elle tazelemek için:
 node scripts/build-catalog.js 600
 ```
 
+### Opsiyonel Node modu (server.js)
+
+Site **tamamen statik** çalışır (GitHub Pages). `server.js` yalnızca şu ek yetenekler için vardır:
+OMDb proxy (anahtarı gizlemek), JustWatch anlık sorgusu, Deezer OST akışı ve YouTube fragman çözme.
+
+Yerelde denemek için:
+
+```bash
+npm start          # http://127.0.0.1:3300
+```
+
+Dağıtım: `render.yaml` (Render.com) veya benzeri bir Node hosting. Statik yayında bu dosyalar paketlenmez.
+
+### Faydalı komutlar
+
+```bash
+npm run seo        # sitemap.xml üret
+npm run imdb       # katalog IMDb kimliklerini zenginleştir
+npm run catalog    # haftalık yapım indeksini üret
+npm run smoke      # uçtan uca smoke test (Chrome gerekir)
+```
+
 ## 🎮 Faz 5 Özellikleri (Cine3D Features Motoru)
 
 - **🎬 Hover Fragman Önizlemesi**: Kart üzerinde 1.2 sn bekleyince sessiz YouTube fragmanı oynar; çekince/kaydırınca temizlenir.
