@@ -1389,6 +1389,49 @@ body {
   }
 }
 
+/* R014 (ZCode): Duo profil seçici + aile puan rozetleri + gece planı işaretleri */
+.dpc-profile-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.modal-family-ratings {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.family-rating-badge {
+  background: rgba(245, 197, 24, 0.12);
+  border: 1px solid rgba(245, 197, 24, 0.35);
+  color: #f5c518;
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.np-item.np-watched .np-name {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.np-item.np-watched .np-thumb {
+  opacity: 0.5;
+}
+.np-icon-btn.done {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.5);
+}
+.np-remaining {
+  margin-left: 10px;
+  color: #9a9aa8;
+}
+
 .sort-select-wrap {
   position: relative;
 }

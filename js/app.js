@@ -2185,7 +2185,13 @@ class Cine3DApp {
     else if (f === 'scifi') pool = pool.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu'));
     else if (f === 'mind-bending') pool = pool.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending'));
     else if (f === 'series') pool = pool.filter(m => m.isSeries);
-    if (pool.length < 5) pool = [...this.movies];
+    // R014/2: İzleme Listesi Ruleti — makara yalnızca listemdekilerden döner
+    else if (f === 'watchlist') {
+      const wlIds = new Set((this.watchlist || []).map(w => (typeof w === 'string') ? w : w.id));
+      pool = this.movies.filter(m => wlIds.has(m.id));
+      if (this.hideWatched) pool = pool.filter(m => !this.isMovieWatched(m.id));
+    }
+    if (pool.length < 5 && f !== 'watchlist') pool = [...this.movies];
     return pool;
   }
 
@@ -2204,6 +2210,13 @@ class Cine3DApp {
       if (f === 'scifi') return this.movies.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu')).length;
       if (f === 'mind-bending') return this.movies.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending')).length;
       if (f === 'series') return this.movies.filter(m => m.isSeries).length;
+      // R014/2: İzleme Listem sayacı (İzlemediklerim filtresine saygılı)
+      if (f === 'watchlist') {
+        const wlIds = new Set((this.watchlist || []).map(w => (typeof w === 'string') ? w : w.id));
+        let pool = this.movies.filter(m => wlIds.has(m.id));
+        if (this.hideWatched) pool = pool.filter(m => !this.isMovieWatched(m.id));
+        return pool.length;
+      }
       return this.movies.length;
     };
     document.querySelectorAll('#roulette-filter-pills .roulette-filter-pill').forEach(pill => {
@@ -2222,15 +2235,23 @@ class Cine3DApp {
 
     // 64 kartlık dizilim: havuz karıştırılıp doldurulur; hedef her zaman son 12 karttan
     // seçildiği için 109 yapımın tamamı (filtreye göre hepsi) çıkabilir.
+    // R014/2: küçük havuzlar (İzleme Listem 1-4 film) için guard + döngüsel doldurma.
     const TOTAL = 64;
     const seq = [];
-    while (seq.length < TOTAL) {
+    let fillGuard = 0;
+    while (seq.length < TOTAL && fillGuard < 200) {
+      fillGuard++;
       const chunk = this.shuffleRoulette(pool);
       for (const m of chunk) {
         if (seq.length >= TOTAL) break;
         if (seq.length && seq[seq.length - 1].id === m.id) continue;
         seq.push(m);
       }
+    }
+    let cyc = 0;
+    while (seq.length < TOTAL && pool.length) {
+      seq.push(pool[cyc % pool.length]);
+      cyc++;
     }
     this.rouletteSequence = seq;
 
@@ -2355,6 +2376,7 @@ class Cine3DApp {
         <div class="reveal-actions">
           <button class="btn btn-primary" id="roulette-open-modal-btn">▶ Hemen İncele &amp; Fragman</button>
           <button class="btn btn-secondary" id="roulette-watchlist-btn">${inList ? '💔 Listemden Çıkar' : '❤ Listeme Ekle'}</button>
+          <button class="btn btn-secondary" id="roulette-night-btn">🌙 Geceye Ekle</button>
           <button class="btn btn-secondary" id="roulette-ticket-btn">🎟️ Bilet</button>
           <button class="btn btn-secondary" id="roulette-share-btn">🔗 Paylaş</button>
           <button class="btn btn-secondary" id="roulette-re-spin-btn">🔄 Tekrar Döndür</button>
@@ -2374,6 +2396,11 @@ class Cine3DApp {
 
     document.getElementById('roulette-ticket-btn')?.addEventListener('click', () => this.openTicketModal(targetMovie));
 
+    // R014/2: sonucu gece planına ekle
+    document.getElementById('roulette-night-btn')?.addEventListener('click', () => {
+      this.addNightPlanFromWatchlist(targetMovie);
+    });
+
     document.getElementById('roulette-share-btn')?.addEventListener('click', async () => {
       const url = this.buildShareUrl(targetMovie);
       try {
@@ -2386,6 +2413,33 @@ class Cine3DApp {
     });
 
     document.getElementById('roulette-re-spin-btn')?.addEventListener('click', () => this.spinRoulette());
+  }
+
+  // --- R014/3: AİLE PUAN KARŞILAŞTIRMASI ---
+  // Her profilin bu filme verdiği puanı okur (profil-scoped depolardan ham erişim).
+  getFamilyRatings(movieId) {
+    try {
+      const profiles = JSON.parse(localStorage.getItem('cine3d_profiles') || '[]');
+      const out = [];
+      profiles.forEach(p => {
+        let wl = [];
+        try { wl = JSON.parse(localStorage.getItem('cine3d_p_' + p.pid + '_watched') || '[]'); } catch (e) { wl = []; }
+        const entry = (Array.isArray(wl) ? wl : []).find(w => (typeof w === 'string') ? w === movieId : w.id === movieId);
+        const rating = entry && typeof entry === 'object' ? Number(entry.userRating) : NaN;
+        if (Number.isFinite(rating) && rating > 0) out.push({ name: p.name, emoji: p.emoji || '', rating });
+      });
+      return out;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  renderFamilyRatingBadges(movieId) {
+    const fam = this.getFamilyRatings(movieId);
+    if (!fam.length) return '';
+    return `<span class="modal-family-ratings">` + fam.map(f =>
+      `<span class="family-rating-badge" title="${escapeHtmlText(f.name)} puanı">${escapeHtmlText(f.emoji)} ${escapeHtmlText(f.name)} ⭐${f.rating}</span>`
+    ).join('') + `</span>`;
   }
 
   openTicketModal(movie) {
@@ -3012,9 +3066,10 @@ class Cine3DApp {
 
     list.innerHTML = movies.map((m, i) => {
       const mins = this.nightPlanMinutes(m);
+      const watched = this.isMovieWatched(m.id);
       return `
         ${i > 0 ? '<div class="np-break">☕ ' + NIGHT_BREAK_MINUTES + ' dk mola</div>' : ''}
-        <div class="np-item" data-movie-id="${escapeHtmlText(m.id)}">
+        <div class="np-item ${watched ? 'np-watched' : ''}" data-movie-id="${escapeHtmlText(m.id)}">
           <span class="np-idx">${i + 1}</span>
           <img class="np-thumb" src="${escapeHtmlText(m.posterUrl)}" alt="${escapeHtmlText(m.title)}" loading="lazy" />
           <div class="np-info">
@@ -3022,6 +3077,7 @@ class Cine3DApp {
             <div class="np-meta">⭐ ${escapeHtmlText(m.imdbRating)} · ${escapeHtmlText(m.year)} · ${escapeHtmlText(m.duration || '')}</div>
           </div>
           <div class="np-item-actions">
+            <button type="button" class="np-icon-btn${watched ? ' done' : ''}" data-act="watched" data-id="${escapeHtmlText(m.id)}" title="${watched ? 'İzlenmedi olarak işaretle' : 'İzlendi olarak işaretle'}">✓</button>
             <button type="button" class="np-icon-btn" data-act="up" data-id="${escapeHtmlText(m.id)}" title="Yukarı taşı" ${i === 0 ? 'disabled' : ''}>↑</button>
             <button type="button" class="np-icon-btn" data-act="down" data-id="${escapeHtmlText(m.id)}" title="Aşağı taşı" ${i === movies.length - 1 ? 'disabled' : ''}>↓</button>
             <button type="button" class="np-icon-btn danger" data-act="remove" data-id="${escapeHtmlText(m.id)}" title="Plandan çıkar">✕</button>
@@ -3031,9 +3087,11 @@ class Cine3DApp {
 
     const totalMovies = movies.reduce((sum, m) => sum + this.nightPlanMinutes(m), 0);
     const breaks = (movies.length - 1) * NIGHT_BREAK_MINUTES;
+    const remaining = movies.reduce((sum, m) => this.isMovieWatched(m.id) ? sum : sum + this.nightPlanMinutes(m), 0);
     summary.innerHTML = `
       <span class="np-total">Bu gece: <strong>${this.formatMinutes(totalMovies + breaks)}</strong></span>
-      <span class="np-detail">${movies.length} film · ${this.formatMinutes(totalMovies)} film + ${breaks}dk mola</span>`;
+      <span class="np-detail">${movies.length} film · ${this.formatMinutes(totalMovies)} film + ${breaks}dk mola</span>
+      ${remaining < totalMovies ? `<span class="np-remaining">Kalan: <strong>${this.formatMinutes(remaining)}</strong></span>` : ''}`;
 
     list.querySelectorAll('.np-icon-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -3045,6 +3103,13 @@ class Cine3DApp {
         if (act === 'remove') plan.splice(idx, 1);
         else if (act === 'up' && idx > 0) { [plan[idx - 1], plan[idx]] = [plan[idx], plan[idx - 1]]; }
         else if (act === 'down' && idx < plan.length - 1) { [plan[idx + 1], plan[idx]] = [plan[idx], plan[idx + 1]]; }
+        else if (act === 'watched') {
+          const movie = this.movies.find(x => x.id === id);
+          if (movie) this.toggleWatched(movie);
+          this.saveNightPlan(plan);
+          this.renderNightPlan();
+          return;
+        }
         this.saveNightPlan(plan);
         this.renderNightPlan();
       });
@@ -3099,7 +3164,7 @@ class Cine3DApp {
     const lines = ['🌙 Cine3D Sinema Gecesi Planı', ''];
     movies.forEach((m, i) => {
       if (i > 0) lines.push('   ☕ ' + NIGHT_BREAK_MINUTES + ' dk mola');
-      lines.push((i + 1) + '. ' + m.title + ' (' + (m.duration || '') + ')');
+      lines.push((i + 1) + '. ' + m.title + ' ⭐' + (m.imdbRating || '-') + ' (' + (m.duration || '') + ')');
     });
     lines.push('', 'Toplam: ' + this.formatMinutes(totalMovies + breaks) + ' (' + movies.length + ' film + ' + breaks + ' dk mola)');
 
@@ -4876,6 +4941,7 @@ class Cine3DApp {
                 </span>` : ''}
                 ${movie.imdbID ? `<a class="modal-imdb-link" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank" rel="noopener noreferrer" title="IMDb'de aç">IMDb ↗</a>` : ''}
                 <span class="modal-duration-tag">⏱️ ${movie.duration}</span>
+                ${this.renderFamilyRatingBadges(movie.id)}
                 <span class="modal-age-tag">🔞 ${movie.ageRating}</span>
                 <span class="modal-awards-tag">🏆 ${movie.awards || 'Popüler Sinema/Dizi'}</span>
                 ${movie.isOnlineFetched ? '<span class="card-online-badge" style="position:static;">🌐 Canlı İnternet Verisi</span>' : ''}

@@ -1271,8 +1271,8 @@
   // =========================================================================
   const DuoMatcher = {
     inited: false,
-    p1: { name: '1. Seyirci', genres: ['Bilim Kurgu', 'Gerilim'], duration: 'any', rating: 7.5 },
-    p2: { name: '2. Seyirci', genres: ['Dram', 'Gizem'], duration: 'any', rating: 7.5 },
+    p1: { name: '1. Seyirci', genres: ['Bilim Kurgu', 'Gerilim'], duration: 'any', rating: 7.5, pid: null },
+    p2: { name: '2. Seyirci', genres: ['Dram', 'Gizem'], duration: 'any', rating: 7.5, pid: null },
     candidates: [],
     currentIndex: 0,
 
@@ -1295,6 +1295,86 @@
       for (const g of [...this.p1.genres, ...this.p2.genres]) {
         if (!this.genresList.includes(g)) this.genresList.push(g);
       }
+    },
+
+    // --- R014/1: PROFİLLER ARASI DUO ---
+    DUO_PROFILES_KEY: 'cine3d_duo_profiles',
+
+    getProfileOptions() {
+      try {
+        return (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : [];
+      } catch (err) { return []; }
+    },
+
+    getProfileName(pid) {
+      const p = this.getProfileOptions().find(x => x.pid === pid);
+      return p ? p.name : 'Anonim';
+    },
+
+    /** Profilin izleme geçmişini (raw, adapter bypass) film objelerine çözer. */
+    getProfileWatchedMovies(pid) {
+      const app = window.app;
+      if (!app || !Array.isArray(app.movies)) return [];
+      let watched = [];
+      try {
+        watched = JSON.parse((window.Cine3DStorage.raw.get('cine3d_p_' + pid + '_watched')) || '[]');
+      } catch (err) { watched = []; }
+      return (Array.isArray(watched) ? watched : [])
+        .map(w => (typeof w === 'string') ? { id: w } : w)
+        .map(w => { const m = app.movies.find(x => x.id === w.id); return m ? { ...m, userRating: w.userRating } : null; })
+        .filter(Boolean);
+    },
+
+    /** Seçilen profilin zevkini oyuncu kartına uygular: türler, isim, puan beklentisi, süre. */
+    applyProfileTaste(playerIdx, pid) {
+      const target = playerIdx === 1 ? this.p1 : this.p2;
+      if (!pid) { target.pid = null; this.persistDuoProfiles(); this.render(); this.bindEvents(); return; }
+      const movies = this.getProfileWatchedMovies(pid);
+      if (!movies.length) {
+        if (window.app && window.app.showToast) window.app.showToast('Bu profilde yeterli izleme geçmişi yok.', 'info');
+        return;
+      }
+      const counts = {};
+      movies.forEach(m => (m.genres || []).forEach(g => { counts[g] = (counts[g] || 0) + 1; }));
+      const topGenres = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([g]) => g);
+      target.genres = topGenres;
+      target.name = this.getProfileName(pid);
+      target.pid = pid;
+      // ortalama puan beklentisi: en yakın pill'e yuvarla
+      const rated = movies.filter(m => Number.isFinite(Number(m.userRating)) && Number(m.userRating) > 0);
+      const avg = rated.length ? rated.reduce((s, m) => s + Number(m.userRating), 0) / rated.length : 7.5;
+      target.rating = avg >= 8.25 ? 8.5 : (avg >= 7.75 ? 8.0 : 7.5);
+      // ortalama süre tercihi
+      const app = window.app;
+      const mins = movies.map(m => (app && typeof app.parseDurationMinutes === 'function') ? app.parseDurationMinutes(m.duration) : 120).filter(x => x > 0);
+      const avgMin = mins.length ? mins.reduce((s, x) => s + x, 0) / mins.length : 120;
+      target.duration = avgMin < 100 ? 'quick' : (avgMin >= 140 ? 'epic' : 'standard');
+      this.persistDuoProfiles();
+      this.render();
+      this.bindEvents();
+      if (window.app && window.app.showToast) window.app.showToast('🎯 ' + target.name + ' profili uygulandı (' + movies.length + ' izleme).', 'success');
+    },
+
+    persistDuoProfiles() {
+      try { localStorage.setItem(this.DUO_PROFILES_KEY, JSON.stringify({ p1: this.p1.pid || null, p2: this.p2.pid || null })); } catch (err) { /* yoksay */ }
+    },
+
+    restoreDuoProfiles() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(this.DUO_PROFILES_KEY) || '{}');
+        if (saved.p1) { this.p1.pid = saved.p1; this.p1.name = this.getProfileName(saved.p1); }
+        if (saved.p2) { this.p2.pid = saved.p2; this.p2.name = this.getProfileName(saved.p2); }
+      } catch (err) { /* yoksay */ }
+    },
+
+    /** Seçili iki profilin izleme geçmişi birleşimi (ikisinin de izledikleri). */
+    getDualWatchedIds() {
+      const ids = new Set();
+      [this.p1.pid, this.p2.pid].forEach(pid => {
+        if (!pid) return;
+        this.getProfileWatchedMovies(pid).forEach(m => ids.add(m.id));
+      });
+      return ids;
     },
 
     // --- R009/4: DUO ARŞİVİ ---
@@ -1358,6 +1438,8 @@
       if (this.inited) return;
       this.inited = true;
       this.buildGenreList();
+      // R014/1: kayıtlı duo profil tercihlerini geri yükle
+      this.restoreDuoProfiles();
       this.renderArchive();
       this.render();
       this.bindEvents();
@@ -1396,6 +1478,14 @@
                   <input type="text" class="dpc-name-input" id="duo-p1-name" value="${esc(this.p1.name)}" maxlength="20" placeholder="1. Seyirci" />
                   <span class="dpc-sub">İlk Tercih Sahibi</span>
                 </div>
+              </div>
+
+              <div class="dpc-section">
+                <label class="dpc-label">Profilden Zevk Al (otomatik doldur):</label>
+                <select class="dpc-profile-select" data-player="1">
+                  <option value="">✍️ Manuel Seçim</option>
+                  ${(this.getProfileOptions()).map(p => `<option value="${esc(p.pid)}" ${this.p1.pid === p.pid ? 'selected' : ''}>${esc(p.emoji)} ${esc(p.name)}</option>`).join('')}
+                </select>
               </div>
               
               <div class="dpc-section">
@@ -1441,6 +1531,14 @@
                   <input type="text" class="dpc-name-input" id="duo-p2-name" value="${esc(this.p2.name)}" maxlength="20" placeholder="2. Seyirci" />
                   <span class="dpc-sub">İkinci Tercih Sahibi</span>
                 </div>
+              </div>
+
+              <div class="dpc-section">
+                <label class="dpc-label">Profilden Zevk Al (otomatik doldur):</label>
+                <select class="dpc-profile-select" data-player="2">
+                  <option value="">✍️ Manuel Seçim</option>
+                  ${(this.getProfileOptions()).map(p => `<option value="${esc(p.pid)}" ${this.p2.pid === p.pid ? 'selected' : ''}>${esc(p.emoji)} ${esc(p.name)}</option>`).join('')}
+                </select>
               </div>
               
               <div class="dpc-section">
@@ -1500,6 +1598,14 @@
       });
       sec.querySelector('#duo-p2-name')?.addEventListener('input', (e) => {
         this.p2.name = e.target.value.trim() || '2. Seyirci';
+      });
+
+      // R014/1: profil seçici — profilden zevk otomatik doldurma
+      sec.querySelectorAll('.dpc-profile-select').forEach(sel => {
+        sel.addEventListener('change', () => {
+          this.applyProfileTaste(parseInt(sel.dataset.player, 10), sel.value || null);
+          playSound('playWhoosh');
+        });
       });
 
       sec.querySelectorAll('.dpc-genre-chip').forEach(chip => {
@@ -1569,11 +1675,15 @@
       const allMovies = (window.app && Array.isArray(window.app.movies)) ? window.app.movies : [];
       if (!allMovies.length) return;
 
+      // R014/1: iki profil de seçiliyse ikisinin de İZLEDİKLERİ dışlanır
+      const dualSeen = (this.p1.pid && this.p2.pid) ? this.getDualWatchedIds() : null;
+      const pool = dualSeen ? allMovies.filter(m => !dualSeen.has(m.id)) : allMovies;
+
       const g1 = this.p1.genres;
       const g2 = this.p2.genres;
       const minRating = Math.min(this.p1.rating, this.p2.rating);
 
-      const scored = allMovies.map(m => {
+      const scored = pool.map(m => {
         let score = 0;
         const genres = Array.isArray(m.genres) ? m.genres : [];
         const shared = genres.filter(g => g1.includes(g) && g2.includes(g));
@@ -1634,6 +1744,10 @@
       const m = item.movie;
       const p1Name = esc(this.p1.name);
       const p2Name = esc(this.p2.name);
+      // R014/1: iki profil seçiliyse ortak seçim rozeti
+      const dualNote = (this.p1.pid && this.p2.pid)
+        ? `🤝 ${p1Name} + ${p2Name} için ortak seçim — ikisinin de izlemedikleri arasından`
+        : 'İki taraf için de mükemmel uzlaşma filmi';
 
       const p1Reason = item.p1Genres.length > 0 
         ? `${p1Name}'ın istediği ${item.p1Genres.join(', ')} unsurlarını barındırıyor.` 
@@ -1652,7 +1766,7 @@
             <span>✨</span>
             <span>%${item.matchPct} Zevk Uyumu Bulundu!</span>
           </div>
-          <span class="drc-verdict-title">İki taraf için de mükemmel uzlaşma filmi</span>
+          <span class="drc-verdict-title">${dualNote}</span>
         </div>
 
         <div class="drc-reasons-grid">
