@@ -2515,6 +2515,35 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* R016: aile rozetleri (Sinema Karnem > Rapor) — daha önce stilsizdi */
+.family-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+.family-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #8b8b9a;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0.8;
+}
+.family-badge.earned {
+  color: #f5c518;
+  background: rgba(245, 197, 24, 0.12);
+  border-color: rgba(245, 197, 24, 0.4);
+  opacity: 1;
+}
+
 .report-dna-section {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);

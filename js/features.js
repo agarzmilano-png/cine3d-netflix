@@ -880,16 +880,25 @@
       const rows = profiles.map(p => {
         let st = { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 };
         try {
-          const raw = window.Cine3DStorage.raw.get('cine3d_p_' + p.pid + '_prediction_stats');
-          st = { ...st, ...JSON.parse(raw || '{}') };
+          // R016: raw köprüsü yoksa çökme yok
+          const rawGet = window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get;
+          if (typeof rawGet === 'function') {
+            const raw = rawGet('cine3d_p_' + p.pid + '_prediction_stats');
+            st = { ...st, ...JSON.parse(raw || '{}') };
+          }
         } catch (err) { /* varsayilan */ }
         const num = (x) => Math.max(0, parseInt(x, 10) || 0);
-        return `<div class="gfp-row"><span class="gfp-name">${p.emoji} ${p.name}</span><span class="gfp-stats">🏆 En iyi seri: <strong>${num(st.bestStreak)}</strong> · ✅ Doğru: <strong>${num(st.totalCorrect)}</strong> · 🎮 Oyun: <strong>${num(st.gamesPlayed)}</strong></span></div>`;
+        // R016: profil adı/emoji kullanıcı girdisi → kaçışlanır (bozuk HTML/XSS yok)
+        return `<div class="gfp-row"><span class="gfp-name">${esc(p.emoji)} ${esc(p.name)}</span><span class="gfp-stats">🏆 En iyi seri: <strong>${num(st.bestStreak)}</strong> · ✅ Doğru: <strong>${num(st.totalCorrect)}</strong> · 🎮 Oyun: <strong>${num(st.gamesPlayed)}</strong></span></div>`;
       }).join('');
       const html = `<div class="guess-family-panel" id="guess-family-panel"><div class="gfp-head">👥 Tahmin Ligi — Profiller Arası</div>${rows}</div>`;
       const existing = document.getElementById('guess-family-panel');
       if (existing) existing.outerHTML = html;
-      else section.insertAdjacentHTML('afterbegin', html);
+      else {
+        // Oyun kartının içine ekle (bölüm genişliği/hizası korunur)
+        const host = section.querySelector('.guess-container') || section;
+        host.insertAdjacentHTML('afterbegin', html);
+      }
     },
 
     /** Kazanılan seri rozetleri (5/10/15). */
@@ -1340,10 +1349,13 @@
     /** Profilin izleme geçmişini (raw, adapter bypass) film objelerine çözer. */
     getProfileWatchedMovies(pid) {
       const app = window.app;
-      if (!app || !Array.isArray(app.movies)) return [];
+      if (!app || !Array.isArray(app.movies) || !pid) return [];
+      // R016: raw köprüsü yoksa sessizce boş dön (eski tarayıcı/örnek sayfa)
+      const rawGet = window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get;
+      if (typeof rawGet !== 'function') return [];
       let watched = [];
       try {
-        watched = JSON.parse((window.Cine3DStorage.raw.get('cine3d_p_' + pid + '_watched')) || '[]');
+        watched = JSON.parse((rawGet('cine3d_p_' + pid + '_watched')) || '[]');
       } catch (err) { watched = []; }
       return (Array.isArray(watched) ? watched : [])
         .map(w => (typeof w === 'string') ? { id: w } : w)
@@ -1351,34 +1363,57 @@
         .filter(Boolean);
     },
 
-    /** Seçilen profilin zevkini oyuncu kartına uygular: türler, isim, puan beklentisi, süre. */
-    applyProfileTaste(playerIdx, pid) {
-      const target = playerIdx === 1 ? this.p1 : this.p2;
-      if (!pid) { target.pid = null; this.persistDuoProfiles(); this.render(); this.bindEvents(); return; }
+    /**
+     * R016: Profilin izleme geçmişinden tür/puan/süre tercihini hesaplar (yan etkisiz).
+     * Hem manuel seçimde hem de sayfa yenilendikten sonra geri yüklemede kullanılır.
+     */
+    computeProfileTaste(pid) {
       const movies = this.getProfileWatchedMovies(pid);
-      if (!movies.length) {
-        if (window.app && window.app.showToast) window.app.showToast('Bu profilde yeterli izleme geçmişi yok.', 'info');
-        return;
-      }
+      if (!movies.length) return null;
       const counts = {};
       movies.forEach(m => (m.genres || []).forEach(g => { counts[g] = (counts[g] || 0) + 1; }));
       const topGenres = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([g]) => g);
-      target.genres = topGenres;
-      target.name = this.getProfileName(pid);
-      target.pid = pid;
-      // ortalama puan beklentisi: en yakın pill'e yuvarla
       const rated = movies.filter(m => Number.isFinite(Number(m.userRating)) && Number(m.userRating) > 0);
       const avg = rated.length ? rated.reduce((s, m) => s + Number(m.userRating), 0) / rated.length : 7.5;
-      target.rating = avg >= 8.25 ? 8.5 : (avg >= 7.75 ? 8.0 : 7.5);
-      // ortalama süre tercihi
+      const rating = avg >= 8.25 ? 8.5 : (avg >= 7.75 ? 8.0 : 7.5);
       const app = window.app;
       const mins = movies.map(m => (app && typeof app.parseDurationMinutes === 'function') ? app.parseDurationMinutes(m.duration) : 120).filter(x => x > 0);
       const avgMin = mins.length ? mins.reduce((s, x) => s + x, 0) / mins.length : 120;
-      target.duration = avgMin < 100 ? 'quick' : (avgMin >= 140 ? 'epic' : 'standard');
+      const duration = avgMin < 100 ? 'quick' : (avgMin >= 140 ? 'epic' : 'standard');
+      return { genres: topGenres, rating, duration, name: this.getProfileName(pid), count: movies.length };
+    },
+
+    /** Seçilen profilin zevkini oyuncu kartına uygular: türler, isim, puan beklentisi, süre. */
+    applyProfileTaste(playerIdx, pid) {
+      const target = playerIdx === 1 ? this.p1 : this.p2;
+      const defaultName = playerIdx === 1 ? '1. Seyirci' : '2. Seyirci';
+      if (!pid) {
+        // R016: manuel seçime dönüldüğünde otomatik doldurulan isim de sıfırlanır
+        const wasAuto = !!target.pid;
+        target.pid = null;
+        if (wasAuto) target.name = defaultName;
+        this.persistDuoProfiles();
+        this.render();
+        this.bindEvents();
+        return;
+      }
+      const taste = this.computeProfileTaste(pid);
+      if (!taste) {
+        if (window.app && window.app.showToast) window.app.showToast('Bu profilde yeterli izleme geçmişi yok.', 'info');
+        // R016: başarısız seçimde <select> eski (kayıtlı) duruma geri döner
+        this.render();
+        this.bindEvents();
+        return;
+      }
+      target.genres = taste.genres;
+      target.name = taste.name;
+      target.pid = pid;
+      target.rating = taste.rating;
+      target.duration = taste.duration;
       this.persistDuoProfiles();
       this.render();
       this.bindEvents();
-      if (window.app && window.app.showToast) window.app.showToast('🎯 ' + target.name + ' profili uygulandı (' + movies.length + ' izleme).', 'success');
+      if (window.app && window.app.showToast) window.app.showToast('🎯 ' + target.name + ' profili uygulandı (' + taste.count + ' izleme).', 'success');
     },
 
     persistDuoProfiles() {
@@ -1388,8 +1423,26 @@
     restoreDuoProfiles() {
       try {
         const saved = JSON.parse(localStorage.getItem(this.DUO_PROFILES_KEY) || '{}');
-        if (saved.p1) { this.p1.pid = saved.p1; this.p1.name = this.getProfileName(saved.p1); }
-        if (saved.p2) { this.p2.pid = saved.p2; this.p2.name = this.getProfileName(saved.p2); }
+        const valid = new Set(this.getProfileOptions().map(p => p.pid));
+        // R016: sadece pid+isim değil, profilin TÜM zevki (tür/puan/süre) geri yüklenir.
+        // Önceden yenilemeden sonra isim kalıyor ama türler varsayılana dönüyordu.
+        [['p1', this.p1], ['p2', this.p2]].forEach(([key, target]) => {
+          const pid = saved[key];
+          target.pid = null;
+          if (!pid || !valid.has(pid)) return;
+          const taste = this.computeProfileTaste(pid);
+          if (!taste) return; // profilde izleme geçmişi kalmamış → manuel mod
+          target.pid = pid;
+          target.name = taste.name;
+          target.genres = taste.genres;
+          target.rating = taste.rating;
+          target.duration = taste.duration;
+        });
+        // Geçersiz/silinmiş profil kimlikleri depodan temizlenir
+        const clean = { p1: this.p1.pid || null, p2: this.p2.pid || null };
+        if (saved.p1 !== clean.p1 || saved.p2 !== clean.p2) {
+          localStorage.setItem(this.DUO_PROFILES_KEY, JSON.stringify(clean));
+        }
       } catch (err) { /* yoksay */ }
     },
 

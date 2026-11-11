@@ -2208,8 +2208,18 @@ class Cine3DApp {
       }
       pool = this.movies.filter(m => !seen.has(m.id));
     }
-    if (pool.length < 5 && f !== 'watchlist') pool = [...this.movies];
+    // R016: 'watchlist' ve 'dual' filtreleri küçük/boş havuzu KORUR (tüm kataloğa düşmez).
+    // Boş havuz sahnesi artık initRoulette içinde anlamlı bir mesajla gösterilir.
+    if (pool.length < 5 && f !== 'watchlist' && f !== 'dual') pool = [...this.movies];
     return pool;
+  }
+
+  /** R016: Boş rulet havuzu için filtreye özel açıklama. */
+  rouletteEmptyMessage() {
+    const f = this.activeRouletteFilter || 'all';
+    if (f === 'watchlist') return '🎯 İzleme listeniz boş — rulet için önce filmlere ❤️ verin.';
+    if (f === 'dual') return '👥 İkimiz İçin havuzu boş — iki profilin de tüm yapımları izlemiş görünüyor.';
+    return '🎬 Bu filtreye uygun yapım bulunamadı.';
   }
 
   shuffleRoulette(list) {
@@ -2262,7 +2272,29 @@ class Cine3DApp {
     if (!strip) return;
 
     const pool = this.getRoulettePool();
+    const spinBtn = document.getElementById('btn-spin-roulette');
     this.updateRouletteCounts();
+
+    // R016: boş havuz → boş şerit + pasif "Döndür" düğmesi + açıklama (sessiz no-op yok)
+    if (!pool.length) {
+      this.rouletteSequence = [];
+      this.roulettePoolEmpty = true;
+      strip.style.transition = 'none';
+      strip.style.transform = 'translateX(0px)';
+      strip.classList.add('is-empty');
+      strip.innerHTML = `<div class="roulette-empty">${escapeHtmlText(this.rouletteEmptyMessage())}</div>`;
+      if (spinBtn) {
+        spinBtn.disabled = true;
+        spinBtn.setAttribute('aria-disabled', 'true');
+      }
+      return;
+    }
+    this.roulettePoolEmpty = false;
+    strip.classList.remove('is-empty');
+    if (spinBtn) {
+      spinBtn.disabled = false;
+      spinBtn.removeAttribute('aria-disabled');
+    }
 
     // 64 kartlık dizilim: havuz karıştırılıp doldurulur; hedef her zaman son 12 karttan
     // seçildiği için 109 yapımın tamamı (filtreye göre hepsi) çıkabilir.
@@ -2309,7 +2341,12 @@ class Cine3DApp {
     if (!strip || !spinBtn) return;
 
     if (!this.rouletteSequence || this.rouletteSequence.length < 10) this.initRoulette();
-    if (!this.rouletteSequence || !this.rouletteSequence.length) return;
+    if (!this.rouletteSequence || !this.rouletteSequence.length) {
+      // R016: boş havuzda sessizce hiçbir şey yapmıyordu — kullanıcıya nedenini söyle
+      this.showToast(this.rouletteEmptyMessage(), 'info');
+      if (spinBtn) spinBtn.disabled = true;
+      return;
+    }
 
     this.isSpinningRoulette = true;
     spinBtn.disabled = true;

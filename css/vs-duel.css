@@ -876,6 +876,26 @@
   will-change: transform;
 }
 
+/* R016: boş havuz durumu (İzleme Listem boş / İkimiz İçin havuzu tükendi) */
+.roulette-strip.is-empty {
+  width: 100%;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+.roulette-strip.is-empty .roulette-empty {
+  flex: 1 1 auto;
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 26px 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .roulette-strip.spinning {
   /* Hızlı animasyon class'ı */
   transition: transform 0.05s linear;

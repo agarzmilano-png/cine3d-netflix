@@ -339,7 +339,7 @@ const MOVIES_DATA = [
     "summary": "Seul'de yarı bodrum katında sefalet içinde yaşayan dört kişilik Kim ailesi, işsizlik ve yoksullukla boğuşmaktadır. Oğulları Ki-woo, varlıklı Park ailesinin kızına özel İngilizce dersi vermeye başladığında kurnaz bir plan yaparlar. Kim ailesinin tüm üyeleri kimliklerini gizleyerek lüks malikanede şoför, hizmetçi ve sanat terapisti olarak sırayla işe yerleşir. Ancak zenginliğin altındaki karanlık bir sır açığa çıktığında olaylar geri dönülemez bir felakete dönüşür.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjk1Y2U4MjQtY2ZiNS00OWQyLWI3MmYtZWUwNmRjYWRiNWNhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjk1Y2U4MjQtY2ZiNS00OWQyLWI3MmYtZWUwNmRjYWRiNWNhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "5xH0hhMbzEQ",
+    "trailerYoutubeId": "5xH0HfJHsaY",
     "isFeatured": false,
     "themeColor": "#06b6d4",
     "moods": [
@@ -824,7 +824,7 @@ const MOVIES_DATA = [
     "summary": "İmparatorluğun çöküşünün ardından ve İlk Düzen'in ortaya çıkışından önce galaksinin ücra köşelerinde geçen hikayede yalnız bir silahşor olan Din Djarin (Mandalorian), aldığı gizemli bir ödül avı görevinde Güç ile derin bağları olan sevimli bir çocuğu (Grogu) korumayı seçer ve tüm galaktik suç şebekelerini karşısına alır.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjgxZGM0OWUtZGY1MS00MWRmLTk2N2ItYjQyZTI1OThlZDliXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjgxZGM0OWUtZGY1MS00MWRmLTk2N2ItYjQyZTI1OThlZDliXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "aOC8E8z_ifA",
+    "trailerYoutubeId": "aOC8E8z_ifw",
     "isFeatured": true,
     "isSeries": true,
     "platforms": [
@@ -1039,7 +1039,7 @@ const MOVIES_DATA = [
     "summary": "İnsanlığın çöp yığınına dönüştürüp terk ettiği Dünya'da yüzyıllardır tek başına çalışan sevimli robot WALL-E, gezegene gönderilen gelişmiş robot EVE'e aşık olur. Canlı bir bitki filizi bulmasıyla birlikte tüm insanlığın kaderini değiştirecek galaksiler arası bir maceraya sürüklenir.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzk0ZGMzMDYtMDJkYS00NTdhLWJlZWUtMTdhOTJkOTM3NDUwXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMzk0ZGMzMDYtMDJkYS00NTdhLWJlZWUtMTdhOTJkOTM3NDUwXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
-    "trailerYoutubeId": "alIq_82P9mM",
+    "trailerYoutubeId": "CZ1CATNbXg0",
     "isFeatured": false,
     "isSeries": false,
     "platforms": [
@@ -1125,7 +1125,7 @@ const MOVIES_DATA = [
     "summary": "Müziğin yasak olduğu bir ayakkabıcı ailesinde büyüyen genç Miguel, idolü Ernesto de la Cruz gibi bir müzisyen olma hayaliyle Ölüler Diyarı'na büyülü bir geçiş yapar. Orada atalarının gerçek aile sırrını keşfeder.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDIyM2E2NTAtMzlhNy00ZGUxLWI1NjgtZDY5MzhiMDc5NGU3XkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDIyM2E2NTAtMzlhNy00ZGUxLWI1NjgtZDY5MzhiMDc5NGU3XkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg",
-    "trailerYoutubeId": "xLnTIAMergg",
+    "trailerYoutubeId": "Ga6RYejo6Hk",
     "isFeatured": false,
     "isSeries": false,
     "platforms": [
@@ -1212,7 +1212,7 @@ const MOVIES_DATA = [
     "summary": "Dünyanın en iyi restoranlarında çalışan genç gurme şef Carmy Berzatto, abisinin trajik intiharının ardından Chicago'daki salaş İtalyan sandviç dükkanını yönetmek için geri döner. Mutfaktaki yüksek tansiyon, aile travmaları ve lezzet arayışı.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjk2NWI5OTctODcwYy00NGRmLWFmN2YtOTZiNzFiYjVlODBkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjk2NWI5OTctODcwYy00NGRmLWFmN2YtOTZiNzFiYjVlODBkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
-    "trailerYoutubeId": "y-cqqAJIXhk",
+    "trailerYoutubeId": "gBmkI4jlaIo",
     "isFeatured": true,
     "isSeries": true,
     "platforms": [
@@ -1601,7 +1601,7 @@ const MOVIES_DATA = [
     "summary": "Süper güçlerini halkın gözü önünde iyilik için kullanıyormuş gibi davranan ancak kapalı kapılar ardında ahlaksız ve yozlaşmış olan kurumsal süper kahraman grubu 'Yedi'yi dize getirmek için kanunsuz adalet arayıcısı 'The Boys' ekibi harekete geçer.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZjU4OWNiYzQtMzc1NS00NjZlLTgyYTctZWY4ZmEzMTkxYjA4XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZjU4OWNiYzQtMzc1NS00NjZlLTgyYTctZWY4ZmEzMTkxYjA4XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
-    "trailerYoutubeId": "06rueu_fh30",
+    "trailerYoutubeId": "M1bhOaLV4FU",
     "isFeatured": true,
     "isSeries": true,
     "platforms": [
@@ -1644,7 +1644,7 @@ const MOVIES_DATA = [
     "summary": "Nükleer kıyametten 200 yıl sonra lüks sığınak Vault 33'ten yüzeye çıkan saf sığınak sakini Lucy, acımasız ve vahşi Los Angeles nükleer çölünde babasını bulmak için bir Ghoul ödül avcısı ve Çelik Kardeşliği askeriyle karşılaşır.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzE1MTZmY2ItMTgxNi00OGU5LTk4NTItMmY2ODFhYzhjZjRkXkEyXkFqcGc@._V1_QL75_UX380_CR0,57,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzE1MTZmY2ItMTgxNi00OGU5LTk4NTItMmY2ODFhYzhjZjRkXkEyXkFqcGc@._V1_QL75_UX380_CR0,57,380,562_.jpg",
-    "trailerYoutubeId": "V-mugKDQDlg",
+    "trailerYoutubeId": "7h8zJHywjAw",
     "isFeatured": true,
     "isSeries": true,
     "platforms": [
@@ -1687,7 +1687,7 @@ const MOVIES_DATA = [
     "summary": "J.R.R. Tolkien'in Orta Dünya İkinci Çağı'nda geçen dizide Güç Yüzüklerinin dövülüşü, Karanlıklar Efendisi Sauron'un yükselişi ve Númenor krallığının destansı kaderi anlatılıyor.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjlhYTk3ZGQtNjdlYi00NDQyLTgxZTEtMzk0OTU5OTRhNGZhXkEyXkFqcGc@._V1_QL75_UX380_CR0,57,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjlhYTk3ZGQtNjdlYi00NDQyLTgxZTEtMzk0OTU5OTRhNGZhXkEyXkFqcGc@._V1_QL75_UX380_CR0,57,380,562_.jpg",
-    "trailerYoutubeId": "v7v1hIkXY2I",
+    "trailerYoutubeId": "TTSNLnnxI9g",
     "isFeatured": false,
     "isSeries": true,
     "platforms": [
@@ -1728,7 +1728,7 @@ const MOVIES_DATA = [
     "summary": "Eski bir ordu askeri polisi olan Jack Reacher, işlemediği bir cinayetle suçlanınca küçük bir Gürcistan kasabasında polisler, iş adamları ve politikacıları içeren derin bir komployu kas gücü ve parlak zekasıyla ortaya çıkarmaya başlar.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmE0YTA3MTItMjhiNC00MGQ3LTllZDktNGNiZWY1OWFmNmM1XkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmE0YTA3MTItMjhiNC00MGQ3LTllZDktNGNiZWY1OWFmNmM1XkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
-    "trailerYoutubeId": "GSycMV_vr8k",
+    "trailerYoutubeId": "GSycMV-_Csw",
     "isFeatured": false,
     "isSeries": true,
     "platforms": [
@@ -2283,7 +2283,7 @@ const MOVIES_DATA = [
     "summary": "Nesillerdir Haydarpaşa Garı'nda Anadolu Tat Lokantası'nı işleten 8 kişilik Mermer ailesi, dışarıdan sıradan bir esnaf gibi görünse de aslında uluslararası bir suç örgütü için gizli kiralık katillik yapmaktadır. Örgütün gizli bir kuralını çiğnemeleriyle birlikte hedef haline gelirler ve Türkiye'den kaçmak için absürt, panik dolu ve kahkahalarla bezeli bir hayatta kalma operasyonu başlatırlar.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGQzMWY0NGYtMGE4MS00YmExLTkyOWItNzQxOWUzODkxNzAyXkEyXkFqcGdeQXVyNDQ2MTMzODA@._V1_SX300.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZGQzMWY0NGYtMGE4MS00YmExLTkyOWItNzQxOWUzODkxNzAyXkEyXkFqcGdeQXVyNDQ2MTMzODA@._V1_SX300.jpg",
-    "trailerYoutubeId": "e-7Q_dUtv_w",
+    "trailerYoutubeId": "jHlLVxkG-XY",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -2324,7 +2324,7 @@ const MOVIES_DATA = [
     "summary": "Kanun kaçağı olarak birbirinden kopuk saklanan Mermer ailesi, ailenin en saf üyesi Zafer'in örgüt tarafından kaçırılması üzerine mecburen yeniden bir araya gelir. Zafer'i kurtarabilmek için örgütün elindeki devasa bir veri bankasını çalmak üzere son bir absürt soyguna girişirler.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTExMzUyZjctZDViNS00NzA3LWJiNTctNzE1ZWJiYmZjNmM4XkEyXkFqcGc@._V1_SX300.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTExMzUyZjctZDViNS00NzA3LWJiNTctNzE1ZWJiYmZjNmM4XkEyXkFqcGc@._V1_SX300.jpg",
-    "trailerYoutubeId": "Ld1wF1c4G6I",
+    "trailerYoutubeId": "PnQrVt3Vvxc",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -2366,7 +2366,7 @@ const MOVIES_DATA = [
     "summary": "Kurnaz ve hazırcevap halı satıcısı Arif, dükkanına gelen uzaylılar tarafından kaçırılarak G.O.R.A. gezegenine köle olarak götürülür. Gezegendeki kötü kalpli Komutan Logar'ın Prenses Ceku ile evlenip gezegeni ele geçirme planını fark eden Arif, gezegenden kaçmak ve prensesi kurtarmak için Türk usulü akıl oyunları ve efsanevi esprilerle mücadeleye girişir.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDU3NTVhYTItNGYyOS00Njk0LWIzMWQtZTU5Njg5MzkwZTllXkEyXkFqcGc@._V1_SX300.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDU3NTVhYTItNGYyOS00Njk0LWIzMWQtZTU5Njg5MzkwZTllXkEyXkFqcGc@._V1_SX300.jpg",
-    "trailerYoutubeId": "W26g55o779g",
+    "trailerYoutubeId": "b-xjnFcUGn8",
     "isFeatured": true,
     "platforms": [
       "netflix"
@@ -2408,7 +2408,7 @@ const MOVIES_DATA = [
     "summary": "G.O.R.A.'dan kurtulup Dünya'da Ceku ile mutlu bir evlilik kuran Arif, intikam peşindeki Komutan Logar'ın zaman makinesi hilesiyle günümüzden bir milyon yıl öncesine, Taş Devri'ne sürgün edilir. Vahşi doğada Taş Devri insanlarıyla karşılaşan Arif, modern çağın futbolunu, teknolojisini ve medeniyetini ilkel kabileye öğreterek tekrar geleceğe dönmenin yolunu arar.",
     "posterUrl": "https://upload.wikimedia.org/wikipedia/en/8/83/A.R.O.G._%28movie_poster%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
     "backdropUrl": "https://upload.wikimedia.org/wikipedia/en/8/83/A.R.O.G._%28movie_poster%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
-    "trailerYoutubeId": "yK6C_qgK-z0",
+    "trailerYoutubeId": "v00CtY2vEQg",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -2449,7 +2449,7 @@ const MOVIES_DATA = [
     "summary": "Varlıklı polisiye yazarı Harlan Thrombey 85. yaş gününün ertesi sabahı malikanesinde ölü bulunur. Görünürde bir intihar gibi duran olayı aydınlatmak üzere gizemli bir müşteri tarafından tutulan güneyli şık dedektif Benoit Blanc devreye girer. Harlan'ın açgözlü ve sahtekar akrabalarının her birinin cinayet için sebebi vardır. Zekice yazılmış diyalogları ve Agatha Christie havasındaki mizahıyla modern bir klasik.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDU5ZTRkYmItZjg0Mi00ZTQwLThjMWItNWM3MTMxMzVjZmVjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDU5ZTRkYmItZjg0Mi00ZTQwLThjMWItNWM3MTMxMzVjZmVjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "qGqiHJTsRfs",
+    "trailerYoutubeId": "aEdV1RoBU_0",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -2617,7 +2617,7 @@ const MOVIES_DATA = [
     "summary": "Manhattan'da yaşayan yirmili yaşlarındaki altı yakın arkadaş Rachel, Monica, Phoebe, Joey, Chandler ve Ross'un dostluk, kariyer, aşk ve hayat mücadelelerini Central Perk kafesinde ve unutulmaz dairelerinde konu alan, televizyon tarihinin en ikonik ve samimi durum komedisi.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTU2YmM5ZjctOGVlMC00YTczLTljM2MtYjhlNGI5YWMyZjFkXkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTU2YmM5ZjctOGVlMC00YTczLTljM2MtYjhlNGI5YWMyZjFkXkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg",
-    "trailerYoutubeId": "hDNNmeeMCU1",
+    "trailerYoutubeId": "8wThS5WCzs4",
     "isFeatured": false,
     "platforms": [
       "hbo"
@@ -2657,7 +2657,7 @@ const MOVIES_DATA = [
     "summary": "John Bennett çocukken dilediği bir dilek sayesinde en sevdiği peluş ayısı Ted canlanır ve tüm dünyaya ün salar. Ancak aradan 27 yıl geçmiştir ve John artık 35 yaşında yetişkin bir erkektir. Ted ise hala küfürbaz, bira içen, sorumsuz bir ayıdır. John sevgilisi Lori ile geleceğini kurmak isterken, çocukluk dostu Ted'in yarattığı absürt karmaşalar arasında bocalayacaktır.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ1OTU0ODcxMV5BMl5BanBnXkFtZTcwOTMxNTUwOA@@._V1_QL75_UX380_CR0,20,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTQ1OTU0ODcxMV5BMl5BanBnXkFtZTcwOTMxNTUwOA@@._V1_QL75_UX380_CR0,20,380,562_.jpg",
-    "trailerYoutubeId": "9fbo_pRkamL",
+    "trailerYoutubeId": "9fbo_pQvU7M",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -2696,7 +2696,7 @@ const MOVIES_DATA = [
     "summary": "Bencil, huysuz televizyon hava durumu spikeri Phil Connors, her yıl nefret ettiği Punxsutawney kasabasına 'Dağ Sıçanı Günü' festivalini haber yapmak için gönderilir. Ancak ertesi sabah uyandığında yine aynı 2 Şubat sabahına uyandığını fark eder. Zaman döngüsünde sıkışan Phil, aynı günü defalarca yaşarken intihar denemelerinden piyanistliğe kadar her şeyi dener ve sonunda iyi bir insan olmanın değerini anlar.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWE3MjQ3ZDAtNDQ2MC00YjBjLTk0ZWYtNjQ0YzQ4YWE3YTEyXkEyXkFqcGc@._V1_QL75_UX380_CR0,2,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOWE3MjQ3ZDAtNDQ2MC00YjBjLTk0ZWYtNjQ0YzQ4YWE3YTEyXkEyXkFqcGc@._V1_QL75_UX380_CR0,2,380,562_.jpg",
-    "trailerYoutubeId": "GncQtURucE4",
+    "trailerYoutubeId": "GncQtURdcE4",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -2737,7 +2737,7 @@ const MOVIES_DATA = [
     "summary": "Birbiriyle akraba olan üç farklı aile yapısının komik ve sıcak hikayesi: Zengin yaşlı Jay Pritchett ile genç Kolombiyalı eşi Gloria; geleneksel çekirdek aile Phil ve Claire Dunphy çifti; evlat edindikleri bebekle eşcinsel çift Mitchell ve Cameron. Belgesel tarzı röportajlarla aile dinamiklerini kahkahalarla ekrana yansıtan fenomen dizi.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzFlOWFjNzQtODViNC00NzgzLThhZmItZTc1N2VlZDgwODUwXkEyXkFqcGc@._V1_QL75_UX380_CR0,2,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzFlOWFjNzQtODViNC00NzgzLThhZmItZTc1N2VlZDgwODUwXkEyXkFqcGc@._V1_QL75_UX380_CR0,2,380,562_.jpg",
-    "trailerYoutubeId": "a9s0DCxI7G8",
+    "trailerYoutubeId": "Ub_lfN2VMIo",
     "isFeatured": false,
     "platforms": [
       "disney"
@@ -2819,7 +2819,7 @@ const MOVIES_DATA = [
     "summary": "Free City adlı açık dünya video oyununda banka memuru olarak yaşayan Guy, her gün aynı rutinle soygunlara maruz kalan bir arka plan NPC'sidir. Bir gün gözlüklü bir kadın oyuncuya aşık olup bir oyuncunun gözlüğünü çalmasıyla kendi kodunun dışına çıkarak oyunun ve kendi kaderinin kahramanı haline gelir.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2I0MGMxYjUtZTZiMS00MzMxLTkzNWYtMDUyZmUwY2ViYTljXkEyXkFqcGc@._V1_QL75_UY562_CR5,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BN2I0MGMxYjUtZTZiMS00MzMxLTkzNWYtMDUyZmUwY2ViYTljXkEyXkFqcGc@._V1_QL75_UY562_CR5,0,380,562_.jpg",
-    "trailerYoutubeId": "X2m-08c80EY",
+    "trailerYoutubeId": "X2m-08cOAbc",
     "isFeatured": false,
     "platforms": [
       "disney"
@@ -2982,7 +2982,7 @@ const MOVIES_DATA = [
     "summary": "İstanbul Emniyeti Cinayet Büro'nun deneyimli başkomiseri Emin ve ekibi, kurbanlarını tuhaf sanat eserleri gibi süsleyen gizemli bir seri katilin peşine düşer. Olay yerine gelen suç uzmanı Dizdar Koşu'nun absürt teorileri, ekibin beceriksizlikleri ve ardı arkası kesilmeyen yanlış anlamalarla katili yakalama görevi tam bir komedi fiyaskosuna dönüşür.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjA1YjQxM2YtNjBmZi00ZDQ0LTlhZGMtNTVhYjRiNjRhM2VkXkEyXkFqcGc@._V1_SX300.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjA1YjQxM2YtNjBmZi00ZDQ0LTlhZGMtNTVhYjRiNjRhM2VkXkEyXkFqcGc@._V1_SX300.jpg",
-    "trailerYoutubeId": "y3qj69V1T9k",
+    "trailerYoutubeId": "TRfAs2qnlh0",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -3021,7 +3021,7 @@ const MOVIES_DATA = [
     "summary": "Londra'da elektronik eşya mağazasında çalışan ve hayatında hiçbir hedefi olmayan 30 yaşındaki Shaun, kız arkadaşı Liz tarafından terk edilir. Tam hayatını düzene sokmaya karar verdiği gün Londra sokaklarını bir zombi istilası sarar. Shaun ve tembel ev arkadaşı Ed, annesini ve Liz'i kurtarıp en sevdikleri pub The Winchester'a sığınmak için absürt bir mücadeleye girişir.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzNjZGE4YTUtOWU3OC00Mzg2LThjNWItMzUwYzEwMDgxYmVjXkEyXkFqcGc@._V1_QL75_UX380_CR0,3,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNzNjZGE4YTUtOWU3OC00Mzg2LThjNWItMzUwYzEwMDgxYmVjXkEyXkFqcGc@._V1_QL75_UX380_CR0,3,380,562_.jpg",
-    "trailerYoutubeId": "LIFh924GeQQ",
+    "trailerYoutubeId": "ukOhdq1wQlQ",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -3228,9 +3228,9 @@ const MOVIES_DATA = [
     "tagline": "Hayatının dönüm noktasında bir dostun fısıltısı.",
     "awards": "2 Oscar Ödülü (Robin Williams & Özgün Senaryo)",
     "summary": "MIT üniversitesinde hademelik yapan 20 yaşındaki Will Hunting, koridordaki tahtaya yazılan imkansız matematik denklemlerini gizlice çözen dahi bir gençtir. Ancak çocukluk travmaları, öfke patlamaları ve tutuklanma riski yüzünden geleceğini çöpe atmaktadır. Bir profesörün yönlendirmesiyle dul terapist Sean Maguire ile seanslara başlar. Sean'ın 'Bu senin suçun değil' diyerek Will'in kabuğunu kırdığı sahne sinema tarihinin en unutulmaz duygusal anlarından biridir.",
-    "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzJkNmZiMDEtNjg2Yi00ZDljLWJjZGQtZGFiMTExZjMyMTljXkEyXkFqcGdeQXVyMjQ0NzE0MQ@@._V1_SX300.jpg",
-    "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzJkNmZiMDEtNjg2Yi00ZDljLWJjZGQtZGFiMTExZjMyMTljXkEyXkFqcGdeQXVyMjQ0NzE0MQ@@._V1_SX300.jpg",
-    "trailerYoutubeId": "PaAVLWF8V4U",
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDdjZGQ5YzEtNTc2My00Mjc0LWFlMTctYzkwMzZlNzdiZWYzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNDdjZGQ5YzEtNTc2My00Mjc0LWFlMTctYzkwMzZlNzdiZWYzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "trailerYoutubeId": "PaZVjZEFkRs",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -3272,7 +3272,7 @@ const MOVIES_DATA = [
     "summary": "12 Eylül darbesinin yaşandığı gece annesi doğumda ölen minik Deniz, gazeteci babası Sadık tarafından büyütülür. Sadık hapishane işkenceleri yüzünden amansız bir hastalığa yakalanınca, yıllar önce üniversiteye giderken kavga edip bağlarını kopardığı Ege'deki küs çiftlik sahibi babası Hüseyin Efendi'nin yanına oğlunu emanet etmek için döner. Türk sinemasının mendil ıslatan en büyük aile dramı.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDE3MTBkNmQtNGFjMC00YTcwLWExY2ItN2MyMGZkNWJlMmFmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDE3MTBkNmQtNGFjMC00YTcwLWExY2ItN2MyMGZkNWJlMmFmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
-    "trailerYoutubeId": "s3G5vB27B5M",
+    "trailerYoutubeId": "KTmrUXNxwWI",
     "isFeatured": true,
     "platforms": [
       "netflix"
@@ -3314,7 +3314,7 @@ const MOVIES_DATA = [
     "summary": "1950 Kore Savaşı'nda Türk Tugayı'nda görevli Astsubay Süleyman Dilbirliği, savaş alanında donmak üzere olan 5 yaşındaki öksüz bir Koreli minik kız çocuğu bulur. Ona 'Ayla' adını verip 15 ay boyunca kendi evladı gibi kışlada bakar ve bağrına basar. Türkiye'ye dönüş vakti geldiğinde kanunlar gereği Ayla'yı getiremeyip yetimhaneye bırakmak zorunda kalması ve 60 yıl sonra tekrar birbirlerine sarılmaları gözyaşlarını sel gibi akıtan gerçek bir destandır.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDRhYTNiMjMtY2U1OC00NWIwLTk0MTEtMDY1NTMxZDExYjBmXkEyXkFqcGc@._V1_QL75_UY562_CR13,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDRhYTNiMjMtY2U1OC00NWIwLTk0MTEtMDY1NTMxZDExYjBmXkEyXkFqcGc@._V1_QL75_UY562_CR13,0,380,562_.jpg",
-    "trailerYoutubeId": "yW3eR6XkFv8",
+    "trailerYoutubeId": "8PELOIYaEiw",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -3353,7 +3353,7 @@ const MOVIES_DATA = [
     "summary": "1983 yılında bir Ege kasabasında kızı Ova ile aynı zeka yaşına sahip zihinsel engelli Memo, bir komutanın kızının kazara kayalıklardan düşüp ölmesi üzerine haksız yere cinayetle suçlanıp idama mahkum edilir. Sıkıyönetim hapishanesindeki en sert mahkumların bulunduğu 7. koğuşa atılan Memo'nun saflığı ve kızına olan aşkı, koğuş arkadaşlarının kalbini yumuşatır ve Memo ile Ova'yı kavuşturmak için hayatlarını ortaya koydukları bir mucize planı başlatılır.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTEyZTQ4YWItMzNkNi00MTUwLWEyODAtMWI3NDNhNDRiYmQwXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTEyZTQ4YWItMzNkNi00MTUwLWEyODAtMWI3NDNhNDRiYmQwXkEyXkFqcGc@._V1_QL75_UY562_CR7,0,380,562_.jpg",
-    "trailerYoutubeId": "tV_vKk0Z9Jg",
+    "trailerYoutubeId": "z_tgY9Nmo18",
     "isFeatured": false,
     "platforms": [
       "netflix"
@@ -3519,7 +3519,7 @@ const MOVIES_DATA = [
     "summary": "Boston'da kapıcılık yaparak yalnız ve içine kapanık bir hayat süren Lee Chandler, ağabeyinin ani ölümü üzerine memleketi Manchester-by-the-Sea'ye döner. Ağabeyinin 16 yaşındaki oğlu Patrick'in yasal vasisi olarak atandığını öğrenen Lee, yıllar önce kasabayı terk etmesine neden olan ve kendi ailesini yok eden kahredici yangın trajedisiyle ve eski eşi Randi ile yüzleşmek zorunda kalır.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTYxMjk0NDg4Ml5BMl5BanBnXkFtZTgwODcyNjA5OTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTYxMjk0NDg4Ml5BMl5BanBnXkFtZTgwODcyNjA5OTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "gsVoD0zmpe8",
+    "trailerYoutubeId": "5TyNHoFcqFY",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -3559,7 +3559,7 @@ const MOVIES_DATA = [
     "summary": "80 yaşındaki Anthony, Londra'daki dairesinde yalnız yaşamayı ısrarla sürdüren bağımsız bir adamdır. Ancak ilerleyen demans hastalığı nedeniyle kızı Anne'i, damadını ve hatta içinde bulunduğu odayı tanıyamaz hale gelir. İzleyiciyi doğrudan demanslı bir hastanın gözünden dünyaya baktıran film, Anthony'nin zaman algısını, mekanları ve anılarını yitirirken 'tüm yapraklarımı döküyorum' diyerek annesini aradığı final sahnesiyle kalpleri paramparça eder.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTQzY2M5ZmUtZjBkNi00NTAzLTgzMTItODJlMzhhMDI5OGRhXkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTQzY2M5ZmUtZjBkNi00NTAzLTgzMTItODJlMzhhMDI5OGRhXkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg",
-    "trailerYoutubeId": "4TZb33mTcqA",
+    "trailerYoutubeId": "PSZTFO-HSzw",
     "isFeatured": false,
     "platforms": [
       "hbo"
@@ -3597,8 +3597,8 @@ const MOVIES_DATA = [
     "tagline": "Bazı şeyleri hatırlamak için unutman gerekir.",
     "awards": "2 Oscar Adaylığı, Bağımsız Ruh Ödülleri",
     "summary": "Eski bir sigorta müfettişi olan Leonard Shelby, karısının vahşice öldürüldüğü saldırı sırasında kafasına aldığı darbe yüzünden kısa süreli hafıza kaybı hastalığına (anterograd amnezi) yakalanmıştır. 15 dakikada bir her şeyi unutan Leonard, karısının katilini bulabilmek için önemli bilgileri polaroid fotoğraflarla belgeler ve vücuduna dövme olarak kazır. Biri sondan başa, diğeri baştan sona ilerleyen iki zaman kurgusuyla sinema tarihinin en büyük akıl oyunudur.",
-    "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmJlNzYxMmMtMzQ2YS00NTM5LWJjMjYtMzRmY2NhNDZkMjE1XkEyXkFqcGdeQXVyNjc5Mjg4Nzc@._V1_SX300.jpg",
-    "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZmJlNzYxMmMtMzQ2YS00NTM5LWJjMjYtMzRmY2NhNDZkMjE1XkEyXkFqcGdeQXVyNjc5Mjg4Nzc@._V1_SX300.jpg",
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGQ3Y2Q4NjktN2E4Ny00Y2Q2LTliZDUtZTNiNjRhY2I0NGIyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMGQ3Y2Q4NjktN2E4Ny00Y2Q2LTliZDUtZTNiNjRhY2I0NGIyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "trailerYoutubeId": "4CV41hoyS8A",
     "isFeatured": true,
     "platforms": [
@@ -3685,7 +3685,7 @@ const MOVIES_DATA = [
     "summary": "Kendisine yalnızca 'Kahraman' denilen gizli bir ajan, insanlığı 3. Dünya Savaşı'ndan daha büyük bir felaketten (gelecekten geçmişe yönelik zaman entropisinin tersine çevrilmesi) kurtarmak için uluslararası bir casusluk operasyonuna seçilir. Mermilerin hedeften silaha geri döndüğü, zamanın ileri ve geri aynı anda aktığı bu zihin yakan kuantum labirentinde Neil ile birlikte Rus oligark Andrei Sator'un kıyamet algoritmasını durdurmak zorundadırlar.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTIzNDIxMzktMzlkMi00MmUyLWFmMjQtZDgwMjBmOGJmNTI3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTIzNDIxMzktMzlkMi00MmUyLWFmMjQtZDgwMjBmOGJmNTI3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "LdOM0x0WVSc",
+    "trailerYoutubeId": "LdOM0x0XDMo",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -3850,7 +3850,7 @@ const MOVIES_DATA = [
     "summary": "Geçmişe ve geleceğe sıçrayarak suçları daha işlenmeden önce önlemekle görevli 'Zamansal Ajan', New York'ta binlerce masum insanın ölümüne neden olan 'Fiyasko Bombacısı' adlı teröristi durdurmak için son bir göreve çıkar. Bir barda barmen kılığına girdiğinde gizemli bir müşteriyle sohbet etmeye başlar. Zaman yolculuğu ve büyükbaba paradoksunun sinema tarihindeki en baş döndürücü ve ters köşe senaryolarından biri.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjcxZjhkOTAtNTAyMC00ZjAwLWJmODAtNDA0Mjc3YzZjMWYyXkEyXkFqcGc@._V1_SX300.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjcxZjhkOTAtNTAyMC00ZjAwLWJmODAtNDA0Mjc3YzZjMWYyXkEyXkFqcGc@._V1_SX300.jpg",
-    "trailerYoutubeId": "xxG-YfedrUo",
+    "trailerYoutubeId": "dLwKlV5M0ro",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -3892,7 +3892,7 @@ const MOVIES_DATA = [
     "summary": "Gelişen teknolojinin, yapay zekanın, sosyal medyanın ve sanal gerçekliğin insan doğasını nasıl manipüle ettiğini, ahlaki sınırları nasıl çürüttüğünü her bölümde bağımsız bir hikayeyle inceleyen distopik antoloji dizisi. Beyin yakan ters köşeleri ve sarsıcı karanlık öngörüleriyle televizyon tarihinin en çarpıcı bilimkurgusudur.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BODcxMWI2NDMtYTc3NC00OTZjLWFmNmUtM2NmY2I1ODkxYzczXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BODcxMWI2NDMtYTc3NC00OTZjLWFmNmUtM2NmY2I1ODkxYzczXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "2bVik34nWLY",
+    "trailerYoutubeId": "jROLrhQkK78",
     "isFeatured": true,
     "platforms": [
       "netflix"
@@ -4062,7 +4062,7 @@ const MOVIES_DATA = [
     "summary": "Kıyamet sonrası nükleer çöl dünyasında su ve benzin için savaşan insanların arasında yalnız Max Rockatansky, tiran Ölümsüz Joe'nun haremini kurtaran tek kollu savaşçı İmparator Furiosa ile zoraki bir ittifak kurar. Canavar zırhlı tırlarla çölde geçen iki saatlik kesintisiz, pratik efektli ve alev fışkırtan elektro gitarlı saf aksiyon senfonisi.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDRkODJhOTgtOTc1OC00NTgzLTk4NjItNDgxZDY4YjlmNDY2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDRkODJhOTgtOTc1OC00NTgzLTk4NjItNDgxZDY4YjlmNDY2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "hEJnMQG99gw",
+    "trailerYoutubeId": "hEJnMQG9ev8",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -4189,7 +4189,7 @@ const MOVIES_DATA = [
     "summary": "Ethan Hunt ve IMF ekibi, küresel finansı, nükleer savunma sistemlerini ve gerçeğin kendisini kontrol edebilen 'Varlık' adlı kontrolden çıkmış bir yapay zekanın iki parçalı anahtarını ele geçirmek için ölümcül bir yarışa girer. Abu Dabi havalimanından Roma sokaklarına ve Tom Cruise'un motosikletle uçurumdan atladığı nefes kesen tren kovalamacasına kadar dur durak bilmeyen bir macera.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2U4OTdmM2QtZTkxYy00ZmQyLTg2N2UtMDdmMGJmNDhlZDU1XkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BN2U4OTdmM2QtZTkxYy00ZmQyLTg2N2UtMDdmMGJmNDhlZDU1XkEyXkFqcGc@._V1_QL75_UY562_CR1,0,380,562_.jpg",
-    "trailerYoutubeId": "avz0AhEtbTE",
+    "trailerYoutubeId": "avz06PDqDbM",
     "isFeatured": false,
     "platforms": [
       "prime"
@@ -4273,7 +4273,7 @@ const MOVIES_DATA = [
     "summary": "Şükran Günü kutlaması sırasında iki ailenin küçük kızları gizemli bir şekilde ortadan kaybolur. Olayı soruşturan soğukkanlı Dedektif Loki, delil yetersizliği yüzünden zihinsel engelli şüpheli Alex Jones'u serbest bırakmak zorunda kalır. Çaresizlikten çılgına dönen baba Keller Dover, kızını kurtarmak için adaleti kendi ellerine alarak şüpheliyi kaçırıp gizli bir sorguya başlar. Ahlaki sınırları altüst eden tırnak kemirtici bir gerilim.",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg0NTIzMjQ1NV5BMl5BanBnXkFtZTcwNDc3MzM5OQ@@._V1_QL75_UY562_CR0,0,380,562_.jpg",
     "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg0NTIzMjQ1NV5BMl5BanBnXkFtZTcwNDc3MzM5OQ@@._V1_QL75_UY562_CR0,0,380,562_.jpg",
-    "trailerYoutubeId": "bpXfcT61eyA",
+    "trailerYoutubeId": "bpXfcTF6iVk",
     "isFeatured": false,
     "platforms": [
       "netflix",

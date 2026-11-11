@@ -535,8 +535,12 @@
 .spoiler-body.hidden {
   display: none;
 }
-.mask.hidden {
+/* R016: yanlış seçiciydi (.mask → .spoiler-mask); "Göster"ye basınca maske gizlenir */
+.spoiler-mask.hidden {
   display: none;
+}
+.review-spoiler-picker {
+  margin: 10px 0 12px;
 }
 .review-spoiler-toggle {
   display: inline-flex;
