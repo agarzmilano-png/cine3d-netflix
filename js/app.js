@@ -2191,6 +2191,23 @@ class Cine3DApp {
       pool = this.movies.filter(m => wlIds.has(m.id));
       if (this.hideWatched) pool = pool.filter(m => !this.isMovieWatched(m.id));
     }
+    // R015/7: İkimiz İçin — duo profillerinin İKİSİNİN de izlemedikleri
+    else if (f === 'dual') {
+      const seen = new Set();
+      let duoSel = null;
+      try { duoSel = JSON.parse(localStorage.getItem('cine3d_duo_profiles') || '{}'); } catch (e) { duoSel = {}; }
+      const pids = [duoSel.p1, duoSel.p2].filter(Boolean);
+      pids.forEach(pid => {
+        let wl = [];
+        try { wl = JSON.parse(localStorage.getItem('cine3d_p_' + pid + '_watched') || '[]'); } catch (e) { wl = []; }
+        (Array.isArray(wl) ? wl : []).forEach(w => seen.add((typeof w === 'string') ? w : w.id));
+      });
+      if (!pids.length) {
+        // duo seçimi yoksa: aktif profilin izledikleri hariç
+        (this.watchedList || []).forEach(w => seen.add((typeof w === 'string') ? w : w.id));
+      }
+      pool = this.movies.filter(m => !seen.has(m.id));
+    }
     if (pool.length < 5 && f !== 'watchlist') pool = [...this.movies];
     return pool;
   }
@@ -2216,6 +2233,20 @@ class Cine3DApp {
         let pool = this.movies.filter(m => wlIds.has(m.id));
         if (this.hideWatched) pool = pool.filter(m => !this.isMovieWatched(m.id));
         return pool.length;
+      }
+      // R015/7: İkimiz İçin sayacı
+      if (f === 'dual') {
+        const seen = new Set();
+        let duoSel = {};
+        try { duoSel = JSON.parse(localStorage.getItem('cine3d_duo_profiles') || '{}'); } catch (e) { duoSel = {}; }
+        const pids = [duoSel.p1, duoSel.p2].filter(Boolean);
+        pids.forEach(pid => {
+          let wl = [];
+          try { wl = JSON.parse(localStorage.getItem('cine3d_p_' + pid + '_watched') || '[]'); } catch (e) { wl = []; }
+          (Array.isArray(wl) ? wl : []).forEach(w => seen.add((typeof w === 'string') ? w : w.id));
+        });
+        if (!pids.length) (this.watchedList || []).forEach(w => seen.add((typeof w === 'string') ? w : w.id));
+        return this.movies.filter(m => !seen.has(m.id)).length;
       }
       return this.movies.length;
     };
@@ -2440,6 +2471,70 @@ class Cine3DApp {
     return `<span class="modal-family-ratings">` + fam.map(f =>
       `<span class="family-rating-badge" title="${escapeHtmlText(f.name)} puanı">${escapeHtmlText(f.emoji)} ${escapeHtmlText(f.name)} ⭐${f.rating}</span>`
     ).join('') + `</span>`;
+  }
+
+  // --- R015/3: AİLE ROZETLERİ (ortak başarımlar) ---
+  getFamilyStats() {
+    try {
+      const profiles = JSON.parse(localStorage.getItem('cine3d_profiles') || '[]');
+      let familyWatched = 0;
+      profiles.forEach(p => {
+        let wl = [];
+        try { wl = JSON.parse(localStorage.getItem('cine3d_p_' + p.pid + '_watched') || '[]'); } catch (e) { wl = []; }
+        familyWatched += Array.isArray(wl) ? wl.length : 0;
+      });
+      let reviewsTotal = 0;
+      try {
+        const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+        reviewsTotal = Object.values(shared).reduce((n, mov) => n + Object.keys(mov).length, 0);
+      } catch (e) { reviewsTotal = 0; }
+      return { profileCount: profiles.length, familyWatched, reviewsTotal };
+    } catch (e) {
+      return { profileCount: 0, familyWatched: 0, reviewsTotal: 0 };
+    }
+  }
+
+  renderFamilyBadgesTile() {
+    const s = this.getFamilyStats();
+    const badges = [
+      { emoji: '👨‍👩‍👧', label: s.profileCount + ' Profil', earned: s.profileCount >= 3 },
+      { emoji: '🍿', label: 'Ailece ' + s.familyWatched + ' Film', earned: s.familyWatched >= 25 },
+      { emoji: '💬', label: s.reviewsTotal + ' Yorum', earned: s.reviewsTotal >= 10 },
+    ];
+    return `<span class="family-badges-row">` + badges.map(b =>
+      `<span class="family-badge${b.earned ? ' earned' : ''}" title="${b.earned ? 'Kazanıldı' : 'Kilitli — hedef: ' + b.label}">${b.emoji} ${b.label}</span>`
+    ).join('') + `</span>`;
+  }
+
+  // --- R015/8 (ZCode): yazdırılabilir aile kütüphanesi raporu (Tarayıcıdan PDF olarak kaydedilir) ---
+  printLibraryReport() {
+    const old = document.getElementById('library-report');
+    if (old) old.remove();
+    const movies = this.movies.slice().sort((a, b) => (b.imdbRating || 0) - (a.imdbRating || 0));
+    const watchedMap = new Map((this.watchedList || []).map(w => [(typeof w === 'string') ? w : w.id, w]));
+    let shared = {};
+    try { shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}'); } catch (e) { shared = {}; }
+    const rows = movies.map(m => {
+      const w = watchedMap.get(m.id);
+      const myNote = w && typeof w === 'object' && Number(w.userRating) > 0 ? '⭐' + w.userRating : '—';
+      const fam = Object.entries(shared[m.id] || {})
+        .map(([pid, rev]) => (rev.author || this.getProfileName(pid)) + ': ' + (rev.note || ''))
+        .join(' • ');
+      return `<tr><td class="lr-t">${escapeHtmlText(m.title)}</td><td>${escapeHtmlText(m.year)}</td><td>⭐${escapeHtmlText(m.imdbRating)}</td><td>${escapeHtmlText((m.genres || []).join(', '))}</td><td>${myNote}</td><td class="lr-reviews">${escapeHtmlText(fam || '—')}</td></tr>`;
+    }).join('');
+    const wrap = document.createElement('div');
+    wrap.id = 'library-report';
+    wrap.innerHTML = `
+      <h1>🎬 Cine3D Aile Kütüphanesi</h1>
+      <p class="lr-meta">Rapor: ${new Date().toLocaleDateString('tr-TR')} · ${movies.length} yapım · Aktif profil: ${escapeHtmlText(this.getProfileName(this.getActivePid()))}</p>
+      <table class="lr-table">
+        <thead><tr><th>Başlık</th><th>Yıl</th><th>IMDb</th><th>Türler</th><th>Benim Puanım</th><th>Aile Yorumları</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    document.body.appendChild(wrap);
+    const cleanup = () => { wrap.remove(); window.removeEventListener('afterprint', cleanup); };
+    window.addEventListener('afterprint', cleanup);
+    window.print();
   }
 
   openTicketModal(movie) {
@@ -2991,6 +3086,25 @@ class Cine3DApp {
     }
   }
 
+  // --- R015/6 (ZCode): izleme listesinden hafta planı (günde 1 film, en fazla 7) ---
+  fillNightPlanFromWatchlist() {
+    const wlIds = (this.watchlist || []).map(w => (typeof w === 'string') ? w : w.id);
+    if (!wlIds.length) {
+      this.showToast('İzleme listeniz boş — önce filme kalp verin.', 'info');
+      return;
+    }
+    const movies = wlIds.map(id => this.movies.find(m => m.id === id)).filter(Boolean);
+    const pool = this.hideWatched ? movies.filter(m => !this.isMovieWatched(m.id)) : movies;
+    if (!pool.length) {
+      this.showToast('Listede uygun yapım bulunamadı.', 'info');
+      return;
+    }
+    const picks = pool.slice(0, 7).map(m => m.id);
+    this.saveNightPlan(picks);
+    this.renderNightPlan();
+    this.showToast('📅 İzleme listesinden ' + picks.length + ' yapım hafta planına dağıtıldı — günde 1 film.', 'success');
+  }
+
   saveNightPlan(ids) {
     try { localStorage.setItem(NIGHT_PLAN_KEY, JSON.stringify(ids)); } catch (err) { /* yoksay */ }
   }
@@ -3026,7 +3140,9 @@ class Cine3DApp {
     });
 
     document.getElementById('np-copy-btn')?.addEventListener('click', () => this.copyNightPlan());
-    document.getElementById('np-dna-fill-btn')?.addEventListener('click', () => this.autoFillNightPlan());
+      document.getElementById('np-dna-fill-btn')?.addEventListener('click', () => this.autoFillNightPlan());
+      // R015/6: izleme listesinden hafta planı
+      document.getElementById('np-week-fill-btn')?.addEventListener('click', () => this.fillNightPlanFromWatchlist());
 
     this.renderNightPlan();
   }
@@ -6213,7 +6329,9 @@ class Cine3DApp {
             ${dateStr(rev) ? `<span class="review-date-badge">${dateStr(rev)}</span>` : ''}
           </div>
           ${rev.tag ? `<span class="saved-review-tag">${esc(rev.tag)}</span>` : ''}
-          <p class="saved-review-text">${esc(rev.note)}</p>
+          ${rev.spoiler
+            ? `<p class="saved-review-text spoiler"><span class="spoiler-mask">⚠️ Spoiler içeriyor — <button type="button" class="spoiler-reveal-btn" data-spoiler-id="sp-${esc(rev.pid)}">Göster</button></span><span class="spoiler-body hidden" id="sp-${esc(rev.pid)}">${esc(rev.note)}</span></p>`
+            : `<p class="saved-review-text">${esc(rev.note)}</p>`}
           ${rev.pid === activePid ? `
           <div class="saved-review-actions">
             <button class="btn-review-sm" id="btn-edit-review">✏️ Düzenle</button>
@@ -6234,6 +6352,14 @@ class Cine3DApp {
         </div>
       `;
 
+      container.querySelectorAll('.spoiler-reveal-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const body = container.querySelector('#' + btn.dataset.spoilerId);
+          const mask = btn.closest('.spoiler-mask');
+          if (body) body.classList.remove('hidden');
+          if (mask) mask.classList.add('hidden');
+        });
+      });
       container.querySelector('#btn-add-review')?.addEventListener('click', () => {
         this.renderModalReviewSection(movie, true);
       });
@@ -6251,6 +6377,7 @@ class Cine3DApp {
 
     // Düzenleme / Ekleme Modu (kendi yorumum)
     let selectedTag = myReview?.tag || '';
+    let selectedSpoiler = !!myReview?.spoiler;
     const tags = ['Başyapıt 🏆', 'Kafa Açıcı 🧠', 'Görsel Şölen 🎨', 'Dram / Duygusal 💔', 'Arkadaşla İzlenir 🍿', 'Ters Köşe ⚡', 'Hayal Kırıklığı 🥱'];
 
     container.innerHTML = `
@@ -6269,6 +6396,9 @@ class Cine3DApp {
                 <button type="button" class="review-tag-chip ${selectedTag === t ? 'active' : ''}" data-tag="${esc(t)}">${esc(t)}</button>
               `).join('')}
             </div>
+          </div>
+          <div class="review-spoiler-picker">
+            <label class="review-spoiler-toggle"><input type="checkbox" id="review-spoiler-check" ${selectedSpoiler ? 'checked' : ''}/> ⚠️ Bu yorum spoiler içeriyor (kullanıcı onaylamadan gizli görünsün)</label>
           </div>
           <textarea
             id="review-textarea"
@@ -6304,6 +6434,10 @@ class Cine3DApp {
       });
     });
 
+    container.querySelector('#review-spoiler-check')?.addEventListener('change', (e) => {
+      selectedSpoiler = e.target.checked;
+    });
+
     const textarea = container.querySelector('#review-textarea');
     const charNum = container.querySelector('#review-char-num');
     textarea?.addEventListener('input', () => {
@@ -6322,7 +6456,8 @@ class Cine3DApp {
       }
       this.saveMovieReview(movie.id, {
         note: note || selectedTag,
-        tag: selectedTag
+        tag: selectedTag,
+        spoiler: selectedSpoiler
       });
       this.showToast('💬 Yorumun kaydedildi — profili adıyla görünecek!', 'success');
       this.renderModalReviewSection(movie, false);
@@ -6791,6 +6926,9 @@ class Cine3DApp {
           <button class="btn-report-demo" id="btn-import-data" title="Daha önce aldığın JSON yedeğini geri yükle">
             <span>📥 İçe Aktar</span>
           </button>
+          <button class="btn-report-demo" id="btn-library-report" title="Yazdırılabilir aile kütüphanesi raporu (PDF olarak kaydet)">
+            <span>🖨️ Rapor</span>
+          </button>
           <input type="file" id="import-file-input" accept="application/json,.json" hidden />
         </div>
 
@@ -6823,6 +6961,10 @@ class Cine3DApp {
             <div class="report-stat-tile">
               <span class="report-tile-val">${Object.values(JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}')).reduce((n, mov) => n + Object.keys(mov).length, 0)} Yorum</span>
               <span class="report-tile-label">Aile Yorum Duvarı</span>
+            </div>
+            <div class="report-stat-tile">
+              ${this.renderFamilyBadgesTile()}
+              <span class="report-tile-label">Aile Rozetleri</span>
             </div>
           </div>
 
@@ -6911,6 +7053,8 @@ class Cine3DApp {
       document.getElementById('btn-import-data')?.addEventListener('click', () => {
         document.getElementById('import-file-input')?.click();
       });
+      // R015/8: yazdırılabilir kütüphane raporu
+      document.getElementById('btn-library-report')?.addEventListener('click', () => this.printLibraryReport());
       document.getElementById('import-file-input')?.addEventListener('change', (e) => this.handleImportFile(e.target));
     }
   }

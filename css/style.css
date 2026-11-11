@@ -1431,6 +1431,85 @@ body {
   margin-left: 10px;
   color: #9a9aa8;
 }
+/* R015/8 (ZCode): yazdırılabilir aile kütüphanesi raporu */
+#library-report {
+  display: none;
+}
+@media print {
+  body > *:not(#library-report) {
+    display: none !important;
+  }
+  #library-report {
+    display: block !important;
+    color: #111;
+    font-family: Georgia, 'Times New Roman', serif;
+    padding: 24px;
+  }
+  #library-report h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+  }
+  #library-report .lr-meta {
+    color: #555;
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  #library-report .lr-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  #library-report .lr-table th {
+    text-align: left;
+    border-bottom: 2px solid #333;
+    padding: 6px 8px;
+  }
+  #library-report .lr-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 8px;
+    vertical-align: top;
+  }
+  #library-report .lr-t {
+    font-weight: 700;
+  }
+  #library-report .lr-reviews {
+    max-width: 260px;
+  }
+}
+/* R015/4 (ZCode): Tahmin ligi — profiller arası panel */
+.guess-family-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+.guess-family-panel .gfp-head {
+  font-weight: 800;
+  color: var(--imdb-gold);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.guess-family-panel .gfp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+.guess-family-panel .gfp-name {
+  font-weight: 700;
+  color: #fff;
+}
+.guess-family-panel .gfp-stats {
+  color: #c9c9d4;
+  font-size: 0.82rem;
+}
+.guess-family-panel .gfp-stats strong {
+  color: #f5c518;
+}
 
 .sort-select-wrap {
   position: relative;

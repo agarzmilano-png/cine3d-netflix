@@ -111,6 +111,18 @@ function check(name, ok, detail = '') {
     const sitemapCount = (sitemapBody.match(/<loc>/g) || []).length;
     check('sitemap 110+ URL', sitemapCount >= 110, sitemapCount + ' URL');
 
+    // R015/9 (ZCode): sürüm tutarlılığı — index.html ?v= etiketleri == sw.js CACHE_VERSION
+    // (R006b/R013'de sürüm artırımı unutulup canlıda eski dosya servis edilmişti)
+    const indexBody = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+    const swBody = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+    const htmlVersions = [...new Set((indexBody.match(/\?v=([\d.]+)/g) || []).map((s) => s.slice(3)))];
+    const swVersion = ((swBody.match(/CACHE_VERSION = '([^']+)'/) || [])[1]) || null;
+    check(
+      'sürüm etiketleri tutarlı',
+      htmlVersions.length === 1 && swVersion !== null && htmlVersions[0] === swVersion,
+      'index: ' + (htmlVersions.join(', ') || 'yok') + ' / sw: ' + (swVersion || 'yok')
+    );
+
     // --- Chrome ---
     const chromePath = findChrome();
     check('Chrome bulundu', !!chromePath, chromePath || 'CHROME_PATH verin');

@@ -866,6 +866,30 @@
 
     saveStats() {
       try { localStorage.setItem(this.STATS_KEY, JSON.stringify(this.stats)); } catch (err) { /* yoksay */ }
+      // R015/4: lig panelini tazele
+      if (this.renderGuessFamilyPanel) this.renderGuessFamilyPanel();
+    },
+
+    // --- R015/4: PROFİLLER ARASI TAHMİN LİGİ ---
+    renderGuessFamilyPanel() {
+      const section = document.getElementById('guess-game-section');
+      if (!section) return;
+      let profiles = [];
+      try { profiles = (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : []; } catch (err) { profiles = []; }
+      if (!profiles.length) return;
+      const rows = profiles.map(p => {
+        let st = { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 };
+        try {
+          const raw = window.Cine3DStorage.raw.get('cine3d_p_' + p.pid + '_prediction_stats');
+          st = { ...st, ...JSON.parse(raw || '{}') };
+        } catch (err) { /* varsayilan */ }
+        const num = (x) => Math.max(0, parseInt(x, 10) || 0);
+        return `<div class="gfp-row"><span class="gfp-name">${p.emoji} ${p.name}</span><span class="gfp-stats">🏆 En iyi seri: <strong>${num(st.bestStreak)}</strong> · ✅ Doğru: <strong>${num(st.totalCorrect)}</strong> · 🎮 Oyun: <strong>${num(st.gamesPlayed)}</strong></span></div>`;
+      }).join('');
+      const html = `<div class="guess-family-panel" id="guess-family-panel"><div class="gfp-head">👥 Tahmin Ligi — Profiller Arası</div>${rows}</div>`;
+      const existing = document.getElementById('guess-family-panel');
+      if (existing) existing.outerHTML = html;
+      else section.insertAdjacentHTML('afterbegin', html);
     },
 
     /** Kazanılan seri rozetleri (5/10/15). */
@@ -887,6 +911,8 @@
       if (GuessGame.inited) return;
       GuessGame.inited = true;
       GuessGame.stats = GuessGame.loadStats();
+      // R015/4: profiller arası lig paneli
+      if (GuessGame.renderGuessFamilyPanel) GuessGame.renderGuessFamilyPanel();
 
       const slider = document.getElementById('guess-range-slider');
       if (slider) {
@@ -1880,7 +1906,7 @@
 
     // Tahmin oyunu ve Birlikte Ne İzleyelim sekmeleri ilk açıldığında kurulur
     document.querySelector('.discovery-tab-btn[data-tab-panel="guess-game-section"]')
-      ?.addEventListener('click', () => GuessGame.init());
+      ?.addEventListener('click', () => { GuessGame.init(); if (GuessGame.renderGuessFamilyPanel) GuessGame.renderGuessFamilyPanel(); });
     document.querySelector('.discovery-tab-btn[data-tab-panel="duo-match-section"]')
       ?.addEventListener('click', () => DuoMatcher.init());
   }

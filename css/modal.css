@@ -514,6 +514,43 @@
   padding: 10px 4px;
 }
 
+/* R015/1 (ZCode): spoiler etiketi */
+.spoiler-mask {
+  color: #ffb84d;
+  font-weight: 700;
+}
+.spoiler-reveal-btn {
+  background: rgba(255, 184, 77, 0.15);
+  border: 1px solid rgba(255, 184, 77, 0.5);
+  color: #ffb84d;
+  font-family: inherit;
+  font-size: 0.78rem;
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.spoiler-reveal-btn:hover {
+  background: rgba(255, 184, 77, 0.3);
+}
+.spoiler-body.hidden {
+  display: none;
+}
+.mask.hidden {
+  display: none;
+}
+.review-spoiler-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffb84d;
+  font-size: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+}
+.review-spoiler-toggle input {
+  accent-color: #ffb84d;
+}
+
 .modal-awards-tag {
   border-color: rgba(245, 197, 24, 0.4);
   color: var(--imdb-gold);
