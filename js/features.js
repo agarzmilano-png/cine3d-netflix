@@ -1285,10 +1285,68 @@
       }
     },
 
+    // --- R009/4: DUO ARŞİVİ ---
+    ARCHIVE_KEY: 'cine3d_duo_archive',
+
+    loadArchive() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(this.ARCHIVE_KEY) || '[]');
+        return Array.isArray(raw) ? raw.filter(x => x && x.movieId) : [];
+      } catch (err) { return []; }
+    },
+
+    saveArchive(list) {
+      try { localStorage.setItem(this.ARCHIVE_KEY, JSON.stringify(list.slice(0, 30))); } catch (err) { /* yoksay */ }
+    },
+
+    addToArchive(entry) {
+      const list = this.loadArchive();
+      if (list.some(x => x.movieId === entry.movieId && x.p1 === entry.p1 && x.p2 === entry.p2)) {
+        return false;
+      }
+      list.unshift(entry);
+      this.saveArchive(list);
+      this.renderArchive();
+      return true;
+    },
+
+    removeFromArchive(id) {
+      this.saveArchive(this.loadArchive().filter(x => x.id !== id));
+      this.renderArchive();
+    },
+
+    renderArchive() {
+      const box = document.getElementById('duo-archive');
+      if (!box) return;
+      const list = this.loadArchive();
+      if (!list.length) { box.innerHTML = ''; return; }
+
+      box.innerHTML = `
+        <div class="duo-archive-head">💾 Duo Arşivi <span>(${list.length})</span></div>
+        <div class="duo-archive-list">
+          ${list.map(x => {
+            const mv = (window.app && window.app.movies.find(m => m.id === x.movieId)) || { title: x.movieTitle || x.movieId, posterUrl: '' };
+            return `<div class="duo-archive-item">
+              <img src="${esc(mv.posterUrl || '')}" alt="${esc(mv.title)}" loading="lazy" />
+              <div class="dai-info">
+                <div class="dai-title">${esc(mv.title)}</div>
+                <div class="dai-meta">%<strong>${Number(x.pct) || 0}</strong> uyum · ${esc(x.p1)} + ${esc(x.p2)}</div>
+              </div>
+              <button type="button" class="dai-del" data-archive-id="${esc(x.id)}" title="Arşivden sil" aria-label="${esc(mv.title)} kaydını arşivden sil">🗑</button>
+            </div>`;
+          }).join('')}
+        </div>`;
+
+      box.querySelectorAll('.dai-del').forEach(btn => {
+        btn.addEventListener('click', () => this.removeFromArchive(btn.dataset.archiveId));
+      });
+    },
+
     init() {
       if (this.inited) return;
       this.inited = true;
       this.buildGenreList();
+      this.renderArchive();
       this.render();
       this.bindEvents();
     },
@@ -1414,6 +1472,9 @@
 
           <!-- Eşleşme Sonuç Kartı -->
           <div class="duo-result-card hidden" id="duo-result-card"></div>
+
+          <!-- R009/4: Duo arşivi -->
+          <div class="duo-archive" id="duo-archive"></div>
         </div>
       `;
     },
@@ -1620,6 +1681,9 @@
                   <span>🎲 Başka Ortak Alternatif (${this.currentIndex + 1}/${this.candidates.length})</span>
                 </button>
               ` : ''}
+              <button class="btn-drc-alt" id="btn-duo-archive">
+                <span>💾 Arşive kaydet</span>
+              </button>
               <button class="btn-drc-alt" id="btn-duo-repick">
                 <span>🔄 Tercihleri Değiştir</span>
               </button>
@@ -1632,6 +1696,21 @@
         if (window.app && typeof window.app.openModal === 'function') {
           window.app.openModal(m, true);
         }
+      });
+
+      box.querySelector('#btn-duo-archive')?.addEventListener('click', (e) => {
+        const added = this.addToArchive({
+          id: 'duo_' + Date.now().toString(36),
+          at: Date.now(),
+          p1: this.p1.name,
+          p2: this.p2.name,
+          movieId: m.id,
+          movieTitle: m.title,
+          pct: item.matchPct
+        });
+        const btn = e.currentTarget;
+        if (btn) btn.querySelector('span').textContent = added ? '✅ Arşivde' : '✅ Zaten arşivde';
+        playSound('playWhoosh');
       });
 
       box.querySelector('#btn-duo-watchlist')?.addEventListener('click', (e) => {

@@ -6684,3 +6684,294 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
 }
 .wl-compare-btn:hover { background: rgba(245, 197, 24, 0.2); }
 .wl-compare-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* ==========================================================================
+   R009/1: Çoklu profil değiştirici
+   ========================================================================== */
+.profile-switcher { position: relative; }
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.profile-btn:hover { border-color: rgba(245, 197, 24, 0.55); }
+.profile-btn:focus-visible { outline: 2px solid #f5c518; outline-offset: 2px; }
+.profile-btn-emoji { font-size: 1rem; }
+.profile-btn-name { max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 264px;
+  z-index: 9000;
+  background: #15151d;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.7);
+  padding: 10px;
+}
+.profile-panel.hidden { display: none; }
+.profile-panel-head {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #8a8a99;
+  padding: 2px 2px 8px;
+}
+.profile-list { display: grid; gap: 4px; max-height: 180px; overflow: auto; }
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+}
+.profile-row:hover { background: rgba(255, 255, 255, 0.09); }
+.profile-row.active { border-color: #f5c518; background: rgba(245, 197, 24, 0.12); }
+.profile-row .pr-emoji { font-size: 1rem; }
+.profile-row .pr-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-row .pr-del {
+  border: 0; background: transparent; color: #6b7280;
+  cursor: pointer; font-size: 0.85rem; padding: 2px 4px; border-radius: 6px;
+}
+.profile-row .pr-del:hover { color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.profile-new {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 6px;
+}
+.profile-input {
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #1a1a22;
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.8rem;
+}
+.profile-emoji-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.profile-emoji-btn {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.profile-emoji-btn.active { border-color: #f5c518; background: rgba(245, 197, 24, 0.18); }
+.profile-add-btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 8px;
+  background: linear-gradient(135deg, #f5c518, #f59e0b);
+  color: #0a0a0c;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+@media (max-width: 720px) {
+  .profile-btn-name { display: none; }
+}
+
+/* ==========================================================================
+   R009/2 & 6 & 8: Yıllık özet, rozetler, sezon kontrolü
+   ========================================================================== */
+.wrap-card {
+  background: linear-gradient(135deg, rgba(229, 9, 20, 0.14), rgba(245, 197, 24, 0.1));
+  border: 1px solid rgba(245, 197, 24, 0.35);
+  border-radius: 14px;
+  padding: 12px;
+}
+.wrap-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.wrap-title { font-size: 0.95rem; font-weight: 900; color: #fff; }
+.wrap-copy-btn {
+  border: 1px solid rgba(245, 197, 24, 0.5);
+  background: rgba(245, 197, 24, 0.14);
+  color: #f5c518;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.wrap-stats { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 8px; }
+.wrap-stat {
+  flex: 1 1 70px;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+.wrap-stat span { display: block; font-size: 1rem; font-weight: 900; color: #f5c518; }
+.wrap-stat small { font-size: 0.64rem; color: #cbd5e1; font-weight: 700; }
+.wrap-lines { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.72rem; color: #e2e8f0; }
+
+.badges-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px;
+}
+.badges-title { font-size: 0.78rem; font-weight: 800; color: #e8e8ee; margin-bottom: 8px; }
+.badges-grid { display: flex; gap: 6px; flex-wrap: wrap; }
+.c3d-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #6b7280;
+}
+.c3d-badge.earned {
+  color: #0a0a0c;
+  background: linear-gradient(135deg, #f5c518, #f59e0b);
+  border-color: #f5c518;
+  box-shadow: 0 0 12px rgba(245, 197, 24, 0.3);
+}
+
+.modal-season-ctrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #7dd3fc;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.modal-season-ctrl .season-btn {
+  border: 0;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0f2fe;
+  border-radius: 6px;
+  width: 20px; height: 20px;
+  line-height: 1;
+  cursor: pointer;
+  font-weight: 900;
+}
+.modal-season-ctrl .season-btn:hover { background: rgba(56, 189, 248, 0.35); }
+.modal-season-ctrl .season-count { min-width: 14px; text-align: center; }
+.modal-season-ctrl .season-label { font-weight: 600; opacity: 0.85; }
+
+/* ==========================================================================
+   R009/3: Paylaşılan izleme listesi görüntüleyici + liste butonları
+   ========================================================================== */
+.wl-share-modal, .compare-modal { }
+.wl-share-modal {
+  position: fixed; inset: 0; z-index: 12000;
+  display: none; align-items: center; justify-content: center; padding: 18px;
+}
+.wl-share-modal.open { display: flex; }
+.wl-share-backdrop { position: absolute; inset: 0; background: rgba(6, 6, 10, 0.82); backdrop-filter: blur(4px); }
+.wl-share-dialog {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: 84vh;
+  overflow: auto;
+  background: #15151d;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75);
+}
+.wl-share-title { margin: 0 0 12px; font-size: 1.02rem; color: #fff; }
+.wl-share-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06); color: #cbd5e1; cursor: pointer;
+}
+.wl-share-body { display: grid; gap: 6px; }
+.wl-share-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.wl-share-item img { width: 34px; height: 48px; object-fit: cover; border-radius: 6px; }
+.wl-share-item .wsi-name { font-size: 0.84rem; font-weight: 700; color: #e8e8ee; }
+.wl-share-item .wsi-meta { font-size: 0.7rem; color: #8a8a99; }
+.wl-share-actions { margin-top: 14px; }
+.wl-share-add {
+  width: 100%; border: 0; border-radius: 10px; padding: 11px;
+  background: linear-gradient(135deg, #f5c518, #f59e0b); color: #0a0a0c;
+  font-family: inherit; font-size: 0.82rem; font-weight: 800; cursor: pointer;
+}
+.wl-share-btn {
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.12);
+  color: #7dd3fc; border-radius: 8px; padding: 7px 10px;
+  font-family: inherit; font-size: 0.74rem; font-weight: 800;
+  cursor: pointer; white-space: nowrap; align-self: flex-end;
+}
+.wl-share-btn:hover { background: rgba(56, 189, 248, 0.22); }
+.wl-night-btn {
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  background: rgba(167, 139, 250, 0.12);
+  color: #c4b5fd; border-radius: 8px;
+  width: 30px; height: 30px; cursor: pointer; font-size: 0.85rem;
+}
+.wl-night-btn:hover { background: rgba(167, 139, 250, 0.26); }
+
+/* ==========================================================================
+   R009/4: Duo arşivi
+   ========================================================================== */
+.duo-archive { margin-top: 14px; }
+.duo-archive-head {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: #a78bfa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.duo-archive-head span { color: #8a8a99; font-weight: 700; }
+.duo-archive-list { display: grid; gap: 6px; }
+.duo-archive-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.duo-archive-item img { width: 32px; height: 46px; object-fit: cover; border-radius: 6px; flex: 0 0 auto; }
+.dai-info { flex: 1; min-width: 0; }
+.dai-title { font-size: 0.82rem; font-weight: 700; color: #e8e8ee; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dai-meta { font-size: 0.7rem; color: #8a8a99; }
+.dai-meta strong { color: #34d399; }
+.dai-del {
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-radius: 8px;
+  width: 28px; height: 28px;
+  cursor: pointer;
+}

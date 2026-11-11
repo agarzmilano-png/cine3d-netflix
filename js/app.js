@@ -1045,6 +1045,12 @@ class Cine3DApp {
     // Koleksiyon hub'ları
     this.renderCollectionHubs();
 
+    // R009/1: çoklu profil
+    this.initProfiles();
+
+    // R009/3: paylaşılan liste bağlantısı (#wl=...)
+    this.openSharedListFromHash();
+
     // PWA (Progressive Web App) Servis Çalışanı ve Kurulum Desteği
     this.initPWA();
   }
@@ -1646,6 +1652,25 @@ class Cine3DApp {
     this.updateHideWatchedButton();
     this.updateWatchedCardButtons();
     this.updateWatchedModalBtn(movie.id);
+    this.renderWatchlistDrawer();
+  }
+
+  /** R009/8: dizi sezon takibi (izleme kaydı yoksa oluşturur). */
+  setWatchedSeasons(movie, count) {
+    if (!movie || !movie.id) return;
+    const n = Math.max(0, Math.min(30, Number(count) || 0));
+    let rec = this.getMovieWatchedRecord(movie.id);
+    if (!rec) {
+      // izleme kaydı yok: sezon bilgisiyle birlikte oluştur
+      this.watchedList.push({ id: movie.id, userRating: null, watchedAt: Date.now(), watchedSeasons: n });
+      this.showToast('👁️ "' + movie.title + '" izlendi olarak işaretlendi (' + n + ' sezon).', 'success');
+    } else {
+      rec.watchedSeasons = n;
+      this.showToast('📺 "' + movie.title + '" → ' + n + ' sezon.', 'info');
+    }
+    this.saveWatchedList();
+    this.updateWatchedCardButtons();
+    this.updateHideWatchedButton();
     this.renderWatchlistDrawer();
   }
 
@@ -3093,6 +3118,212 @@ class Cine3DApp {
     }
   }
 
+  // --- R009/1: ÇOKLU PROFİL (AİLE MODU) ---
+  initProfiles() {
+    const S = window.Cine3DStorage;
+    if (!S) return;
+
+    const btn = document.getElementById('profile-btn');
+    const panel = document.getElementById('profile-panel');
+    const listEl = document.getElementById('profile-list');
+    const emojiRow = document.getElementById('profile-emoji-row');
+    const nameInput = document.getElementById('profile-new-name');
+    const addBtn = document.getElementById('profile-add-btn');
+    if (!btn || !panel || !listEl) return;
+
+    const EMOJIS = ['🙂', '😎', '🍿', '🎬', '🌙', '👾', '🐱', '🦊', '🎧', '⭐'];
+    let selectedEmoji = EMOJIS[0];
+
+    const paintButton = () => {
+      const prof = S.activeProfile();
+      const emojiEl = document.getElementById('profile-btn-emoji');
+      const nameEl = document.getElementById('profile-btn-name');
+      if (prof) {
+        if (emojiEl) emojiEl.textContent = prof.emoji;
+        if (nameEl) nameEl.textContent = prof.name;
+        btn.setAttribute('title', 'Profil: ' + prof.name + ' — değiştirmek için tıkla');
+      }
+    };
+
+    const renderList = () => {
+      const active = S.activePid();
+      listEl.innerHTML = S.profiles().map(prof => `
+        <div class="profile-row${prof.pid === active ? ' active' : ''}" data-pid="${escapeHtmlText(prof.pid)}" role="menuitem" tabindex="0">
+          <span class="pr-emoji">${escapeHtmlText(prof.emoji)}</span>
+          <span class="pr-name">${escapeHtmlText(prof.name)}</span>
+          <button type="button" class="pr-del" data-del="${escapeHtmlText(prof.pid)}" title="Profili sil" aria-label="${escapeHtmlText(prof.name)} profilini sil">🗑</button>
+        </div>`).join('');
+
+      listEl.querySelectorAll('.profile-row').forEach(row => {
+        const pid = row.dataset.pid;
+        const activate = () => {
+          if (pid === S.activePid()) { panel.classList.add('hidden'); return; }
+          S.setActiveProfile(pid);
+          window.location.reload(); // tüm veri katmanları yeni profile göre yüklenir
+        };
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('.pr-del')) return;
+          activate();
+        });
+        row.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+        });
+        row.querySelector('.pr-del')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!window.confirm('Bu profil ve tüm verileri silinsin mi?')) return;
+          const ok = S.removeProfile(pid);
+          if (!ok) { this.showToast('Son profil silinemez.', 'info'); return; }
+          if (pid === S.activePid()) { window.location.reload(); return; }
+          renderList();
+          paintButton();
+          this.showToast('Profil silindi.', 'info');
+        });
+      });
+    };
+
+    if (emojiRow) {
+      emojiRow.innerHTML = EMOJIS.map((em, i) => `<button type="button" class="profile-emoji-btn${i === 0 ? ' active' : ''}" data-emoji="${em}">${em}</button>`).join('');
+      emojiRow.querySelectorAll('.profile-emoji-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          selectedEmoji = b.dataset.emoji;
+          emojiRow.querySelectorAll('.profile-emoji-btn').forEach(x => x.classList.toggle('active', x === b));
+        });
+      });
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = !panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', open);
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      if (!open) renderList();
+    });
+
+    addBtn?.addEventListener('click', () => {
+      const name = (nameInput && nameInput.value || '').trim();
+      if (!name) { this.showToast('Profil adı girin.', 'info'); return; }
+      const pid = S.addProfile(name, selectedEmoji);
+      S.setActiveProfile(pid);
+      window.location.reload();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+        panel.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { panel.classList.add('hidden'); btn.setAttribute('aria-expanded', 'false'); }
+    });
+
+    paintButton();
+  }
+
+  // --- R009/3: İZLEME LİSTESİ PAYLAŞIMI ---
+  encodeWatchlist(ids) {
+    try {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(ids))));
+    } catch (err) { return ''; }
+  }
+
+  decodeWatchlist(b64) {
+    try {
+      return JSON.parse(decodeURIComponent(escape(atob(b64))));
+    } catch (err) { return null; }
+  }
+
+  shareWatchlist() {
+    const ids = (this.watchlist || []).map(w => (typeof w === 'string' ? w : w.id)).filter(Boolean);
+    if (!ids.length) { this.showToast('Paylaşılacak liste boş.', 'info'); return; }
+    const payload = this.encodeWatchlist(ids);
+    const url = window.location.origin + window.location.pathname + '#wl=' + payload;
+
+    const copy = async () => {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(url);
+        else {
+          const ta = document.createElement('textarea');
+          ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+        }
+        this.showToast('🔗 Liste bağlantısı kopyalandı (' + ids.length + ' yapım).', 'success');
+      } catch (err) { this.showToast('Bağlantı: ' + url, 'info'); }
+    };
+    copy();
+  }
+
+  /** URL'de #wl=... varsa salt-okunur görüntüleyiciyi açar. */
+  openSharedListFromHash() {
+    const m = /(?:^|[#&])wl=([A-Za-z0-9+/=]+)/.exec(window.location.hash || '');
+    if (!m) return false;
+    const ids = this.decodeWatchlist(m[1]);
+    if (!Array.isArray(ids) || !ids.length) return false;
+
+    const modal = document.getElementById('wl-share-modal');
+    const body = document.getElementById('wl-share-body');
+    if (!modal || !body) return false;
+
+    const movies = ids.map(id => this.movies.find(x => x.id === id)).filter(Boolean);
+    body.innerHTML = movies.length
+      ? movies.map(mv => `
+        <div class="wl-share-item">
+          <img src="${escapeHtmlText(mv.posterUrl)}" alt="${escapeHtmlText(mv.title)}" />
+          <div>
+            <div class="wsi-name">${escapeHtmlText(mv.title)}</div>
+            <div class="wsi-meta">⭐ ${escapeHtmlText(mv.imdbRating)} · ${escapeHtmlText(mv.year)} · ${escapeHtmlText(mv.duration || '')}</div>
+          </div>
+        </div>`).join('')
+      : '<div class="wl-share-item">Bu listede katalogta bulunan yapım yok.</div>';
+
+    const addBtn = document.getElementById('wl-share-add');
+    if (addBtn) {
+      addBtn.disabled = movies.length === 0;
+      addBtn.onclick = () => {
+        let added = 0;
+        movies.forEach(mv => {
+          if (!this.isMovieInWatchlist(mv.id)) { this.watchlist.push(mv); added++; }
+        });
+        this.saveWatchlist();
+        this.renderWatchlistDrawer();
+        this.showToast('➕ ' + added + ' yapım listenize eklendi.', 'success');
+        this.closeSharedList();
+      };
+    }
+
+    document.getElementById('wl-share-close')?.addEventListener('click', () => this.closeSharedList(), { once: true });
+    document.getElementById('wl-share-backdrop')?.addEventListener('click', () => this.closeSharedList(), { once: true });
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    this.updateBackgroundInert();
+    return true;
+  }
+
+  closeSharedList() {
+    const modal = document.getElementById('wl-share-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    }
+    this.updateBackgroundInert();
+  }
+
+  // --- R009/7: İzleme listesinden gece planına ---
+  addNightPlanFromWatchlist(movie) {
+    if (!movie || !movie.id) return;
+    const plan = this.loadNightPlan();
+    if (plan.includes(movie.id)) {
+      this.showToast('🌙 Bu yapım zaten gece planında.', 'info');
+      return;
+    }
+    plan.push(movie.id);
+    this.saveNightPlan(plan);
+    this.renderNightPlan();
+    this.showToast('🌙 "' + movie.title + '" gece planına eklendi.', 'success');
+  }
+
   // --- R009: iOS PWA İPUCU ---
   initIosPwaHint() {
     const ua = navigator.userAgent || '';
@@ -4169,6 +4400,8 @@ class Cine3DApp {
 
     grid.innerHTML = this.filteredMovies.map(movie => {
       const isFav = this.isMovieInWatchlist(movie.id);
+    const watchedRec = this.getMovieWatchedRecord ? this.getMovieWatchedRecord(movie.id) : null;
+    const watchedSeasons = (watchedRec && watchedRec.watchedSeasons) ? Number(watchedRec.watchedSeasons) : 0;
       const moodBadge = this.getMovieMoodBadge(movie);
       const moviePalette = this.getMoviePalette(movie);
       const streamInfo = typeof getMovieStreamingInfo === 'function' 
@@ -4463,6 +4696,19 @@ class Cine3DApp {
     const isFav = this.isMovieInWatchlist(movie.id);
 
     // Eğer videoId henüz yoksa arka planda hemen çözümle
+    // R009/5: Fragman kimliği yoksa gömülü katalog indeksinden bulmayı dene
+    if (!movie.trailerYoutubeId && window.cine3dCatalog) {
+      try {
+        const idx = window.cine3dCatalog;
+        if (Array.isArray(idx.items)) {
+          const norm = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+          const key = norm(movie.originalTitle || movie.title);
+          const hit = idx.items.find(i => i.yt && (norm(i.o) === key || norm(i.t) === key));
+          if (hit && hit.yt) movie.trailerYoutubeId = hit.yt;
+        }
+      } catch (err) { /* yoksay */ }
+    }
+
     if (!movie.trailerYoutubeId && this.apiService) {
       this.apiService.resolveTrailerVideoId(movie.title, movie.year).then(vid => {
         if (vid) {
@@ -4590,6 +4836,12 @@ class Cine3DApp {
               </div>
 
               <div class="modal-pill-row">
+                ${movie.isSeries ? `<span class="modal-season-ctrl" title="İzlenen sezon sayısı">
+                  <button type="button" class="season-btn" data-season-act="dec" aria-label="Sezon azalt">−</button>
+                  <span class="season-count" id="modal-season-count">${watchedSeasons}</span>
+                  <span class="season-label">sezon</span>
+                  <button type="button" class="season-btn" data-season-act="inc" aria-label="Sezon ekle">＋</button>
+                </span>` : ''}
                 <span class="modal-duration-tag">⏱️ ${movie.duration}</span>
                 <span class="modal-age-tag">🔞 ${movie.ageRating}</span>
                 <span class="modal-awards-tag">🏆 ${movie.awards || 'Popüler Sinema/Dizi'}</span>
@@ -4746,6 +4998,17 @@ class Cine3DApp {
       } else {
         this.switchModalToTrailer(movie);
       }
+    });
+
+    document.querySelectorAll('.modal-season-ctrl .season-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const act = btn.dataset.seasonAct;
+        const current = (this.getMovieWatchedRecord(movie.id) || {}).watchedSeasons || 0;
+        const next = Math.max(0, Math.min(30, current + (act === 'inc' ? 1 : -1)));
+        this.setWatchedSeasons(movie, next);
+        const el = document.getElementById('modal-season-count');
+        if (el) el.textContent = next;
+      });
     });
 
     document.getElementById('modal-watchlist-btn')?.addEventListener('click', () => {
@@ -5913,9 +6176,11 @@ class Cine3DApp {
     // Başlık İkon & Metnini Güncelle
     const titleText = document.querySelector('#drawer-main-title span');
     if (titleText) {
-      if (this.activeDrawerTab === 'watchlist') titleText.textContent = `İzleme Listem (${this.watchlist.length})`;
-      else if (this.activeDrawerTab === 'watched') titleText.textContent = `İzlediklerim (${this.watchedList.length})`;
-      else titleText.textContent = `Sinema Karnem`;
+      const prof = window.Cine3DStorage && window.Cine3DStorage.activeProfile ? window.Cine3DStorage.activeProfile() : null;
+      const profPrefix = prof ? prof.emoji + ' ' + prof.name + ' · ' : '';
+      if (this.activeDrawerTab === 'watchlist') titleText.textContent = profPrefix + `İzleme Listem (${this.watchlist.length})`;
+      else if (this.activeDrawerTab === 'watched') titleText.textContent = profPrefix + `İzlediklerim (${this.watchedList.length})`;
+      else titleText.textContent = profPrefix + `Sinema Karnem`;
     }
 
     // --- 1. SEKME: İZLEME LİSTEM ---
@@ -5980,6 +6245,7 @@ class Cine3DApp {
           </label>
           <span class="wl-control-count">${viewList.length}/${resolvedItems.length}</span>
           <button type="button" class="wl-compare-btn" id="wl-compare-btn" title="İlk 3 filmi yan yana karşılaştır" ${this.watchlist.length < 2 ? 'disabled' : ''}>⚖️ Karşılaştır</button>
+          <button type="button" class="wl-share-btn" id="wl-share-btn" title="Listeyi bağlantı olarak paylaş" ${this.watchlist.length < 1 ? 'disabled' : ''}>🔗 Listeyi Paylaş</button>
         </div>
       `;
 
@@ -5996,6 +6262,7 @@ class Cine3DApp {
             </div>
             <p class="wl-genres">${Array.isArray(movie.genres) ? movie.genres.join(', ') : movie.genres}</p>
           </div>
+          <button class="wl-night-btn" data-movie-id="${movie.id}" title="🌙 Gece planına ekle" aria-label="${escapeHtmlText(movie.title)} filmini gece planına ekle">🌙</button>
           <button class="wl-remove-btn" data-movie-id="${movie.id}" title="Listeden Çıkar">
             ✕
           </button>
@@ -6009,6 +6276,7 @@ class Cine3DApp {
         this.renderWatchlistDrawer();
       });
       container.querySelector('#wl-compare-btn')?.addEventListener('click', () => this.openCompareModal());
+      container.querySelector('#wl-share-btn')?.addEventListener('click', () => this.shareWatchlist());
 
       container.querySelector('#wl-sort')?.addEventListener('change', (e) => {
         const next = this.getWatchlistPrefs();
@@ -6026,6 +6294,15 @@ class Cine3DApp {
             this.closeWatchlistDrawer();
             this.openModal(movie);
           }
+        });
+      });
+
+      container.querySelectorAll('.wl-night-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.movieId;
+          const movie = this.movies.find(m => m.id === id);
+          if (movie) this.addNightPlanFromWatchlist(movie);
         });
       });
 
@@ -6236,6 +6513,78 @@ class Cine3DApp {
       const genreSvg = this.buildGenreBarSvg(genreChartRows);
       const yearSvg = this.buildYearTimelineSvg(yearRows);
 
+      // --- R009/2: Yıllık özet (wrapped) ---
+      const wrapYear = new Date().getFullYear();
+      const yearItems = this.watchedList
+        .map(w => ({ w, m: this.movies.find(x => x.id === w.id) }))
+        .filter(x => x.m)
+        .filter(x => {
+          const d = x.w.watchedAt ? new Date(x.w.watchedAt) : null;
+          if (d && !isNaN(d.getTime())) return d.getFullYear() === wrapYear;
+          return false;
+        });
+
+      const wrapCount = yearItems.length || this.watchedList.length; // timestamp yoksa tüm geçmiş
+      const wrapSource = yearItems.length ? yearItems : this.watchedList.map(w => ({ w, m: this.movies.find(x => x.id === w.id) })).filter(x => x.m);
+      const wrapMinutes = wrapSource.reduce((sum, x) => sum + this.nightPlanMinutes(x.m), 0);
+      const wrapGenreCounts = {};
+      const wrapDirectorCounts = {};
+      let wrapRatedSum = 0, wrapRatedN = 0, wrapBest = null;
+      wrapSource.forEach(({ w, m }) => {
+        (m.genres || []).forEach(g => { wrapGenreCounts[g] = (wrapGenreCounts[g] || 0) + 1; });
+        if (m.director) wrapDirectorCounts[m.director] = (wrapDirectorCounts[m.director] || 0) + 1;
+        if (typeof w.userRating === 'number' && w.userRating > 0) { wrapRatedSum += w.userRating; wrapRatedN++; }
+        if (!wrapBest || Number(m.imdbRating) > Number(wrapBest.imdbRating)) wrapBest = m;
+      });
+      const wrapTopGenre = Object.entries(wrapGenreCounts).sort((a, b) => b[1] - a[1])[0];
+      const wrapTopDirector = Object.entries(wrapDirectorCounts).sort((a, b) => b[1] - a[1])[0];
+      const wrapAvg = wrapRatedN ? (wrapRatedSum / wrapRatedN).toFixed(1) : '—';
+      const wrapSeasons = this.watchedList.reduce((sum, w) => {
+        const m = this.movies.find(x => x.id === w.id);
+        return sum + ((m && m.isSeries && w.watchedSeasons) ? Number(w.watchedSeasons) || 0 : 0);
+      }, 0);
+      const wrapText = [
+        '🍿 Cine3D ' + wrapYear + ' Yılın',
+        '',
+        '🎬 İzlenen: ' + wrapCount + ' yapım',
+        '⏱️ Toplam: ' + this.formatMinutes(wrapMinutes),
+        '🏆 En çok tür: ' + (wrapTopGenre ? wrapTopGenre[0] + ' (' + wrapTopGenre[1] + ')' : '—'),
+        '⭐ Ort. puanın: ' + wrapAvg,
+        '🌟 En yüksek puanlı keşfin: ' + (wrapBest ? wrapBest.title + ' (' + wrapBest.imdbRating + ')' : '—'),
+        '🎬 Favori yönetmen: ' + (wrapTopDirector ? wrapTopDirector[0] : '—'),
+        '📺 Toplam sezon: ' + wrapSeasons
+      ].join('\n');
+
+      // --- R009/6: Karnem rozetleri ---
+      const badgeState = this.evaluateBadges();
+
+      const wrapCardHtml = `
+        <div class="wrap-card">
+          <div class="wrap-head">
+            <span class="wrap-title">🍿 ${wrapYear} Yılın</span>
+            <button type="button" class="wrap-copy-btn" id="wrap-copy-btn">📋 Kopyala</button>
+          </div>
+          <div class="wrap-stats">
+            <div class="wrap-stat"><span>${wrapCount}</span><small>yapım</small></div>
+            <div class="wrap-stat"><span>${this.formatMinutes(wrapMinutes)}</span><small>toplam</small></div>
+            <div class="wrap-stat"><span>${wrapAvg}</span><small>ort. puan</small></div>
+            <div class="wrap-stat"><span>${wrapSeasons}</span><small>sezon</small></div>
+          </div>
+          <div class="wrap-lines">
+            <span>🏆 ${wrapTopGenre ? escapeHtmlText(wrapTopGenre[0]) : '—'}</span>
+            <span>🎬 ${wrapTopDirector ? escapeHtmlText(wrapTopDirector[0]) : '—'}</span>
+            <span>🌟 ${wrapBest ? escapeHtmlText(wrapBest.title) : '—'}</span>
+          </div>
+        </div>`;
+
+      const badgeHtml = `
+        <div class="badges-card">
+          <div class="badges-title">🏅 Karnem Rozetleri</div>
+          <div class="badges-grid">
+            ${badgeState.all.map(b => `<span class="c3d-badge ${b.earned ? 'earned' : ''}" title="${escapeHtmlText(b.desc)}">${b.emoji} ${escapeHtmlText(b.label)}</span>`).join('')}
+          </div>
+        </div>`;
+
       // Sinefil Seviyesi & Rütbe
       let rankBadge = '🌱 SİNEMA ÇIRAĞI';
       let rankTitle = 'Keşif Yolculuğunun Başındasın';
@@ -6343,6 +6692,9 @@ class Cine3DApp {
             </div>
           </div>
 
+          ${wrapCardHtml}
+          ${badgeHtml}
+
           <!-- Alt Butonlar -->
           <div style="display:flex; gap:8px;">
             <button class="btn-report-demo" id="btn-reload-demo" style="flex:1;">
@@ -6361,6 +6713,17 @@ class Cine3DApp {
 
       document.getElementById('btn-clear-history')?.addEventListener('click', () => {
         this.clearWatchedHistory();
+      });
+
+      document.getElementById('wrap-copy-btn')?.addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(wrapText);
+          else {
+            const ta = document.createElement('textarea');
+            ta.value = wrapText; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+          }
+          this.showToast('📋 Yıllık özet kopyalandı.', 'success');
+        } catch (err) { this.showToast('Kopyalanamadı.', 'error'); }
       });
 
       document.getElementById('btn-backup-data')?.addEventListener('click', () => this.exportBackup());
@@ -6633,6 +6996,7 @@ class Cine3DApp {
       '#ticket-modal.open',
       '#tournament-modal.open',
       '#compare-modal.open',
+      '#wl-share-modal.open',
       '.import-choice-overlay'
     ];
     const anyOpen = overlaySelectors.some(sel => document.querySelector(sel));
@@ -6685,6 +7049,50 @@ class Cine3DApp {
       if (el) layer = el;
     }
     return layer;
+  }
+
+  /**
+   * R009/6: Karnem rozetleri.
+   * Kazanılanlar cine3d_badges (profil kapsamlı) altında saklanır; yeni kazanılan
+   * rozet varsa tek seferlik toast gösterilir.
+   */
+  getBadgeDefinitions() {
+    const watched = this.watchedList || [];
+    const resolved = watched.map(w => ({ w, m: this.movies.find(x => x.id === w.id) })).filter(x => x.m);
+    const ratedCount = watched.filter(w => typeof w.userRating === 'number' && w.userRating > 0).length;
+    const genres = new Set();
+    resolved.forEach(({ m }) => (m.genres || []).forEach(g => genres.add(g)));
+    const nightMinutes = (this.loadNightPlan ? this.getNightPlanMovies() : []).reduce((sum, m) => sum + this.nightPlanMinutes(m), 0);
+    const count = watched.length;
+
+    return [
+      { id: 'watch5', emoji: '🥉', label: '5 Film', desc: '5 yapım izledin', earned: count >= 5 },
+      { id: 'watch10', emoji: '🥈', label: '10 Film', desc: '10 yapım izledin', earned: count >= 10 },
+      { id: 'watch25', emoji: '🥇', label: '25 Film', desc: '25 yapım izledin', earned: count >= 25 },
+      { id: 'watch50', emoji: '👑', label: '50 Film', desc: '50 yapım izledin', earned: count >= 50 },
+      { id: 'allrated', emoji: '⭐', label: 'Hepsi Puanlı', desc: 'İzlediklerinin tamamını puanladın (en az 3)', earned: count >= 3 && ratedCount === count },
+      { id: 'genres5', emoji: '🎭', label: '5 Tür', desc: '5 farklı tür keşfettin', earned: genres.size >= 5 },
+      { id: 'night50', emoji: '🌙', label: 'Gece Kuşu', desc: 'Gece planın 50+ dk', earned: nightMinutes >= 50 }
+    ];
+  }
+
+  evaluateBadges() {
+    const all = this.getBadgeDefinitions();
+    let stored = [];
+    try { stored = JSON.parse(localStorage.getItem('cine3d_badges') || '[]'); } catch (err) { stored = []; }
+    if (!Array.isArray(stored)) stored = [];
+
+    const earnedNow = all.filter(b => b.earned).map(b => b.id);
+    const fresh = earnedNow.filter(id => !stored.includes(id));
+    if (fresh.length) {
+      try { localStorage.setItem('cine3d_badges', JSON.stringify([...new Set([...stored, ...earnedNow])])); } catch (err) { /* yoksay */ }
+      const freshDefs = all.filter(b => fresh.includes(b.id));
+      const first = freshDefs[0];
+      if (first) {
+        setTimeout(() => this.showToast('🏅 Yeni rozet: ' + first.emoji + ' ' + first.label, 'success'), 600);
+      }
+    }
+    return { all, earned: earnedNow, fresh };
   }
 
   /** IMDb oy metnini sayıya çevirir ("2.5M" → 2500000). */
@@ -7129,6 +7537,7 @@ class Cine3DApp {
       if (e.key === 'Escape') {
         this.closeModal();
         this.closeCompareModal();
+        this.closeSharedList();
         this.closeWatchlistDrawer();
         this.closeVSModal();
         this.closeTicketModal();
