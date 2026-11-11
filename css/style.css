@@ -1380,6 +1380,15 @@ body {
   gap: 16px;
 }
 
+/* R011 (ZCode): mobilde sıralama + görünüm satırı 375px'e sığmıyordu —
+   yatay kaydırmanın tek kök nedeni buydu. Küçük ekranda sar. */
+@media (max-width: 480px) {
+  .view-and-sort-group {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+}
+
 .sort-select-wrap {
   position: relative;
 }
