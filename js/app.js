@@ -4871,6 +4871,7 @@ class Cine3DApp {
                   <span class="season-label">sezon</span>
                   <button type="button" class="season-btn" data-season-act="inc" aria-label="Sezon ekle">＋</button>
                 </span>` : ''}
+                ${movie.imdbID ? `<a class="modal-imdb-link" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank" rel="noopener noreferrer" title="IMDb'de aç">IMDb ↗</a>` : ''}
                 <span class="modal-duration-tag">⏱️ ${movie.duration}</span>
                 <span class="modal-age-tag">🔞 ${movie.ageRating}</span>
                 <span class="modal-awards-tag">🏆 ${movie.awards || 'Popüler Sinema/Dizi'}</span>

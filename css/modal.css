@@ -473,13 +473,27 @@
   gap: 10px;
 }
 
-.modal-duration-tag, .modal-age-tag, .modal-awards-tag {
+.modal-duration-tag, .modal-age-tag, .modal-awards-tag, .modal-imdb-link {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-glass);
   font-size: 0.84rem;
   padding: 4px 12px;
   border-radius: var(--radius-sm);
   color: #d1d1db;
+}
+
+/* R012 (ZCode): modal içinde IMDb bağlantısı — imdbID olan yapımlarda görünür */
+.modal-imdb-link {
+  text-decoration: none;
+  color: #f5c518;
+  border-color: rgba(245, 197, 24, 0.45);
+  font-weight: 700;
+  transition: all 0.18s ease;
+}
+.modal-imdb-link:hover {
+  background: rgba(245, 197, 24, 0.16);
+  border-color: #f5c518;
+  color: #ffe066;
 }
 
 .modal-awards-tag {
