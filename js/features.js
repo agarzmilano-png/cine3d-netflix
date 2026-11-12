@@ -1188,6 +1188,15 @@
       }
       playSound('playHover');
 
+      // R020: süre dolması da bir cevaptır (yanlış) — doğruluk yüzdesi şişmesin.
+      GuessGame.stats.answers = (GuessGame.stats.answers || 0) + 1;
+      if (!GuessGame.stats.byDiff || typeof GuessGame.stats.byDiff !== 'object') GuessGame.stats.byDiff = {};
+      const timeoutDiff = GuessGame.diff || 'medium';
+      const timeoutStat = GuessGame.stats.byDiff[timeoutDiff] || { answers: 0, correct: 0 };
+      timeoutStat.answers = (parseInt(timeoutStat.answers, 10) || 0) + 1;
+      GuessGame.stats.byDiff[timeoutDiff] = timeoutStat;
+      GuessGame.saveStats();
+
       setTimeout(() => {
         GuessGame.roundIdx++;
         if (GuessGame.roundIdx >= GuessGame.TOTAL_ROUNDS) {

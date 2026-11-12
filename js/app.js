@@ -2456,7 +2456,6 @@ class Cine3DApp {
     // R016: boş havuz → boş şerit + pasif "Döndür" düğmesi + açıklama (sessiz no-op yok)
     if (!pool.length) {
       this.rouletteSequence = [];
-      this.roulettePoolEmpty = true;
       strip.style.transition = 'none';
       strip.style.transform = 'translateX(0px)';
       strip.classList.add('is-empty');
@@ -2467,7 +2466,6 @@ class Cine3DApp {
       }
       return;
     }
-    this.roulettePoolEmpty = false;
     strip.classList.remove('is-empty');
     if (spinBtn) {
       spinBtn.disabled = false;
