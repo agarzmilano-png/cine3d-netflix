@@ -1354,13 +1354,18 @@ class Cine3DApp {
         <p class="sc-hint">Kısayollar yazı alanlarında çalışmaz.</p>
       </div>`;
     document.body.appendChild(overlay);
+    this.rememberFocus();
+    this.focusFirst(overlay, '.sc-close');
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay || e.target.closest('[data-sc-close]')) this.closeShortcutsHelp();
     });
   }
 
   closeShortcutsHelp() {
-    document.getElementById('shortcuts-help')?.remove();
+    const el = document.getElementById('shortcuts-help');
+    if (!el) return;
+    el.remove();
+    this.restoreFocus();
   }
 
   // --- R022: "BUGÜN NE İZLESEM?" -----------------------------------
@@ -1425,9 +1430,11 @@ class Cine3DApp {
         </div>
       </div>`;
     document.body.appendChild(overlay);
+    this.rememberFocus();
     requestAnimationFrame(() => overlay.classList.add('open'));
     document.body.style.overflow = 'hidden';
     this.updateBackgroundInert();
+    this.focusFirst(overlay, '.dp-close');
 
     overlay.querySelectorAll('[data-dp-close]').forEach(el => el.addEventListener('click', () => this.closeDailyPick()));
     overlay.querySelector('#dp-close-btn')?.addEventListener('click', () => this.closeDailyPick());
@@ -1448,6 +1455,7 @@ class Cine3DApp {
     const drawerOpen = !!document.querySelector('#watchlist-drawer.open');
     document.body.style.overflow = (modalOpen || drawerOpen) ? 'hidden' : '';
     this.updateBackgroundInert();
+    this.restoreFocus();
     if (this._dailyPickEsc) {
       document.removeEventListener('keydown', this._dailyPickEsc);
       this._dailyPickEsc = null;
@@ -1862,8 +1870,10 @@ class Cine3DApp {
         </div>
       </div>`;
     document.body.appendChild(overlay);
+    this.rememberFocus();
     requestAnimationFrame(() => overlay.classList.add('open'));
     document.body.style.overflow = 'hidden';
+    this.focusFirst(overlay, '.wr-close');
 
     const paint = () => {
       const s = slides[idx];
@@ -1906,6 +1916,7 @@ class Cine3DApp {
     const modalOpen = !!document.querySelector('#movie-modal.open');
     const drawerOpen = !!document.querySelector('#watchlist-drawer.open');
     document.body.style.overflow = (modalOpen || drawerOpen) ? 'hidden' : '';
+    this.restoreFocus();
     if (this._wrappedEsc) {
       document.removeEventListener('keydown', this._wrappedEsc);
       this._wrappedEsc = null;
@@ -5590,6 +5601,26 @@ class Cine3DApp {
     return (this.movies || []).filter(m => this.isAgeAllowed(m));
   }
 
+  /** R028: katman açılırken odağı hatırla, kapanınca geri ver (a11y). */
+  rememberFocus() {
+    this._overlayReturnFocus = document.activeElement;
+  }
+
+  restoreFocus() {
+    const el = this._overlayReturnFocus;
+    this._overlayReturnFocus = null;
+    if (el && el.isConnected && typeof el.focus === 'function') {
+      try { el.focus({ preventScroll: true }); } catch (e) { /* yoksay */ }
+    }
+  }
+
+  /** Katman açıldığında ilk anlamlı öğeye odaklan. */
+  focusFirst(overlay, selector) {
+    if (!overlay) return;
+    const el = overlay.querySelector(selector || 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (el) setTimeout(() => { try { el.focus({ preventScroll: true }); } catch (e) { /* yoksay */ } }, 40);
+  }
+
   /** Basit yerel PIN özeti (4 hane; cihaz içi ebeveyn kilidi). */
   hashPin(pin) {
     const src = 'cine3d|' + String(pin == null ? '' : pin);
@@ -5619,8 +5650,9 @@ class Cine3DApp {
           </div>
         </div>`;
       document.body.appendChild(overlay);
+      this.rememberFocus();
       const input = overlay.querySelector('#pin-input');
-      const done = (val) => { overlay.remove(); resolve(val); };
+      const done = (val) => { overlay.remove(); this.restoreFocus(); resolve(val); };
       overlay.querySelector('#pin-ok')?.addEventListener('click', () => done(input ? input.value.trim() : ''));
       overlay.querySelector('#pin-cancel')?.addEventListener('click', () => done(null));
       overlay.querySelector('[data-pin-cancel]')?.addEventListener('click', () => done(null));

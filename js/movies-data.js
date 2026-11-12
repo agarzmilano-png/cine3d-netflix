@@ -356,7 +356,7 @@ const MOVIES_DATA = [
     "imdbRating": 8.6,
     "imdbVotes": "850K",
     "duration": "2s 05dk",
-    "ageRating": "Genel İzleyici",
+    "ageRating": "Genel",
     "genres": [
       "Animasyon",
       "Macera",
@@ -577,7 +577,7 @@ const MOVIES_DATA = [
     "imdbRating": 8.4,
     "imdbVotes": "670K",
     "duration": "1s 57dk",
-    "ageRating": "Genel İzleyici",
+    "ageRating": "Genel",
     "genres": [
       "Animasyon",
       "Aksiyon",
@@ -3379,7 +3379,7 @@ const MOVIES_DATA = [
     "imdbRating": 8.1,
     "imdbVotes": "320K",
     "duration": "1s 33dk",
-    "ageRating": "Genel İzleyici",
+    "ageRating": "Genel",
     "genres": [
       "Biyografi",
       "Dram",
@@ -4468,7 +4468,7 @@ const MOVIES_DATA = [
     "imdbRating": 8.1,
     "imdbVotes": "820K",
     "duration": "1s 51dk",
-    "ageRating": "Genel İzleyici",
+    "ageRating": "Genel",
     "genres": [
       "Animasyon",
       "Komedi",
