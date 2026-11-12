@@ -1171,7 +1171,9 @@
    v2.9 — NAVBAR DUYARLILIĞI (taşma düzeltmesi)
    1920'de bile tüm butonlar (⚔️ VS, 🏆 Turnuva, ♡ Liste) erişilebilir olmalı.
    ========================================================================= */
-@media (max-width: 2100px) {
+@media (max-width: 2280px) {
+  /* R016: 2100px eşiğinde tema etiketleri açılınca navbar 2101-2280px
+     arasında taşıyordu (son butonlar ekran dışı). Etiketler ancak sığdığında açılır. */
   .theme-pill-text { display: none; }
   .theme-pill-btn { padding: 5px 10px; }
   .nav-link { padding: 6px 9px; font-size: 0.82rem; }
@@ -1197,8 +1199,10 @@
   .theme-pill-btn { padding: 4px 6px; }
 }
 
-@media (max-width: 1400px) {
-  /* Navbar iki satıra sarılır; tüm kontroller erişilebilir kalır */
+@media (max-width: 1999px) {
+  /* R016: 1400px eşiği çok düşüktü — 1401-1528 ve 1651-1880px aralıklarında
+     tek satır navbar taşıp son kontroller (liste kalbi, tema) ekran dışında
+     kalıyordu. Navbar iki satıra sarılır; tüm kontroller erişilebilir kalır. */
   .navbar {
     height: auto;
     flex-wrap: wrap;
@@ -1208,6 +1212,53 @@
   .nav-left { width: 100%; justify-content: flex-start; }
   .nav-right { width: 100%; justify-content: flex-end; flex-wrap: wrap; row-gap: 8px; }
   .app-container { padding-top: 52px; }
+}
+
+/* R016: Mobilde (≤900px) navbar üç satıra kırılıp hero içeriğinin üstüne
+   biniyordu (logo + tema/arama + ikon satırı) ve app-container boşluğu
+   52px'te kaldığı için yazılar navbar'ın altında kalıyordu.
+   Çözüm: iki satırlı sabit başlık — 1) logo, 2) profil + ikonlar önde,
+   tema/arama kaydırılabilir; içerik 106px aşağıdan başlar. */
+@media (max-width: 900px) {
+  .navbar {
+    height: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px 4% 10px;
+    column-gap: 10px;
+    row-gap: 8px;
+    overflow: visible;
+  }
+  .nav-left { width: auto; flex: 1 1 auto; justify-content: flex-start; }
+  /* Satır sarması (kaydırma yok): arama menüsü/spotlight kırpılmaz */
+  .nav-right {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    row-gap: 8px;
+    overflow: visible;
+  }
+  .nav-right > * { flex-shrink: 0; }
+  /* Öncelik: profil + eylem ikonları ilk satır, arama + tema ikinci satır */
+  .profile-switcher { order: -4; }
+  .nav-actions-group { order: -3; }
+  #search-box-container { order: -2; }
+  .theme-switcher-bar { order: -1; }
+  #open-watchlist-btn { order: -1; }
+  .app-container { padding-top: 152px; }
+
+  /* R016: profil paneli ve arama spotlight'ı mobilde ekran dışına taşıyordu
+     (profil ilk sırada olduğu için sağa hizalı panel x=-200'den açılıyordu) */
+  .profile-panel {
+    right: auto;
+    left: 0;
+    width: min(264px, calc(100vw - 24px));
+  }
+  .search-spotlight-dropdown {
+    right: auto;
+    left: 0;
+    width: min(320px, calc(100vw - 24px));
+  }
 }
 
 .btn-tournament-ai {

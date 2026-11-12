@@ -1387,6 +1387,23 @@ body {
     flex-wrap: wrap;
     row-gap: 10px;
   }
+  /* R016: uzun bölüm başlığı + alt başlık yan yana sığmayıp sayfayı
+     yatay kaydırıyordu (320px'te scrollWidth 356). Başlık sarmasına izin ver. */
+  .section-header {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+  .section-title {
+    font-size: 1.7rem;
+    flex-wrap: wrap;
+  }
+  /* Çekmece sekmeleri 320-360px'te taşabiliyor → yatay kaydırılabilir */
+  .drawer-tabs-bar {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .drawer-tabs-bar::-webkit-scrollbar { display: none; }
+  .drawer-tab-btn { flex-shrink: 0; }
 }
 
 /* R014 (ZCode): Duo profil seçici + aile puan rozetleri + gece planı işaretleri */
@@ -2819,6 +2836,20 @@ body {
   .theme-pill-btn {
     padding: 5px 8px;
   }
+}
+
+/* R016: mobil başlık (≤900px) tek/iki satır — masaüstü menü linkleri
+   bu aralıkta yer kaplayıp navbar'ı taşırıyordu (820px'te 5px taşma). */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+}
+
+/* R016: 320-380px arası çok küçük ekranlarda IMDb ön ayar butonları
+   sarmıyordu (333px) ve sayfayı yatay kaydırıyordu. */
+@media (max-width: 380px) {
+  .imdb-preset-container { flex-wrap: wrap; }
+  .imdb-slider-wrap { width: 100%; }
+  .imdb-range-input { flex: 1 1 auto; min-width: 0; }
 }
 
 @media (max-width: 768px) {
