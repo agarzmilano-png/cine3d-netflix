@@ -8,7 +8,9 @@
     "seo": "node scripts/generate-seo.js",
     "catalog": "node scripts/build-catalog.js",
     "imdb": "node scripts/enrich-imdb.js",
-    "smoke": "node tests/smoke.js"
+    "smoke": "node tests/smoke.js",
+    "verify:data": "node scripts/verify-data.js",
+    "verify": "node scripts/verify-data.js && node tests/smoke.js"
   },
   "engines": {
     "node": ">=14"

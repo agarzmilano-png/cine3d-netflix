@@ -26,6 +26,9 @@ jobs:
       - name: Chrome sürümü
         run: google-chrome --version || chromium --version || true
 
+      - name: Veri bütünlüğü doğrulaması
+        run: node scripts/verify-data.js
+
       - name: Smoke test
         env:
           CHROME_PATH: /usr/bin/google-chrome

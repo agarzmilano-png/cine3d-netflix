@@ -3914,6 +3914,19 @@ class Cine3DApp {
     const heroContainer = document.getElementById('hero-section');
     if (!heroContainer) return;
 
+    // R027: hero arka planını önceden yükle (boş kare / geçiş titremesi olmasın)
+    if (heroMovie && heroMovie.backdropUrl) {
+      let preload = document.getElementById('hero-backdrop-preload');
+      if (preload) preload.remove();
+      preload = document.createElement('link');
+      preload.id = 'hero-backdrop-preload';
+      preload.rel = 'preload';
+      preload.as = 'image';
+      preload.href = heroMovie.backdropUrl;
+      preload.setAttribute('fetchpriority', 'high');
+      document.head.appendChild(preload);
+    }
+
     const heroStreamInfo = typeof getMovieStreamingInfo === 'function' 
       ? getMovieStreamingInfo(heroMovie) 
       : { hasTrProvider: false, statusText: "TR yayıncısı bulunamadı", providers: [], globalProviders: [] };
@@ -6079,7 +6092,7 @@ class Cine3DApp {
         <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}" role="button" tabindex="0" aria-label="${escapeHtmlText(movie.title)} — detayları aç">
           <div class="card-inner">
             <div class="card-poster">
-              <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
+              <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" decoding="async" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
               <div class="card-glare"></div>
 
               <!-- Platform Marka Rozeti -->
@@ -9819,6 +9832,10 @@ class Cine3DApp {
     this.activeHubKeywords = [];
     this.heroMovieIndex = 0;
     document.documentElement.setAttribute('data-theme', theme);
+    // R027: mobil tarayıcı çubuğu rengi aktif platform temasına uysun
+    const themeColorMap = { netflix: '#e50914', disney: '#00d2ff', hbo: '#9945ff', prime: '#00a8e1' };
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme && themeColorMap[theme]) metaTheme.setAttribute('content', themeColorMap[theme]);
     try {
       localStorage.setItem('cine3d_theme', theme);
     } catch (e) {}

@@ -1192,10 +1192,13 @@ const server = http.createServer(async (req, res) => {
         return res.end('Dosya okuma hatası.');
       }
 
+      // R027: ?v=... sorgulu varlıklar sürümlüdür → uzun süreli immutable cache.
+      // Sürüm her yayında değiştiği için bayat dosya riski yok; HTML ise no-cache.
+      const isVersionedAsset = /[?&]v=[\w.]+/.test(req.url || '');
       const headers = {
         ...fileHeaders,
         'Content-Type': contentType,
-        'Cache-Control': 'no-cache',
+        'Cache-Control': isVersionedAsset ? 'public, max-age=31536000, immutable' : 'no-cache',
         ETag: etag
       };
 
