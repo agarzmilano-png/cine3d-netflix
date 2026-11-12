@@ -849,7 +849,7 @@
     // R007/6: kalıcı lig istatistikleri
     STATS_KEY: 'cine3d_prediction_stats',
     STATS_BADGES: [5, 10, 15],
-    stats: { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 },
+    stats: { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0 },
 
     loadStats() {
       try {
@@ -857,10 +857,11 @@
         return {
           totalCorrect: Math.max(0, parseInt(raw.totalCorrect, 10) || 0),
           bestStreak: Math.max(0, parseInt(raw.bestStreak, 10) || 0),
-          gamesPlayed: Math.max(0, parseInt(raw.gamesPlayed, 10) || 0)
+          gamesPlayed: Math.max(0, parseInt(raw.gamesPlayed, 10) || 0),
+          answers: Math.max(0, parseInt(raw.answers, 10) || 0)
         };
       } catch (err) {
-        return { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 };
+        return { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0 };
       }
     },
 
@@ -871,31 +872,73 @@
     },
 
     // --- R015/4: PROFİLLER ARASI TAHMİN LİGİ ---
+    /**
+     * R018: Profiller arası tahmin ligi 2.0
+     * Sıralama (madalyalı), doğruluk yüzdesi, aktif profil vurgusu ve bar.
+     */
     renderGuessFamilyPanel() {
       const section = document.getElementById('guess-game-section');
       if (!section) return;
       let profiles = [];
-      try { profiles = (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : []; } catch (err) { profiles = []; }
+      try {
+        profiles = (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : [];
+      } catch (err) { profiles = []; }
       if (!profiles.length) return;
-      const rows = profiles.map(p => {
-        let st = { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0 };
+
+      let activePid = null;
+      try { activePid = window.Cine3DStorage && window.Cine3DStorage.activePid ? window.Cine3DStorage.activePid() : null; } catch (err) { activePid = null; }
+
+      const rawGet = (window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get) || null;
+      const rowsData = profiles.map(p => {
+        let st = { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0 };
         try {
-          // R016: raw köprüsü yoksa çökme yok
-          const rawGet = window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get;
           if (typeof rawGet === 'function') {
             const raw = rawGet('cine3d_p_' + p.pid + '_prediction_stats');
             st = { ...st, ...JSON.parse(raw || '{}') };
           }
         } catch (err) { /* varsayilan */ }
         const num = (x) => Math.max(0, parseInt(x, 10) || 0);
-        // R016: profil adı/emoji kullanıcı girdisi → kaçışlanır (bozuk HTML/XSS yok)
-        return `<div class="gfp-row"><span class="gfp-name">${esc(p.emoji)} ${esc(p.name)}</span><span class="gfp-stats">🏆 En iyi seri: <strong>${num(st.bestStreak)}</strong> · ✅ Doğru: <strong>${num(st.totalCorrect)}</strong> · 🎮 Oyun: <strong>${num(st.gamesPlayed)}</strong></span></div>`;
+        const correct = num(st.totalCorrect);
+        const answers = num(st.answers);
+        const games = num(st.gamesPlayed);
+        const streak = num(st.bestStreak);
+        const accuracy = answers > 0 ? Math.round((correct / answers) * 100) : 0;
+        // Sıralama puanı: seri > doğru sayısı > oyun > doğruluk
+        const rankScore = streak * 1000 + correct * 10 + games * 3 + accuracy;
+        return { p, correct, answers, games, streak, accuracy, rankScore, active: p.pid === activePid };
+      });
+
+      rowsData.sort((a, b) => b.rankScore - a.rankScore || String(a.p.name).localeCompare(String(b.p.name), 'tr'));
+      const topScore = rowsData.length ? Math.max(1, rowsData[0].rankScore) : 1;
+      const medals = ['🥇', '🥈', '🥉'];
+      const leader = rowsData[0];
+
+      const rows = rowsData.map((r, i) => {
+        const rel = Math.max(6, Math.round((r.rankScore / topScore) * 100));
+        const accText = r.answers > 0 ? `%${r.accuracy} <span class="gfp-sub">(${r.correct}/${r.answers})</span>` : '—';
+        return `<div class="gfp-row${r.active ? ' active' : ''}">
+          <span class="gfp-rank">${medals[i] || (i + 1) + '.'}</span>
+          <span class="gfp-name">${esc(r.p.emoji)} ${esc(r.p.name)}${r.active ? ' <span class="gfp-you">sen</span>' : ''}</span>
+          <span class="gfp-stats">
+            <span class="gfp-stat" title="En iyi seri">🏆 <strong>${r.streak}</strong></span>
+            <span class="gfp-stat" title="Doğru cevap / doğruluk">✅ ${accText}</span>
+            <span class="gfp-stat" title="Oynanan oyun">🎮 <strong>${r.games}</strong></span>
+          </span>
+          <span class="gfp-bar" aria-hidden="true"><i style="width:${rel}%"></i></span>
+        </div>`;
       }).join('');
-      const html = `<div class="guess-family-panel" id="guess-family-panel"><div class="gfp-head">👥 Tahmin Ligi — Profiller Arası</div>${rows}</div>`;
+
+      const headNote = leader
+        ? `Lider: ${esc(leader.p.emoji)} <strong>${esc(leader.p.name)}</strong> · ${leader.streak} seri`
+        : '';
+      const html = `<div class="guess-family-panel" id="guess-family-panel">
+        <div class="gfp-head">👥 Tahmin Ligi — Profiller Arası <span class="gfp-note">${headNote}</span></div>
+        ${rows}
+      </div>`;
+
       const existing = document.getElementById('guess-family-panel');
       if (existing) existing.outerHTML = html;
       else {
-        // Oyun kartının içine ekle (bölüm genişliği/hizası korunur)
         const host = section.querySelector('.guess-container') || section;
         host.insertAdjacentHTML('afterbegin', html);
       }
@@ -1180,6 +1223,8 @@
         GuessGame.stats.totalCorrect = (GuessGame.stats.totalCorrect || 0) + 1;
       }
       GuessGame.stats.bestStreak = Math.max(GuessGame.stats.bestStreak || 0, GuessGame.streak || 0);
+      // R018: doğruluk yüzdesi için toplam cevap sayısı
+      GuessGame.stats.answers = (GuessGame.stats.answers || 0) + 1;
       GuessGame.saveStats();
 
       GuessGame.totalScore += pts + bonus;
@@ -1750,6 +1795,54 @@
       });
     },
 
+    /**
+     * R018: İki oyuncunun zevk uyumunu ölçer (0-100) ve kırılımını döner.
+     * Profiller seçiliyse izleme geçmişleri de hesaba katılır.
+     */
+    computeCompatibility() {
+      const p1 = this.p1, p2 = this.p2;
+      const g1 = Array.isArray(p1.genres) ? p1.genres : [];
+      const g2 = Array.isArray(p2.genres) ? p2.genres : [];
+      const shared = g1.filter(g => g2.includes(g));
+      const ratingGap = Math.abs(Number(p1.rating || 7.5) - Number(p2.rating || 7.5));
+      const durationMatch = (p1.duration === 'any' || p2.duration === 'any' || p1.duration === p2.duration);
+      const dual = !!(p1.pid && p2.pid);
+      let bothWatched = 0;
+      let poolSize = 0;
+      if (dual) {
+        const a = new Set(this.getProfileWatchedMovies(p1.pid).map(m => m.id));
+        const b = this.getProfileWatchedMovies(p2.pid).map(m => m.id);
+        bothWatched = b.filter(id => a.has(id)).length;
+        const seen = this.getDualWatchedIds();
+        poolSize = Math.max(0, ((window.app && window.app.movies) ? window.app.movies.length : 0) - seen.size);
+      }
+      const score = Math.max(0, Math.min(100, Math.round(
+        Math.min(40, shared.length * 14) +          // ortak tür ağırlığı
+        Math.max(0, 25 - ratingGap * 15) +           // puan beklentisi yakınlığı
+        (durationMatch ? 15 : 4) +                   // süre/ritim uyumu
+        Math.min(20, bothWatched * 2)                // birlikte izleme derinliği
+      )));
+      return { dual, shared, ratingGap, durationMatch, bothWatched, poolSize, score };
+    },
+
+    /** R018: Rulet sonucu için tek film uyum skoru (0-100). */
+    matchScoreForMovie(movie) {
+      if (!movie) return null;
+      if (!(this.p1.pid && this.p2.pid)) return null;
+      const g1 = Array.isArray(this.p1.genres) ? this.p1.genres : [];
+      const g2 = Array.isArray(this.p2.genres) ? this.p2.genres : [];
+      const genres = Array.isArray(movie.genres) ? movie.genres : [];
+      const shared = genres.filter(g => g1.includes(g) && g2.includes(g));
+      const hit1 = genres.some(g => g1.includes(g));
+      const hit2 = genres.some(g => g2.includes(g));
+      const mins = (window.app && typeof window.app.parseDurationMinutes === 'function') ? window.app.parseDurationMinutes(movie.duration) : 120;
+      let score = shared.length * 18 + (hit1 && hit2 ? 30 : (hit1 || hit2 ? 12 : 0));
+      score += ((Number(movie.imdbRating) || 8) - 7) * 10;
+      if (mins < 100 && (this.p1.duration === 'quick' || this.p2.duration === 'quick')) score += 8;
+      if (mins >= 140 && (this.p1.duration === 'epic' || this.p2.duration === 'epic')) score += 8;
+      return Math.max(35, Math.min(99, Math.round(50 + score / 5)));
+    },
+
     runMatch() {
       const allMovies = (window.app && Array.isArray(window.app.movies)) ? window.app.movies : [];
       if (!allMovies.length) return;
@@ -1808,6 +1901,7 @@
       });
 
       scored.sort((a, b) => b.score - a.score);
+      this.compat = this.computeCompatibility();
       this.candidates = scored.slice(0, 6);
       this.currentIndex = 0;
 
@@ -1847,6 +1941,22 @@
           </div>
           <span class="drc-verdict-title">${dualNote}</span>
         </div>
+
+        ${(this.compat && this.compat.dual) ? `
+        <div class="drc-compat-card">
+          <div class="drc-compat-head">
+            <span>🧬 Çift Uyum Raporu</span>
+            <strong>%${this.compat.score}</strong>
+          </div>
+          <div class="drc-compat-bar"><span style="width:${this.compat.score}%"></span></div>
+          <div class="drc-compat-metrics">
+            <span class="drc-compat-chip">🤝 Ortak tür: <strong>${this.compat.shared.length}</strong></span>
+            <span class="drc-compat-chip">⭐ Puan farkı: <strong>${this.compat.ratingGap.toFixed(1)}</strong></span>
+            <span class="drc-compat-chip">⏱ ${this.compat.durationMatch ? 'Süre uyumlu' : 'Süre farklı'}</span>
+            <span class="drc-compat-chip">👀 Birlikte izlenen: <strong>${this.compat.bothWatched}</strong></span>
+            <span class="drc-compat-chip">🎯 Ortak havuz: <strong>${this.compat.poolSize}</strong></span>
+          </div>
+        </div>` : ''}
 
         <div class="drc-reasons-grid">
           <div class="drc-reason-box p1-reason">

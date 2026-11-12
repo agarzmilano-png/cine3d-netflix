@@ -490,6 +490,13 @@
   font-weight: 700;
   transition: all 0.18s ease;
 }
+/* R018: "Nerede izlenir?" dış bağlantısı (JustWatch araması) */
+.modal-imdb-link.modal-jw-link {
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.1);
+  font-weight: 600;
+}
 .modal-imdb-link:hover {
   background: rgba(245, 197, 24, 0.16);
   border-color: #f5c518;
@@ -553,6 +560,187 @@
 }
 .review-spoiler-toggle input {
   accent-color: #ffb84d;
+}
+
+/* ==========================================================================
+   R018: AİLE YORUM DUVARI 2.0 — tepkiler, filtre/sıralama, spoiler tercihi
+   ========================================================================== */
+.review-wall .review-box-header {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.review-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.16);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #7dd3fc;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+.review-spoiler-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255, 184, 77, 0.12);
+  border: 1px solid rgba(255, 184, 77, 0.4);
+  color: #ffb84d;
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+.review-wall-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 10px;
+}
+.rwt-filters { display: inline-flex; gap: 5px; flex-wrap: wrap; }
+.rwt-chip {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #a3a3b2;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.rwt-chip:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
+.rwt-chip.active {
+  color: #fff;
+  background: rgba(229, 9, 20, 0.18);
+  border-color: rgba(229, 9, 20, 0.6);
+}
+.rwt-right { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rwt-spoiler-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #a3a3b2;
+  font-size: 0.72rem;
+  cursor: pointer;
+  user-select: none;
+}
+.rwt-spoiler-toggle input { accent-color: #ffb84d; }
+.rwt-sort {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.rwt-sort:focus-visible { outline: 2px solid rgba(56, 189, 248, 0.6); outline-offset: 1px; }
+
+.review-cards-list { display: grid; gap: 10px; }
+.saved-review-card.mine { border-color: rgba(56, 189, 248, 0.35); }
+.review-author-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  color: #e8e8ee;
+  font-size: 0.85rem;
+}
+.rac-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.8rem;
+}
+.rac-you {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+.review-reactions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.review-react-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #cfcfda;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.review-react-btn:hover:not([disabled]) {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+.review-react-btn.active {
+  color: #fff;
+  background: rgba(245, 197, 24, 0.16);
+  border-color: rgba(245, 197, 24, 0.55);
+}
+.review-react-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.rr-count { font-variant-numeric: tabular-nums; }
+.rr-hint { font-size: 0.68rem; color: #8a8a99; }
+
+.spoiler-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 184, 77, 0.12);
+  border: 1px solid rgba(255, 184, 77, 0.4);
+  color: #ffb84d;
+  font-size: 0.65rem;
+  font-weight: 800;
+  vertical-align: middle;
+}
+.review-wall-hint {
+  margin: 10px 0 0;
+  font-size: 0.7rem;
+  color: #8a8a99;
+  line-height: 1.45;
+}
+
+@media (max-width: 560px) {
+  .review-wall-toolbar { flex-direction: column; align-items: flex-start; }
+  .rwt-right { width: 100%; justify-content: space-between; }
+  .review-cards-list { gap: 8px; }
 }
 
 .modal-awards-tag {

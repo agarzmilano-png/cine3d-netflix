@@ -1502,30 +1502,100 @@ body {
   margin-bottom: 18px;
 }
 .guess-family-panel .gfp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
   font-weight: 800;
   color: var(--imdb-gold);
   margin-bottom: 8px;
   font-size: 0.9rem;
 }
+.guess-family-panel .gfp-note {
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  color: #a3a3b2;
+}
+.guess-family-panel .gfp-note strong { color: #fff; }
 .guess-family-panel .gfp-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 6px 0;
+  gap: 10px;
+  padding: 7px 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   flex-wrap: wrap;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.guess-family-panel .gfp-row.active {
+  background: rgba(56, 189, 248, 0.08);
+  border-top-color: rgba(56, 189, 248, 0.25);
+}
+.guess-family-panel .gfp-rank {
+  flex: 0 0 auto;
+  width: 26px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #a3a3b2;
 }
 .guess-family-panel .gfp-name {
+  flex: 1 1 120px;
   font-weight: 700;
   color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.guess-family-panel .gfp-you {
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 999px;
+  padding: 1px 6px;
 }
 .guess-family-panel .gfp-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
   color: #c9c9d4;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
+.guess-family-panel .gfp-stat { white-space: nowrap; }
 .guess-family-panel .gfp-stats strong {
   color: #f5c518;
+  font-variant-numeric: tabular-nums;
+}
+.guess-family-panel .gfp-sub { color: #8a8a99; font-size: 0.72rem; }
+.guess-family-panel .gfp-bar {
+  flex: 1 1 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+.guess-family-panel .gfp-bar > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f5c518, #f97316);
+}
+.guess-family-panel .gfp-row.active .gfp-bar > i {
+  background: linear-gradient(90deg, #38bdf8, #a78bfa);
+}
+
+@media (max-width: 560px) {
+  .guess-family-panel { padding: 10px 12px; }
+  .guess-family-panel .gfp-stats { gap: 6px; font-size: 0.74rem; }
+  .guess-family-panel .gfp-rank { width: 20px; }
 }
 
 .sort-select-wrap {
@@ -6339,10 +6409,11 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
    ========================================================================== */
 .report-tools {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 10px;
 }
-.report-tools .btn-report-demo { flex: 1; margin: 0; }
+.report-tools .btn-report-demo { flex: 1 1 120px; margin: 0; }
 
 .import-choice-overlay {
   position: fixed;
@@ -6594,6 +6665,30 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
   font-size: 0.72rem; font-weight: 800; color: #0a0a0c;
   background: linear-gradient(135deg, #f5c518, #f59e0b);
   flex: 0 0 auto;
+}
+
+/* R018: hafta planı gün etiketleri + bugün vurgusu */
+.np-today-tag {
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #052e16;
+  background: #86efac;
+  border-radius: 999px;
+  padding: 0 4px;
+}
+.np-item.np-today {
+  background: rgba(134, 239, 172, 0.08);
+  border-color: rgba(134, 239, 172, 0.35);
+}
+.np-week-note {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #86efac;
 }
 .np-thumb { width: 38px; height: 54px; object-fit: cover; border-radius: 6px; flex: 0 0 auto; }
 .np-info { flex: 1; min-width: 0; }

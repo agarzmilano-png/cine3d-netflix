@@ -2430,6 +2430,19 @@ class Cine3DApp {
 
     const inList = this.isMovieInWatchlist(targetMovie.id);
     const safeTitle = escapeHtmlText(targetMovie.title);
+
+    // R018: sonuç bağlamı — çift uyumu (İkimiz İçin) ve liste kaynağı
+    let duoScore = null;
+    try {
+      const duo = window.cine3dFeatures && window.cine3dFeatures.duoMatcher;
+      if (this.activeRouletteFilter === 'dual' && duo && typeof duo.matchScoreForMovie === 'function') {
+        duoScore = duo.matchScoreForMovie(targetMovie);
+      }
+    } catch (e) { duoScore = null; }
+    const ctxChips = [
+      this.activeRouletteFilter === 'watchlist' ? '<span class="reveal-ctx-chip watchlist">🎯 İzleme listemden</span>' : '',
+      duoScore ? `<span class="reveal-ctx-chip">🤝 İkimiz için %${duoScore} uyum</span>` : ''
+    ].filter(Boolean).join('');
     const safeGenre = escapeHtmlText((targetMovie.genres && targetMovie.genres[0]) || 'Sinema');
 
     revealCard.innerHTML = `
@@ -2440,6 +2453,7 @@ class Cine3DApp {
         <div class="reveal-crown-line">👑 ŞANSININ SEÇTİĞİ BAŞYAPIT</div>
         <h3 class="reveal-title">${safeTitle}</h3>
         <div class="reveal-meta">⭐ ${escapeHtmlText(targetMovie.imdbRating)} IMDb • ${escapeHtmlText(targetMovie.year)} • ${escapeHtmlText(targetMovie.duration)} • ${escapeHtmlText(targetMovie.director)}</div>
+        ${ctxChips ? `<div class="reveal-context-row">${ctxChips}</div>` : ''}
         <div class="reveal-tagline">“${escapeHtmlText((targetMovie.tagline || targetMovie.summary || '').slice(0, 110))}…”</div>
         <div class="reveal-actions">
           <button class="btn btn-primary" id="roulette-open-modal-btn">▶ Hemen İncele &amp; Fragman</button>
@@ -2541,6 +2555,58 @@ class Cine3DApp {
     return `<span class="family-badges-row">` + badges.map(b =>
       `<span class="family-badge${b.earned ? ' earned' : ''}" title="${b.earned ? 'Kazanıldı' : 'Kilitli — hedef: ' + b.label}">${b.emoji} ${b.label}</span>`
     ).join('') + `</span>`;
+  }
+
+  // --- R018: KÜTÜPHANE RAPORU 2.0 — CSV dışa aktarımı ---
+  /** Tüm katalog + kişisel puan + aile yorumlarını CSV olarak indirir. */
+  exportLibraryCSV() {
+    const movies = this.movies.slice().sort((a, b) => (Number(b.imdbRating) || 0) - (Number(a.imdbRating) || 0));
+    const watchedMap = new Map((this.watchedList || []).map(w => [(typeof w === 'string') ? w : w.id, w]));
+    let shared = {};
+    try { shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}'); } catch (e) { shared = {}; }
+
+    const cell = (v) => {
+      const text = String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ');
+      return '"' + text + '"';
+    };
+    const rows = [
+      ['Başlık', 'Yıl', 'Türler', 'IMDb', 'Benim Puanım', 'İzledim', 'Listemde', 'Aile Yorumları', 'Yorum Sayısı']
+    ];
+
+    movies.forEach(m => {
+      const w = watchedMap.get(m.id);
+      const myRating = (w && typeof w === 'object' && Number(w.userRating) > 0) ? Number(w.userRating) : '';
+      const reviews = Object.entries(shared[m.id] || {});
+      const familyNotes = reviews.map(([pid, rev]) => (rev.author || this.getProfileName(pid)) + ': ' + (rev.note || '')).join(' | ');
+      rows.push([
+        m.title,
+        m.year || '',
+        (m.genres || []).join(', '),
+        m.imdbRating || '',
+        myRating,
+        w ? 'Evet' : 'Hayır',
+        this.isMovieInWatchlist(m.id) ? 'Evet' : 'Hayır',
+        familyNotes,
+        reviews.length
+      ]);
+    });
+
+    const csv = '\uFEFF' + rows.map(r => r.map(cell).join(';')).join('\r\n');
+    try {
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = 'cine3d-kutuphane-' + stamp + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      this.showToast('📄 ' + movies.length + ' yapım CSV olarak indirildi.', 'success');
+    } catch (e) {
+      this.showToast('CSV dosyası oluşturulamadı.', 'error');
+    }
   }
 
   // --- R015/8 (ZCode): yazdırılabilir aile kütüphanesi raporu (Tarayıcıdan PDF olarak kaydedilir) ---
@@ -3123,6 +3189,31 @@ class Cine3DApp {
     }
   }
 
+  // --- R018: HAFTA PLANI 2.0 (gün etiketleri + takvim dışa aktarımı) ---
+  /** Hafta günleri (Pazartesi = 0) */
+  get WEEK_DAYS() {
+    return ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+  }
+
+  /** Hafta planı modu açık mı? (izleme listesinden doldurulunca açılır) */
+  isWeekPlanMode() {
+    try { return localStorage.getItem('cine3d_night_plan_week') === '1'; } catch (e) { return false; }
+  }
+
+  setWeekPlanMode(on) {
+    try { localStorage.setItem('cine3d_night_plan_week', on ? '1' : '0'); } catch (e) { /* yoksay */ }
+  }
+
+  /** Bugünün hafta içi indeksi (Pazartesi = 0). */
+  todayWeekIndex() {
+    return (new Date().getDay() + 6) % 7;
+  }
+
+  /** Plan sırasına göre gün etiketi: 0 → Pzt ... 6 → Paz */
+  weekDayLabel(index) {
+    return this.WEEK_DAYS[((index % 7) + 7) % 7];
+  }
+
   // --- R015/6 (ZCode): izleme listesinden hafta planı (günde 1 film, en fazla 7) ---
   fillNightPlanFromWatchlist() {
     const wlIds = (this.watchlist || []).map(w => (typeof w === 'string') ? w : w.id);
@@ -3138,6 +3229,7 @@ class Cine3DApp {
     }
     const picks = pool.slice(0, 7).map(m => m.id);
     this.saveNightPlan(picks);
+    this.setWeekPlanMode(true);
     this.renderNightPlan();
     this.showToast('📅 İzleme listesinden ' + picks.length + ' yapım hafta planına dağıtıldı — günde 1 film.', 'success');
   }
@@ -3167,11 +3259,13 @@ class Cine3DApp {
       }
       plan.push(id);
       this.saveNightPlan(plan);
+      this.setWeekPlanMode(false); // manuel eklemede gece planı moduna dön
       this.renderNightPlan();
     });
 
     document.getElementById('np-clear-btn')?.addEventListener('click', () => {
       this.saveNightPlan([]);
+      this.setWeekPlanMode(false);
       this.renderNightPlan();
       this.showToast('🌙 Gece planı temizlendi.', 'info');
     });
@@ -3180,6 +3274,8 @@ class Cine3DApp {
       document.getElementById('np-dna-fill-btn')?.addEventListener('click', () => this.autoFillNightPlan());
       // R015/6: izleme listesinden hafta planı
       document.getElementById('np-week-fill-btn')?.addEventListener('click', () => this.fillNightPlanFromWatchlist());
+      // R018: hafta planı → takvim dosyası
+      document.getElementById('np-ics-btn')?.addEventListener('click', () => this.exportWeekPlanICS());
 
     this.renderNightPlan();
   }
@@ -3210,6 +3306,8 @@ class Cine3DApp {
     if (!list || !summary) return;
 
     const movies = this.getNightPlanMovies();
+    const weekMode = this.isWeekPlanMode() && movies.length >= 2;
+    const todayIdx = this.todayWeekIndex();
 
     if (!movies.length) {
       list.innerHTML = '<div class="np-empty">Henüz film eklenmedi. Yukarıdan seçip “Ekle”ye bas.</div>';
@@ -3222,8 +3320,9 @@ class Cine3DApp {
       const watched = this.isMovieWatched(m.id);
       return `
         ${i > 0 ? '<div class="np-break">☕ ' + NIGHT_BREAK_MINUTES + ' dk mola</div>' : ''}
-        <div class="np-item ${watched ? 'np-watched' : ''}" data-movie-id="${escapeHtmlText(m.id)}">
-          <span class="np-idx">${i + 1}</span>
+        <div class="np-item ${watched ? 'np-watched' : ''}${weekMode ? (i % 7 === todayIdx ? ' np-today' : '') : ''}" data-movie-id="${escapeHtmlText(m.id)}">
+          <span class="np-idx">${weekMode ? escapeHtmlText(this.weekDayLabel(i)) : i + 1}</span>
+          ${weekMode && i % 7 === todayIdx ? '<span class="np-today-tag">bugün</span>' : ''}
           <img class="np-thumb" src="${escapeHtmlText(m.posterUrl)}" alt="${escapeHtmlText(m.title)}" loading="lazy" />
           <div class="np-info">
             <div class="np-name">${escapeHtmlText(m.title)}</div>
@@ -3242,8 +3341,9 @@ class Cine3DApp {
     const breaks = (movies.length - 1) * NIGHT_BREAK_MINUTES;
     const remaining = movies.reduce((sum, m) => this.isMovieWatched(m.id) ? sum : sum + this.nightPlanMinutes(m), 0);
     summary.innerHTML = `
-      <span class="np-total">Bu gece: <strong>${this.formatMinutes(totalMovies + breaks)}</strong></span>
+      <span class="np-total">${weekMode ? 'Bu hafta' : 'Bu gece'}: <strong>${this.formatMinutes(totalMovies + breaks)}</strong></span>
       <span class="np-detail">${movies.length} film · ${this.formatMinutes(totalMovies)} film + ${breaks}dk mola</span>
+      ${weekMode ? `<span class="np-week-note">📅 ${movies.length} güne dağıtıldı · ${escapeHtmlText(this.weekDayLabel(0))} → ${escapeHtmlText(this.weekDayLabel(movies.length - 1))}</span>` : ''}
       ${remaining < totalMovies ? `<span class="np-remaining">Kalan: <strong>${this.formatMinutes(remaining)}</strong></span>` : ''}`;
 
     list.querySelectorAll('.np-icon-btn').forEach(btn => {
@@ -3303,6 +3403,70 @@ class Cine3DApp {
     this.saveNightPlan(ranked);
     this.renderNightPlan();
     this.showToast('✨ Plan zevk DNA\'na göre dolduruldu (' + ranked.length + ' film).', 'success');
+  }
+
+  /**
+   * R018: Hafta planını .ics takvim dosyası olarak indirir.
+   * Filmler gelecek pazartesiden başlayarak günde 1 film, 20:00'de, süresi kadar yer kaplar.
+   */
+  exportWeekPlanICS() {
+    const movies = this.getNightPlanMovies();
+    if (!movies.length) {
+      this.showToast('Takvime aktarılacak plan boş.', 'info');
+      return;
+    }
+    const pad = (n) => String(n).padStart(2, '0');
+    const fmtLocal = (d) => '' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + 'T' + pad(d.getHours()) + pad(d.getMinutes()) + '00';
+    const fmtUTC = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+
+    // Gelecek pazartesi (bugün pazartesiyse bugün), 20:00
+    const start = new Date();
+    start.setHours(20, 0, 0, 0);
+    const shift = (8 - start.getDay()) % 7;
+    start.setDate(start.getDate() + shift);
+
+    const icsEsc = (v) => String(v || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Cine3D//Hafta Plani//TR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH'
+    ];
+    movies.slice(0, 7).forEach((m, i) => {
+      const begin = new Date(start);
+      begin.setDate(begin.getDate() + i);
+      const mins = Math.max(30, this.nightPlanMinutes(m) || 120);
+      const end = new Date(begin.getTime() + mins * 60000);
+      lines.push(
+        'BEGIN:VEVENT',
+        'UID:cine3d-' + m.id + '-' + begin.getTime() + '@cine3d',
+        'DTSTAMP:' + fmtUTC(new Date()),
+        'DTSTART:' + fmtLocal(begin),
+        'DTEND:' + fmtLocal(end),
+        'SUMMARY:' + icsEsc('🎬 ' + m.title),
+        'DESCRIPTION:' + icsEsc('Cine3D hafta planı · IMDb ' + (m.imdbRating || '-') + ' · ' + (m.year || '')),
+        'LOCATION:' + icsEsc('Cine3D · ' + this.weekDayLabel(i)),
+        'END:VEVENT'
+      );
+    });
+    lines.push('END:VCALENDAR');
+
+    try {
+      const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cine3d-hafta-plani.ics';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      this.showToast('📅 ' + Math.min(movies.length, 7) + ' film takvime aktarıldı (pazartesi 20:00).', 'success');
+    } catch (e) {
+      this.showToast('Takvim dosyası oluşturulamadı.', 'error');
+    }
   }
 
   async copyNightPlan() {
@@ -5093,6 +5257,7 @@ class Cine3DApp {
                   <button type="button" class="season-btn" data-season-act="inc" aria-label="Sezon ekle">＋</button>
                 </span>` : ''}
                 ${movie.imdbID ? `<a class="modal-imdb-link" href="https://www.imdb.com/title/${movie.imdbID}/" target="_blank" rel="noopener noreferrer" title="IMDb'de aç">IMDb ↗</a>` : ''}
+                <a class="modal-imdb-link modal-jw-link" href="https://www.justwatch.com/tr/arama?q=${encodeURIComponent(movie.title)}" target="_blank" rel="noopener noreferrer" title="JustWatch'ta nerede izlenir?">Nerede İzlenir? ↗</a>
                 <span class="modal-duration-tag">⏱️ ${movie.duration}</span>
                 ${this.renderFamilyRatingBadges(movie.id)}
                 <span class="modal-age-tag">🔞 ${movie.ageRating}</span>
@@ -6322,6 +6487,87 @@ class Cine3DApp {
       .sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
   }
 
+  // --- R018: AİLE YORUM DUVARI 2.0 --------------------------------
+  /** Profil adı + emoji (yorum kartındaki yazar çipi için). */
+  getProfileMeta(pid) {
+    try {
+      const p = JSON.parse(localStorage.getItem('cine3d_profiles') || '[]').find(x => x.pid === pid);
+      return { name: (p && p.name) || 'Anonim', emoji: (p && p.emoji) || '🙂' };
+    } catch (e) {
+      return { name: 'Anonim', emoji: '🙂' };
+    }
+  }
+
+  /** Yorum duvarı tercihleri (sıralama / filtre / spoiler gizleme) — global. */
+  getReviewPrefs() {
+    const defaults = { sort: 'new', filter: 'all', hideSpoilers: true };
+    try {
+      const raw = JSON.parse(localStorage.getItem('cine3d_review_wall_prefs') || '{}');
+      return {
+        sort: ['new', 'likes', 'author'].includes(raw.sort) ? raw.sort : defaults.sort,
+        filter: ['all', 'mine', 'nospoiler'].includes(raw.filter) ? raw.filter : defaults.filter,
+        hideSpoilers: raw.hideSpoilers !== false
+      };
+    } catch (e) {
+      return defaults;
+    }
+  }
+
+  saveReviewPrefs(patch) {
+    try {
+      const next = { ...this.getReviewPrefs(), ...(patch || {}) };
+      localStorage.setItem('cine3d_review_wall_prefs', JSON.stringify(next));
+      return next;
+    } catch (e) {
+      return this.getReviewPrefs();
+    }
+  }
+
+  /** Bir yorumun emoji tepkilerini sayar: { '👍': 2, '❤️': 1 } */
+  summarizeReactions(review) {
+    const out = {};
+    const map = (review && review.reactions) || {};
+    Object.values(map).forEach((emoji) => {
+      if (emoji === '👍' || emoji === '❤️') out[emoji] = (out[emoji] || 0) + 1;
+    });
+    return out;
+  }
+
+  /** Tepki ver / geri al: aynı emoji tekrar tıklanınca kaldırılır. */
+  toggleReviewReaction(movieId, targetPid, emoji) {
+    if (!movieId || !targetPid || !emoji) return false;
+    const pid = this.getActivePid();
+    if (pid === targetPid) return false; // kendi yorumuna tepki verilmez
+    try {
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      const rev = shared[movieId] && shared[movieId][targetPid];
+      if (!rev) return false;
+      if (!rev.reactions || typeof rev.reactions !== 'object') rev.reactions = {};
+      if (rev.reactions[pid] === emoji) delete rev.reactions[pid];
+      else rev.reactions[pid] = emoji;
+      localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** "2 sa önce" / "3 gün önce" biçiminde göreli zaman. */
+  formatRelativeTime(iso) {
+    const t = Date.parse(iso || '');
+    if (!t || Number.isNaN(t)) return '';
+    const diff = Date.now() - t;
+    if (diff < 60 * 1000) return 'az önce';
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return mins + ' dk önce';
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + ' sa önce';
+    const days = Math.floor(hours / 24);
+    if (days < 7) return days + ' gün önce';
+    if (days < 30) return Math.floor(days / 7) + ' hf önce';
+    return new Date(t).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
   saveMovieReview(movieId, reviewData) {
     if (!movieId) return false;
     try {
@@ -6329,9 +6575,13 @@ class Cine3DApp {
       const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
       if (!shared[movieId]) shared[movieId] = {};
       if (reviewData) {
+        // R018: düzenlemede başkalarının tepkileri korunur
+        const prev = shared[movieId][pid] || {};
         shared[movieId][pid] = {
           ...reviewData,
           author: this.getProfileName(pid),
+          reactions: prev.reactions || {},
+          createdAt: prev.createdAt || new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
       } else {
@@ -6357,38 +6607,125 @@ class Cine3DApp {
     const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
     if (!isEditing) {
-      // --- R013: AİLE YORUM DUVARI — herkesin yorumu yazar adıyla ---
-      const dateStr = (rev) => rev.updatedAt ? new Date(rev.updatedAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-      const reviewCards = allReviews.map(rev => `
-        <div class="saved-review-card">
+      // --- R018: AİLE YORUM DUVARI 2.0 ---------------------------------
+      // Tepkiler (👍/❤️), sıralama, filtre ve kalıcı spoiler tercihi.
+      const prefs = this.getReviewPrefs();
+      const activeMeta = this.getProfileMeta(activePid);
+      const spoilerCount = allReviews.filter(r => !!r.spoiler).length;
+
+      const decorated = allReviews.map(rev => {
+        const meta = this.getProfileMeta(rev.pid);
+        const reactions = this.summarizeReactions(rev);
+        return {
+          ...rev,
+          meta,
+          reactions,
+          likeTotal: (reactions['👍'] || 0) + (reactions['❤️'] || 0),
+          myReaction: (rev.reactions && rev.reactions[activePid]) || null,
+          isMine: rev.pid === activePid
+        };
+      });
+
+      let visible = decorated;
+      if (prefs.filter === 'mine') visible = visible.filter(r => r.isMine);
+      else if (prefs.filter === 'nospoiler') visible = visible.filter(r => !r.spoiler);
+
+      visible = visible.slice().sort((a, b) => {
+        if (prefs.sort === 'likes') {
+          if (b.likeTotal !== a.likeTotal) return b.likeTotal - a.likeTotal;
+          return String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''));
+        }
+        if (prefs.sort === 'author') return String(a.meta.name).localeCompare(String(b.meta.name), 'tr');
+        return String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''));
+      });
+
+      const cardHtml = (rev) => {
+        const reactionBtn = (emoji) => `
+          <button type="button" class="review-react-btn ${rev.myReaction === emoji ? 'active' : ''}"
+                  data-react="${emoji}" data-target="${esc(rev.pid)}"
+                  ${rev.isMine ? 'disabled title="Kendi yorumuna tepki veremezsin"' : 'title="' + (rev.myReaction === emoji ? 'Tepkini geri al' : 'Tepki ver') + '"'}>
+            <span class="rr-emoji">${emoji}</span><span class="rr-count">${rev.reactions[emoji] || 0}</span>
+          </button>`;
+
+        const body = rev.spoiler
+          ? (prefs.hideSpoilers && !rev.isMine
+            ? `<p class="saved-review-text spoiler-masked">
+                 <span class="spoiler-mask">⚠️ Spoiler içeriyor — <button type="button" class="spoiler-reveal-btn" data-spoiler-id="sp-${esc(rev.pid)}">Göster</button></span>
+                 <span class="spoiler-body hidden" id="sp-${esc(rev.pid)}">${esc(rev.note)}</span>
+               </p>`
+            : `<p class="saved-review-text"><span class="spoiler-flag">⚠️ Spoiler</span>${esc(rev.note)}</p>`)
+          : `<p class="saved-review-text">${esc(rev.note)}</p>`;
+
+        return `
+        <div class="saved-review-card${rev.isMine ? ' mine' : ''}" data-review-pid="${esc(rev.pid)}">
           <div class="review-box-header">
-            <div class="review-author">👤 ${esc(rev.author)}:</div>
-            ${dateStr(rev) ? `<span class="review-date-badge">${dateStr(rev)}</span>` : ''}
+            <div class="review-author-chip">
+              <span class="rac-emoji">${esc(rev.meta.emoji)}</span>
+              <span class="rac-name">${esc(rev.meta.name)}</span>
+              ${rev.isMine ? '<span class="rac-you">sen</span>' : ''}
+            </div>
+            <span class="review-date-badge" title="${esc(rev.updatedAt || '')}">${esc(this.formatRelativeTime(rev.updatedAt))}</span>
           </div>
           ${rev.tag ? `<span class="saved-review-tag">${esc(rev.tag)}</span>` : ''}
-          ${rev.spoiler
-            ? `<p class="saved-review-text spoiler"><span class="spoiler-mask">⚠️ Spoiler içeriyor — <button type="button" class="spoiler-reveal-btn" data-spoiler-id="sp-${esc(rev.pid)}">Göster</button></span><span class="spoiler-body hidden" id="sp-${esc(rev.pid)}">${esc(rev.note)}</span></p>`
-            : `<p class="saved-review-text">${esc(rev.note)}</p>`}
-          ${rev.pid === activePid ? `
+          ${body}
+          <div class="review-reactions">
+            ${reactionBtn('👍')}
+            ${reactionBtn('❤️')}
+            ${rev.isMine
+              ? `<span class="rr-hint">senin yorumun</span>`
+              : (rev.myReaction ? `<span class="rr-hint">tepkin kaydedildi</span>` : '')}
+          </div>
+          ${rev.isMine ? `
           <div class="saved-review-actions">
             <button class="btn-review-sm" id="btn-edit-review">✏️ Düzenle</button>
             <button class="btn-review-sm danger" id="btn-delete-review">🗑️ Sil</button>
           </div>` : ''}
-        </div>`).join('');
+        </div>`;
+      };
+
+      const cardsHtml = visible.map(cardHtml).join('');
 
       container.innerHTML = `
-        <div class="modal-review-box">
+        <div class="modal-review-box review-wall">
           <div class="review-box-header">
             <div class="review-box-title">
               <span class="review-box-icon">💬</span>
               <span>Film Yorumları</span>
+              <span class="review-count-badge">${decorated.length}</span>
+              ${spoilerCount ? `<span class="review-spoiler-badge">⚠️ ${spoilerCount}</span>` : ''}
             </div>
             <button type="button" class="btn-review-sm" id="btn-add-review">${myReview ? '✏️ Yorumumu Düzenle' : '＋ Yorum Ekle'}</button>
           </div>
-          ${reviewCards || `<p class="reviews-empty">Henüz yorum yok — ilk yorumu sen yaz! ✨</p>`}
+
+          <div class="review-wall-toolbar">
+            <div class="rwt-filters" role="group" aria-label="Yorum filtresi">
+              <button type="button" class="rwt-chip ${prefs.filter === 'all' ? 'active' : ''}" data-rfilter="all">Tümü</button>
+              <button type="button" class="rwt-chip ${prefs.filter === 'mine' ? 'active' : ''}" data-rfilter="mine">Benim</button>
+              <button type="button" class="rwt-chip ${prefs.filter === 'nospoiler' ? 'active' : ''}" data-rfilter="nospoiler">Spoiler'sız</button>
+            </div>
+            <div class="rwt-right">
+              <label class="rwt-spoiler-toggle" title="Spoiler içeren yorumları gizli tut">
+                <input type="checkbox" id="rwt-hide-spoilers" ${prefs.hideSpoilers ? 'checked' : ''}/>
+                <span>Spoiler gizle</span>
+              </label>
+              <select id="rwt-sort" class="rwt-sort" aria-label="Yorum sıralaması">
+                <option value="new"${prefs.sort === 'new' ? ' selected' : ''}>En yeni</option>
+                <option value="likes"${prefs.sort === 'likes' ? ' selected' : ''}>En beğenilen</option>
+                <option value="author"${prefs.sort === 'author' ? ' selected' : ''}>Yazara göre</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="review-cards-list">
+            ${cardsHtml || `<p class="reviews-empty">${decorated.length
+              ? (prefs.filter === 'mine' ? 'Bu filme henüz kendi yorumunu yazmadın. ✍️' : 'Bu filtrede gösterilecek yorum yok. 🔍')
+              : 'Henüz yorum yok — ilk yorumu sen yaz! ✨'}</p>`}
+          </div>
+          <p class="review-wall-hint">💡 ${esc(activeMeta.emoji)} <strong>${esc(activeMeta.name)}</strong> olarak yorum yapıyorsun — yorumlar aile duvarında yazar adıyla görünür.</p>
         </div>
       `;
 
+      // Spoiler "Göster"
       container.querySelectorAll('.spoiler-reveal-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const body = container.querySelector('#' + btn.dataset.spoilerId);
@@ -6397,6 +6734,32 @@ class Cine3DApp {
           if (mask) mask.classList.add('hidden');
         });
       });
+
+      // Tepkiler
+      container.querySelectorAll('.review-react-btn:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.toggleReviewReaction(movie.id, btn.dataset.target, btn.dataset.react);
+          if (window.cinemaAudio) window.cinemaAudio.playHover();
+          this.renderModalReviewSection(movie, false);
+        });
+      });
+
+      // Filtre / sıralama / spoiler tercihi
+      container.querySelectorAll('.rwt-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          this.saveReviewPrefs({ filter: chip.dataset.rfilter || 'all' });
+          this.renderModalReviewSection(movie, false);
+        });
+      });
+      container.querySelector('#rwt-sort')?.addEventListener('change', (e) => {
+        this.saveReviewPrefs({ sort: e.target.value });
+        this.renderModalReviewSection(movie, false);
+      });
+      container.querySelector('#rwt-hide-spoilers')?.addEventListener('change', (e) => {
+        this.saveReviewPrefs({ hideSpoilers: e.target.checked });
+        this.renderModalReviewSection(movie, false);
+      });
+
       container.querySelector('#btn-add-review')?.addEventListener('click', () => {
         this.renderModalReviewSection(movie, true);
       });
@@ -6966,6 +7329,9 @@ class Cine3DApp {
           <button class="btn-report-demo" id="btn-library-report" title="Yazdırılabilir aile kütüphanesi raporu (PDF olarak kaydet)">
             <span>🖨️ Rapor</span>
           </button>
+          <button class="btn-report-demo" id="btn-report-csv" title="Kütüphaneyi CSV olarak indir (Excel / Google Sheets)">
+            <span>📄 CSV</span>
+          </button>
           <input type="file" id="import-file-input" accept="application/json,.json" hidden />
         </div>
 
@@ -7092,6 +7458,8 @@ class Cine3DApp {
       });
       // R015/8: yazdırılabilir kütüphane raporu
       document.getElementById('btn-library-report')?.addEventListener('click', () => this.printLibraryReport());
+      // R018: CSV dışa aktarımı
+      document.getElementById('btn-report-csv')?.addEventListener('click', () => this.exportLibraryCSV());
       document.getElementById('import-file-input')?.addEventListener('change', (e) => this.handleImportFile(e.target));
     }
   }
