@@ -1007,7 +1007,10 @@ class Cine3DApp {
       const loadThreeLib = () => {
         if (typeof THREE !== 'undefined') { startScene(); return; }
         const s = document.createElement('script');
-        s.src = 'js/vendor/three.min.js?v=8.6';
+        // sürüm etiketini app.js'in kendi etiketinden türet (her sürüm artışında otomatik uyumlu)
+        const ownTag = document.querySelector('script[src*="app.js"]');
+        const ownV = ownTag ? (ownTag.src.match(/v=([\d.]+)/) || [])[1] : null;
+        s.src = 'js/vendor/three.min.js' + (ownV ? '?v=' + ownV : '');
         s.async = true;
         s.onload = () => startScene();
         s.onerror = () => {
@@ -2643,6 +2646,15 @@ class Cine3DApp {
     if (movie) this.updateWatchedModalBtn(movie.id);
     this.renderWatchlistDrawer();
     this.showToast('↩️ İşlem geri alındı.', 'info');
+  }
+
+  /** ÖZ1: dizi toplam sezon sayısı — duration alanından ("5 Sezon") türetir; minidiziler 1 sezon. */
+  getSeriesTotalSeasons(movie) {
+    if (!movie || !movie.isSeries) return 0;
+    const d = String(movie.duration || '');
+    if (/minidizi/i.test(d)) return 1;
+    const m = d.match(/(\d+)\s*[Ss]ezon/);
+    return m ? Math.max(0, Math.min(60, Number(m[1]) || 0)) : 0;
   }
 
   /** R009/8: dizi sezon takibi (izleme kaydı yoksa oluşturur). */
@@ -6490,6 +6502,8 @@ class Cine3DApp {
     // "ReferenceError: watchedSeasons is not defined" fırlıyor ve tıklama akışı yarıda kalıyordu.
     const modalWatchedRec = this.getMovieWatchedRecord ? this.getMovieWatchedRecord(movie.id) : null;
     const watchedSeasons = (modalWatchedRec && modalWatchedRec.watchedSeasons) ? Number(modalWatchedRec.watchedSeasons) || 0 : 0;
+    // ÖZ1: toplam sezon (duration "5 Sezon" biçiminden) — biliniyorsa ilerleme kartı gösterilir
+    const totalSeasons = this.getSeriesTotalSeasons ? this.getSeriesTotalSeasons(movie) : 0;
 
     // Eğer videoId henüz yoksa arka planda hemen çözümle
     // R009/5: Fragman kimliği yoksa gömülü katalog indeksinden bulmayı dene
@@ -6632,7 +6646,7 @@ class Cine3DApp {
               </div>
 
               <div class="modal-pill-row">
-                ${movie.isSeries ? `<span class="modal-season-ctrl" title="İzlenen sezon sayısı">
+                ${movie.isSeries && !totalSeasons ? `<span class="modal-season-ctrl" title="İzlenen sezon sayısı">
                   <button type="button" class="season-btn" data-season-act="dec" aria-label="Sezon azalt">−</button>
                   <span class="season-count" id="modal-season-count">${watchedSeasons}</span>
                   <span class="season-label">sezon</span>
@@ -6646,6 +6660,25 @@ class Cine3DApp {
                 <span class="modal-awards-tag">🏆 ${movie.awards || 'Popüler Sinema/Dizi'}</span>
                 ${movie.isOnlineFetched ? '<span class="card-online-badge" style="position:static;">🌐 Canlı İnternet Verisi</span>' : ''}
               </div>
+
+              <!-- ÖZ1: Dizi Sezon Takip Kartı -->
+              ${movie.isSeries && totalSeasons > 0 ? `
+              <div class="season-progress-card" id="season-progress-card">
+                <div class="spc-head">
+                  <span class="spc-title">📺 Sezon Takibi</span>
+                  <span class="spc-stats"><span class="season-count" id="modal-season-count">${watchedSeasons}</span><span class="spc-total">/${totalSeasons} sezon</span></span>
+                </div>
+                <div class="spc-bar" id="spc-bar" role="progressbar" aria-label="Sezon ilerlemesi" aria-valuemin="0" aria-valuemax="${totalSeasons}" aria-valuenow="${watchedSeasons}">
+                  <div class="spc-fill${watchedSeasons >= totalSeasons ? ' spc-done' : ''}" id="spc-fill" style="width:${Math.min(100, Math.round((watchedSeasons / totalSeasons) * 100))}%"></div>
+                </div>
+                <div class="spc-foot">
+                  <span class="modal-season-ctrl">
+                    <button type="button" class="season-btn" data-season-act="dec" aria-label="Sezon azalt">−</button>
+                    <span class="spc-remain" id="spc-remain">${watchedSeasons >= totalSeasons ? '🎉 Seri tamamlandı!' : (totalSeasons - watchedSeasons) + ' sezon kaldı'}</span>
+                    <button type="button" class="season-btn" data-season-act="inc" aria-label="Sezon ekle">＋</button>
+                  </span>
+                </div>
+              </div>` : ''}
 
               <!-- Film Türleri -->
               <div class="modal-genre-box">
@@ -6808,10 +6841,19 @@ class Cine3DApp {
       btn.addEventListener('click', () => {
         const act = btn.dataset.seasonAct;
         const current = (this.getMovieWatchedRecord(movie.id) || {}).watchedSeasons || 0;
-        const next = Math.max(0, Math.min(30, current + (act === 'inc' ? 1 : -1)));
+        const cap = totalSeasons > 0 ? totalSeasons : 30;
+        const next = Math.max(0, Math.min(cap, current + (act === 'inc' ? 1 : -1)));
         this.setWatchedSeasons(movie, next);
-        const el = document.getElementById('modal-season-count');
-        if (el) el.textContent = next;
+        // ÖZ1: ilerleme kartını canlı güncelle
+        const countEl = document.getElementById('modal-season-count');
+        if (countEl) countEl.textContent = next;
+        const fill = document.getElementById('spc-fill');
+        if (fill) fill.style.width = Math.min(100, Math.round((next / cap) * 100)) + '%';
+        const bar = document.getElementById('spc-bar');
+        if (bar) bar.setAttribute('aria-valuenow', next);
+        const remain = document.getElementById('spc-remain');
+        if (remain && totalSeasons > 0) remain.textContent = next >= totalSeasons ? '🎉 Seri tamamlandı!' : (totalSeasons - next) + ' sezon kaldı';
+        if (fill) fill.classList.toggle('spc-done', totalSeasons > 0 && next >= totalSeasons);
       });
     });
 

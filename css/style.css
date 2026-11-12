@@ -7250,6 +7250,42 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
 .modal-season-ctrl .season-count { min-width: 14px; text-align: center; }
 .modal-season-ctrl .season-label { font-weight: 600; opacity: 0.85; }
 
+/* ÖZ1: Dizi sezon takip kartı */
+.season-progress-card {
+  margin: 12px 0 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(56, 189, 248, 0.06);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+.season-progress-card .spc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.season-progress-card .spc-title { font-weight: 800; font-size: 0.85rem; color: #7dd3fc; }
+.season-progress-card .spc-stats { font-weight: 800; font-size: 0.85rem; color: #e2e8f0; }
+.season-progress-card .spc-total { opacity: 0.65; font-weight: 600; }
+.season-progress-card .spc-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+.season-progress-card .spc-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  transition: width 0.35s ease;
+}
+.season-progress-card .spc-fill.spc-done {
+  background: linear-gradient(90deg, #f5c518, #eab308);
+}
+.season-progress-card .spc-foot { margin-top: 8px; }
+.season-progress-card .spc-remain { font-size: 0.75rem; font-weight: 700; color: #94a3b8; padding: 0 2px; }
+
 /* ==========================================================================
    R009/3: Paylaşılan izleme listesi görüntüleyici + liste butonları
    ========================================================================== */
