@@ -984,18 +984,44 @@ class Cine3DApp {
       document.body.classList.add('reduced-motion');
     }
 
-    // 3D Canvas başlat
-    if (window.initThreeScene && !reducedMotion) {
-      try {
-        window.initThreeScene();
-      } catch (err) {
-        // WebGL kapalı/engelli cihazlarda renderer kurulamıyor; bu hata tüm init()
-        // zincirini kesip sayfayı boş bırakıyordu. 2D modda devam ediyoruz.
-        console.warn('[3D] Sahne başlatılamadı, 2D modda devam ediliyor:', err && err.message);
-        const canvas = document.getElementById('cinema-3d-canvas');
-        if (canvas) canvas.style.display = 'none';
-        document.body.classList.add('no-webgl');
-      }
+    // 3D Canvas başlat — three.min.js (603 KB) ilk boyamadan sonra boşta yüklenir (R032 lazy-load)
+    if (!reducedMotion) {
+      const startScene = () => {
+        if (!window.initThreeScene) return;
+        try {
+          window.initThreeScene();
+          // Sahne geç başladıysa (tema değişimi araya girdiyse) aktif temayı uygula
+          if (window.cinema3D && this.activeTheme && this.activeTheme !== 'netflix' &&
+              typeof window.cinema3D.setTheme === 'function') {
+            window.cinema3D.setTheme(this.activeTheme);
+          }
+        } catch (err) {
+          // WebGL kapalı/engelli cihazlarda renderer kurulamıyor; bu hata tüm init()
+          // zincirini kesip sayfayı boş bırakıyordu. 2D modda devam ediyoruz.
+          console.warn('[3D] Sahne başlatılamadı, 2D modda devam ediliyor:', err && err.message);
+          const canvas = document.getElementById('cinema-3d-canvas');
+          if (canvas) canvas.style.display = 'none';
+          document.body.classList.add('no-webgl');
+        }
+      };
+      const loadThreeLib = () => {
+        if (typeof THREE !== 'undefined') { startScene(); return; }
+        const s = document.createElement('script');
+        s.src = 'js/vendor/three.min.js?v=8.6';
+        s.async = true;
+        s.onload = () => startScene();
+        s.onerror = () => {
+          // three.min.js yüklenemedi: uygulama etkilenmez, 2D arka planla devam
+          console.warn('[3D] three.min.js yüklenemedi, 2D arka planla devam ediliyor');
+          const canvas = document.getElementById('cinema-3d-canvas');
+          if (canvas) canvas.style.display = 'none';
+          document.body.classList.add('no-webgl');
+        };
+        document.head.appendChild(s);
+      };
+      // İlk boyama sonrası boşta yükle (requestIdleCallback yoksa 1.8 s)
+      const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1800));
+      idle(() => loadThreeLib());
     }
 
     // Temayı başlat
