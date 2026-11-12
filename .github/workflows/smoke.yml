@@ -34,6 +34,11 @@ jobs:
           CHROME_PATH: /usr/bin/google-chrome
         run: node tests/smoke.js
 
+      - name: Özellik testleri
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node tests/features.js
+
       - name: Sitemap bütünlüğü
         run: |
           COUNT=$(grep -c '<loc>' sitemap.xml)

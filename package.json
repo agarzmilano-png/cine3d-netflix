@@ -10,7 +10,8 @@
     "imdb": "node scripts/enrich-imdb.js",
     "smoke": "node tests/smoke.js",
     "verify:data": "node scripts/verify-data.js",
-    "verify": "node scripts/verify-data.js && node tests/smoke.js"
+    "verify": "node scripts/verify-data.js && node tests/smoke.js && node tests/features.js",
+    "test:features": "node tests/features.js"
   },
   "engines": {
     "node": ">=14"

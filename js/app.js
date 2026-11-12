@@ -1018,6 +1018,7 @@ class Cine3DApp {
     this.renderHeroBanner();
     this.applyFilters();
     this.bindGlobalEvents();
+    this.initFocusTrap();
     this.initHeroAutoCycle();
 
     // Ses bildirim ikonu durumu
@@ -1356,6 +1357,7 @@ class Cine3DApp {
     document.body.appendChild(overlay);
     this.rememberFocus();
     this.focusFirst(overlay, '.sc-close');
+    this.updateBackgroundInert();
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay || e.target.closest('[data-sc-close]')) this.closeShortcutsHelp();
     });
@@ -1366,6 +1368,7 @@ class Cine3DApp {
     if (!el) return;
     el.remove();
     this.restoreFocus();
+    this.updateBackgroundInert();
   }
 
   // --- R022: "BUGÜN NE İZLESEM?" -----------------------------------
@@ -1874,6 +1877,7 @@ class Cine3DApp {
     requestAnimationFrame(() => overlay.classList.add('open'));
     document.body.style.overflow = 'hidden';
     this.focusFirst(overlay, '.wr-close');
+    this.updateBackgroundInert();
 
     const paint = () => {
       const s = slides[idx];
@@ -1917,6 +1921,7 @@ class Cine3DApp {
     const drawerOpen = !!document.querySelector('#watchlist-drawer.open');
     document.body.style.overflow = (modalOpen || drawerOpen) ? 'hidden' : '';
     this.restoreFocus();
+    this.updateBackgroundInert();
     if (this._wrappedEsc) {
       document.removeEventListener('keydown', this._wrappedEsc);
       this._wrappedEsc = null;
@@ -5651,8 +5656,9 @@ class Cine3DApp {
         </div>`;
       document.body.appendChild(overlay);
       this.rememberFocus();
+      this.updateBackgroundInert();
       const input = overlay.querySelector('#pin-input');
-      const done = (val) => { overlay.remove(); this.restoreFocus(); resolve(val); };
+      const done = (val) => { overlay.remove(); this.restoreFocus(); this.updateBackgroundInert(); resolve(val); };
       overlay.querySelector('#pin-ok')?.addEventListener('click', () => done(input ? input.value.trim() : ''));
       overlay.querySelector('#pin-cancel')?.addEventListener('click', () => done(null));
       overlay.querySelector('[data-pin-cancel]')?.addEventListener('click', () => done(null));
@@ -9199,7 +9205,12 @@ class Cine3DApp {
       '#tournament-modal.open',
       '#compare-modal.open',
       '#wl-share-modal.open',
-      '.import-choice-overlay'
+      '.import-choice-overlay',
+      // R029: yeni katmanlar da arka planı inert yapar
+      '.daily-pick-modal',
+      '.wrapped-modal',
+      '.pin-modal',
+      '#shortcuts-help'
     ];
     const anyOpen = overlaySelectors.some(sel => document.querySelector(sel));
     const background = [document.getElementById('navbar'), document.querySelector('main.main-content'), document.querySelector('footer.app-footer')];
@@ -9238,19 +9249,50 @@ class Cine3DApp {
   }
 
   getActiveFocusLayer() {
+    // En üstteki (yüksek z-index) katman; odak tuzağı bunun içinde döner.
     const selectors = [
-      '.movie-modal.open',
+      '.pin-modal',
+      '#shortcuts-help',
+      '.wrapped-modal',
+      '.daily-pick-modal',
+      '#movie-modal.open',
       '#vs-modal.open',
-      '#watchlist-drawer.open',
       '#tournament-modal.open',
-      '#ticket-modal.open'
+      '#ticket-modal.open',
+      '#compare-modal.open',
+      '#wl-share-modal.open',
+      '#watchlist-drawer.open'
     ];
-    let layer = null;
     for (const sel of selectors) {
       const el = document.querySelector(sel);
-      if (el) layer = el;
+      if (el) return el;
     }
-    return layer;
+    return null;
+  }
+
+  /** R029: Tab/Shift+Tab açık katmanın içinde dönsün (focus trap). */
+  initFocusTrap() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const layer = this.getActiveFocusLayer();
+      if (!layer) return;
+      const focusables = Array.from(layer.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter((el) => el.getClientRects().length > 0 && !el.hasAttribute('aria-hidden'));
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey) {
+        if (active === first || !layer.contains(active)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !layer.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
   }
 
   /**
