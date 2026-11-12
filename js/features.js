@@ -1196,6 +1196,7 @@
       timeoutStat.answers = (parseInt(timeoutStat.answers, 10) || 0) + 1;
       GuessGame.stats.byDiff[timeoutDiff] = timeoutStat;
       GuessGame.saveStats();
+      if (window.app && window.app.markDailyTask) window.app.markDailyTask('guess');
 
       setTimeout(() => {
         GuessGame.roundIdx++;
@@ -1279,6 +1280,7 @@
       if (diff <= 0.3) dStat.correct = (parseInt(dStat.correct, 10) || 0) + 1;
       GuessGame.stats.byDiff[diffKey] = dStat;
       GuessGame.saveStats();
+      if (window.app && window.app.markDailyTask) window.app.markDailyTask('guess');
 
       GuessGame.totalScore += pts + bonus;
       const scoreEl = document.getElementById('guess-total-score');

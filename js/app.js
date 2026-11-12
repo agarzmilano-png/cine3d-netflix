@@ -1196,6 +1196,8 @@ class Cine3DApp {
 
     container.innerHTML = `
       <div class="family-feed-wrap">
+        <div id="daily-tasks-host"></div>
+        ${this.renderWeeklyRankingHtml()}
         <div class="ff-hero">
           <div>
             <span class="ff-pill">👨‍👩‍👧 AİLE AKTİVİTESİ</span>
@@ -1245,6 +1247,433 @@ class Cine3DApp {
         p.textContent = e.note;
       });
     });
+
+    this.renderDailyTasks();
+  }
+
+  // --- R022: "BUNLARI DA SEVEBİLİRSİN" -----------------------------
+  renderSimilarMovies(movie) {
+    const host = document.getElementById('modal-similar-section');
+    if (!host || !movie) return;
+
+    let dna = null;
+    try {
+      const reco = window.cine3dFeatures && window.cine3dFeatures.reco;
+      if (reco && typeof reco.computeDNA === 'function') dna = reco.computeDNA();
+    } catch (e) { dna = null; }
+    const recScore = (m) => {
+      try {
+        const reco = window.cine3dFeatures && window.cine3dFeatures.reco;
+        return (dna && reco) ? (reco.score(m, dna) || 0) : 0;
+      } catch (e) { return 0; }
+    };
+
+    const scored = this.movies.filter(m => m.id !== movie.id).map(m => {
+      let score = 0;
+      if (m.director && m.director === movie.director) score += 40;
+      const shared = (m.genres || []).filter(g => (movie.genres || []).includes(g));
+      score += shared.length * 10;
+      const castShared = (m.cast || []).filter(c => (movie.cast || []).includes(c));
+      score += Math.min(20, castShared.length * 8);
+      score += recScore(m) * 2;
+      if (this.isMovieWatched(m.id)) score -= 6;
+      return { m, score, sameDirector: m.director && m.director === movie.director };
+    }).sort((a, b) => b.score - a.score).slice(0, 4);
+
+    if (!scored.length) { host.innerHTML = ''; return; }
+    const max = Math.max(1, scored[0].score);
+
+    host.innerHTML = `
+      <div class="similar-box">
+        <div class="similar-head">
+          <span class="similar-title">🍿 Bunları da sevebilirsin</span>
+          <span class="similar-sub">Yönetmen, tür ve zevk DNA'na göre</span>
+        </div>
+        <div class="similar-grid">
+          ${scored.map(({ m, score, sameDirector }) => {
+            const pct = Math.min(99, Math.max(55, Math.round(55 + (score / max) * 40)));
+            const safe = escapeHtmlText(m.title);
+            return `
+              <button type="button" class="similar-card" data-similar-id="${escapeHtmlText(m.id)}" title="${safe}">
+                <span class="similar-poster-wrap">
+                  <img class="similar-poster" src="${escapeHtmlText(m.posterUrl)}" alt="${safe}" loading="lazy" />
+                  <span class="similar-pct">%${pct}</span>
+                </span>
+                <span class="similar-name">${safe}</span>
+                <span class="similar-meta">${escapeHtmlText(m.year)} · ⭐ ${escapeHtmlText(m.imdbRating)}</span>
+                ${sameDirector ? '<span class="similar-flag">🎬 Aynı yönetmen</span>' : ''}
+              </button>`;
+          }).join('')}
+        </div>
+      </div>`;
+
+    host.querySelectorAll('.similar-poster').forEach(img => {
+      img.addEventListener('error', () => {
+        const card = img.closest('.similar-card');
+        const m = card ? this.movies.find(x => x.id === card.dataset.similarId) : null;
+        img.onerror = null;
+        img.src = getFallbackPoster(m ? m.title : 'Film', (m && m.genres && m.genres[0]) || 'Sinema', (m && m.imdbRating) || 8);
+      }, { once: true });
+    });
+    host.querySelectorAll('.similar-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const m = this.movies.find(x => x.id === card.dataset.similarId);
+        if (m) this.openModal(m);
+      });
+    });
+  }
+
+  // --- R022: KLAVYE KISAYOLLARI -------------------------------------
+  toggleShortcutsHelp() {
+    if (document.getElementById('shortcuts-help')) { this.closeShortcutsHelp(); return; }
+    const overlay = document.createElement('div');
+    overlay.id = 'shortcuts-help';
+    overlay.className = 'shortcuts-help open';
+    overlay.innerHTML = `
+      <div class="sc-backdrop" data-sc-close></div>
+      <div class="sc-dialog" role="dialog" aria-modal="true" aria-labelledby="sc-title">
+        <button type="button" class="sc-close" data-sc-close aria-label="Kapat">✕</button>
+        <h3 id="sc-title">⌨️ Klavye Kısayolları</h3>
+        <div class="sc-list">
+          <div class="sc-row"><kbd>/</kbd><span>Arama kutusuna git</span></div>
+          <div class="sc-row"><kbd>G</kbd><span>Kataloğa (filmlere) git</span></div>
+          <div class="sc-row"><kbd>D</kbd><span>Bugün ne izlesem?</span></div>
+          <div class="sc-row"><kbd>W</kbd><span>İzleme listesini aç</span></div>
+          <div class="sc-row"><kbd>?</kbd><span>Bu yardımı aç / kapat</span></div>
+          <div class="sc-row"><kbd>Esc</kbd><span>Açık pencereyi kapat</span></div>
+        </div>
+        <p class="sc-hint">Kısayollar yazı alanlarında çalışmaz.</p>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target.closest('[data-sc-close]')) this.closeShortcutsHelp();
+    });
+  }
+
+  closeShortcutsHelp() {
+    document.getElementById('shortcuts-help')?.remove();
+  }
+
+  // --- R022: "BUGÜN NE İZLESEM?" -----------------------------------
+  /** Aday havuzu: aktif filtreler + izlenmemişler; yetmezse tüm katalog. */
+  buildDailyPickPool() {
+    const notWatched = (m) => !this.isMovieWatched(m.id);
+    let pool = (this.filteredMovies || []).filter(notWatched);
+    if (pool.length < 6) pool = (this.movies || []).filter(notWatched);
+    if (!pool.length) pool = (this.movies || []).slice();
+    return pool;
+  }
+
+  /** Adayı ruh hali, süre, tür, IMDb ve zevk DNA'sına göre puanlar. */
+  scoreDailyPickCandidate(m) {
+    let score = 0;
+    try {
+      const reco = window.cine3dFeatures && window.cine3dFeatures.reco;
+      const dna = reco && typeof reco.computeDNA === 'function' ? reco.computeDNA() : null;
+      if (dna) score += (reco.score(m, dna) || 0) * 6;
+    } catch (e) { /* DNA yoksa atla */ }
+
+    if (this.activeMoodObj && this.isMovieMatchingMood(m, this.activeMoodObj.id)) score += 14;
+    if (this.activePaletteObj && this.isMovieMatchingPalette(m, this.activePaletteObj.id)) score += 8;
+    if (this.activeGenre && this.activeGenre !== 'Tümü' && (m.genres || []).includes(this.activeGenre)) score += 10;
+
+    const mins = this.parseDurationMinutes(m.duration);
+    if (typeof mins === 'number' && Number.isFinite(mins)) {
+      if (this.activeDurationFilter === 'short' && mins < 100) score += 10;
+      else if (this.activeDurationFilter === 'epic' && mins >= 140) score += 10;
+      else if (!this.activeDurationFilter || this.activeDurationFilter === 'all') score += mins <= 130 ? 8 : 0;
+    }
+
+    score += Math.max(0, (Number(m.imdbRating) || 8) - 7.5) * 6;
+    score += Math.random() * 12;
+    return score;
+  }
+
+  openDailyPick() {
+    this.closeDailyPick();
+    this._dailyPickPool = this.buildDailyPickPool();
+    if (!this._dailyPickPool.length) {
+      this.showToast('Öneri için uygun yapım bulunamadı.', 'info');
+      return;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'daily-pick-modal';
+    overlay.className = 'daily-pick-modal';
+    overlay.innerHTML = `
+      <div class="dp-backdrop" data-dp-close></div>
+      <div class="dp-dialog" role="dialog" aria-modal="true" aria-labelledby="dp-title">
+        <button type="button" class="dp-close" data-dp-close aria-label="Kapat">✕</button>
+        <div class="dp-head">
+          <span class="dp-pill">🎯 BUGÜN NE İZLESEM?</span>
+          <h3 id="dp-title">Senin için 3 aday</h3>
+          <p class="dp-sub">Ruh halin, süren, türlerin ve zevk DNA'n birlikte değerlendirildi.</p>
+        </div>
+        <div class="dp-grid" id="dp-grid"></div>
+        <div class="dp-foot">
+          <button type="button" class="btn btn-secondary" id="dp-refresh">🔄 Yeni 3 aday</button>
+          <button type="button" class="btn btn-secondary" id="dp-close-btn">Kapat</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+    this.updateBackgroundInert();
+
+    overlay.querySelectorAll('[data-dp-close]').forEach(el => el.addEventListener('click', () => this.closeDailyPick()));
+    overlay.querySelector('#dp-close-btn')?.addEventListener('click', () => this.closeDailyPick());
+    overlay.querySelector('#dp-refresh')?.addEventListener('click', () => this.renderDailyPickCandidates(true));
+
+    this._dailyPickEsc = (e) => { if (e.key === 'Escape') this.closeDailyPick(); };
+    document.addEventListener('keydown', this._dailyPickEsc);
+
+    this.renderDailyPickCandidates();
+  }
+
+  closeDailyPick() {
+    const overlay = document.getElementById('daily-pick-modal');
+    if (!overlay) return;
+    overlay.remove();
+    document.body.style.overflow = '';
+    this.updateBackgroundInert();
+    if (this._dailyPickEsc) {
+      document.removeEventListener('keydown', this._dailyPickEsc);
+      this._dailyPickEsc = null;
+    }
+  }
+
+  renderDailyPickCandidates() {
+    const grid = document.getElementById('dp-grid');
+    if (!grid) return;
+    const pool = this._dailyPickPool || this.buildDailyPickPool();
+    const scored = pool
+      .map(m => ({ m, s: this.scoreDailyPickCandidate(m) }))
+      .sort((a, b) => b.s - a.s)
+      .slice(0, 10);
+
+    const picks = [];
+    const copy = scored.slice();
+    while (picks.length < 3 && copy.length) {
+      const idx = Math.floor(Math.random() * Math.min(copy.length, 6));
+      picks.push(copy.splice(idx, 1)[0]);
+    }
+    if (!picks.length) {
+      grid.innerHTML = '<p class="dp-empty">Uygun aday bulunamadı — filtreleri gevşetip tekrar dene.</p>';
+      return;
+    }
+
+    const max = Math.max(1, ...picks.map(p => p.s));
+    grid.innerHTML = picks.map(({ m, s }) => {
+      const pct = Math.min(99, Math.max(50, Math.round(50 + (s / max) * 45)));
+      const safeTitle = escapeHtmlText(m.title);
+      const reasons = [];
+      if (this.activeMoodObj && this.isMovieMatchingMood(m, this.activeMoodObj.id)) reasons.push('🎭 ' + this.activeMoodObj.shortTitle);
+      if (this.activePaletteObj && this.isMovieMatchingPalette(m, this.activePaletteObj.id)) reasons.push('🎨 ' + this.activePaletteObj.title);
+      reasons.push('⏱️ ' + (m.duration || '~2s'));
+      reasons.push('⭐ ' + m.imdbRating);
+      return `
+        <div class="dp-card" data-mid="${escapeHtmlText(m.id)}">
+          <div class="dp-poster-wrap">
+            <img class="dp-poster" src="${escapeHtmlText(m.posterUrl)}" alt="${safeTitle}" loading="lazy" />
+            <span class="dp-match">%${pct} uyum</span>
+          </div>
+          <div class="dp-info">
+            <div class="dp-title">${safeTitle}</div>
+            <div class="dp-meta">${escapeHtmlText(m.year)} · ${escapeHtmlText((m.genres || []).slice(0, 2).join(' / '))}</div>
+            <div class="dp-reasons">${reasons.map(r => `<span class="dp-reason">${escapeHtmlText(r)}</span>`).join('')}</div>
+            <div class="dp-actions">
+              <button type="button" class="dp-btn primary" data-dp-detail="${escapeHtmlText(m.id)}">▶ Detay & Fragman</button>
+              <button type="button" class="dp-btn" data-dp-night="${escapeHtmlText(m.id)}">🌙 Geceye Ekle</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Poster yüklenemezse yerel SVG afişe düş
+    grid.querySelectorAll('.dp-poster').forEach(img => {
+      img.addEventListener('error', () => {
+        const card = img.closest('.dp-card');
+        const movie = card ? this.movies.find(m => m.id === card.dataset.mid) : null;
+        img.onerror = null;
+        img.src = getFallbackPoster(movie ? movie.title : 'Film', (movie && movie.genres && movie.genres[0]) || 'Sinema', (movie && movie.imdbRating) || 8);
+      }, { once: true });
+    });
+
+    grid.querySelectorAll('[data-dp-detail]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const movie = this.movies.find(m => m.id === btn.dataset.dpDetail);
+        if (!movie) return;
+        this.closeDailyPick();
+        this.openModal(movie);
+      });
+    });
+    grid.querySelectorAll('[data-dp-night]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const movie = this.movies.find(m => m.id === btn.dataset.dpNight);
+        if (movie) this.addNightPlanFromWatchlist(movie);
+      });
+    });
+  }
+
+  // --- R022: GÜNLÜK GÖREVLER + SERİ (STREAK) -------------------------
+  todayKey(d) {
+    const t = d instanceof Date ? d : new Date();
+    return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+  }
+
+  getDailyState() {
+    const today = this.todayKey();
+    let st = {};
+    try { st = JSON.parse(localStorage.getItem('cine3d_daily_tasks') || '{}') || {}; } catch (e) { st = {}; }
+    if (st.date !== today) {
+      st = {
+        date: today,
+        watched: 0,
+        review: 0,
+        guess: 0,
+        completed: false,
+        streak: Math.max(0, parseInt(st.streak, 10) || 0),
+        bestStreak: Math.max(0, parseInt(st.bestStreak, 10) || 0),
+        lastComplete: st.lastComplete || null
+      };
+      this.saveDailyState(st);
+    }
+    st.streak = Math.max(0, parseInt(st.streak, 10) || 0);
+    st.bestStreak = Math.max(0, parseInt(st.bestStreak, 10) || 0);
+    return st;
+  }
+
+  saveDailyState(st) {
+    try { localStorage.setItem('cine3d_daily_tasks', JSON.stringify(st)); } catch (e) { /* yoksay */ }
+  }
+
+  /** Günlük görev ilerlemesi: watched / review / guess */
+  markDailyTask(kind) {
+    if (!['watched', 'review', 'guess'].includes(kind)) return;
+    const st = this.getDailyState();
+    if (st[kind]) return;
+    st[kind] = 1;
+    if (st.watched && st.review && st.guess && !st.completed) {
+      st.completed = true;
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      const yesterday = this.todayKey(y);
+      st.streak = (st.lastComplete === yesterday) ? (st.streak || 0) + 1 : 1;
+      st.lastComplete = st.date;
+      st.bestStreak = Math.max(st.bestStreak || 0, st.streak);
+      this.showToast('🔥 Günlük görevler tamamlandı! ' + st.streak + ' günlük seri.', 'success');
+      if (window.cinemaAudio) window.cinemaAudio.playWhoosh();
+    }
+    this.saveDailyState(st);
+    this.renderDailyTasks();
+  }
+
+  /** Aile akışındaki günlük görev kartını çizer. */
+  renderDailyTasks() {
+    const host = document.getElementById('daily-tasks-host');
+    if (!host) return;
+    const st = this.getDailyState();
+    const tasks = [
+      { k: 'watched', icon: '👁️', label: 'Film izle', hint: 'Bir yapımı izlendi işaretle' },
+      { k: 'review', icon: '💬', label: 'Yorum yaz', hint: 'Bir filme yorum bırak' },
+      { k: 'guess', icon: '🎯', label: 'Tahmin yap', hint: 'Tahmin oyununda cevap ver' }
+    ];
+    const doneCount = tasks.filter(t => !!st[t.k]).length;
+    const pct = Math.round((doneCount / tasks.length) * 100);
+    const streakTxt = st.streak > 0 ? `🔥 ${st.streak} günlük seri` : '🔥 Seriyi başlat';
+    host.innerHTML = `
+      <div class="daily-card${st.completed ? ' completed' : ''}">
+        <div class="daily-head">
+          <span class="daily-title">🎯 Günlük Görevler</span>
+          <span class="daily-streak" title="En iyi seri: ${st.bestStreak || 0} gün">${streakTxt}</span>
+        </div>
+        <div class="daily-tasks">
+          ${tasks.map(t => `
+            <span class="daily-task${st[t.k] ? ' done' : ''}" title="${escapeHtmlText(t.hint)}">
+              <span class="dt-icon">${st[t.k] ? '✅' : t.icon}</span>${escapeHtmlText(t.label)}
+            </span>`).join('')}
+        </div>
+        <div class="daily-progress"><i style="width:${pct}%"></i></div>
+        <div class="daily-foot">${st.completed
+          ? '✅ Bugünün görevleri tamam — yarın seriyi sürdür!'
+          : `${doneCount}/3 tamamlandı · seri için üçünü de yap`}</div>
+      </div>`;
+  }
+
+  // --- R022: HAFTALIK AİLE SIRALAMASI -------------------------------
+  weekStartTime() {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // Pazartesi 00:00
+    return d.getTime();
+  }
+
+  getWeeklyFamilyRanking() {
+    const start = this.weekStartTime();
+    let profiles = [];
+    try { profiles = (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : []; } catch (e) { profiles = []; }
+    const rawGet = (window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get) || null;
+
+    // Yorum/yanıtlar: paylaşılan depo
+    let shared = {};
+    try { shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}'); } catch (e) { shared = {}; }
+    const reviewsBy = {};
+    const repliesBy = {};
+    Object.values(shared || {}).forEach(byPid => {
+      Object.entries(byPid || {}).forEach(([pid, rev]) => {
+        const t = Date.parse(rev.updatedAt || rev.createdAt || '');
+        if (t >= start) reviewsBy[pid] = (reviewsBy[pid] || 0) + 1;
+        (Array.isArray(rev.replies) ? rev.replies : []).forEach(r => {
+          if (Date.parse(r.at || '') >= start) repliesBy[r.pid] = (repliesBy[r.pid] || 0) + 1;
+        });
+      });
+    });
+
+    let activePid = null;
+    try { activePid = window.Cine3DStorage && window.Cine3DStorage.activePid ? window.Cine3DStorage.activePid() : null; } catch (e) { activePid = null; }
+
+    const rows = profiles.map(p => {
+      let watched = 0, weekBest = 0;
+      if (typeof rawGet === 'function') {
+        try {
+          const wl = JSON.parse(rawGet('cine3d_p_' + p.pid + '_watched') || '[]');
+          watched = (Array.isArray(wl) ? wl : []).filter(w => w && Number(w.watchedAt) >= start).length;
+        } catch (e) { watched = 0; }
+        try {
+          const st = JSON.parse(rawGet('cine3d_p_' + p.pid + '_prediction_stats') || '{}');
+          weekBest = Math.max(0, parseInt(st.weekBest, 10) || 0);
+          if (st.weekKey !== undefined && st.weekKey === null) weekBest = 0;
+        } catch (e) { weekBest = 0; }
+      }
+      const reviews = reviewsBy[p.pid] || 0;
+      const replies = repliesBy[p.pid] || 0;
+      const points = watched * 10 + reviews * 15 + replies * 5 + Math.round(weekBest / 10);
+      return { p, watched, reviews, replies, weekBest, points, active: p.pid === activePid };
+    }).sort((a, b) => b.points - a.points || String(a.p.name).localeCompare(String(b.p.name), 'tr'));
+
+    return rows;
+  }
+
+  renderWeeklyRankingHtml() {
+    const rows = this.getWeeklyFamilyRanking();
+    if (!rows.length) return '';
+    const top = Math.max(1, rows[0].points);
+    const medals = ['🥇', '🥈', '🥉'];
+    return `
+      <div class="family-week-card">
+        <div class="fwc-head">
+          <span>🏆 Haftanın Aile Sıralaması</span>
+          <span class="fwc-sub">Pazartesiden beri · izleme + yorum + yanıt + lig</span>
+        </div>
+        ${rows.map((r, i) => `
+          <div class="fwc-row${r.active ? ' active' : ''}">
+            <span class="fwc-rank">${medals[i] || (i + 1) + '.'}</span>
+            <span class="fwc-name">${escapeHtmlText(r.p.emoji)} ${escapeHtmlText(r.p.name)}${r.active ? ' <span class="fwc-you">sen</span>' : ''}</span>
+            <span class="fwc-stats">👁️ ${r.watched} · 💬 ${r.reviews} · ↩️ ${r.replies}${r.weekBest ? ` · 🎯 ${r.weekBest}p` : ''}</span>
+            <span class="fwc-points">${r.points} puan</span>
+            <span class="fwc-bar"><i style="width:${Math.max(4, Math.round((r.points / top) * 100))}%"></i></span>
+          </div>`).join('')}
+      </div>`;
   }
 
   switchDiscoveryTab(panelId) {
@@ -1825,6 +2254,7 @@ class Cine3DApp {
       });
       this.showToast(`👁️ "${movie.title}" izlendi olarak işaretlendi!`, 'success');
       if (window.cinemaAudio) window.cinemaAudio.playWhoosh();
+      this.markDailyTask('watched');
     }
 
     this.saveWatchedList();
@@ -3056,6 +3486,10 @@ class Cine3DApp {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             ${detailBtnText}
           </button>
+          <button class="btn btn-secondary btn-daily-pick" id="btn-daily-pick-hero" title="Ruh haline, sürene ve zevk DNA'na göre 3 aday (kısayol: D)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="1" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="23"></line><line x1="1" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="23" y2="12"></line></svg>
+            Bugün Ne İzlesem?
+          </button>
           <button class="btn btn-icon hero-watchlist-btn ${this.isMovieInWatchlist(heroMovie.id) ? 'active' : ''}" data-movie-id="${heroMovie.id}" title="Listeme Ekle">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="${this.isMovieInWatchlist(heroMovie.id) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           </button>
@@ -3078,6 +3512,7 @@ class Cine3DApp {
     heroContainer.querySelector('.btn-hero-detail')?.addEventListener('click', () => {
       this.openModal(heroMovie, false);
     });
+    heroContainer.querySelector('.btn-daily-pick')?.addEventListener('click', () => this.openDailyPick());
 
     heroContainer.querySelector('.hero-watchlist-btn')?.addEventListener('click', (e) => {
       this.toggleWatchlist(heroMovie);
@@ -5556,6 +5991,9 @@ class Cine3DApp {
               <!-- Orijinal Film/Dizi Müziği (OST) Şeridi Yuvası -->
               <div class="modal-ost-slot" id="modal-ost-slot"></div>
 
+              <!-- R022: Bunları da sevebilirsin -->
+              <div class="modal-similar-section" id="modal-similar-section"></div>
+
               <!-- Kişisel Film Notu & İnceleme Bölümü (Faz 6) -->
               <div class="modal-review-section" id="modal-review-section"></div>
             </div>
@@ -5599,6 +6037,8 @@ class Cine3DApp {
 
     // Kişisel Film Notu & İncelemesini Render Et
     this.renderModalReviewSection(movie);
+    // R022: Benzer film önerileri
+    this.renderSimilarMovies(movie);
 
     // Dinleyiciler
     document.getElementById('modal-close')?.addEventListener('click', () => this.closeModal());
@@ -6821,6 +7261,7 @@ class Cine3DApp {
           createdAt: prev.createdAt || new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
+        this.markDailyTask('review');
       } else {
         delete shared[movieId][pid]; // yalnızca KENDİ yorumunu silebilir
         if (!Object.keys(shared[movieId]).length) delete shared[movieId];
@@ -8437,6 +8878,34 @@ class Cine3DApp {
         const theme = e.currentTarget.dataset.theme;
         this.applyTheme(theme, true);
       });
+    });
+
+    // R022: klavye kısayolları (/ arama, G katalog, D günün önerisi, W liste, ? yardım)
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target;
+      const tag = t && t.tagName ? t.tagName : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+      if (e.key === 'Escape') { this.closeShortcutsHelp(); return; }
+      if (e.key === '/') {
+        e.preventDefault();
+        const input = document.getElementById('search-input');
+        if (input) { input.scrollIntoView({ block: 'center', behavior: 'smooth' }); input.focus(); }
+      } else if (e.key === 'g' || e.key === 'G') {
+        const target = document.getElementById('movies-anchor');
+        if (target) {
+          const nav = document.getElementById('navbar');
+          const navH = nav ? nav.offsetHeight : 74;
+          window.scrollTo({ top: Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - navH - 15), behavior: 'smooth' });
+        }
+      } else if (e.key === 'd' || e.key === 'D') {
+        this.openDailyPick();
+      } else if (e.key === 'w' || e.key === 'W') {
+        this.openWatchlistDrawer();
+      } else if (e.key === '?') {
+        e.preventDefault();
+        this.toggleShortcutsHelp();
+      }
     });
 
     // Ses Butonu (Ta-Dum kaldırıldı; kalan efektler için aç/kapa)

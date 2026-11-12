@@ -22,7 +22,7 @@
   var SCOPED = {
     watched: 1, watchlist: 1, reviews: 1, watchlist_prefs: 1, search_history: 1,
     night_plan: 1, prediction_stats: 1, guess_best_easy: 1, guess_best_medium: 1,
-    guess_best_hard: 1, champions: 1, duo_archive: 1, badges: 1,
+    guess_best_hard: 1, champions: 1, duo_archive: 1, badges: 1, daily_tasks: 1,
     /* R015/5 (ZCode): tema da profil bazlı — her profil kendi platform temasını hatırlar */
     theme: 1
   };
