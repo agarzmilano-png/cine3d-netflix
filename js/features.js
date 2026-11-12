@@ -334,7 +334,7 @@
       const watchedIds = new Set((app.watchedList || []).map(w => w.id));
       const watchlistIds = new Set((app.watchlist || []).map(m => m.id));
 
-      const scored = (app.movies || [])
+      const scored = (app.movies || []).filter(m => !app.isAgeAllowed || app.isAgeAllowed(m))
         .filter(m => !watchedIds.has(m.id))
         .map(m => ({ m, s: Reco.score(m, dna) + (watchlistIds.has(m.id) ? -1.5 : 0) }))
         .sort((a, b) => b.s - a.s)
@@ -552,7 +552,7 @@
 
     buildPool() {
       const app = F.app;
-      let base = (app.movies || []).filter(m => m.imdbRating && m.posterUrl);
+      let base = (app.movies || []).filter(m => m.imdbRating && m.posterUrl && (!app.isAgeAllowed || app.isAgeAllowed(m)));
 
       // Kalite eşiği: önce 8.0+ havuzu; yetmezse genişlet
       const strong = base.filter(m => m.imdbRating >= 8.0);
@@ -1045,7 +1045,7 @@
 
     pickPool() {
       const app = F.app;
-      let pool = (app.movies || []).filter(m => m.imdbRating && m.posterUrl);
+      let pool = (app.movies || []).filter(m => m.imdbRating && m.posterUrl && (!app.isAgeAllowed || app.isAgeAllowed(m)));
       if (this.diff === 'easy') {
         const rich = pool.filter(m => parseVotesSafe(m.imdbVotes) >= 800000 || m.imdbRating >= 8.7);
         if (rich.length >= this.TOTAL_ROUNDS) pool = rich;
@@ -2062,7 +2062,9 @@
     },
 
     runMatch() {
-      const allMovies = (window.app && Array.isArray(window.app.movies)) ? window.app.movies : [];
+      const allMovies = (window.app && typeof window.app.ageAllowedMovies === 'function')
+        ? window.app.ageAllowedMovies()
+        : ((window.app && Array.isArray(window.app.movies)) ? window.app.movies : []);
       if (!allMovies.length) return;
 
       // R014/1: iki profil de seçiliyse ikisinin de İZLEDİKLERİ dışlanır

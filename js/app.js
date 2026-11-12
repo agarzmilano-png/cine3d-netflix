@@ -971,8 +971,9 @@ class Cine3DApp {
       }
     });
 
-    const featured = themePool.filter(m => m.isFeatured);
-    return featured.length > 0 ? featured : (themePool.length > 0 ? themePool : this.movies.filter(m => m.isFeatured));
+    const safePool = themePool.filter(m => this.isAgeAllowed(m));
+    const featured = safePool.filter(m => m.isFeatured);
+    return featured.length > 0 ? featured : (safePool.length > 0 ? safePool : this.movies.filter(m => m.isFeatured && this.isAgeAllowed(m)));
   }
 
   init() {
@@ -1047,6 +1048,10 @@ class Cine3DApp {
 
     // R023: son izlediklerim şeridi
     this.renderRecentlyWatched();
+
+    // R025: görünüm yoğunluğu + sesli arama
+    this.initDensity();
+    this.initVoiceSearch();
 
     // R009/1: çoklu profil
     this.initProfiles();
@@ -1128,7 +1133,7 @@ class Cine3DApp {
     });
 
     return events
-      .filter(e => e && e.mid && e.at && this.movies.some(m => m.id === e.mid))
+      .filter(e => e && e.mid && e.at && this.movies.some(m => m.id === e.mid && this.isAgeAllowed(m)))
       .sort((a, b) => Date.parse(b.at) - Date.parse(a.at))
       .slice(0, 80);
   }
@@ -1200,6 +1205,7 @@ class Cine3DApp {
     container.innerHTML = `
       <div class="family-feed-wrap">
         <div id="daily-tasks-host"></div>
+        ${this.renderWeeklyChallengesHtml()}
         ${this.renderWeeklyRankingHtml()}
         <div class="ff-hero">
           <div>
@@ -1271,7 +1277,7 @@ class Cine3DApp {
       } catch (e) { return 0; }
     };
 
-    const scored = this.movies.filter(m => m.id !== movie.id).map(m => {
+    const scored = this.movies.filter(m => m.id !== movie.id && this.isAgeAllowed(m)).map(m => {
       let score = 0;
       if (m.director && m.director === movie.director) score += 40;
       const shared = (m.genres || []).filter(g => (movie.genres || []).includes(g));
@@ -1360,10 +1366,10 @@ class Cine3DApp {
   // --- R022: "BUGÜN NE İZLESEM?" -----------------------------------
   /** Aday havuzu: aktif filtreler + izlenmemişler; yetmezse tüm katalog. */
   buildDailyPickPool() {
-    const notWatched = (m) => !this.isMovieWatched(m.id);
+    const notWatched = (m) => !this.isMovieWatched(m.id) && this.isAgeAllowed(m);
     let pool = (this.filteredMovies || []).filter(notWatched);
     if (pool.length < 6) pool = (this.movies || []).filter(notWatched);
-    if (!pool.length) pool = (this.movies || []).slice();
+    if (!pool.length) pool = this.ageAllowedMovies().slice();
     return pool;
   }
 
@@ -1675,6 +1681,237 @@ class Cine3DApp {
     return rows;
   }
 
+  // --- R025: GÖRÜNÜM YOĞUNLUĞU -------------------------------------
+  initDensity() {
+    const btn = document.getElementById('density-toggle');
+    let mode = 'comfortable';
+    try { mode = localStorage.getItem('cine3d_density') === 'compact' ? 'compact' : 'comfortable'; } catch (e) { /* yoksay */ }
+    this.applyDensity(mode);
+    btn?.addEventListener('click', () => {
+      const next = document.body.classList.contains('density-compact') ? 'comfortable' : 'compact';
+      this.applyDensity(next);
+      try { localStorage.setItem('cine3d_density', next); } catch (e) { /* yoksay */ }
+      if (window.cinemaAudio) window.cinemaAudio.playHover();
+    });
+  }
+
+  applyDensity(mode) {
+    const compact = mode === 'compact';
+    document.body.classList.toggle('density-compact', compact);
+    const btn = document.getElementById('density-toggle');
+    if (btn) {
+      btn.classList.toggle('active', compact);
+      btn.setAttribute('aria-pressed', compact ? 'true' : 'false');
+      btn.title = compact ? 'Rahat görünüme geç' : 'Kompakt görünüme geç';
+      btn.textContent = compact ? '🔲' : '🔳';
+    }
+  }
+
+  // --- R025: SESLİ ARAMA (Web Speech API) --------------------------
+  initVoiceSearch() {
+    const btn = document.getElementById('search-mic-btn');
+    if (!btn) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { btn.classList.add('hidden'); return; }
+    btn.classList.remove('hidden');
+    let rec = null;
+    let listening = false;
+
+    const stop = () => {
+      listening = false;
+      btn.classList.remove('listening');
+      try { if (rec) rec.stop(); } catch (e) { /* yoksay */ }
+    };
+
+    btn.addEventListener('click', () => {
+      if (listening) { stop(); return; }
+      try {
+        rec = new SR();
+        rec.lang = 'tr-TR';
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
+        rec.onresult = (e) => {
+          const text = (e.results && e.results[0] && e.results[0][0] && e.results[0][0].transcript) || '';
+          if (!text.trim()) return;
+          const input = document.getElementById('search-input');
+          if (!input) return;
+          input.value = text.trim();
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          if (this.handleLiveSearch) this.handleLiveSearch(input.value);
+          this.showToast('🎙️ "' + text.trim() + '" aranıyor…', 'info');
+        };
+        rec.onerror = (e) => {
+          stop();
+          const code = e && e.error;
+          if (code === 'not-allowed' || code === 'service-not-allowed') this.showToast('Mikrofon izni verilmedi.', 'error');
+          else if (code !== 'aborted' && code !== 'no-speech') this.showToast('Sesli arama başlatılamadı.', 'error');
+        };
+        rec.onend = () => { listening = false; btn.classList.remove('listening'); };
+        rec.start();
+        listening = true;
+        btn.classList.add('listening');
+        this.showToast('🎙️ Dinliyorum… konuşun.', 'info');
+      } catch (e) {
+        stop();
+        this.showToast('Sesli arama bu tarayıcıda çalışmıyor.', 'error');
+      }
+    });
+  }
+
+  // --- R025: HAFTALIK AİLE MEYDAN OKUMALARI ------------------------
+  renderWeeklyChallengesHtml() {
+    const rows = this.getWeeklyFamilyRanking();
+    const totals = rows.reduce((acc, r) => ({
+      watched: acc.watched + (r.watched || 0),
+      reviews: acc.reviews + (r.reviews || 0),
+      replies: acc.replies + (r.replies || 0)
+    }), { watched: 0, reviews: 0, replies: 0 });
+
+    const start = this.weekStartTime();
+    let duoCount = 0;
+    try {
+      duoCount = this.collectFamilyActivity().filter(e => e.type === 'duo' && Date.parse(e.at) >= start).length;
+    } catch (e) { duoCount = 0; }
+
+    const goals = [
+      { icon: '👁️', label: '3 film izle', value: totals.watched, target: 3 },
+      { icon: '💬', label: '2 yorum / yanıt yaz', value: totals.reviews + totals.replies, target: 2 },
+      { icon: '🤝', label: '1 ortak film seç', value: duoCount, target: 1 }
+    ];
+    const done = goals.filter(g => g.value >= g.target).length;
+
+    return `
+      <div class="weekly-challenges">
+        <div class="wc-head">
+          <span>🎯 Haftanın Aile Hedefleri</span>
+          <span class="wc-sub">${done}/3 tamamlandı</span>
+        </div>
+        ${goals.map(g => {
+          const pct = Math.min(100, Math.round((g.value / g.target) * 100));
+          return `<div class="wc-row${g.value >= g.target ? ' done' : ''}">
+            <span class="wc-icon">${g.value >= g.target ? '✅' : g.icon}</span>
+            <span class="wc-label">${escapeHtmlText(g.label)}</span>
+            <span class="wc-count">${Math.min(g.value, g.target)}/${g.target}</span>
+            <span class="wc-bar"><i style="width:${pct}%"></i></span>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }
+
+  // --- R025: CINE3D WRAPPED ----------------------------------------
+  buildWrappedSlides() {
+    const year = new Date().getFullYear();
+    const watched = (this.watchedList || [])
+      .map(w => ({ w: (typeof w === 'string') ? { id: w } : w }))
+      .map(x => ({ ...x, m: this.movies.find(m => m.id === x.w.id) }))
+      .filter(x => x.m && (!x.w.watchedAt || new Date(x.w.watchedAt).getFullYear() === year));
+    const movies = watched.map(x => x.m);
+    const mins = movies.reduce((sum, m) => {
+      const v = this.parseDurationMinutes(m.duration);
+      return sum + (typeof v === 'number' && Number.isFinite(v) ? v : 0);
+    }, 0);
+
+    const genreCounts = {};
+    movies.forEach(m => (m.genres || []).forEach(g => { genreCounts[g] = (genreCounts[g] || 0) + 1; }));
+    const topGenre = Object.entries(genreCounts).sort((a, b) => b[1] - a[1])[0];
+    const directorCounts = {};
+    movies.forEach(m => { if (m.director) directorCounts[m.director] = (directorCounts[m.director] || 0) + 1; });
+    const topDirector = Object.entries(directorCounts).sort((a, b) => b[1] - a[1])[0];
+    const rated = watched.filter(x => Number(x.w.userRating) > 0);
+    const avg = rated.length ? rated.reduce((sum, x) => sum + Number(x.w.userRating), 0) / rated.length : 0;
+    const best = movies.slice().sort((a, b) => (Number(b.imdbRating) || 0) - (Number(a.imdbRating) || 0))[0];
+
+    let reviewCount = 0;
+    try {
+      const pid = this.getActivePid();
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      Object.values(shared).forEach(byPid => { if (byPid && byPid[pid]) reviewCount++; });
+    } catch (e) { reviewCount = 0; }
+    const daily = this.getDailyState();
+
+    return [
+      { emoji: '🎬', big: String(movies.length), label: 'yapım izledin', sub: year + ' senin sinema yılın' },
+      { emoji: '⏱️', big: this.formatMinutes(mins), label: 'sinema keyfi', sub: movies.length + ' yapım boyunca' },
+      { emoji: '🎭', big: topGenre ? topGenre[0] : '—', label: 'en çok sevdiğin tür', sub: topGenre ? topGenre[1] + ' yapım' : 'Henüz yeterli veri yok' },
+      { emoji: '🎥', big: topDirector ? topDirector[0].split(' ').slice(-1)[0] : '—', label: 'favori yönetmenin', sub: topDirector ? topDirector[1] + ' film' : '—' },
+      { emoji: '⭐', big: avg ? avg.toFixed(1) : '—', label: 'ortalama puanın', sub: best ? 'En yüksek: ' + best.title : '—' },
+      { emoji: '💬', big: String(reviewCount), label: 'aile yorumun', sub: daily.streak ? daily.streak + ' günlük seri' : 'Seriyi başlat!' }
+    ];
+  }
+
+  openWrapped() {
+    this.closeWrapped();
+    const slides = this.buildWrappedSlides();
+    let idx = 0;
+    const overlay = document.createElement('div');
+    overlay.id = 'wrapped-modal';
+    overlay.className = 'wrapped-modal';
+    overlay.innerHTML = `
+      <div class="wr-backdrop" data-wr-close></div>
+      <div class="wr-dialog" role="dialog" aria-modal="true" aria-label="Cine3D Wrapped">
+        <button type="button" class="wr-close" data-wr-close aria-label="Kapat">✕</button>
+        <div class="wr-slide" id="wr-slide"></div>
+        <div class="wr-nav">
+          <button type="button" class="wr-btn" id="wr-prev" aria-label="Önceki">‹</button>
+          <div class="wr-dots" id="wr-dots"></div>
+          <button type="button" class="wr-btn" id="wr-next" aria-label="Sonraki">›</button>
+        </div>
+        <div class="wr-actions">
+          <button type="button" class="btn btn-secondary" id="wr-share">📸 Karne olarak indir</button>
+          <button type="button" class="btn btn-secondary" data-wr-close>Kapat</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+
+    const paint = () => {
+      const s = slides[idx];
+      const slide = document.getElementById('wr-slide');
+      if (slide) {
+        slide.innerHTML = `
+          <span class="wr-emoji">${s.emoji}</span>
+          <span class="wr-big">${escapeHtmlText(s.big)}</span>
+          <span class="wr-label">${escapeHtmlText(s.label)}</span>
+          <span class="wr-sub">${escapeHtmlText(s.sub)}</span>
+          <span class="wr-year">CINE3D WRAPPED ${new Date().getFullYear()}</span>`;
+      }
+      overlay.querySelectorAll('.wr-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      const prev = document.getElementById('wr-prev');
+      const next = document.getElementById('wr-next');
+      if (prev) prev.disabled = idx === 0;
+      if (next) next.disabled = idx === slides.length - 1;
+    };
+
+    const dots = document.getElementById('wr-dots');
+    if (dots) {
+      dots.innerHTML = slides.map((_, i) => `<span class="wr-dot${i === 0 ? ' active' : ''}" data-wr-dot="${i}"></span>`).join('');
+      dots.querySelectorAll('[data-wr-dot]').forEach(dot => {
+        dot.addEventListener('click', () => { idx = Number(dot.dataset.wrDot) || 0; paint(); });
+      });
+    }
+    overlay.querySelector('#wr-prev')?.addEventListener('click', () => { if (idx > 0) { idx--; paint(); } });
+    overlay.querySelector('#wr-next')?.addEventListener('click', () => { if (idx < slides.length - 1) { idx++; paint(); } });
+    overlay.querySelector('#wr-share')?.addEventListener('click', () => this.exportFamilyReportCard());
+    overlay.querySelectorAll('[data-wr-close]').forEach(el => el.addEventListener('click', () => this.closeWrapped()));
+    this._wrappedEsc = (e) => { if (e.key === 'Escape') this.closeWrapped(); };
+    document.addEventListener('keydown', this._wrappedEsc);
+    paint();
+  }
+
+  closeWrapped() {
+    const overlay = document.getElementById('wrapped-modal');
+    if (!overlay) return;
+    overlay.remove();
+    const modalOpen = !!document.querySelector('#movie-modal.open');
+    const drawerOpen = !!document.querySelector('#watchlist-drawer.open');
+    document.body.style.overflow = (modalOpen || drawerOpen) ? 'hidden' : '';
+    if (this._wrappedEsc) {
+      document.removeEventListener('keydown', this._wrappedEsc);
+      this._wrappedEsc = null;
+    }
+  }
+
   // --- R023: SON İZLEDİKLERİM ŞERİDİ -------------------------------
   renderRecentlyWatched() {
     const section = document.getElementById('recently-watched-section');
@@ -1690,7 +1927,7 @@ class Cine3DApp {
         const id = (typeof w === 'string') ? w : w.id;
         return { w: (typeof w === 'string') ? { id } : w, m: this.movies.find(x => x.id === id) };
       })
-      .filter(x => x.m);
+      .filter(x => x.m && this.isAgeAllowed(x.m));
 
     if (!items.length) {
       section.classList.add('hidden');
@@ -1909,7 +2146,7 @@ class Cine3DApp {
     if (!container) return;
 
     container.innerHTML = MOOD_PRESETS.map(mood => {
-      const matchCount = this.movies.filter(m => this.isMovieMatchingMood(m, mood.id)).length;
+      const matchCount = this.movies.filter(m => this.isAgeAllowed(m) && this.isMovieMatchingMood(m, mood.id)).length;
       const isActive = this.activeMoodFilter === mood.id;
 
       return `
@@ -2083,7 +2320,7 @@ class Cine3DApp {
     if (!container) return;
 
     container.innerHTML = COLOR_PALETTES.map(pal => {
-      const matchCount = this.movies.filter(m => this.isMovieMatchingPalette(m, pal.id)).length;
+      const matchCount = this.movies.filter(m => this.isAgeAllowed(m) && this.isMovieMatchingPalette(m, pal.id)).length;
       const isActive = this.activePaletteFilter === pal.id;
 
       return `
@@ -2261,12 +2498,22 @@ class Cine3DApp {
 
   toggleWatchlist(movie) {
     const exists = this.watchlist.some(m => m.id === movie.id);
+    // R026: geri al
+    const snapshot = this.watchlist.slice();
+    const undo = { label: 'Geri al', onClick: () => {
+      this.watchlist = snapshot.slice();
+      this.saveWatchlist();
+      this.updateWatchlistModalBtn(movie.id);
+      this.renderWatchlistDrawer();
+      this.showToast('↩️ Liste işlemi geri alındı.', 'info');
+    } };
+
     if (exists) {
       this.watchlist = this.watchlist.filter(m => m.id !== movie.id);
-      this.showToast(`"${movie.title}" listenizden kaldırıldı.`, 'info');
+      this.showToast(`"${movie.title}" listenizden kaldırıldı.`, 'info', undo);
     } else {
       this.watchlist.push(movie);
-      this.showToast(`"${movie.title}" listenize eklendi!`, 'success');
+      this.showToast(`"${movie.title}" listenize eklendi!`, 'success', undo);
       if (window.cinemaAudio) window.cinemaAudio.playWhoosh();
     }
     this.saveWatchlist();
@@ -2320,17 +2567,20 @@ class Cine3DApp {
   toggleWatched(movie, userRating = null) {
     if (!movie) return;
     const exists = this.isMovieWatched(movie.id);
+    // R026: geri al için önceki durumun kopyası
+    const snapshot = this.watchedList.map(item => ({ ...item }));
+    const undo = { label: 'Geri al', onClick: () => this.restoreWatchedSnapshot(snapshot, movie) };
 
     if (exists) {
       this.watchedList = this.watchedList.filter(item => item.id !== movie.id);
-      this.showToast(`"${movie.title}" izlediklerinizden kaldırıldı.`, 'info');
+      this.showToast(`"${movie.title}" izlediklerinizden kaldırıldı.`, 'info', undo);
     } else {
       this.watchedList.push({
         id: movie.id,
         userRating: (userRating == null) ? null : Math.max(1, Math.min(10, Number(userRating) || 10)),
         watchedAt: Date.now()
       });
-      this.showToast(`👁️ "${movie.title}" izlendi olarak işaretlendi!`, 'success');
+      this.showToast(`👁️ "${movie.title}" izlendi olarak işaretlendi!`, 'success', undo);
       if (window.cinemaAudio) window.cinemaAudio.playWhoosh();
       this.markDailyTask('watched');
     }
@@ -2340,6 +2590,17 @@ class Cine3DApp {
     this.updateWatchedCardButtons();
     this.updateWatchedModalBtn(movie.id);
     this.renderWatchlistDrawer();
+  }
+
+  /** R026: izleme listesi işlemini geri alır (puan/sezon dahil). */
+  restoreWatchedSnapshot(snapshot, movie) {
+    this.watchedList = (snapshot || []).map(item => ({ ...item }));
+    this.saveWatchedList();
+    this.updateHideWatchedButton();
+    this.updateWatchedCardButtons();
+    if (movie) this.updateWatchedModalBtn(movie.id);
+    this.renderWatchlistDrawer();
+    this.showToast('↩️ İşlem geri alındı.', 'info');
   }
 
   /** R009/8: dizi sezon takibi (izleme kaydı yoksa oluşturur). */
@@ -2365,17 +2626,26 @@ class Cine3DApp {
   setMovieUserRating(movieId, rating) {
     const record = this.getMovieWatchedRecord(movieId);
     if (record) {
+      // R026: geri al
+      const prevRating = record.userRating;
+      const undo = { label: 'Geri al', onClick: () => {
+        record.userRating = prevRating;
+        this.saveWatchedList();
+        this.renderWatchlistDrawer();
+        this.showToast('↩️ Puan geri alındı.', 'info');
+      } };
+
       if (rating == null || rating === '' || Number.isNaN(Number(rating))) {
         record.userRating = null;
         this.saveWatchedList();
         this.renderWatchlistDrawer();
-        this.showToast('Puan kaldırıldı.', 'info');
+        this.showToast('Puan kaldırıldı.', 'info', undo);
         return;
       }
       record.userRating = Math.max(1, Math.min(10, Number(rating)));
       this.saveWatchedList();
       this.renderWatchlistDrawer();
-      this.showToast(`⭐ Kişisel puanınız güncellendi: ${record.userRating}/10`, 'success');
+      this.showToast(`⭐ Kişisel puanınız güncellendi: ${record.userRating}/10`, 'success', undo);
       if (window.cinemaAudio) window.cinemaAudio.playHover();
     }
   }
@@ -2863,7 +3133,7 @@ class Cine3DApp {
   // =========================================================================
   getRoulettePool() {
     const f = this.activeRouletteFilter || 'all';
-    let pool = [...this.movies];
+    let pool = this.ageAllowedMovies();
     if (f === 'masterpiece') pool = pool.filter(m => Number(m.imdbRating) >= 8.8);
     else if (f === 'scifi') pool = pool.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu'));
     else if (f === 'mind-bending') pool = pool.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending'));
@@ -4132,7 +4402,7 @@ class Cine3DApp {
   getNightPlanMovies() {
     return this.loadNightPlan()
       .map(id => this.movies.find(m => m.id === id))
-      .filter(Boolean);
+      .filter(m => m && this.isAgeAllowed(m));
   }
 
   /** Gece planı için güvenli süre (dizi → bölüm başına ~50 dk, bilinmeyen → 0). */
@@ -4400,6 +4670,17 @@ class Cine3DApp {
     const EMOJIS = ['🙂', '😎', '🍿', '🎬', '🌙', '👾', '🐱', '🦊', '🎧', '⭐'];
     let selectedEmoji = EMOJIS[0];
 
+    // R026: çocuk profili kontrolleri
+    const kidsToggle = document.getElementById('profile-kids-toggle');
+    const kidsLimit = document.getElementById('profile-kids-limit');
+    const maxAgeSelect = document.getElementById('profile-max-age');
+    const pinInput = document.getElementById('profile-pin');
+    kidsToggle?.addEventListener('change', () => {
+      kidsLimit?.classList.toggle('hidden', !kidsToggle.checked);
+      if (!kidsToggle.checked && pinInput) pinInput.value = '';
+    });
+    this.updateKidsModeIndicator();
+
     const paintButton = () => {
       const prof = S.activeProfile();
       const emojiEl = document.getElementById('profile-btn-emoji');
@@ -4409,6 +4690,7 @@ class Cine3DApp {
         if (nameEl) nameEl.textContent = prof.name;
         btn.setAttribute('title', 'Profil: ' + prof.name + ' — değiştirmek için tıkla');
       }
+      this.updateKidsModeIndicator();
     };
 
     const renderList = () => {
@@ -4417,13 +4699,17 @@ class Cine3DApp {
         <div class="profile-row${prof.pid === active ? ' active' : ''}" data-pid="${escapeHtmlText(prof.pid)}" role="menuitem" tabindex="0">
           <span class="pr-emoji">${escapeHtmlText(prof.emoji)}</span>
           <span class="pr-name">${escapeHtmlText(prof.name)}</span>
+          ${Number(prof.maxAge) > 0 ? `<span class="pr-limit" title="Çocuk profili · ${Number(prof.maxAge)}+">🧸 ${Number(prof.maxAge)}+</span>` : ''}
           <button type="button" class="pr-del" data-del="${escapeHtmlText(prof.pid)}" title="Profili sil" aria-label="${escapeHtmlText(prof.name)} profilini sil">🗑</button>
         </div>`).join('');
 
       listEl.querySelectorAll('.profile-row').forEach(row => {
         const pid = row.dataset.pid;
-        const activate = () => {
+        const activate = async () => {
           if (pid === S.activePid()) { panel.classList.add('hidden'); return; }
+          // R026: çocuk profilinden çıkışta PIN
+          const ok = await this.verifyActivePin('Çocuk profilinden çıkmak için PIN');
+          if (!ok) return;
           S.setActiveProfile(pid);
           window.location.reload(); // tüm veri katmanları yeni profile göre yüklenir
         };
@@ -4434,9 +4720,12 @@ class Cine3DApp {
         row.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
         });
-        row.querySelector('.pr-del')?.addEventListener('click', (e) => {
+        row.querySelector('.pr-del')?.addEventListener('click', async (e) => {
           e.stopPropagation();
           if (!window.confirm('Bu profil ve tüm verileri silinsin mi?')) return;
+          // R026: çocuk modundan çıkmadan profil silinemez
+          const allowed = await this.verifyActivePin('Profil silmek için PIN');
+          if (!allowed) return;
           const ok = S.removeProfile(pid);
           if (!ok) { this.showToast('Son profil silinemez.', 'info'); return; }
           if (pid === S.activePid()) { window.location.reload(); return; }
@@ -4468,7 +4757,14 @@ class Cine3DApp {
     addBtn?.addEventListener('click', () => {
       const name = (nameInput && nameInput.value || '').trim();
       if (!name) { this.showToast('Profil adı girin.', 'info'); return; }
-      const pid = S.addProfile(name, selectedEmoji);
+      const kids = !!(kidsToggle && kidsToggle.checked);
+      const maxAge = kids ? (parseInt(maxAgeSelect && maxAgeSelect.value, 10) || 13) : 0;
+      const pin = kids ? String(pinInput && pinInput.value || '').trim() : '';
+      if (kids && pin && !/^\d{4}$/.test(pin)) {
+        this.showToast('PIN 4 haneli olmalı.', 'error');
+        return;
+      }
+      const pid = S.addProfile(name, selectedEmoji, { maxAge, pinHash: (kids && pin) ? this.hashPin(pin) : null });
       S.setActiveProfile(pid);
       window.location.reload();
     });
@@ -5249,8 +5545,108 @@ class Cine3DApp {
   }
 
   // --- FİLTRELEME & SIRALAMA MANTIĞI ---
+  // --- R026: ÇOCUK PROFİLİ / YAŞ KİLİDİ ---------------------------
+  getActiveProfileObj() {
+    try {
+      const S = window.Cine3DStorage;
+      if (!S || !S.profiles) return null;
+      const pid = S.activePid ? S.activePid() : null;
+      return (S.profiles() || []).find(p => p.pid === pid) || null;
+    } catch (e) { return null; }
+  }
+
+  getActiveAgeLimit() {
+    const p = this.getActiveProfileObj();
+    const limit = p ? Number(p.maxAge) : 0;
+    return Number.isFinite(limit) && limit > 0 ? limit : 0;
+  }
+
+  parseAgeRating(value) {
+    const m = String(value == null ? '' : value).match(/(\d{1,2})/);
+    return m ? Math.max(0, Math.min(18, parseInt(m[1], 10))) : 0;
+  }
+
+  /** Aktif profil çocuk profiliyse yaş sınırını uygular. */
+  isAgeAllowed(movie) {
+    const limit = this.getActiveAgeLimit();
+    if (!limit) return true;
+    return this.parseAgeRating(movie && movie.ageRating) <= limit;
+  }
+
+  ageAllowedMovies() {
+    return (this.movies || []).filter(m => this.isAgeAllowed(m));
+  }
+
+  /** Basit yerel PIN özeti (4 hane; cihaz içi ebeveyn kilidi). */
+  hashPin(pin) {
+    const src = 'cine3d|' + String(pin == null ? '' : pin);
+    let h = 2166136261;
+    for (let i = 0; i < src.length; i++) {
+      h ^= src.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return ('0000000' + (h >>> 0).toString(16)).slice(-8);
+  }
+
+  /** 4 haneli PIN sorar; iptalde null döner. */
+  askPin(title) {
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.id = 'pin-modal';
+      overlay.className = 'pin-modal open';
+      overlay.innerHTML = `
+        <div class="pin-backdrop" data-pin-cancel></div>
+        <div class="pin-dialog" role="dialog" aria-modal="true" aria-labelledby="pin-title">
+          <h3 id="pin-title">${escapeHtmlText(title || 'PIN gerekli')}</h3>
+          <p class="pin-sub">Ebeveyn PIN'i (4 hane)</p>
+          <input type="password" id="pin-input" class="pin-input" inputmode="numeric" maxlength="4" autocomplete="off" />
+          <div class="pin-actions">
+            <button type="button" class="btn btn-secondary" id="pin-cancel">İptal</button>
+            <button type="button" class="btn btn-primary" id="pin-ok">Onayla</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      const input = overlay.querySelector('#pin-input');
+      const done = (val) => { overlay.remove(); resolve(val); };
+      overlay.querySelector('#pin-ok')?.addEventListener('click', () => done(input ? input.value.trim() : ''));
+      overlay.querySelector('#pin-cancel')?.addEventListener('click', () => done(null));
+      overlay.querySelector('[data-pin-cancel]')?.addEventListener('click', () => done(null));
+      input?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); done(input.value.trim()); }
+        if (e.key === 'Escape') { e.preventDefault(); done(null); }
+      });
+      setTimeout(() => input && input.focus(), 50);
+    });
+  }
+
+  /** Aktif profil çocuk profiliyse PIN doğrular; değilse true döner. */
+  async verifyActivePin(title) {
+    const active = this.getActiveProfileObj();
+    if (!active || !(Number(active.maxAge) > 0) || !active.pinHash) return true;
+    const pin = await this.askPin(title || 'Çocuk profilinden çıkmak için PIN');
+    if (pin == null) return false;
+    if (this.hashPin(pin) !== active.pinHash) {
+      this.showToast('PIN hatalı.', 'error');
+      return false;
+    }
+    return true;
+  }
+
+  /** Navbar'da çocuk modu rozetini güncelle. */
+  updateKidsModeIndicator() {
+    const limit = this.getActiveAgeLimit();
+    document.body.classList.toggle('kids-mode', !!limit);
+    const badge = document.getElementById('kids-mode-badge');
+    if (badge) {
+      badge.classList.toggle('hidden', !limit);
+      if (limit) badge.textContent = '🧸 ' + limit + '+';
+    }
+    const btn = document.getElementById('profile-btn');
+    if (btn) btn.classList.toggle('kids-profile', !!limit);
+  }
+
   applyFilters() {
-    let result = [...this.movies];
+    let result = this.ageAllowedMovies();
 
     // 0. Ruh Hali (Mood) Filtresi (Beyin Yakan, Ağlatan, Komedi, Aksiyon, Büyü vb.)
     if (this.activeMoodFilter) {
@@ -5553,10 +5949,11 @@ class Cine3DApp {
       }
     }
 
-    const sortedCandidates = [...candidatePool].sort((a, b) => b.imdbRating - a.imdbRating);
+    const sortedCandidates = [...candidatePool].filter(m => this.isAgeAllowed(m)).sort((a, b) => b.imdbRating - a.imdbRating);
     const top10 = [...sortedCandidates];
     if (top10.length < 10) {
       const remaining = [...this.movies]
+        .filter(m => this.isAgeAllowed(m))
         .sort((a, b) => b.imdbRating - a.imdbRating)
         .filter(m => !top10.some(t => t.id === m.id));
       top10.push(...remaining.slice(0, 10 - top10.length));
@@ -5970,6 +6367,11 @@ class Cine3DApp {
 
   // --- DETAY MODALI / FİLM KONUSU & FRAGMAN ---
   openModal(movie, autoplayTrailer = false, updateUrl = true) {
+    if (!movie) return;
+    if (!this.isAgeAllowed(movie)) {
+      this.showToast('🧸 Bu yapım çocuk profili için uygun değil.', 'info');
+      return;
+    }
     this.stopMovieOst();
     this.activeMovieForModal = movie;
     const modal = document.getElementById('movie-modal');
@@ -8314,6 +8716,9 @@ class Cine3DApp {
           <button class="btn-report-demo" id="btn-family-card" title="Paylaşılabilir aile karnesi (PNG)">
             <span>📸 Karne</span>
           </button>
+          <button class="btn-report-demo" id="btn-wrapped" title="Yıl sonu Cine3D Wrapped">
+            <span>🎁 Wrapped</span>
+          </button>
           <input type="file" id="import-file-input" accept="application/json,.json" hidden />
         </div>
 
@@ -8444,6 +8849,8 @@ class Cine3DApp {
       document.getElementById('btn-report-csv')?.addEventListener('click', () => this.exportLibraryCSV());
       // R024: paylaşılabilir aile karnesi (PNG)
       document.getElementById('btn-family-card')?.addEventListener('click', () => this.exportFamilyReportCard());
+      // R025: Cine3D Wrapped
+      document.getElementById('btn-wrapped')?.addEventListener('click', () => this.openWrapped());
       document.getElementById('import-file-input')?.addEventListener('change', (e) => this.handleImportFile(e.target));
     }
   }
@@ -8671,16 +9078,33 @@ class Cine3DApp {
   }
 
   // --- TOAST BİLDİRİMİ ---
-  showToast(message, type = 'info') {
+  showToast(message, type = 'info', action = null) {
     const toast = document.getElementById('toast-notification');
     if (!toast) return;
 
-    toast.textContent = this.decodeHtmlEntities(message);
-    toast.className = `toast-popup show ${type}`;
+    toast.innerHTML = '';
+    const text = document.createElement('span');
+    text.className = 'toast-text';
+    text.textContent = this.decodeHtmlEntities(message);
+    toast.appendChild(text);
 
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 3200);
+    let hasAction = false;
+    if (action && action.label && typeof action.onClick === 'function') {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'toast-action';
+      btn.textContent = action.label;
+      btn.addEventListener('click', () => {
+        try { action.onClick(); } catch (e) { /* yoksay */ }
+        toast.classList.remove('show');
+      });
+      toast.appendChild(btn);
+      hasAction = true;
+    }
+
+    toast.className = `toast-popup show ${type}${hasAction ? ' has-action' : ''}`;
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => toast.classList.remove('show'), hasAction ? 6000 : 3200);
   }
 
   resetFilters() {

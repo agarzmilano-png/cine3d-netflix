@@ -2378,3 +2378,249 @@
   font-size: 0.8rem;
   padding: 6px 2px;
 }
+
+/* ==========================================================================
+   R025: Görünüm yoğunluğu, sesli arama, haftalık hedefler, Wrapped
+   ========================================================================== */
+
+/* ---- Kompakt görünüm ---- */
+body.density-compact .movies-grid {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+}
+body.density-compact .card-poster { height: 272px; }
+body.density-compact .card-summary-short,
+body.density-compact .card-genres,
+body.density-compact .card-streaming-row { display: none; }
+body.density-compact .movie-card .card-inner { transform: none; }
+body.density-compact .recent-card { width: 112px; }
+body.density-compact .top10-poster-wrap { width: 140px; height: 205px; }
+
+/* ---- Sesli arama ---- */
+.search-mic-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #cfcfda;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.search-mic-btn:hover { background: rgba(229, 9, 20, 0.2); border-color: rgba(229, 9, 20, 0.55); color: #fff; }
+.search-mic-btn.listening {
+  background: rgba(229, 9, 20, 0.3);
+  border-color: rgba(229, 9, 20, 0.8);
+  color: #fff;
+  animation: micPulse 1s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.45); }
+  50% { box-shadow: 0 0 0 7px rgba(229, 9, 20, 0); }
+}
+
+/* ---- Haftalık aile hedefleri ---- */
+.weekly-challenges {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.09), rgba(167, 139, 250, 0.06));
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.wc-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-weight: 800;
+  color: #7dd3fc;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+.wc-sub { font-size: 0.68rem; font-weight: 700; color: #a3a3b2; }
+.wc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: #cfcfda;
+}
+.wc-row.done { color: #bbf7d0; }
+.wc-icon { width: 20px; text-align: center; }
+.wc-label { flex: 1 1 130px; font-weight: 600; }
+.wc-count { font-weight: 800; font-variant-numeric: tabular-nums; color: #fff; }
+.wc-row.done .wc-count { color: #86efac; }
+.wc-bar { flex: 1 1 100%; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.wc-bar > i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #38bdf8, #a78bfa); transition: width 0.4s ease; }
+.wc-row.done .wc-bar > i { background: linear-gradient(90deg, #86efac, #38bdf8); }
+
+/* ---- Cine3D Wrapped ---- */
+.wrapped-modal {
+  position: fixed; inset: 0; z-index: 12500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; transition: opacity 0.25s ease;
+}
+.wrapped-modal.open { opacity: 1; }
+.wr-backdrop { position: absolute; inset: 0; background: rgba(4, 4, 8, 0.88); backdrop-filter: blur(6px); }
+.wr-dialog {
+  position: relative;
+  width: min(560px, 100%);
+  border-radius: 22px;
+  padding: 26px 22px 18px;
+  background:
+    radial-gradient(700px 260px at 15% 0%, rgba(229, 9, 20, 0.28), transparent 60%),
+    radial-gradient(600px 260px at 90% 100%, rgba(245, 197, 24, 0.16), transparent 60%),
+    #101018;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75);
+  color: #fff;
+  transform: translateY(14px);
+  transition: transform 0.25s ease;
+}
+.wrapped-modal.open .wr-dialog { transform: translateY(0); }
+.wr-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff; cursor: pointer;
+}
+.wr-slide {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; min-height: 320px; gap: 6px; padding: 10px 6px 18px;
+}
+.wr-emoji { font-size: 3.4rem; line-height: 1; margin-bottom: 6px; }
+.wr-big {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(3rem, 9vw, 5rem);
+  line-height: 1; letter-spacing: 1px;
+  background: linear-gradient(135deg, #fff, #f5c518);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.wr-label { font-size: 1.05rem; font-weight: 800; color: #fff; }
+.wr-sub { font-size: 0.82rem; color: #a3a3b2; }
+.wr-year { margin-top: 10px; font-size: 0.62rem; font-weight: 900; letter-spacing: 2px; color: rgba(255, 255, 255, 0.4); }
+.wr-nav { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.wr-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff; font-size: 1.2rem; line-height: 1; cursor: pointer;
+}
+.wr-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.wr-dots { display: flex; gap: 6px; }
+.wr-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.25); cursor: pointer; transition: all 0.2s ease; }
+.wr-dot.active { width: 20px; border-radius: 999px; background: #f5c518; }
+.wr-actions { display: flex; justify-content: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+
+@media (max-width: 560px) {
+  body.density-compact .card-poster { height: 230px; }
+  .wr-dialog { padding: 20px 14px 14px; }
+  .wr-slide { min-height: 280px; }
+}
+
+/* R026: geri al (undo) destekli bildirim */
+.toast-popup.has-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 10px;
+  max-width: min(92vw, 560px);
+  border-radius: 16px;
+  text-align: left;
+}
+.toast-popup .toast-text { flex: 1 1 auto; }
+.toast-action {
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+.toast-action:hover { background: rgba(255, 255, 255, 0.22); }
+
+/* ==========================================================================
+   R026: Çocuk profili / yaş kilidi / PIN
+   ========================================================================== */
+.profile-kids-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 8px 0 4px;
+  font-size: 0.78rem;
+  color: #cfcfda;
+  cursor: pointer;
+  user-select: none;
+}
+.profile-kids-toggle input { accent-color: #38bdf8; }
+.profile-kids-limit { display: grid; gap: 6px; margin: 4px 0 8px; }
+.profile-kids-limit .profile-input { width: 100%; }
+.pr-limit {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 999px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.kids-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  margin-right: 6px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #7dd3fc;
+  font-size: 0.66rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.profile-btn.kids-profile { border-color: rgba(56, 189, 248, 0.55); background: rgba(56, 189, 248, 0.12); }
+body.kids-mode #mood-section .mood-card[data-mood-id="thriller"],
+body.kids-mode #mood-section .mood-card[data-mood-id="mind-bending"] { opacity: 0.6; }
+
+/* PIN penceresi */
+.pin-modal {
+  position: fixed; inset: 0; z-index: 13500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.pin-backdrop { position: absolute; inset: 0; background: rgba(5, 5, 9, 0.82); backdrop-filter: blur(5px); }
+.pin-dialog {
+  position: relative; width: min(360px, 100%);
+  background: #15151d; border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px; padding: 20px; color: #e8e8ee;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7); text-align: center;
+}
+.pin-dialog h3 { margin: 0 0 4px; font-size: 1.02rem; }
+.pin-sub { margin: 0 0 14px; font-size: 0.76rem; color: #8a8a99; }
+.pin-input {
+  width: 100%; text-align: center; letter-spacing: 0.6em;
+  font-size: 1.6rem; font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px; color: #fff; padding: 10px 8px 10px 16px;
+  font-family: inherit;
+}
+.pin-input:focus { outline: 2px solid rgba(56, 189, 248, 0.6); outline-offset: 1px; }
+.pin-actions { display: flex; gap: 8px; margin-top: 14px; }
+.pin-actions .btn { flex: 1; justify-content: center; }

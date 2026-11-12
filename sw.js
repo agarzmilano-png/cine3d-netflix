@@ -7,7 +7,7 @@
  * - `ignoreSearch`: asset'ler `?v=3.1` sorgusuyla istendiği için eşleşme sorunu yok.
  * - Önbellekte karşılık bulunamayan isteklerde `respondWith(undefined)` hatası giderildi.
  */
-const CACHE_VERSION = '7.9';
+const CACHE_VERSION = '8.0';
 const CACHE_NAME = `cine3d-cache-v${CACHE_VERSION}`;
 
 // Service worker'ın bulunduğu dizin (site kökü veya alt dizin)
@@ -120,6 +120,35 @@ async function networkFirstAsset(request) {
   }
 }
 
+// R026: Görsel (poster) önbelleği — ağ yoksa son görülen afişler açılsın.
+const IMAGE_CACHE = 'cine3d-img-v1';
+const IMAGE_MAX = 140;
+
+async function trimImageCache(cache) {
+  try {
+    const keys = await cache.keys();
+    if (keys.length > IMAGE_MAX) {
+      for (let i = 0; i < keys.length - IMAGE_MAX; i++) await cache.delete(keys[i]);
+    }
+  } catch (err) { /* yoksay */ }
+}
+
+async function imageCacheFirst(request) {
+  const cache = await caches.open(IMAGE_CACHE);
+  const cached = await cache.match(request);
+  if (cached) return cached;
+  try {
+    const fresh = await fetch(request);
+    if (fresh && (fresh.status === 200 || fresh.type === 'opaque')) {
+      cache.put(request, fresh.clone()).catch(() => {});
+      trimImageCache(cache);
+    }
+    return fresh;
+  } catch (err) {
+    return cached || Response.error();
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -127,6 +156,12 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin && url.protocol !== 'https:') return;
   if (isBypassed(req, url)) return;
+
+  // Görseller: önce önbellek (posterler), yoksa ağdan çek ve önbelleğe al.
+  if (req.destination === 'image' || /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(url.pathname)) {
+    event.respondWith(imageCacheFirst(req));
+    return;
+  }
 
   // Sayfa gezinmeleri: her zaman önce ağ (taze index.html), sonra önbellek.
   if (req.mode === 'navigate') {

@@ -113,7 +113,7 @@
     window.Cine3DStorage.migrated = migrateLegacyTo(activePid);
   }
 
-  function addProfile(name, emoji) {
+  function addProfile(name, emoji, opts) {
     var list = loadProfiles();
     var clean = String(name || '').trim().slice(0, 24) || 'Profil';
     // R019: aynı milisaniyede iki profil eklenirse pid çakışıyordu (veri karışması).
@@ -122,14 +122,44 @@
     do {
       pid = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     } while (list.some(function (p) { return p && p.pid === pid; }));
-    list.push({
+
+    var profile = {
       pid: pid,
       name: clean,
       emoji: String(emoji || '🙂').slice(0, 4),
       createdAt: Date.now()
-    });
+    };
+    // R026: çocuk profili / yaş kilidi
+    if (opts && typeof opts === 'object') {
+      var maxAge = parseInt(opts.maxAge, 10);
+      if (!isNaN(maxAge) && maxAge > 0) profile.maxAge = Math.max(1, Math.min(18, maxAge));
+      if (opts.pinHash) profile.pinHash = String(opts.pinHash);
+    }
+    list.push(profile);
     saveProfiles(list);
     return pid;
+  }
+
+  function updateProfile(pid, patch) {
+    var list = loadProfiles();
+    var p = null;
+    for (var i = 0; i < list.length; i++) { if (list[i] && list[i].pid === pid) { p = list[i]; break; } }
+    if (!p) return false;
+    if (patch && typeof patch === 'object') {
+      if (typeof patch.name === 'string') p.name = patch.name.trim().slice(0, 24) || p.name;
+      if (typeof patch.emoji === 'string') p.emoji = patch.emoji.slice(0, 4);
+      if (patch.maxAge !== undefined) {
+        var ma = parseInt(patch.maxAge, 10);
+        if (ma > 0) p.maxAge = Math.max(1, Math.min(18, ma));
+        else delete p.maxAge;
+      }
+      if (patch.pinHash !== undefined) {
+        if (patch.pinHash) p.pinHash = String(patch.pinHash);
+        else delete p.pinHash;
+      }
+    }
+    saveProfiles(list);
+    return true;
   }
 
   function removeProfile(pid) {
@@ -163,6 +193,7 @@
       return loadProfiles().find(function (p) { return p.pid === pid; }) || null;
     },
     addProfile: addProfile,
+    updateProfile: updateProfile,
     removeProfile: removeProfile,
     setActiveProfile: setActiveProfile,
     keyFor: scopedKey,

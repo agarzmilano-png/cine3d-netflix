@@ -65,10 +65,10 @@
   <link rel="dns-prefetch" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Stiller -->
-  <link rel="stylesheet" href="css/style.css?v=7.9" />
-  <link rel="stylesheet" href="css/modal.css?v=7.9" />
-  <link rel="stylesheet" href="css/vs-duel.css?v=7.9" />
-  <link rel="stylesheet" href="css/features.css?v=7.9" />
+  <link rel="stylesheet" href="css/style.css?v=8.0" />
+  <link rel="stylesheet" href="css/modal.css?v=8.0" />
+  <link rel="stylesheet" href="css/vs-duel.css?v=8.0" />
+  <link rel="stylesheet" href="css/features.css?v=8.0" />
 </head>
 <body>
   <a class="skip-link" href="#movies-anchor">İçeriğe atla</a>
@@ -145,6 +145,14 @@
               placeholder="Ara" 
               autocomplete="off"
             />
+            <button type="button" class="search-mic-btn hidden" id="search-mic-btn" title="Sesle ara" aria-label="Sesle ara">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
             <span class="search-atmosphere-tag hidden" id="search-atmosphere-tag"></span>
             <div class="search-loading-spinner hidden" id="search-spinner" title="İnternetten çekiliyor...">
               <div class="spinner-ring"></div>
@@ -157,6 +165,7 @@
 
         <!-- R009/1: Profil değiştirici -->
         <div class="profile-switcher" id="profile-switcher">
+          <span class="kids-mode-badge hidden" id="kids-mode-badge" title="Çocuk modu aktif">🧸 13+</span>
           <button class="profile-btn" id="profile-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Profil değiştir">
             <span class="profile-btn-emoji" id="profile-btn-emoji">🙂</span>
             <span class="profile-btn-name" id="profile-btn-name">Ben</span>
@@ -167,6 +176,18 @@
             <div class="profile-new">
               <input type="text" id="profile-new-name" class="profile-input" placeholder="Yeni profil adı" maxlength="24" />
               <div class="profile-emoji-row" id="profile-emoji-row"></div>
+              <label class="profile-kids-toggle">
+                <input type="checkbox" id="profile-kids-toggle" />
+                <span>🧸 Çocuk profili (yaş kilidi)</span>
+              </label>
+              <div class="profile-kids-limit hidden" id="profile-kids-limit">
+                <select id="profile-max-age" class="profile-input" aria-label="Yaş sınırı">
+                  <option value="7">7+ · Okul öncesi</option>
+                  <option value="13" selected>13+ · Genç</option>
+                  <option value="16">16+ · Ergen</option>
+                </select>
+                <input type="password" id="profile-pin" class="profile-input" inputmode="numeric" maxlength="4" placeholder="PIN (isteğe bağlı, 4 hane)" autocomplete="off" />
+              </div>
               <button type="button" class="profile-add-btn" id="profile-add-btn">＋ Yeni profil</button>
             </div>
           </div>
@@ -707,6 +728,7 @@
 
             <!-- Görünüm Modu Değiştirici (Izgara / 3D Karusel) -->
             <div class="view-mode-toggle">
+              <button class="view-btn" id="density-toggle" title="Kompakt / rahat görünüm" aria-pressed="false">🔳</button>
               <button class="view-btn active" id="view-toggle-grid" title="Netflix Standart Izgara Görünümü">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <rect x="3" y="3" width="7" height="7"></rect>
@@ -956,18 +978,18 @@
   <div class="toast-popup" id="toast-notification"></div>
 
   <!-- JavaScript Dosyaları (Three.js body sonunda: 603 KB'lik parse ilk boyamayı bloklamaz) -->
-  <script src="js/vendor/three.min.js?v=7.9"></script>
-  <script src="js/movies-data.js?v=7.9"></script>
-  <script src="js/movie-soundtracks.js?v=7.9"></script>
-  <script src="js/storage-adapter.js?v=7.9"></script>
-  <script src="js/config.js?v=7.9"></script>
-  <script src="js/catalog-index.js?v=7.9"></script>
-  <script src="js/api-service.js?v=7.9"></script>
-  <script src="js/audio.js?v=7.9"></script>
-  <script src="js/three-scene.js?v=7.9"></script>
-  <script src="js/coverflow3d.js?v=7.9"></script>
-  <script src="js/story-adventure.js?v=7.9"></script>
-  <script src="js/app.js?v=7.9"></script>
-  <script src="js/features.js?v=7.9"></script>
+  <script src="js/vendor/three.min.js?v=8.0"></script>
+  <script src="js/movies-data.js?v=8.0"></script>
+  <script src="js/movie-soundtracks.js?v=8.0"></script>
+  <script src="js/storage-adapter.js?v=8.0"></script>
+  <script src="js/config.js?v=8.0"></script>
+  <script src="js/catalog-index.js?v=8.0"></script>
+  <script src="js/api-service.js?v=8.0"></script>
+  <script src="js/audio.js?v=8.0"></script>
+  <script src="js/three-scene.js?v=8.0"></script>
+  <script src="js/coverflow3d.js?v=8.0"></script>
+  <script src="js/story-adventure.js?v=8.0"></script>
+  <script src="js/app.js?v=8.0"></script>
+  <script src="js/features.js?v=8.0"></script>
 </body>
 </html>
