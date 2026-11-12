@@ -1568,7 +1568,6 @@ class Cine3DApp {
     if (chosen) {
       this.setMoodFilter(chosen.id);
       this.showToast(`🎲 Şansına "${chosen.title}" çıktı! İyi seyirler!`, 'success');
-      if (window.cinemaAudio) window.cinemaAudio.playThemeSound(this.activeTheme);
     }
   }
 
@@ -1732,7 +1731,6 @@ class Cine3DApp {
     if (chosen) {
       this.setPaletteFilter(chosen.id);
       this.showToast(`🎨 Şansına "${chosen.title}" (${chosen.directorSignature}) çıktı!`, 'success');
-      if (window.cinemaAudio) window.cinemaAudio.playThemeSound(this.activeTheme);
     }
   }
 
@@ -1911,7 +1909,6 @@ class Cine3DApp {
     if (this.activeMovieForModal) this.updateWatchedModalBtn(this.activeMovieForModal.id);
     this.renderWatchlistDrawer();
     this.showToast('📊 8 Başyapıtlık örnek izleme geçmişi yüklendi!', 'success');
-    if (window.cinemaAudio) window.cinemaAudio.playTaDum();
   }
 
   clearWatchedHistory() {
@@ -2315,7 +2312,6 @@ class Cine3DApp {
       });
     });
 
-    if (window.cinemaAudio) window.cinemaAudio.playTaDum();
   }
 
   closeVSModal() {
@@ -2601,7 +2597,6 @@ class Cine3DApp {
     const revealCard = document.getElementById('roulette-reveal-card');
     this.isSpinningRoulette = false;
     if (spinBtn) spinBtn.disabled = false;
-    if (window.cinemaAudio) window.cinemaAudio.playTaDum();
     if (!revealCard || !targetMovie) return;
 
     const inList = this.isMovieInWatchlist(targetMovie.id);
@@ -2962,7 +2957,6 @@ class Cine3DApp {
     link.href = canvas.toDataURL('image/png');
     link.click();
     this.showToast(`🎟️ "${movie.title}" sinema biletiniz indirildi!`, 'success');
-    if (window.cinemaAudio) window.cinemaAudio.playTaDum();
   }
 
   // --- HERO BANNER ---
@@ -3287,7 +3281,6 @@ class Cine3DApp {
       if (items && items.length > 0) {
         const added = this.integrateOnlineMovies(items, true);
         this.showToast(`✨ ${added} yeni yapım kataloğa eklendi!`, 'success');
-        if (window.cinemaAudio) window.cinemaAudio.playTaDum();
       } else {
         this.showToast('İnternet bağlantısı sağlandı, yeni filmler güncel.', 'info');
       }
@@ -4573,7 +4566,6 @@ class Cine3DApp {
     }
 
     this.showToast(`🎬 "${cleanPerson}" filmografisi listeleniyor (${this.filteredMovies.length} yapım)`, 'success');
-    if (window.cinemaAudio) window.cinemaAudio.playTaDum();
   }
 
   // --- FİLTRELEME & SIRALAMA MANTIĞI ---
@@ -7969,7 +7961,6 @@ class Cine3DApp {
         this.coverflowInstance.updateData(this.filteredMovies);
       }
 
-      if (window.cinemaAudio) window.cinemaAudio.playTaDum();
     } else {
       coverflowContainer?.classList.add('hidden');
       gridContainer?.classList.remove('hidden');
@@ -8448,21 +8439,11 @@ class Cine3DApp {
       });
     });
 
-    // Ses Butonu
+    // Ses Butonu (Ta-Dum kaldırıldı; kalan efektler için aç/kapa)
     document.getElementById('audio-toggle-btn')?.addEventListener('click', () => {
       if (window.cinemaAudio) {
-        const muted = window.cinemaAudio.toggleMute();
+        window.cinemaAudio.toggleMute();
         this.updateAudioButtonState();
-        if (!muted) {
-          window.cinemaAudio.playThemeSound(this.activeTheme);
-        }
-      }
-    });
-
-    // Platform Ses Efekti Tanıtım Butonu
-    document.getElementById('play-tadum-btn')?.addEventListener('click', () => {
-      if (window.cinemaAudio) {
-        window.cinemaAudio.playThemeSound(this.activeTheme);
       }
     });
 
@@ -8675,14 +8656,13 @@ class Cine3DApp {
       });
     });
 
-    // Sayfaya ilk kullanıcı etkileşiminde ses context'ini uyandır ve tema introsunu çal
-    const playIntroOnce = () => {
-      if (window.cinemaAudio && !window.cinemaAudio.ctx) {
-        window.cinemaAudio.playThemeSound(this.activeTheme);
-      }
-      window.removeEventListener('click', playIntroOnce);
+    // Sayfaya ilk kullanıcı etkileşiminde Web Audio context'ini uyandır.
+    // (Ta-Dum/tema introsu kaldırıldı; hover, whoosh ve çark tıkırtısı çalışmaya devam eder.)
+    const warmAudioOnce = () => {
+      if (window.cinemaAudio && !window.cinemaAudio.ctx) window.cinemaAudio.init();
+      window.removeEventListener('click', warmAudioOnce);
     };
-    window.addEventListener('click', playIntroOnce, { once: true });
+    window.addEventListener('click', warmAudioOnce, { once: true });
   }
 
   // --- PLATFORM TEMA YÖNETİMİ (NETFLIX, HBO MAX, DISNEY+, PRIME VIDEO) ---
@@ -8829,8 +8809,6 @@ class Cine3DApp {
     const logoIconWrap = document.getElementById('logo-icon-wrap');
     const logoText = document.getElementById('logo-text');
     const logoBadge = document.getElementById('logo-theme-badge');
-    const tadumBtnText = document.getElementById('tadum-btn-text');
-    const tadumBtn = document.getElementById('play-tadum-btn');
     const searchInput = document.getElementById('search-input');
 
     const navLinkHome = document.getElementById('nav-link-home');
@@ -8843,8 +8821,6 @@ class Cine3DApp {
     if (logoIconWrap) logoIconWrap.innerHTML = currentMeta.logoIcon;
     if (logoText) logoText.textContent = currentMeta.logoTitle;
     if (logoBadge) logoBadge.textContent = currentMeta.badge;
-    if (tadumBtnText) tadumBtnText.textContent = currentMeta.soundName;
-    if (tadumBtn) tadumBtn.setAttribute('title', `${currentMeta.badge} Ses Efektini Dinle`);
     if (searchInput) searchInput.setAttribute('placeholder', currentMeta.searchPlaceholder);
 
     if (navLinkHome) navLinkHome.textContent = currentMeta.home;
@@ -8909,9 +8885,8 @@ class Cine3DApp {
       window.cinema3D.setTheme(theme);
     }
 
-    // 7. Platforma Özel Sinematik Ses Efektini Çal
-    if (playSound && window.cinemaAudio) {
-      window.cinemaAudio.playThemeSound(theme);
+    // 7. Tema değişim bildirimi (Ta-Dum sesi kaldırıldı)
+    if (playSound) {
       this.showToast(currentMeta.toast, 'success');
     }
   }

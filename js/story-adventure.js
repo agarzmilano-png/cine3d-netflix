@@ -461,8 +461,6 @@ class StoryAdventureEngine {
     if (this.gameBoard) this.gameBoard.classList.add('hidden');
     if (this.analyzingCard) this.analyzingCard.classList.remove('hidden');
 
-    if (window.cinemaAudio) window.cinemaAudio.playThemeSound(this.app.activeTheme || 'netflix');
-
     // 1.4 saniye dramatik sinematik DNA analizi
     setTimeout(() => {
       this.targetMovie = this.resolveDestinyMovie(this.userChoices);

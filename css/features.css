@@ -1184,8 +1184,6 @@
 
 @media (max-width: 1650px) {
   .logo-badge { display: none; }
-  .btn-tadum #tadum-btn-text { display: none; }
-  .btn-tadum { padding: 8px; border-radius: var(--radius-full, 999px); }
   .search-box-inner { width: 160px; }
   .nav-link { padding: 5px 6px; font-size: 0.76rem; }
   .theme-pill-btn { padding: 4px 8px; }

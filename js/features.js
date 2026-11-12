@@ -603,7 +603,7 @@
         history: [],
         size: fighters.length
       };
-      playSound('playTaDum');
+      playSound('playWhoosh');
       Tournament.renderMatch();
     },
 
@@ -724,7 +724,7 @@
       if (!s || s.picking) return;
       s.picking = true;
 
-      playSound(isAiPick ? 'playTaDum' : 'playWhoosh');
+      playSound('playWhoosh');
       if (pickedEl) {
         pickedEl.classList.add('is-picked');
         const body = document.getElementById('tournament-body');
@@ -762,7 +762,7 @@
     renderChampion(champion) {
       const body = document.getElementById('tournament-body');
       if (!body) return;
-      playSound('playTaDum');
+      playSound('playWhoosh');
 
       Tournament.addChampion(champion, Tournament.state ? Tournament.state.size : Tournament.size);
       const champs = Tournament.champions();
@@ -1292,7 +1292,7 @@
       }
 
       let note;
-      if (diff <= 0.1) { note = '😐 Neredeyse kusursuz! Sen bir IMDb veritabanısısın.'; playSound('playTaDum'); }
+      if (diff <= 0.1) { note = '😐 Neredeyse kusursuz! Sen bir IMDb veritabanısısın.'; playSound('playWhoosh'); }
       else if (diff <= 0.3) { note = '🔥 Çok yakın! Gerçek bir sinefil sezgisi.'; playSound('playWhoosh'); }
       else if (diff <= 0.6) { note = '👍 Fena değil — çoğu insan bundan daha uzak tahmin ediyor.'; playSound('playHover'); }
       else { note = '🤔 Peki ya poster bu kadar iddialıysa? Sıradaki turda dene!'; playSound('playHover'); }
@@ -1403,7 +1403,7 @@
       const submitBtn = document.getElementById('btn-guess-submit');
       if (submitBtn) submitBtn.classList.add('hidden');
       document.getElementById('btn-guess-new-game')?.classList.remove('hidden');
-      playSound('playTaDum');
+      playSound('playWhoosh');
     }
   };
 
@@ -2054,7 +2054,7 @@
       this.candidates = scored.slice(0, 6);
       this.currentIndex = 0;
 
-      playSound('playTaDum');
+      playSound('playWhoosh');
       this.renderResult();
     },
 

@@ -823,27 +823,6 @@ body {
   box-shadow: 0 0 8px var(--netflix-red);
 }
 
-.btn-tadum {
-  background: linear-gradient(135deg, rgba(229, 9, 20, 0.25), rgba(245, 197, 24, 0.2));
-  border: 1px solid var(--border-red);
-  color: #fff;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.btn-tadum:hover {
-  background: var(--netflix-red);
-  box-shadow: 0 0 16px var(--netflix-red-glow);
-  transform: scale(1.04);
-}
-
 /* --- HERO BÖLÜMÜ --- */
 .hero-section {
   position: relative;
@@ -5922,11 +5901,6 @@ body {
   flex-shrink: 0;
 }
 
-.btn-tadum {
-  padding: 6px 12px;
-  font-size: 0.78rem;
-  border-radius: var(--radius-full);
-}
 
 .nav-icon-btn {
   width: 38px;
@@ -6128,15 +6102,6 @@ body {
   }
   .compact-theme-bar .theme-pill-btn {
     padding: 5px 8px;
-  }
-  .btn-tadum span {
-    display: none;
-  }
-  .btn-tadum {
-    padding: 8px;
-    width: 38px;
-    height: 38px;
-    justify-content: center;
   }
 }
 
