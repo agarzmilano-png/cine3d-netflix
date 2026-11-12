@@ -4084,8 +4084,12 @@ class Cine3DApp {
   }
 
   initHeroAutoCycle() {
-    setInterval(() => {
+    if (this._heroCycleTimer) clearInterval(this._heroCycleTimer);
+    this._heroCycleTimer = setInterval(() => {
       if (document.hidden) return;
+      // R030: bir katman (modal/oneri/PIN) acikken hero degismesin — odak ve
+      // kullanici baglami korunur, arka planda icerik degismez.
+      if (this.getActiveFocusLayer()) return;
       const themeFeatured = this.getThemeFeaturedMovies(this.activeTheme);
       if (themeFeatured.length > 0) {
         this.heroMovieIndex = (this.heroMovieIndex + 1) % themeFeatured.length;
@@ -5608,7 +5612,9 @@ class Cine3DApp {
 
   /** R028: katman açılırken odağı hatırla, kapanınca geri ver (a11y). */
   rememberFocus() {
-    this._overlayReturnFocus = document.activeElement;
+    const el = document.activeElement;
+    this._overlayReturnFocus = (el && el !== document.body) ? el : null;
+    this._overlayReturnFocusId = (el && el.id) ? el.id : null;
   }
 
   restoreFocus() {
@@ -5616,7 +5622,17 @@ class Cine3DApp {
     this._overlayReturnFocus = null;
     if (el && el.isConnected && typeof el.focus === 'function') {
       try { el.focus({ preventScroll: true }); } catch (e) { /* yoksay */ }
+      this._overlayReturnFocusId = null;
+      return;
     }
+    // R030: tetikleyici yeniden render edildiyse (ör. hero döngüsü) id ile bul
+    if (this._overlayReturnFocusId) {
+      const again = document.getElementById(this._overlayReturnFocusId);
+      if (again && typeof again.focus === 'function') {
+        try { again.focus({ preventScroll: true }); } catch (e) { /* yoksay */ }
+      }
+    }
+    this._overlayReturnFocusId = null;
   }
 
   /** Katman açıldığında ilk anlamlı öğeye odaklan. */

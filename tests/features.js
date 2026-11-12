@@ -149,7 +149,13 @@ function check(name, ok, detail = '') {
     await new Promise((r) => (ws.onopen = r));
     await send('Runtime.enable');
     await send('Page.enable');
+    // CI yavasligini yerelde taklit etmek icin: FEATURES_CPU_THROTTLE=4
+    if (process.env.FEATURES_CPU_THROTTLE) {
+      await send('Emulation.setCPUThrottlingRate', { rate: Number(process.env.FEATURES_CPU_THROTTLE) });
+    }
     await nav();
+    // Test boyunca hero otomatik döngüsünü durdur (12 sn'de bir DOM'u yeniliyor)
+    await ev(`if (window.app && window.app._heroCycleTimer) clearInterval(window.app._heroCycleTimer); return true;`);
 
     // 1) Açılış + veri bütünlüğü
     const boot = await ev(`
@@ -444,7 +450,7 @@ function check(name, ok, detail = '') {
       await new Promise(r => setTimeout(r, 300));
       res.closed = !document.getElementById('daily-pick-modal');
       res.inertAfter = main && main.hasAttribute('inert');
-      res.focusReturned = document.activeElement === trigger;
+      res.focusReturned = !!document.activeElement && document.activeElement.id === 'btn-daily-pick-hero';
       // yardım penceresi
       document.dispatchEvent(new KeyboardEvent('keydown', { key: '?', bubbles: true, cancelable: true }));
       await new Promise(r => setTimeout(r, 300));
