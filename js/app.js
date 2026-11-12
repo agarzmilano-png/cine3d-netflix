@@ -1051,6 +1051,12 @@ class Cine3DApp {
     // R013: eski yorumları paylaşılan aile yorum duvarına taşı (bir kez)
     this.migrateReviewsToShared();
 
+    // R019: aile aktivite akışını ilk kez çiz ve veri değişimlerini dinle
+    this.renderFamilyFeed();
+    window.addEventListener('cine3d-user-data-changed', () => {
+      if (document.getElementById('family-feed-section')) this.renderFamilyFeed();
+    });
+
     // R009/3: paylaşılan liste bağlantısı (#wl=...)
     this.openSharedListFromHash();
 
@@ -1067,6 +1073,176 @@ class Cine3DApp {
       btn.addEventListener('click', () => {
         const panelId = btn.dataset.tabPanel;
         this.switchDiscoveryTab(panelId);
+      });
+    });
+  }
+
+  // --- R019: AİLE AKTİVİTE AKIŞI -----------------------------------
+  /** Tüm profillerin yorum / izleme / ödül olaylarını tek zaman tünelinde toplar. */
+  collectFamilyActivity() {
+    const events = [];
+    let shared = {};
+    try { shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}'); } catch (e) { shared = {}; }
+
+    Object.entries(shared || {}).forEach(([mid, byPid]) => {
+      Object.entries(byPid || {}).forEach(([pid, rev]) => {
+        const at = rev.updatedAt || rev.createdAt;
+        if (at) {
+          events.push({ type: 'review', at, pid, mid, note: rev.note || '', spoiler: !!rev.spoiler, tag: rev.tag || '', reactions: this.summarizeReactions(rev) });
+        }
+        (Array.isArray(rev.replies) ? rev.replies : []).forEach(r => {
+          if (r && r.at) events.push({ type: 'reply', at: r.at, pid: r.pid, mid, note: r.note || '' });
+        });
+      });
+    });
+
+    let profiles = [];
+    try {
+      profiles = (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : [];
+    } catch (e) { profiles = []; }
+    const rawGet = (window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get) || null;
+    const read = (pid, name) => {
+      if (typeof rawGet !== 'function') return [];
+      try {
+        const raw = JSON.parse(rawGet('cine3d_p_' + pid + '_' + name) || '[]');
+        return Array.isArray(raw) ? raw : [];
+      } catch (e) { return []; }
+    };
+
+    profiles.forEach(p => {
+      read(p.pid, 'watched').forEach(w => {
+        if (!w || !w.watchedAt) return;
+        events.push({ type: 'watched', at: new Date(w.watchedAt).toISOString(), pid: p.pid, mid: (typeof w === 'string') ? w : w.id, rating: (w.userRating || 0) });
+      });
+      read(p.pid, 'duo_archive').forEach(a => {
+        if (!a || !a.at || !a.movieId) return;
+        events.push({ type: 'duo', at: new Date(a.at).toISOString(), pid: p.pid, mid: a.movieId, pct: a.pct, p1: a.p1, p2: a.p2 });
+      });
+      read(p.pid, 'champions').forEach(c => {
+        if (!c || !c.at || !c.movieId) return;
+        events.push({ type: 'champion', at: new Date(c.at).toISOString(), pid: p.pid, mid: c.movieId, size: c.size, name: c.name });
+      });
+    });
+
+    return events
+      .filter(e => e && e.mid && e.at && this.movies.some(m => m.id === e.mid))
+      .sort((a, b) => Date.parse(b.at) - Date.parse(a.at))
+      .slice(0, 80);
+  }
+
+  /** Aile akışı sekmesini çizer (filtre: tümü / yorum / izleme / ödül). */
+  renderFamilyFeed() {
+    const container = document.getElementById('family-feed-section');
+    if (!container) return;
+
+    const all = this.collectFamilyActivity();
+    const filter = this._feedFilter || 'all';
+    const matches = (e) => {
+      if (filter === 'review') return e.type === 'review' || e.type === 'reply';
+      if (filter === 'watched') return e.type === 'watched';
+      if (filter === 'award') return e.type === 'duo' || e.type === 'champion';
+      return true;
+    };
+    const list = all.filter(matches).slice(0, 40);
+    const counts = {
+      review: all.filter(e => e.type === 'review').length,
+      reply: all.filter(e => e.type === 'reply').length,
+      watched: all.filter(e => e.type === 'watched').length,
+      award: all.filter(e => e.type === 'duo' || e.type === 'champion').length
+    };
+
+    const VERBS = {
+      review: 'yorum yazdı',
+      reply: 'bir yoruma yanıt verdi',
+      watched: 'izledi',
+      duo: 'için ortak film seçti',
+      champion: 'turnuvada şampiyon yaptı'
+    };
+    const ICONS = { review: '💬', reply: '↩️', watched: '👁️', duo: '🤝', champion: '🏆' };
+
+    const items = list.map((e, idx) => {
+      const meta = this.getProfileMeta(e.pid);
+      const movie = this.movies.find(m => m.id === e.mid);
+      const title = movie ? movie.title : e.mid;
+      const noteSpoiler = e.spoiler && (e.type === 'review');
+      const detail = [];
+      if (e.type === 'watched' && Number(e.rating) > 0) detail.push(`⭐ ${e.rating}/10 verdi`);
+      if (e.type === 'duo') detail.push(`%${e.pct} uyum · ${e.p1} + ${e.p2}`);
+      if (e.type === 'champion') detail.push(`${e.size} filmlik turnuva`);
+      if (e.type === 'review' && e.tag) detail.push(e.tag);
+      if (e.reactions) {
+        const likes = (e.reactions['👍'] || 0) + (e.reactions['❤️'] || 0);
+        if (likes) detail.push(`👍 ${likes}`);
+      }
+      const noteHtml = e.note
+        ? `<p class="ff-note${noteSpoiler ? ' spoiler' : ''}" ${noteSpoiler ? 'data-ff-spoiler="' + idx + '"' : ''}>${escapeHtmlText(noteSpoiler ? '⚠️ Spoiler — göstermek için tıkla' : e.note)}</p>`
+        : '';
+      return `
+        <div class="ff-item" data-type="${e.type}">
+          <span class="ff-avatar">${escapeHtmlText(meta.emoji)}</span>
+          <div class="ff-body">
+            <div class="ff-line">
+              <strong>${escapeHtmlText(meta.name)}</strong>
+              <span class="ff-verb">${ICONS[e.type] || ''} ${VERBS[e.type] || 'etkinlik'}</span>
+              <button type="button" class="ff-movie" data-mid="${escapeHtmlText(e.mid)}" title="Detayları aç">${escapeHtmlText(title)}</button>
+              ${e.type === 'champion' ? '<span class="ff-badge gold">ŞAMPİYON</span>' : ''}
+              ${e.type === 'duo' ? '<span class="ff-badge blue">DUO</span>' : ''}
+            </div>
+            <div class="ff-meta">${this.formatRelativeTime(e.at)}${detail.length ? ' · ' + detail.map(d => escapeHtmlText(d)).join(' · ') : ''}</div>
+            ${noteHtml}
+          </div>
+        </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="family-feed-wrap">
+        <div class="ff-hero">
+          <div>
+            <span class="ff-pill">👨‍👩‍👧 AİLE AKTİVİTESİ</span>
+            <h3 class="ff-title">Ailenin Sinema Nabzı</h3>
+            <p class="ff-sub">Tüm profillerin yorumları, izledikleri ve kazandığı ödüller tek akışta.</p>
+          </div>
+          <div class="ff-stats">
+            <span class="ff-stat"><strong>${counts.review}</strong><small>yorum</small></span>
+            <span class="ff-stat"><strong>${counts.reply}</strong><small>yanıt</small></span>
+            <span class="ff-stat"><strong>${counts.watched}</strong><small>izleme</small></span>
+            <span class="ff-stat"><strong>${counts.award}</strong><small>ödül</small></span>
+          </div>
+        </div>
+
+        <div class="ff-toolbar" role="group" aria-label="Akış filtresi">
+          <button type="button" class="ff-chip${filter === 'all' ? ' active' : ''}" data-ffilter="all">Tümü</button>
+          <button type="button" class="ff-chip${filter === 'review' ? ' active' : ''}" data-ffilter="review">💬 Yorumlar</button>
+          <button type="button" class="ff-chip${filter === 'watched' ? ' active' : ''}" data-ffilter="watched">👁️ İzlemeler</button>
+          <button type="button" class="ff-chip${filter === 'award' ? ' active' : ''}" data-ffilter="award">🏆 Ödüller</button>
+        </div>
+
+        <div class="ff-list">
+          ${items || `<div class="ff-empty"><span>🌱</span><p>Henüz aile aktivitesi yok. İlk yorumu yaz, film işaretle veya birlikte film seç — burası canlanır.</p></div>`}
+        </div>
+      </div>`;
+
+    container.querySelectorAll('.ff-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        this._feedFilter = chip.dataset.ffilter || 'all';
+        this.renderFamilyFeed();
+        if (window.cinemaAudio) window.cinemaAudio.playHover();
+      });
+    });
+
+    container.querySelectorAll('.ff-movie').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const movie = this.movies.find(m => m.id === btn.dataset.mid);
+        if (movie) this.openModal(movie);
+      });
+    });
+
+    container.querySelectorAll('[data-ff-spoiler]').forEach(p => {
+      p.addEventListener('click', () => {
+        const e = list[Number(p.dataset.ffSpoiler)];
+        if (!e) return;
+        p.classList.remove('spoiler');
+        p.textContent = e.note;
       });
     });
   }
@@ -1100,7 +1276,9 @@ class Cine3DApp {
       }
     });
 
-    if (panelId === 'roulette-section') {
+    if (panelId === 'family-feed-section') {
+      this.renderFamilyFeed();
+    } else if (panelId === 'roulette-section') {
       this.initRoulette();
     } else if (panelId === 'duo-match-section') {
       if (window.cine3dFeatures && window.cine3dFeatures.duoMatcher) {
@@ -3315,13 +3493,29 @@ class Cine3DApp {
       return;
     }
 
-    list.innerHTML = movies.map((m, i) => {
+    // R019: hafta modunda "bugünün filmi" kartı
+    const todayMovie = (weekMode && todayIdx < movies.length) ? movies[todayIdx] : null;
+    const todayCard = todayMovie ? `
+      <div class="np-today-card">
+        <div class="npt-ribbon">BUGÜNÜN FİLMİ · ${escapeHtmlText(this.weekDayLabel(todayIdx))}</div>
+        <img class="npt-poster" src="${escapeHtmlText(todayMovie.posterUrl)}" alt="${escapeHtmlText(todayMovie.title)}" loading="lazy" />
+        <div class="npt-info">
+          <div class="npt-title">${escapeHtmlText(todayMovie.title)}</div>
+          <div class="npt-meta">⭐ ${escapeHtmlText(todayMovie.imdbRating)} · ${escapeHtmlText(todayMovie.year)} · ${escapeHtmlText(todayMovie.duration || '')} · ${this.formatMinutes(this.nightPlanMinutes(todayMovie))}</div>
+          <div class="npt-actions">
+            <button type="button" class="npt-btn primary" id="np-today-open">▶ Şimdi Başlat</button>
+            <button type="button" class="npt-btn${this.isMovieWatched(todayMovie.id) ? ' done' : ''}" id="np-today-watched">${this.isMovieWatched(todayMovie.id) ? '✅ İzlendi' : '👁️ İzledim'}</button>
+          </div>
+        </div>
+      </div>` : '';
+
+    list.innerHTML = todayCard + movies.map((m, i) => {
       const mins = this.nightPlanMinutes(m);
       const watched = this.isMovieWatched(m.id);
       return `
         ${i > 0 ? '<div class="np-break">☕ ' + NIGHT_BREAK_MINUTES + ' dk mola</div>' : ''}
         <div class="np-item ${watched ? 'np-watched' : ''}${weekMode ? (i % 7 === todayIdx ? ' np-today' : '') : ''}" data-movie-id="${escapeHtmlText(m.id)}">
-          <span class="np-idx">${weekMode ? escapeHtmlText(this.weekDayLabel(i)) : i + 1}</span>
+          <span class="np-idx" title="${weekMode ? escapeHtmlText(this.weekDayLabel(i)) + ' · ' + this.formatMinutes(mins) : this.formatMinutes(mins)}">${weekMode ? escapeHtmlText(this.weekDayLabel(i)) : i + 1}</span>
           ${weekMode && i % 7 === todayIdx ? '<span class="np-today-tag">bugün</span>' : ''}
           <img class="np-thumb" src="${escapeHtmlText(m.posterUrl)}" alt="${escapeHtmlText(m.title)}" loading="lazy" />
           <div class="np-info">
@@ -3366,6 +3560,16 @@ class Cine3DApp {
         this.saveNightPlan(plan);
         this.renderNightPlan();
       });
+    });
+
+    // R019: "bugünün filmi" hızlı aksiyonları
+    document.getElementById('np-today-open')?.addEventListener('click', () => {
+      if (todayMovie) this.openModal(todayMovie);
+    });
+    document.getElementById('np-today-watched')?.addEventListener('click', () => {
+      if (!todayMovie) return;
+      this.toggleWatched(todayMovie);
+      this.renderNightPlan();
     });
   }
 
@@ -3447,6 +3651,12 @@ class Cine3DApp {
         'SUMMARY:' + icsEsc('🎬 ' + m.title),
         'DESCRIPTION:' + icsEsc('Cine3D hafta planı · IMDb ' + (m.imdbRating || '-') + ' · ' + (m.year || '')),
         'LOCATION:' + icsEsc('Cine3D · ' + this.weekDayLabel(i)),
+        // R019: film başlamadan 10 dk önce bildirim
+        'BEGIN:VALARM',
+        'TRIGGER:-PT10M',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:' + icsEsc('Cine3D: ' + m.title + ' birazdan başlıyor'),
+        'END:VALARM',
         'END:VEVENT'
       );
     });
@@ -6534,8 +6744,7 @@ class Cine3DApp {
   }
 
   /** Tepki ver / geri al: aynı emoji tekrar tıklanınca kaldırılır. */
-  toggleReviewReaction(movieId, targetPid, emoji) {
-    if (!movieId || !targetPid || !emoji) return false;
+  toggleReviewReaction(movieId, targetPid, emoji) {    if (!movieId || !targetPid || !emoji) return false;
     const pid = this.getActivePid();
     if (pid === targetPid) return false; // kendi yorumuna tepki verilmez
     try {
@@ -6546,6 +6755,44 @@ class Cine3DApp {
       if (rev.reactions[pid] === emoji) delete rev.reactions[pid];
       else rev.reactions[pid] = emoji;
       localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** Yorum altına yanıt ekler (tek seviye, 280 karakter). */
+  addReviewReply(movieId, targetPid, note) {
+    const text = String(note || '').trim().slice(0, 280);
+    if (!movieId || !targetPid || !text) return false;
+    const pid = this.getActivePid();
+    try {
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      const rev = shared[movieId] && shared[movieId][targetPid];
+      if (!rev) return false;
+      if (!Array.isArray(rev.replies)) rev.replies = [];
+      rev.replies.push({ pid, author: this.getProfileName(pid), at: new Date().toISOString(), note: text });
+      localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
+      window.dispatchEvent(new CustomEvent('cine3d-user-data-changed'));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** Yalnızca kendi yanıtını siler (at = ISO zaman damgası). */
+  deleteReviewReply(movieId, targetPid, at) {
+    if (!movieId || !targetPid || !at) return false;
+    const pid = this.getActivePid();
+    try {
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      const rev = shared[movieId] && shared[movieId][targetPid];
+      if (!rev || !Array.isArray(rev.replies)) return false;
+      const before = rev.replies.length;
+      rev.replies = rev.replies.filter(r => !(r.at === at && r.pid === pid));
+      if (rev.replies.length === before) return false;
+      localStorage.setItem('cine3d_reviews_shared', JSON.stringify(shared));
+      window.dispatchEvent(new CustomEvent('cine3d-user-data-changed'));
       return true;
     } catch (e) {
       return false;
@@ -6656,6 +6903,33 @@ class Cine3DApp {
             : `<p class="saved-review-text"><span class="spoiler-flag">⚠️ Spoiler</span>${esc(rev.note)}</p>`)
           : `<p class="saved-review-text">${esc(rev.note)}</p>`;
 
+        const replyList = (rev.replies || []).map(r => {
+          const rMeta = this.getProfileMeta(r.pid);
+          const mine = r.pid === activePid;
+          return `
+            <div class="review-reply${mine ? ' mine' : ''}">
+              <div class="review-reply-head">
+                <span class="rr-author">${esc(rMeta.emoji)} ${esc(rMeta.name)}</span>
+                <span class="rr-time">${esc(this.formatRelativeTime(r.at))}</span>
+                ${mine ? `<button type="button" class="rr-del" data-reply-del="${esc(rev.pid)}" data-reply-at="${esc(r.at)}" title="Yanıtı sil">✕</button>` : ''}
+              </div>
+              <p class="rr-text">${esc(r.note)}</p>
+            </div>`;
+        }).join('');
+
+        const replyBlockHidden = rev.spoiler && prefs.hideSpoilers && !rev.isMine;
+        const replyBlock = `
+          <div class="review-replies${replyBlockHidden ? ' hidden' : ''}" id="rep-${esc(rev.pid)}" data-spoiler-replies="rep-${esc(rev.pid)}">
+            ${replyList ? `<div class="review-reply-list">${replyList}</div>` : ''}
+            <div class="review-reply-actions">
+              <button type="button" class="review-reply-toggle" data-reply-to="${esc(rev.pid)}">↩ Yanıtla${rev.replies && rev.replies.length ? ' (' + rev.replies.length + ')' : ''}</button>
+            </div>
+            <form class="review-reply-form hidden" data-reply-form="${esc(rev.pid)}">
+              <input type="text" class="review-reply-input" maxlength="280" placeholder="Yanıtını yaz… (280 karakter)" aria-label="Yanıt" />
+              <button type="submit" class="review-reply-send">Gönder</button>
+            </form>
+          </div>`;
+
         return `
         <div class="saved-review-card${rev.isMine ? ' mine' : ''}" data-review-pid="${esc(rev.pid)}">
           <div class="review-box-header">
@@ -6675,6 +6949,7 @@ class Cine3DApp {
               ? `<span class="rr-hint">senin yorumun</span>`
               : (rev.myReaction ? `<span class="rr-hint">tepkin kaydedildi</span>` : '')}
           </div>
+          ${replyBlock}
           ${rev.isMine ? `
           <div class="saved-review-actions">
             <button class="btn-review-sm" id="btn-edit-review">✏️ Düzenle</button>
@@ -6725,13 +7000,41 @@ class Cine3DApp {
         </div>
       `;
 
-      // Spoiler "Göster"
+      // Spoiler "Göster" (yorum + yanıtlar birlikte açılır)
       container.querySelectorAll('.spoiler-reveal-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const body = container.querySelector('#' + btn.dataset.spoilerId);
           const mask = btn.closest('.spoiler-mask');
           if (body) body.classList.remove('hidden');
           if (mask) mask.classList.add('hidden');
+          const replies = container.querySelector('[data-spoiler-replies="rep-' + btn.dataset.spoilerId.replace(/^sp-/, '') + '"]');
+          if (replies) replies.classList.remove('hidden');
+        });
+      });
+
+      // Yanıtlar: aç/kapa, gönder, sil
+      container.querySelectorAll('.review-reply-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const form = container.querySelector('.review-reply-form[data-reply-form="' + btn.dataset.replyTo + '"]');
+          if (!form) return;
+          form.classList.toggle('hidden');
+          if (!form.classList.contains('hidden')) form.querySelector('input')?.focus();
+        });
+      });
+      container.querySelectorAll('.review-reply-form').forEach(form => {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const input = form.querySelector('input');
+          const note = (input && input.value || '').trim();
+          if (!note) return;
+          this.addReviewReply(movie.id, form.dataset.replyForm, note);
+          this.renderModalReviewSection(movie, false);
+        });
+      });
+      container.querySelectorAll('.rr-del').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.deleteReviewReply(movie.id, btn.dataset.replyDel, btn.dataset.replyAt);
+          this.renderModalReviewSection(movie, false);
         });
       });
 

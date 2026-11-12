@@ -443,6 +443,9 @@
     addChampion(movie, size) {
       const list = this.champions();
       list.unshift({
+        // R019: aile akışında zaman damgası + film kimliği gerekli
+        movieId: movie.id,
+        at: Date.now(),
         name: movie.title,
         poster: movie.posterUrl,
         date: new Date().toLocaleDateString('tr-TR'),
@@ -849,7 +852,7 @@
     // R007/6: kalıcı lig istatistikleri
     STATS_KEY: 'cine3d_prediction_stats',
     STATS_BADGES: [5, 10, 15],
-    stats: { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0 },
+    stats: { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0, byDiff: {}, weekKey: null, weekBest: 0 },
 
     loadStats() {
       try {
@@ -858,11 +861,24 @@
           totalCorrect: Math.max(0, parseInt(raw.totalCorrect, 10) || 0),
           bestStreak: Math.max(0, parseInt(raw.bestStreak, 10) || 0),
           gamesPlayed: Math.max(0, parseInt(raw.gamesPlayed, 10) || 0),
-          answers: Math.max(0, parseInt(raw.answers, 10) || 0)
+          answers: Math.max(0, parseInt(raw.answers, 10) || 0),
+          byDiff: (raw.byDiff && typeof raw.byDiff === 'object') ? raw.byDiff : {},
+          weekKey: typeof raw.weekKey === 'string' ? raw.weekKey : null,
+          weekBest: Math.max(0, parseInt(raw.weekBest, 10) || 0)
         };
       } catch (err) {
-        return { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0 };
+        return { totalCorrect: 0, bestStreak: 0, gamesPlayed: 0, answers: 0, byDiff: {}, weekKey: null, weekBest: 0 };
       }
+    },
+
+    /** R019: ISO hafta anahtarı (2026-W46) — haftalık lig için. */
+    weekKey(date) {
+      const d = new Date(Date.UTC((date || new Date()).getFullYear(), (date || new Date()).getMonth(), (date || new Date()).getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return d.getUTCFullYear() + '-W' + String(week).padStart(2, '0');
     },
 
     saveStats() {
@@ -903,9 +919,24 @@
         const games = num(st.gamesPlayed);
         const streak = num(st.bestStreak);
         const accuracy = answers > 0 ? Math.round((correct / answers) * 100) : 0;
+        // R019: zorluk bazlı doğruluk
+        const byDiff = (st.byDiff && typeof st.byDiff === 'object') ? st.byDiff : {};
+        const diffKeys = [['easy', 'K'], ['medium', 'O'], ['hard', 'Z']];
+        const diffText = diffKeys.map(([k, label]) => {
+          const d = byDiff[k];
+          const da = d ? (parseInt(d.answers, 10) || 0) : 0;
+          const dc = d ? (parseInt(d.correct, 10) || 0) : 0;
+          if (!da) return '';
+          return label + ' %' + Math.round((dc / da) * 100);
+        }).filter(Boolean).join(' · ');
         // Sıralama puanı: seri > doğru sayısı > oyun > doğruluk
         const rankScore = streak * 1000 + correct * 10 + games * 3 + accuracy;
-        return { p, correct, answers, games, streak, accuracy, rankScore, active: p.pid === activePid };
+        return {
+          p, correct, answers, games, streak, accuracy, rankScore, diffText,
+          weekKey: st.weekKey || null,
+          weekBest: Math.max(0, parseInt(st.weekBest, 10) || 0),
+          active: p.pid === activePid
+        };
       });
 
       rowsData.sort((a, b) => b.rankScore - a.rankScore || String(a.p.name).localeCompare(String(b.p.name), 'tr'));
@@ -924,12 +955,18 @@
             <span class="gfp-stat" title="Doğru cevap / doğruluk">✅ ${accText}</span>
             <span class="gfp-stat" title="Oynanan oyun">🎮 <strong>${r.games}</strong></span>
           </span>
+          ${r.diffText ? `<span class="gfp-diff" title="Zorluk bazlı doğruluk (K: Kolay, O: Orta, Z: Zor)">${r.diffText}</span>` : ''}
           <span class="gfp-bar" aria-hidden="true"><i style="width:${rel}%"></i></span>
         </div>`;
       }).join('');
 
+      const currentWeek = this.weekKey(new Date());
+      const weekLeader = rowsData
+        .filter(r => r.weekKey === currentWeek && r.weekBest > 0)
+        .sort((a, b) => b.weekBest - a.weekBest)[0];
       const headNote = leader
         ? `Lider: ${esc(leader.p.emoji)} <strong>${esc(leader.p.name)}</strong> · ${leader.streak} seri`
+          + (weekLeader ? ` · Hafta: ${esc(weekLeader.p.emoji)} <strong>${esc(weekLeader.p.name)}</strong> (${weekLeader.weekBest}p)` : '')
         : '';
       const html = `<div class="guess-family-panel" id="guess-family-panel">
         <div class="gfp-head">👥 Tahmin Ligi — Profiller Arası <span class="gfp-note">${headNote}</span></div>
@@ -1225,6 +1262,13 @@
       GuessGame.stats.bestStreak = Math.max(GuessGame.stats.bestStreak || 0, GuessGame.streak || 0);
       // R018: doğruluk yüzdesi için toplam cevap sayısı
       GuessGame.stats.answers = (GuessGame.stats.answers || 0) + 1;
+      // R019: zorluk bazlı doğruluk (Kolay / Orta / Zor)
+      if (!GuessGame.stats.byDiff || typeof GuessGame.stats.byDiff !== 'object') GuessGame.stats.byDiff = {};
+      const diffKey = GuessGame.diff || 'medium';
+      const dStat = GuessGame.stats.byDiff[diffKey] || { answers: 0, correct: 0 };
+      dStat.answers = (parseInt(dStat.answers, 10) || 0) + 1;
+      if (diff <= 0.3) dStat.correct = (parseInt(dStat.correct, 10) || 0) + 1;
+      GuessGame.stats.byDiff[diffKey] = dStat;
       GuessGame.saveStats();
 
       GuessGame.totalScore += pts + bonus;
@@ -1293,6 +1337,14 @@
       GuessGame.stats = GuessGame.loadStats();
       GuessGame.stats.gamesPlayed = (GuessGame.stats.gamesPlayed || 0) + 1;
       GuessGame.stats.bestStreak = Math.max(GuessGame.stats.bestStreak || 0, GuessGame.streak || 0);
+      // R019: haftalık şampiyonluk (hafta değişince sıfırlanır)
+      const currentWeek = GuessGame.weekKey(new Date());
+      if (GuessGame.stats.weekKey !== currentWeek) {
+        GuessGame.stats.weekKey = currentWeek;
+        GuessGame.stats.weekBest = GuessGame.totalScore || 0;
+      } else {
+        GuessGame.stats.weekBest = Math.max(GuessGame.stats.weekBest || 0, GuessGame.totalScore || 0);
+      }
       GuessGame.saveStats();
 
       const cfg = GuessGame.DIFFS[GuessGame.diff];
@@ -1796,6 +1848,53 @@
     },
 
     /**
+     * R019: Profilin izleme geçmişinden tür ağırlıkları (0-1) ve yönetmen
+     * tercihleri çıkarır. Duo eşleştirmesi yalnızca elle seçilen türlere değil,
+     * gerçek izleme zevkine de yaslanır.
+     */
+    buildGenreAffinity(pid) {
+      const movies = pid ? this.getProfileWatchedMovies(pid) : [];
+      const counts = {};
+      const directors = {};
+      movies.forEach(m => {
+        (m.genres || []).forEach(g => { counts[g] = (counts[g] || 0) + 1; });
+        if (m.director) directors[m.director] = (directors[m.director] || 0) + 1;
+      });
+      const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+      const weights = {};
+      Object.entries(counts).forEach(([g, c]) => { weights[g] = c / total; });
+      return { weights, directors, count: movies.length };
+    },
+
+    /**
+     * R019: Sonucu iki profilde de "izlendi" olarak işaretler.
+     * Aktif profil için uygulamanın kendi akışı (toggleWatched) kullanılır.
+     */
+    markBothWatched(movie) {
+      if (!movie || !(this.p1.pid && this.p2.pid)) return false;
+      const rawGet = window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get;
+      const rawSet = window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.set;
+      if (typeof rawGet !== 'function' || typeof rawSet !== 'function') return false;
+      let activePid = null;
+      try { activePid = window.Cine3DStorage.activePid(); } catch (err) { activePid = null; }
+
+      [this.p1.pid, this.p2.pid].forEach(pid => {
+        if (!pid || pid === activePid) return;
+        let list = [];
+        try { list = JSON.parse(rawGet('cine3d_p_' + pid + '_watched') || '[]'); } catch (err) { list = []; }
+        if (!Array.isArray(list)) list = [];
+        if (list.some(w => ((typeof w === 'string') ? w : w.id) === movie.id)) return;
+        list.unshift({ id: movie.id, userRating: null, watchedAt: Date.now() });
+        try { rawSet('cine3d_p_' + pid + '_watched', JSON.stringify(list)); } catch (err) { /* yoksay */ }
+      });
+
+      if ((this.p1.pid === activePid || this.p2.pid === activePid) && window.app) {
+        if (!window.app.isMovieWatched(movie.id)) window.app.toggleWatched(movie);
+      }
+      return true;
+    },
+
+    /**
      * R018: İki oyuncunun zevk uyumunu ölçer (0-100) ve kırılımını döner.
      * Profiller seçiliyse izleme geçmişleri de hesaba katılır.
      */
@@ -1816,13 +1915,28 @@
         const seen = this.getDualWatchedIds();
         poolSize = Math.max(0, ((window.app && window.app.movies) ? window.app.movies.length : 0) - seen.size);
       }
+      // R019: izleme geçmişinden ortak DNA (tür ağırlıkları)
+      let dna = [];
+      if (dual) {
+        const a1 = this.buildGenreAffinity(p1.pid);
+        const a2 = this.buildGenreAffinity(p2.pid);
+        const combined = {};
+        Object.keys(a1.weights).forEach(g => { combined[g] = (combined[g] || 0) + a1.weights[g] * 0.6; });
+        Object.keys(a2.weights).forEach(g => { combined[g] = (combined[g] || 0) + a2.weights[g] * 0.6; });
+        dna = Object.entries(combined)
+          .filter(([g]) => g)
+          .sort((x, y) => y[1] - x[1])
+          .slice(0, 3)
+          .map(([g, w]) => ({ genre: g, pct: Math.min(99, Math.round(w * 100)) }));
+      }
+      const dnaBonus = Math.min(12, dna.length * 4);
       const score = Math.max(0, Math.min(100, Math.round(
         Math.min(40, shared.length * 14) +          // ortak tür ağırlığı
         Math.max(0, 25 - ratingGap * 15) +           // puan beklentisi yakınlığı
         (durationMatch ? 15 : 4) +                   // süre/ritim uyumu
-        Math.min(20, bothWatched * 2)                // birlikte izleme derinliği
+        Math.min(20, bothWatched * 2) + dnaBonus     // birlikte izleme + ortak DNA
       )));
-      return { dual, shared, ratingGap, durationMatch, bothWatched, poolSize, score };
+      return { dual, shared, ratingGap, durationMatch, bothWatched, poolSize, score, dna };
     },
 
     /** R018: Rulet sonucu için tek film uyum skoru (0-100). */
@@ -1854,6 +1968,10 @@
       const g1 = this.p1.genres;
       const g2 = this.p2.genres;
       const minRating = Math.min(this.p1.rating, this.p2.rating);
+      // R019: profiller seçiliyse gerçek izleme zevki (tür ağırlıkları) devreye girer
+      const affinityOn = !!(this.p1.pid && this.p2.pid);
+      const aff1 = affinityOn ? this.buildGenreAffinity(this.p1.pid) : null;
+      const aff2 = affinityOn ? this.buildGenreAffinity(this.p2.pid) : null;
 
       const scored = pool.map(m => {
         let score = 0;
@@ -1863,6 +1981,28 @@
         const p2Hit = genres.filter(g => g2.includes(g));
 
         score += shared.length * 45;
+
+        if (affinityOn) {
+          // Ortak zevk ağırlığı: her iki profilin de sık izlediği türler öne çıkar
+          let affScore = 0;
+          const p1Aff = [];
+          const p2Aff = [];
+          genres.forEach(g => {
+            const w1 = (aff1 && aff1.weights[g]) || 0;
+            const w2 = (aff2 && aff2.weights[g]) || 0;
+            affScore += (w1 + w2) * 55;
+            if (w1 >= 0.12) p1Aff.push(g);
+            if (w2 >= 0.12) p2Aff.push(g);
+          });
+          score += affScore;
+          if (!shared.length && p1Aff.length && p2Aff.length) {
+            // elle seçilen türler tutmasa bile geçmiş ortak zevki yakalıyorsa cezalandırma
+            score += 18;
+          }
+          if (m.director && aff1 && aff2 && aff1.directors[m.director] && aff2.directors[m.director]) {
+            score += 14; // iki profilin de izlediği bir yönetmen
+          }
+        }
 
         if (p1Hit.length > 0 && p2Hit.length > 0) {
           score += 35;
@@ -1956,6 +2096,7 @@
             <span class="drc-compat-chip">👀 Birlikte izlenen: <strong>${this.compat.bothWatched}</strong></span>
             <span class="drc-compat-chip">🎯 Ortak havuz: <strong>${this.compat.poolSize}</strong></span>
           </div>
+          ${(this.compat.dna && this.compat.dna.length) ? `<div class="drc-dna-row"><span class="drc-dna-label">🧬 Ortak DNA:</span>${this.compat.dna.map(d => `<span class="drc-dna-chip">${esc(d.genre)} <strong>%${d.pct}</strong></span>`).join('')}</div>` : ''}
         </div>` : ''}
 
         <div class="drc-reasons-grid">
@@ -1996,6 +2137,9 @@
                   <span>🎲 Başka Ortak Alternatif (${this.currentIndex + 1}/${this.candidates.length})</span>
                 </button>
               ` : ''}
+              ${(this.p1.pid && this.p2.pid) ? `<button class="btn-drc-alt" id="btn-duo-both-watched">
+                <span>👀 İkimiz de İzledik</span>
+              </button>` : ''}
               <button class="btn-drc-alt" id="btn-duo-archive">
                 <span>💾 Arşive kaydet</span>
               </button>
@@ -2011,6 +2155,16 @@
         if (window.app && typeof window.app.openModal === 'function') {
           window.app.openModal(m, true);
         }
+      });
+
+      box.querySelector('#btn-duo-both-watched')?.addEventListener('click', (e) => {
+        const ok = this.markBothWatched(m);
+        const btn = e.currentTarget;
+        if (btn) btn.querySelector('span').textContent = ok ? '✅ İkiniz de izlediniz' : '⚠️ İşaretlenemedi';
+        if (ok && window.app && window.app.showToast) {
+          window.app.showToast('👀 ' + m.title + ' iki profilde de izlendi olarak işaretlendi.', 'success');
+        }
+        playSound('playWhoosh');
       });
 
       box.querySelector('#btn-duo-archive')?.addEventListener('click', (e) => {

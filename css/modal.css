@@ -716,6 +716,81 @@
 .rr-count { font-variant-numeric: tabular-nums; }
 .rr-hint { font-size: 0.68rem; color: #8a8a99; }
 
+/* R019: yorum yanıtları (tek seviye thread) */
+.review-replies {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+}
+.review-reply-list { display: grid; gap: 6px; margin-bottom: 6px; }
+.review-reply {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 2px solid rgba(56, 189, 248, 0.45);
+  border-radius: 8px;
+  padding: 6px 9px;
+}
+.review-reply.mine { border-left-color: rgba(245, 197, 24, 0.6); }
+.review-reply-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  color: #a3a3b2;
+  flex-wrap: wrap;
+}
+.rr-author { font-weight: 800; color: #e8e8ee; }
+.rr-time { margin-left: auto; }
+.rr-del {
+  border: 0;
+  background: transparent;
+  color: #8a8a99;
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+.rr-del:hover { color: #ef4444; }
+.rr-text { margin: 3px 0 0; font-size: 0.8rem; color: #cfcfda; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+.review-reply-actions { display: flex; justify-content: flex-start; }
+.review-reply-toggle {
+  border: 0;
+  background: transparent;
+  color: #7dd3fc;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 0;
+}
+.review-reply-toggle:hover { text-decoration: underline; }
+.review-reply-form { display: flex; gap: 6px; margin-top: 6px; }
+.review-reply-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.78rem;
+  padding: 6px 9px;
+}
+.review-reply-input:focus { outline: 2px solid rgba(56, 189, 248, 0.55); outline-offset: 1px; }
+.review-reply-send {
+  flex: 0 0 auto;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.16);
+  color: #bae6fd;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.review-reply-send:hover { background: rgba(56, 189, 248, 0.28); }
+
 .spoiler-flag {
   display: inline-flex;
   align-items: center;

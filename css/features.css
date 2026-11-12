@@ -1698,6 +1698,29 @@
   font-weight: 600;
 }
 .drc-compat-chip strong { color: #fff; font-variant-numeric: tabular-nums; }
+.drc-dna-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.22);
+}
+.drc-dna-label { font-size: 0.7rem; font-weight: 800; color: #7dd3fc; letter-spacing: 0.4px; }
+.drc-dna-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.38);
+  color: #ddd6fe;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.drc-dna-chip strong { color: #fff; font-variant-numeric: tabular-nums; }
 
 .drc-score-pill {
   display: inline-flex;
@@ -1953,4 +1976,158 @@
   border-radius: 999px;
   padding: 1px 7px;
   white-space: nowrap;
+}
+
+/* ==========================================================================
+   R019: AİLE AKTİVİTE AKIŞI — yorum / yanıt / izleme / ödül zaman tüneli
+   ========================================================================== */
+.family-feed-wrap {
+  padding: 26px 4% 34px;
+}
+/* Sabit navbar'ın altında kalmasın */
+#family-feed-section { scroll-margin-top: 96px; }
+.ff-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.ff-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #7dd3fc;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+.ff-title {
+  margin: 8px 0 4px;
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: 0.6px;
+  color: #fff;
+}
+.ff-sub { margin: 0; color: var(--text-dim); font-size: 0.86rem; }
+.ff-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.ff-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 62px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ff-stat strong { color: #fff; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.ff-stat small { color: #8a8a99; font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.4px; }
+
+.ff-toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.ff-chip {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #a3a3b2;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.ff-chip:hover { color: #fff; border-color: rgba(255, 255, 255, 0.3); }
+.ff-chip.active { color: #fff; background: rgba(56, 189, 248, 0.16); border-color: rgba(56, 189, 248, 0.55); }
+
+.ff-list { display: grid; gap: 8px; }
+.ff-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.ff-item:hover { background: rgba(255, 255, 255, 0.055); border-color: rgba(255, 255, 255, 0.16); }
+.ff-avatar {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 1rem;
+}
+.ff-body { min-width: 0; flex: 1 1 auto; }
+.ff-line { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.88rem; color: #e8e8ee; }
+.ff-line strong { color: #fff; }
+.ff-verb { color: #a3a3b2; font-weight: 600; }
+.ff-movie {
+  border: 0;
+  background: transparent;
+  color: #f5c518;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+.ff-movie:hover { text-decoration: underline; }
+.ff-badge {
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+.ff-badge.gold { color: #f5c518; background: rgba(245, 197, 24, 0.14); border: 1px solid rgba(245, 197, 24, 0.4); }
+.ff-badge.blue { color: #7dd3fc; background: rgba(56, 189, 248, 0.14); border: 1px solid rgba(56, 189, 248, 0.4); }
+.ff-meta { margin-top: 2px; font-size: 0.72rem; color: #8a8a99; }
+.ff-note {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  color: #cfcfda;
+  line-height: 1.45;
+  border-left: 2px solid rgba(255, 255, 255, 0.12);
+  padding-left: 9px;
+  word-break: break-word;
+}
+.ff-note.spoiler {
+  cursor: pointer;
+  color: #ffb84d;
+  border-left-color: rgba(255, 184, 77, 0.5);
+  background: rgba(255, 184, 77, 0.06);
+  border-radius: 6px;
+  padding: 5px 9px;
+}
+.ff-note.spoiler:hover { background: rgba(255, 184, 77, 0.12); }
+.ff-empty {
+  text-align: center;
+  padding: 46px 20px;
+  color: var(--text-muted);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.ff-empty span { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+.ff-empty p { margin: 0; font-size: 0.88rem; max-width: 520px; margin-inline: auto; line-height: 1.5; }
+
+@media (max-width: 640px) {
+  .family-feed-wrap { padding: 18px 4% 26px; }
+  .ff-stats { width: 100%; }
+  .ff-stat { flex: 1 1 0; min-width: 0; padding: 6px 8px; }
+  .ff-item { padding: 9px 11px; gap: 9px; }
+  .ff-avatar { width: 30px; height: 30px; font-size: 0.9rem; }
+  .ff-line { font-size: 0.84rem; }
 }

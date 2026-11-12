@@ -116,7 +116,12 @@
   function addProfile(name, emoji) {
     var list = loadProfiles();
     var clean = String(name || '').trim().slice(0, 24) || 'Profil';
-    var pid = 'p' + Date.now().toString(36);
+    // R019: aynı milisaniyede iki profil eklenirse pid çakışıyordu (veri karışması).
+    // Rastgele son ek + benzersizlik kontrolü ile çakışma imkânsız hale getirildi.
+    var pid;
+    do {
+      pid = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    } while (list.some(function (p) { return p && p.pid === pid; }));
     list.push({
       pid: pid,
       name: clean,

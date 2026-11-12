@@ -1575,6 +1575,18 @@ body {
   font-variant-numeric: tabular-nums;
 }
 .guess-family-panel .gfp-sub { color: #8a8a99; font-size: 0.72rem; }
+/* R019: zorluk bazlı doğruluk çipi (Kolay/Orta/Zor) */
+.guess-family-panel .gfp-diff {
+  flex: 0 0 auto;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  background: rgba(165, 180, 252, 0.1);
+  border: 1px solid rgba(165, 180, 252, 0.3);
+  border-radius: 999px;
+  padding: 2px 8px;
+  letter-spacing: 0.3px;
+}
 .guess-family-panel .gfp-bar {
   flex: 1 1 100%;
   height: 4px;
@@ -6658,6 +6670,75 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* R019: hafta planında "Bugünün Filmi" kartı */
+.np-today-card {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(134, 239, 172, 0.1), rgba(56, 189, 248, 0.06));
+  border: 1px solid rgba(134, 239, 172, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+.npt-ribbon {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  transform: translateY(-50%);
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #86efac;
+  color: #052e16;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+.npt-poster {
+  width: 62px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  flex: 0 0 auto;
+}
+.npt-info { min-width: 0; flex: 1 1 auto; }
+.npt-title { font-size: 1.02rem; font-weight: 800; color: #fff; line-height: 1.25; }
+.npt-meta { margin-top: 3px; font-size: 0.76rem; color: #b9c3cf; }
+.npt-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 9px; }
+.npt-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e8e8ee;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.npt-btn:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-1px); }
+.npt-btn.primary {
+  background: rgba(134, 239, 172, 0.16);
+  border-color: rgba(134, 239, 172, 0.55);
+  color: #bbf7d0;
+}
+.npt-btn.done {
+  background: rgba(52, 211, 153, 0.14);
+  border-color: rgba(52, 211, 153, 0.5);
+  color: #6ee7b7;
+}
+
+@media (max-width: 480px) {
+  .np-today-card { gap: 10px; padding: 12px; }
+  .npt-poster { width: 52px; height: 76px; }
+  .npt-title { font-size: 0.92rem; }
+  .npt-btn { padding: 5px 10px; font-size: 0.72rem; }
 }
 .np-idx {
   width: 24px; height: 24px; border-radius: 50%;
