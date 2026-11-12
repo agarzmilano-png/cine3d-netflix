@@ -1237,6 +1237,7 @@ class Cine3DApp {
         <div id="daily-tasks-host"></div>
         ${this.renderWeeklyChallengesHtml()}
         ${this.renderWeeklyRankingHtml()}
+        ${this.renderFamilyVoteHtml()}
         <div class="ff-hero">
           <div>
             <span class="ff-pill">👨‍👩‍👧 AİLE AKTİVİTESİ</span>
@@ -1285,6 +1286,20 @@ class Cine3DApp {
         p.classList.remove('spoiler');
         p.textContent = e.note;
       });
+    });
+
+    // ÖZ2: aile oylaması bağlantıları
+    container.querySelector('#fv-cast-btn')?.addEventListener('click', () => {
+      const sel = container.querySelector('#fv-select');
+      if (sel && sel.value) this.castFamilyVote(sel.value);
+      else this.showToast('🗳️ Önce bir film seç.', 'info');
+    });
+    container.querySelector('#fv-close-btn')?.addEventListener('click', () => this.closeFamilyVote());
+    container.querySelector('#fv-new-btn')?.addEventListener('click', () => this.reopenFamilyVote());
+    container.querySelector('#fv-night-btn')?.addEventListener('click', () => {
+      const data = this.getFamilyVote();
+      const movie = data.winner ? this.movies.find(m => m.id === data.winner) : null;
+      if (movie) this.addNightPlanFromWatchlist(movie);
     });
 
     this.renderDailyTasks();
@@ -7926,6 +7941,173 @@ class Cine3DApp {
       return { name: 'Anonim', emoji: '🙂' };
     }
   }
+
+  // --- ÖZ2 (ZCode): AİLE OYLAMASI — "Bu hafta ne izleyelim?" -----------------
+
+  /** ISO hafta kimliği (2026-H46 biçimi). */
+  getWeekId(d) {
+    const date = d ? new Date(d) : new Date();
+    const t = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = (t.getUTCDay() + 6) % 7;
+    t.setUTCDate(t.getUTCDate() - dayNum + 3);
+    const firstThursday = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
+    const fDayNum = (firstThursday.getUTCDay() + 6) % 7;
+    firstThursday.setUTCDate(firstThursday.getUTCDate() - fDayNum + 3);
+    const week = 1 + Math.round((t - firstThursday) / (7 * 24 * 3600 * 1000));
+    return t.getUTCFullYear() + '-H' + String(week).padStart(2, '0');
+  }
+
+  getActivePid() {
+    try { return localStorage.getItem('cine3d_active_profile') || 'p1'; } catch (e) { return 'p1'; }
+  }
+
+  getFamilyVote() {
+    const fresh = () => ({ weekId: this.getWeekId(), votes: {}, closed: false, winner: null, closedAt: null, history: [] });
+    try {
+      const raw = JSON.parse(localStorage.getItem('cine3d_family_vote') || 'null');
+      if (raw && raw.weekId === this.getWeekId()) return raw;
+      return fresh();
+    } catch (e) {
+      return fresh();
+    }
+  }
+
+  saveFamilyVote(data) {
+    try { localStorage.setItem('cine3d_family_vote', JSON.stringify(data)); } catch (e) { /* yoksay */ }
+  }
+
+  castFamilyVote(movieId) {
+    const data = this.getFamilyVote();
+    if (data.closed) { this.showToast('🗳️ Bu haftanın oylaması kapandı.', 'info'); return false; }
+    const movie = this.movies.find(m => m.id === movieId);
+    if (!movie) return false;
+    data.votes = data.votes || {};
+    data.votes[this.getActivePid()] = { mid: movieId, at: Date.now() };
+    this.saveFamilyVote(data);
+    this.showToast('🗳️ Oyun kaydedildi: "' + movie.title + '"', 'success');
+    this.renderFamilyFeed();
+    return true;
+  }
+
+  countFamilyVotes(data) {
+    const tally = {};
+    Object.values((data && data.votes) || {}).forEach(v => {
+      if (!v || !v.mid) return;
+      tally[v.mid] = (tally[v.mid] || 0) + 1;
+    });
+    return tally;
+  }
+
+  closeFamilyVote() {
+    const data = this.getFamilyVote();
+    const tally = this.countFamilyVotes(data);
+    const ids = Object.keys(tally);
+    if (!ids.length) { this.showToast('🗳️ Oy verilen film yok.', 'info'); return false; }
+    const max = Math.max.apply(null, Object.values(tally));
+    const leaders = ids.filter(id => tally[id] === max);
+    // beraberlik: hafta kimliğine göre deterministik seçim
+    const seed = data.weekId.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+    const winner = leaders[seed % leaders.length];
+    data.closed = true;
+    data.winner = winner;
+    data.closedAt = Date.now();
+    this.saveFamilyVote(data);
+    const movie = this.movies.find(m => m.id === winner);
+    this.showToast('🏆 Kazanan ilan edildi: ' + (movie ? movie.title : winner), 'success');
+    this.renderFamilyFeed();
+    return true;
+  }
+
+  reopenFamilyVote() {
+    const prev = this.getFamilyVote();
+    const history = (prev && prev.closed && prev.winner)
+      ? [...(prev.history || []), { winner: prev.winner, closedAt: prev.closedAt, votes: prev.votes }]
+      : (prev.history || []);
+    this.saveFamilyVote({ weekId: this.getWeekId(), votes: {}, closed: false, winner: null, closedAt: null, history });
+    this.renderFamilyFeed();
+    this.showToast('🗳️ Yeni oylama başladı!', 'info');
+  }
+
+  renderFamilyVoteHtml() {
+    const data = this.getFamilyVote();
+    const tally = this.countFamilyVotes(data);
+    const totalVotes = Object.keys(data.votes || {}).length;
+    const myPid = this.getActivePid();
+    const myVote = (data.votes || {})[myPid];
+    const myMovie = myVote ? this.movies.find(m => m.id === myVote.mid) : null;
+    const meta = this.getProfileMeta(myPid);
+
+    if (data.closed && data.winner) {
+      const winnerMovie = this.movies.find(m => m.id === data.winner);
+      if (!winnerMovie) return '';
+      return `
+        <div class="family-vote-card closed">
+          <div class="fv-head">
+            <span class="fv-pill gold">🏆 HAFTANIN FİLMİ</span>
+            <span class="fv-week">${data.weekId}</span>
+          </div>
+          <div class="fv-winner">
+            <img class="fv-winner-poster" src="${winnerMovie.posterUrl}" alt="${escapeHtmlText(winnerMovie.title)}" loading="lazy" onerror="this.style.visibility='hidden'">
+            <div class="fv-winner-info">
+              <h4 class="fv-winner-title">${escapeHtmlText(winnerMovie.title)}</h4>
+              <p class="fv-winner-sub">${totalVotes} oy kullanıldı · ${winnerMovie.year} · ⭐ ${winnerMovie.imdbRating}</p>
+              <div class="fv-winner-actions">
+                <button type="button" class="fv-btn primary" id="fv-night-btn">📅 Geceye Ekle</button>
+                <button type="button" class="fv-btn" id="fv-new-btn">🗳️ Yeni Oylama</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    // seçenek havuzu: izleme listesi + öne çıkanlar; mevcut oyum listedeyse koru
+    const pool = this.watchlist.length ? this.watchlist.slice(0, 40) : this.movies.filter(m => m.isFeatured).slice(0, 40);
+    if (myMovie && !pool.some(m => m.id === myMovie.id)) pool.unshift(myMovie);
+
+    const rowsHtml = Object.entries(tally)
+      .sort((a, b) => b[1] - a[1])
+      .map(([mid, count]) => {
+        const movie = this.movies.find(m => m.id === mid);
+        if (!movie) return '';
+        const voters = Object.entries(data.votes || {})
+          .filter(([, v]) => v && v.mid === mid)
+          .map(([pid]) => {
+            const m2 = this.getProfileMeta(pid);
+            return `<span class="fv-voter" title="${escapeHtmlText(m2.name)}">${escapeHtmlText(m2.emoji)}</span>`;
+          }).join('');
+        const isMine = myVote && myVote.mid === mid;
+        return `
+          <div class="fv-row${isMine ? ' mine' : ''}">
+            <img class="fv-poster" src="${movie.posterUrl}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+            <div class="fv-info">
+              <span class="fv-title">${escapeHtmlText(movie.title)}</span>
+              <div class="fv-voters">${voters}</div>
+            </div>
+            <span class="fv-count">${count} oy</span>
+          </div>`;
+      }).join('');
+
+    return `
+      <div class="family-vote-card">
+        <div class="fv-head">
+          <span class="fv-pill">🗳️ BU HAFTA NE İZLEYELİM?</span>
+          <span class="fv-week">${data.weekId} · ${totalVotes} oy</span>
+        </div>
+        <div class="fv-vote-row">
+          <select class="fv-select" id="fv-select" aria-label="Oy vereceğin film">
+            <option value="">— Film seç —</option>
+            ${pool.map(m => `<option value="${m.id}"${myVote && myVote.mid === m.id ? ' selected' : ''}>${escapeHtmlText(m.title)} (${m.year})</option>`).join('')}
+          </select>
+          <button type="button" class="fv-btn primary" id="fv-cast-btn">${myMovie ? '🔁 Oyunu Değiştir' : '🗳️ Oy Ver'}</button>
+        </div>
+        ${myMovie ? `<p class="fv-myvote">${meta.emoji} <strong>${escapeHtmlText(meta.name)}</strong> oyun: <button type="button" class="ff-movie" data-mid="${escapeHtmlText(myMovie.id)}">${escapeHtmlText(myMovie.title)}</button></p>` : ''}
+        <div class="fv-tally">
+          ${rowsHtml || '<p class="fv-empty">Henüz oy yok — ilk oyu sen ver!</p>'}
+        </div>
+        ${totalVotes >= 1 ? '<button type="button" class="fv-btn close" id="fv-close-btn">🏆 Oylamayı Kapat & Kazananı İlan Et</button>' : ''}
+      </div>`;
+  }
+  // --- ÖZ2 SONU --------------------------------------------------------------
 
   /** Yorum duvarı tercihleri (sıralama / filtre / spoiler gizleme) — global. */
   getReviewPrefs() {

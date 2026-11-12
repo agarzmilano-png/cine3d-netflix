@@ -7286,6 +7286,115 @@ body.reduced-motion .card-3d-tilt:hover { transform: none !important; }
 .season-progress-card .spc-foot { margin-top: 8px; }
 .season-progress-card .spc-remain { font-size: 0.75rem; font-weight: 700; color: #94a3b8; padding: 0 2px; }
 
+/* ÖZ2: Aile oylaması — "Bu hafta ne izleyelim?" */
+.family-vote-card {
+  margin: 14px 0;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(139, 92, 246, 0.10), rgba(56, 189, 248, 0.06));
+  border: 1px solid rgba(139, 92, 246, 0.35);
+}
+.family-vote-card .fv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.family-vote-card .fv-pill {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  color: #ddd6fe;
+}
+.family-vote-card .fv-pill.gold {
+  background: rgba(245, 197, 24, 0.15);
+  border-color: rgba(245, 197, 24, 0.5);
+  color: #fde68a;
+}
+.family-vote-card .fv-week { font-size: 0.72rem; font-weight: 700; color: #94a3b8; }
+.family-vote-card .fv-vote-row { display: flex; gap: 8px; align-items: stretch; }
+.family-vote-card .fv-select {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(10, 12, 18, 0.7);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.family-vote-card .fv-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.family-vote-card .fv-btn:hover { background: rgba(255, 255, 255, 0.14); }
+.family-vote-card .fv-btn.primary {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border-color: transparent;
+  color: #fff;
+}
+.family-vote-card .fv-btn.close { margin-top: 10px; width: 100%; }
+.family-vote-card .fv-btn.gold {
+  background: linear-gradient(135deg, #f5c518, #eab308);
+  border-color: transparent;
+  color: #1a1a1a;
+}
+.family-vote-card .fv-myvote { margin: 8px 0 0; font-size: 0.8rem; color: #cbd5e1; }
+.family-vote-card .fv-tally { margin-top: 12px; display: grid; gap: 8px; }
+.family-vote-card .fv-empty { font-size: 0.8rem; color: #94a3b8; padding: 6px 2px; }
+.family-vote-card .fv-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(10, 12, 18, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+.family-vote-card .fv-row.mine { border-color: rgba(139, 92, 246, 0.6); }
+.family-vote-card .fv-poster {
+  width: 34px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.family-vote-card .fv-info { flex: 1; min-width: 0; }
+.family-vote-card .fv-title { font-size: 0.85rem; font-weight: 800; color: #f1f5f9; }
+.family-vote-card .fv-voters { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; }
+.family-vote-card .fv-voter { font-size: 0.85rem; line-height: 1; }
+.family-vote-card .fv-count { font-size: 0.78rem; font-weight: 900; color: #a78bfa; white-space: nowrap; }
+.family-vote-card .fv-winner { display: flex; gap: 14px; align-items: center; }
+.family-vote-card .fv-winner-poster {
+  width: 84px;
+  height: 124px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(245, 197, 24, 0.25);
+}
+.family-vote-card .fv-winner-title { font-size: 1.15rem; font-weight: 900; color: #fde68a; margin: 0 0 4px; }
+.family-vote-card .fv-winner-sub { font-size: 0.8rem; color: #cbd5e1; margin: 0 0 10px; }
+.family-vote-card .fv-winner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 560px) {
+  .family-vote-card .fv-vote-row { flex-direction: column; }
+  .family-vote-card .fv-winner { flex-direction: column; align-items: flex-start; }
+}
+
 /* ==========================================================================
    R009/3: Paylaşılan izleme listesi görüntüleyici + liste butonları
    ========================================================================== */
