@@ -10,6 +10,7 @@
  *   CHROME_PATH="/path/to/chrome" node tests/smoke.js
  */
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -86,7 +87,15 @@ function getJson(url) {
 
 function httpStatus(url) {
   return new Promise((resolve) => {
-    http.get(url, (res) => { res.resume(); resolve(res.statusCode); }).on('error', () => resolve(0));
+    // R016 (ZCode): https afiş URL'leri için protokol desteği + timeout
+    const mod = url.startsWith('https:') ? https : http;
+    try {
+      const req = mod.get(url, (res) => { res.resume(); resolve(res.statusCode); });
+      req.on('error', () => resolve(0));
+      req.setTimeout(15000, () => { req.destroy(); resolve(0); });
+    } catch (e) {
+      resolve(0);
+    }
   });
 }
 
@@ -110,6 +119,23 @@ function check(name, ok, detail = '') {
     const sitemapBody = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     const sitemapCount = (sitemapBody.match(/<loc>/g) || []).length;
     check('sitemap 110+ URL', sitemapCount >= 110, sitemapCount + ' URL');
+
+    // R016/2 (ZCode): afiş URL sağlık kontrolü — rastgele 5 örneklem (rate-limit dostu)
+    let posterSample = [];
+    try {
+      const md = fs.readFileSync(path.join(ROOT, 'js', 'movies-data.js'), 'utf8');
+      const matches = md.match(/https:\/\/m\.media-amazon\.com[^"']+/g) || [];
+      const uniq = [...new Set(matches)];
+      const stepSize = Math.max(1, Math.floor(uniq.length / 5));
+      for (let i = 0; i < uniq.length && posterSample.length < 5; i += stepSize) { posterSample.push(uniq[i]); }
+    } catch (e) { /* yoksay */ }
+    let brokenPosters = [];
+    for (const u of posterSample) {
+      const st = await httpStatus(u);
+      if (st !== 200) brokenPosters.push(st + ' ' + u.slice(-50));
+      await sleep(120);
+    }
+    check('afiş URL sağlığı (5 örneklem)', brokenPosters.length === 0, brokenPosters.slice(0, 3).join(' | ') || posterSample.length + ' URL kontrol edildi');
 
     // R015/9 (ZCode): sürüm tutarlılığı — index.html ?v= etiketleri == sw.js CACHE_VERSION
     // (R006b/R013'de sürüm artırımı unutulup canlıda eski dosya servis edilmişti)

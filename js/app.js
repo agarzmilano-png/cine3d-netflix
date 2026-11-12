@@ -3463,6 +3463,13 @@ class Cine3DApp {
     document.getElementById('roulette-re-spin-btn')?.addEventListener('click', () => this.spinRoulette());
   }
 
+  // --- R016/1 (ZCode): afiş srcset — Amazon URL boyut varyantları (1x=380px, 2x=592px) ---
+  posterSrcset(url) {
+    if (!url || url.indexOf('_V1_QL75_UX380_CR0,0,380,562_') < 0) return '';
+    const large = url.replace('_V1_QL75_UX380_CR0,0,380,562_', '_V1_QL75_UX592_CR0,0,592,876_');
+    return url + ' 380w, ' + large + ' 592w';
+  }
+
   // --- R014/3: AİLE PUAN KARŞILAŞTIRMASI ---
   // Her profilin bu filme verdiği puanı okur (profil-scoped depolardan ham erişim).
   getFamilyRatings(movieId) {
@@ -6056,7 +6063,7 @@ class Cine3DApp {
         <div class="top10-card" data-movie-id="${movie.id}">
           <span class="top10-rank">${rankText}</span>
           <div class="top10-poster-wrap card-3d-tilt">
-            <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
+            <img src="${movie.posterUrl}" ${this.posterSrcset(movie.posterUrl) ? `srcset="${this.posterSrcset(movie.posterUrl)}" sizes="(max-width: 600px) 46vw, 280px"` : ''} alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
             <div class="top10-rating-badge">⭐ ${movie.imdbRating}</div>
           </div>
           <div class="top10-info">
@@ -6146,7 +6153,7 @@ class Cine3DApp {
         <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}" role="button" tabindex="0" aria-label="${escapeHtmlText(movie.title)} — detayları aç">
           <div class="card-inner">
             <div class="card-poster">
-              <img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" decoding="async" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
+              <img src="${movie.posterUrl}" ${this.posterSrcset(movie.posterUrl) ? `srcset="${this.posterSrcset(movie.posterUrl)}" sizes="(max-width: 600px) 46vw, 280px"` : ''} alt="${movie.title}" loading="lazy" decoding="async" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
               <div class="card-glare"></div>
 
               <!-- Platform Marka Rozeti -->
