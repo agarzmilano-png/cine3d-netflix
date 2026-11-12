@@ -3237,6 +3237,172 @@ class Cine3DApp {
     ).join('') + `</span>`;
   }
 
+  // --- R024: PAYLAŞILABİLİR "AİLE KARNESİ" PNG ---
+  exportFamilyReportCard() {
+    const pid = this.getActivePid();
+    const meta = this.getProfileMeta(pid);
+    const watched = (this.watchedList || [])
+      .map(w => ({ w, m: this.movies.find(x => x.id === (typeof w === 'string' ? w : w.id)) }))
+      .filter(x => x.m && x.w);
+    const movies = watched.map(x => x.m);
+    const mins = movies.reduce((sum, m) => {
+      const v = this.parseDurationMinutes(m.duration);
+      return sum + (typeof v === 'number' && Number.isFinite(v) ? v : 0);
+    }, 0);
+    const rated = watched.filter(x => Number(x.w.userRating) > 0);
+    const avg = rated.length ? rated.reduce((sum, x) => sum + Number(x.w.userRating), 0) / rated.length : 0;
+
+    const genreCounts = {};
+    movies.forEach(m => (m.genres || []).forEach(g => { genreCounts[g] = (genreCounts[g] || 0) + 1; }));
+    const topGenres = Object.entries(genreCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+    let reviewCount = 0;
+    try {
+      const shared = JSON.parse(localStorage.getItem('cine3d_reviews_shared') || '{}');
+      Object.values(shared).forEach(byPid => { if (byPid && byPid[pid]) reviewCount++; });
+    } catch (e) { reviewCount = 0; }
+
+    const daily = this.getDailyState();
+    const week = (this.getWeeklyFamilyRanking().find(r => r.active) || { points: 0 });
+    const stats = [
+      ['🎬', String(movies.length), 'izlenen yapım'],
+      ['⏱️', this.formatMinutes(mins), 'toplam süre'],
+      ['⭐', avg ? avg.toFixed(1) : '—', 'ortalama puan'],
+      ['💬', String(reviewCount), 'aile yorumu'],
+      ['🔥', (daily.streak || 0) + ' gün', 'günlük seri'],
+      ['🏆', (week.points || 0) + 'p', 'haftalık puan']
+    ];
+
+    const W = 1080, H = 1350;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) { this.showToast('Karne oluşturulamadı.', 'error'); return null; }
+
+    const roundRect = (x, y, w, h, r) => {
+      const rad = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + rad, y);
+      ctx.arcTo(x + w, y, x + w, y + h, rad);
+      ctx.arcTo(x + w, y + h, x, y + h, rad);
+      ctx.arcTo(x, y + h, x, y, rad);
+      ctx.arcTo(x, y, x + w, y, rad);
+      ctx.closePath();
+    };
+
+    // Arka plan
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#0b0b12');
+    bg.addColorStop(0.55, '#12121f');
+    bg.addColorStop(1, '#09090f');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+    const glow = (x, y, r, color) => {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    };
+    glow(W * 0.1, H * 0.05, 560, 'rgba(229,9,20,0.30)');
+    glow(W * 0.95, H * 0.9, 640, 'rgba(245,197,24,0.16)');
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(28, 28, W - 56, H - 56);
+
+    // Başlık
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#e50914';
+    ctx.font = '800 64px Outfit, sans-serif';
+    ctx.fillText('CINE3D', 72, 66);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '700 21px Outfit, sans-serif';
+    ctx.fillText('A İ L E   S İ N E M A   K A R N E S İ', 74, 144);
+
+    // Profil
+    ctx.font = '110px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(meta.emoji || '🙂', 66, 196);
+    ctx.font = '800 52px Outfit, sans-serif';
+    ctx.fillText(String(meta.name || 'Profil').slice(0, 20), 214, 220);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '500 23px Outfit, sans-serif';
+    ctx.fillText(new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }), 216, 286);
+
+    // 6 metrik kutusu
+    const tileW = 440, tileH = 148, gap = 24, x0 = 72, y0 = 360;
+    stats.forEach((stat, i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const x = x0 + col * (tileW + gap);
+      const y = y0 + row * (tileH + gap);
+      roundRect(x, y, tileW, tileH, 20);
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.font = '38px sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.fillText(stat[0], x + 20, y + 22);
+      ctx.font = '800 42px Outfit, sans-serif';
+      ctx.fillText(stat[1], x + 86, y + 16);
+      ctx.font = '500 20px Outfit, sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.fillText(stat[2], x + 86, y + 76);
+    });
+
+    // Türler
+    const gy = y0 + 3 * (tileH + gap) + 6;
+    ctx.fillStyle = '#fff';
+    ctx.font = '800 30px Outfit, sans-serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('En sevdiğin türler', 72, gy);
+    const maxG = Math.max(1, ...topGenres.map(g => g[1]));
+    topGenres.forEach((g, i) => {
+      const y = gy + 46 + i * 54;
+      ctx.fillStyle = 'rgba(255,255,255,0.78)';
+      ctx.font = '600 23px Outfit, sans-serif';
+      ctx.fillText(g[0], 72, y);
+      roundRect(300, y - 18, 600, 20, 10);
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.fill();
+      const fillW = Math.max(24, Math.round((g[1] / maxG) * 600));
+      roundRect(300, y - 18, fillW, 20, 10);
+      const grad = ctx.createLinearGradient(300, 0, 900, 0);
+      grad.addColorStop(0, '#e50914');
+      grad.addColorStop(1, '#f5c518');
+      ctx.fillStyle = grad;
+      ctx.fill();
+    });
+
+    // Alt bilgi
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '500 22px Outfit, sans-serif';
+    ctx.fillText('cine3d · aile sinema karnesi', W / 2, H - 92);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.font = '500 18px Outfit, sans-serif';
+    ctx.fillText('Tüm veriler bu cihazda saklanır.', W / 2, H - 58);
+    ctx.textAlign = 'left';
+
+    // İndir
+    try {
+      const slug = String(meta.name || 'profil').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'profil';
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'cine3d-karne-' + slug + '-' + new Date().toISOString().slice(0, 10) + '.png';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      this.showToast('📸 Aile karnesi indirildi.', 'success');
+    } catch (e) {
+      this.showToast('Karne oluşturulamadı.', 'error');
+    }
+    return canvas;
+  }
+
   // --- R018: KÜTÜPHANE RAPORU 2.0 — CSV dışa aktarımı ---
   /** Tüm katalog + kişisel puan + aile yorumlarını CSV olarak indirir. */
   exportLibraryCSV() {
@@ -8145,6 +8311,9 @@ class Cine3DApp {
           <button class="btn-report-demo" id="btn-report-csv" title="Kütüphaneyi CSV olarak indir (Excel / Google Sheets)">
             <span>📄 CSV</span>
           </button>
+          <button class="btn-report-demo" id="btn-family-card" title="Paylaşılabilir aile karnesi (PNG)">
+            <span>📸 Karne</span>
+          </button>
           <input type="file" id="import-file-input" accept="application/json,.json" hidden />
         </div>
 
@@ -8273,6 +8442,8 @@ class Cine3DApp {
       document.getElementById('btn-library-report')?.addEventListener('click', () => this.printLibraryReport());
       // R018: CSV dışa aktarımı
       document.getElementById('btn-report-csv')?.addEventListener('click', () => this.exportLibraryCSV());
+      // R024: paylaşılabilir aile karnesi (PNG)
+      document.getElementById('btn-family-card')?.addEventListener('click', () => this.exportFamilyReportCard());
       document.getElementById('import-file-input')?.addEventListener('change', (e) => this.handleImportFile(e.target));
     }
   }

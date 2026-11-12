@@ -1772,8 +1772,13 @@
 
           <!-- R009/4: Duo arşivi -->
           <div class="duo-archive" id="duo-archive"></div>
+
+          <!-- R024: Ortak (çift) izleme listesi -->
+          <div class="duo-shared" id="duo-shared-list"></div>
         </div>
       `;
+
+      this.renderSharedList();
     },
 
     bindEvents() {
@@ -1948,6 +1953,94 @@
         Math.min(20, bothWatched * 2) + dnaBonus     // birlikte izleme + ortak DNA
       )));
       return { dual, shared, ratingGap, durationMatch, bothWatched, poolSize, score, dna };
+    },
+
+    // --- R024: ORTAK (ÇİFT) İZLEME LİSTESİ -------------------------
+    SHARED_LIST_KEY: 'cine3d_duo_watchlist',
+
+    getSharedList() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(this.SHARED_LIST_KEY) || '[]');
+        return Array.isArray(raw) ? raw.filter(x => x && x.id) : [];
+      } catch (e) { return []; }
+    },
+
+    saveSharedList(list) {
+      try { localStorage.setItem(this.SHARED_LIST_KEY, JSON.stringify((list || []).slice(0, 30))); } catch (e) { /* yoksay */ }
+    },
+
+    isInSharedList(movieId) {
+      return this.getSharedList().some(x => x.id === movieId);
+    },
+
+    addToSharedList(movie) {
+      if (!movie || !movie.id) return false;
+      const list = this.getSharedList();
+      if (list.some(x => x.id === movie.id)) return false;
+      list.unshift({ id: movie.id, at: Date.now(), p1: this.p1.name, p2: this.p2.name });
+      this.saveSharedList(list);
+      this.renderSharedList();
+      return true;
+    },
+
+    removeFromSharedList(movieId) {
+      const list = this.getSharedList().filter(x => x.id !== movieId);
+      this.saveSharedList(list);
+      this.renderSharedList();
+    },
+
+    renderSharedList() {
+      const host = document.getElementById('duo-shared-list');
+      if (!host) return;
+      const list = this.getSharedList();
+      const movies = (window.app && Array.isArray(window.app.movies)) ? window.app.movies : [];
+      const items = list.map(it => ({ it, m: movies.find(x => x.id === it.id) })).filter(x => x.m);
+
+      if (!items.length) {
+        host.innerHTML = '<div class="duo-shared-empty">🤝 Ortak listeniz henüz boş — bir sonuçta "İkimize Listele"ye bas.</div>';
+        return;
+      }
+
+      host.innerHTML = `
+        <div class="duo-shared-head">
+          <span>🤝 Ortak Listemiz</span>
+          <span class="duo-shared-sub">${items.length} yapım · ikiniz için</span>
+        </div>
+        <div class="duo-shared-row">
+          ${items.map(({ it, m }) => {
+            const safe = esc(m.title);
+            return `
+              <div class="duo-shared-item" data-ds-id="${esc(m.id)}">
+                <button type="button" class="dsi-open" data-ds-open="${esc(m.id)}" title="${safe}">
+                  <img class="dsi-poster" src="${esc(m.posterUrl)}" alt="${safe}" loading="lazy" />
+                </button>
+                <div class="dsi-name" title="${safe}">${safe}</div>
+                <div class="dsi-meta">${esc(m.year)} · ⭐ ${esc(m.imdbRating)}</div>
+                <button type="button" class="dsi-remove" data-ds-remove="${esc(m.id)}" title="Ortak listeden çıkar">✕</button>
+              </div>`;
+          }).join('')}
+        </div>`;
+
+      host.querySelectorAll('.dsi-poster').forEach(img => {
+        img.addEventListener('error', () => {
+          const item = img.closest('.duo-shared-item');
+          const m = item ? movies.find(x => x.id === item.dataset.dsId) : null;
+          img.onerror = null;
+          img.src = getFallbackPoster(m ? m.title : 'Film', (m && m.genres && m.genres[0]) || 'Sinema', (m && m.imdbRating) || 8);
+        }, { once: true });
+      });
+      host.querySelectorAll('[data-ds-open]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const m = movies.find(x => x.id === btn.dataset.dsOpen);
+          if (m && window.app && typeof window.app.openModal === 'function') window.app.openModal(m);
+        });
+      });
+      host.querySelectorAll('[data-ds-remove]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.removeFromSharedList(btn.dataset.dsRemove);
+          playSound('playHover');
+        });
+      });
     },
 
     /** R018: Rulet sonucu için tek film uyum skoru (0-100). */
@@ -2148,6 +2241,9 @@
                   <span>🎲 Başka Ortak Alternatif (${this.currentIndex + 1}/${this.candidates.length})</span>
                 </button>
               ` : ''}
+              <button class="btn-drc-alt" id="btn-duo-shared-list">
+                <span>${this.isInSharedList(m.id) ? '🤝 Ortak Listede' : '🤝 İkimize Listele'}</span>
+              </button>
               ${(this.p1.pid && this.p2.pid) ? `<button class="btn-drc-alt" id="btn-duo-both-watched">
                 <span>👀 İkimiz de İzledik</span>
               </button>` : ''}
@@ -2166,6 +2262,16 @@
         if (window.app && typeof window.app.openModal === 'function') {
           window.app.openModal(m, true);
         }
+      });
+
+      box.querySelector('#btn-duo-shared-list')?.addEventListener('click', (e) => {
+        const added = this.addToSharedList(m);
+        const btn = e.currentTarget;
+        if (btn) btn.querySelector('span').textContent = '🤝 Ortak Listede';
+        if (window.app && window.app.showToast) {
+          window.app.showToast(added ? ('🤝 "' + m.title + '" ortak listenize eklendi.') : '🤝 Bu yapım zaten ortak listenizde.', added ? 'success' : 'info');
+        }
+        playSound('playWhoosh');
       });
 
       box.querySelector('#btn-duo-both-watched')?.addEventListener('click', (e) => {

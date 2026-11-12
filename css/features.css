@@ -2309,3 +2309,72 @@
   .recent-card { width: 118px; }
   .recent-section { margin-bottom: 30px; }
 }
+
+/* ==========================================================================
+   R024: Ortak (çift) izleme listesi
+   ========================================================================== */
+.duo-shared {
+  margin-top: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.duo-shared-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-weight: 800;
+  color: #fff;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+.duo-shared-sub { font-weight: 600; font-size: 0.68rem; color: #8a8a99; }
+.duo-shared-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(236, 72, 153, 0.5) transparent;
+}
+.duo-shared-row::-webkit-scrollbar { height: 6px; }
+.duo-shared-row::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #ec4899, #8b5cf6); border-radius: 8px; }
+.duo-shared-item { position: relative; flex: 0 0 auto; width: 118px; display: flex; flex-direction: column; gap: 3px; }
+.dsi-open {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0b0b10;
+  cursor: pointer;
+}
+.dsi-poster { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+.dsi-open:hover .dsi-poster { transform: scale(1.05); }
+.dsi-name { font-size: 0.72rem; font-weight: 700; color: #fff; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dsi-meta { font-size: 0.62rem; color: #8a8a99; }
+.dsi-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(5, 5, 9, 0.78);
+  color: #fff;
+  font-size: 0.65rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.dsi-remove:hover { background: rgba(229, 9, 20, 0.75); border-color: rgba(229, 9, 20, 0.8); }
+.duo-shared-empty {
+  color: #8a8a99;
+  font-size: 0.8rem;
+  padding: 6px 2px;
+}
