@@ -3967,7 +3967,7 @@ class Cine3DApp {
     }
 
     heroContainer.innerHTML = `
-      <div class="hero-backdrop" style="background-image: linear-gradient(to top, #0f0f12 5%, rgba(15,15,18,0.7) 45%, rgba(15,15,18,0.4) 100%), linear-gradient(to right, #0f0f12 0%, rgba(15,15,18,0.85) 40%, rgba(15,15,18,0.2) 100%), url('${heroMovie.backdropUrl}');">
+      <div class="hero-backdrop" style="--hero-blur: url('${heroMovie.backdropUrl}'); --hero-sharp: url('${heroMovie.backdropUrl}');">
       </div>
       <div class="hero-content">
         <div class="hero-badge-row">

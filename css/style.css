@@ -836,11 +836,28 @@ body {
 .hero-backdrop {
   position: absolute;
   inset: 0;
+  /* R015 (ZCode): blur dolgu alt katmanı — dikey afiş geniş ekranda yanları boş bırakıyordu */
+  background-image: var(--hero-blur);
   background-size: cover;
-  background-position: center top;
+  background-position: center 18%;
   z-index: 1;
   transition: background-image 0.8s ease-in-out;
   filter: contrast(1.05) brightness(0.9);
+}
+.hero-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--hero-sharp);
+  background-size: auto 100%;
+  background-position: center 18%;
+  background-repeat: no-repeat;
+}
+.hero-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to top, #0f0f12 5%, rgba(15, 15, 18, 0.7) 45%, rgba(15, 15, 18, 0.4) 100%), linear-gradient(to right, #0f0f12 0%, rgba(15, 15, 18, 0.85) 40%, rgba(15, 15, 18, 0.2) 100%);
 }
 
 .hero-content {
