@@ -1045,6 +1045,9 @@ class Cine3DApp {
     // Koleksiyon hub'ları
     this.renderCollectionHubs();
 
+    // R023: son izlediklerim şeridi
+    this.renderRecentlyWatched();
+
     // R009/1: çoklu profil
     this.initProfiles();
 
@@ -1434,7 +1437,10 @@ class Cine3DApp {
     const overlay = document.getElementById('daily-pick-modal');
     if (!overlay) return;
     overlay.remove();
-    document.body.style.overflow = '';
+    // R023: arkada modal/çekmece açıksa sayfa kaydırmayı açma
+    const modalOpen = !!document.querySelector('#movie-modal.open');
+    const drawerOpen = !!document.querySelector('#watchlist-drawer.open');
+    document.body.style.overflow = (modalOpen || drawerOpen) ? 'hidden' : '';
     this.updateBackgroundInert();
     if (this._dailyPickEsc) {
       document.removeEventListener('keydown', this._dailyPickEsc);
@@ -1526,13 +1532,16 @@ class Cine3DApp {
     let st = {};
     try { st = JSON.parse(localStorage.getItem('cine3d_daily_tasks') || '{}') || {}; } catch (e) { st = {}; }
     if (st.date !== today) {
+      const yesterday = this.todayKey(new Date(Date.now() - 86400000));
+      const keepStreak = st.lastComplete && (st.lastComplete === today || st.lastComplete === yesterday);
       st = {
         date: today,
         watched: 0,
         review: 0,
         guess: 0,
         completed: false,
-        streak: Math.max(0, parseInt(st.streak, 10) || 0),
+        // R023: bir gün atlanınca seri kırılır
+        streak: keepStreak ? Math.max(0, parseInt(st.streak, 10) || 0) : 0,
         bestStreak: Math.max(0, parseInt(st.bestStreak, 10) || 0),
         lastComplete: st.lastComplete || null
       };
@@ -1608,8 +1617,20 @@ class Cine3DApp {
     return d.getTime();
   }
 
+  /** R023: ISO hafta anahtarı (2026-W46) — haftalık sıralamada bayat skoru engeller. */
+  currentIsoWeekKey(date) {
+    const base = date instanceof Date ? date : new Date();
+    const d = new Date(Date.UTC(base.getFullYear(), base.getMonth(), base.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return d.getUTCFullYear() + '-W' + String(week).padStart(2, '0');
+  }
+
   getWeeklyFamilyRanking() {
     const start = this.weekStartTime();
+    const currentWeek = this.currentIsoWeekKey();
     let profiles = [];
     try { profiles = (window.Cine3DStorage && window.Cine3DStorage.profiles) ? window.Cine3DStorage.profiles() : []; } catch (e) { profiles = []; }
     const rawGet = (window.Cine3DStorage && window.Cine3DStorage.raw && window.Cine3DStorage.raw.get) || null;
@@ -1641,8 +1662,8 @@ class Cine3DApp {
         } catch (e) { watched = 0; }
         try {
           const st = JSON.parse(rawGet('cine3d_p_' + p.pid + '_prediction_stats') || '{}');
-          weekBest = Math.max(0, parseInt(st.weekBest, 10) || 0);
-          if (st.weekKey !== undefined && st.weekKey === null) weekBest = 0;
+          // R023: yalnızca BU haftanın lig skoru sayılır (önceki haftalar sıfırlanır)
+          weekBest = (st.weekKey === currentWeek) ? Math.max(0, parseInt(st.weekBest, 10) || 0) : 0;
         } catch (e) { weekBest = 0; }
       }
       const reviews = reviewsBy[p.pid] || 0;
@@ -1652,6 +1673,62 @@ class Cine3DApp {
     }).sort((a, b) => b.points - a.points || String(a.p.name).localeCompare(String(b.p.name), 'tr'));
 
     return rows;
+  }
+
+  // --- R023: SON İZLEDİKLERİM ŞERİDİ -------------------------------
+  renderRecentlyWatched() {
+    const section = document.getElementById('recently-watched-section');
+    const scroller = document.getElementById('recent-watched-scroller');
+    if (!section || !scroller) return;
+
+    const items = (this.watchedList || [])
+      .filter(w => w && (typeof w === 'string' ? w : w.id))
+      .slice()
+      .sort((a, b) => (Number(b.watchedAt) || 0) - (Number(a.watchedAt) || 0))
+      .slice(0, 14)
+      .map(w => {
+        const id = (typeof w === 'string') ? w : w.id;
+        return { w: (typeof w === 'string') ? { id } : w, m: this.movies.find(x => x.id === id) };
+      })
+      .filter(x => x.m);
+
+    if (!items.length) {
+      section.classList.add('hidden');
+      scroller.innerHTML = '';
+      return;
+    }
+    section.classList.remove('hidden');
+    const count = document.getElementById('recent-watched-count');
+    if (count) count.textContent = items.length + ' yapım · en son izlediklerin';
+
+    scroller.innerHTML = items.map(({ w, m }) => {
+      const rating = Number(w.userRating) > 0 ? '⭐ ' + w.userRating : '';
+      const when = w.watchedAt ? this.formatRelativeTime(new Date(w.watchedAt).toISOString()) : '';
+      return `
+        <button type="button" class="recent-card" data-recent-id="${escapeHtmlText(m.id)}" title="${escapeHtmlText(m.title)}">
+          <span class="recent-poster-wrap">
+            <img class="recent-poster" src="${escapeHtmlText(m.posterUrl)}" alt="${escapeHtmlText(m.title)}" loading="lazy" />
+            ${rating ? `<span class="recent-rating">${escapeHtmlText(rating)}</span>` : ''}
+          </span>
+          <span class="recent-name">${escapeHtmlText(m.title)}</span>
+          <span class="recent-meta">${escapeHtmlText(m.year)}${when ? ' · ' + escapeHtmlText(when) : ''}</span>
+        </button>`;
+    }).join('');
+
+    scroller.querySelectorAll('.recent-poster').forEach(img => {
+      img.addEventListener('error', () => {
+        const card = img.closest('.recent-card');
+        const m = card ? this.movies.find(x => x.id === card.dataset.recentId) : null;
+        img.onerror = null;
+        img.src = getFallbackPoster(m ? m.title : 'Film', (m && m.genres && m.genres[0]) || 'Sinema', (m && m.imdbRating) || 8);
+      }, { once: true });
+    });
+    scroller.querySelectorAll('.recent-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const m = this.movies.find(x => x.id === card.dataset.recentId);
+        if (m) this.openModal(m);
+      });
+    });
   }
 
   renderWeeklyRankingHtml() {
@@ -2226,6 +2303,7 @@ class Cine3DApp {
       localStorage.setItem('cine3d_watched', JSON.stringify(this.watchedList));
       const countBadge = document.getElementById('drawer-tab-watched-count');
       if (countBadge) countBadge.textContent = this.watchedList.length;
+      this.renderRecentlyWatched();
     } catch (e) {
       console.warn("Watched list kaydedilemedi:", e);
     }
@@ -2273,6 +2351,7 @@ class Cine3DApp {
       // izleme kaydı yok: sezon bilgisiyle birlikte oluştur
       this.watchedList.push({ id: movie.id, userRating: null, watchedAt: Date.now(), watchedSeasons: n });
       this.showToast('👁️ "' + movie.title + '" izlendi olarak işaretlendi (' + n + ' sezon).', 'success');
+      this.markDailyTask('watched');
     } else {
       rec.watchedSeasons = n;
       this.showToast('📺 "' + movie.title + '" → ' + n + ' sezon.', 'info');
