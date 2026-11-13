@@ -454,44 +454,51 @@ async function resolvePoster(title, year = '', imdbId = '') {
 // --- YOUTUBE FRAGMAN ÇÖZÜCÜ ---
 function resolveYoutubeVideoId(title, year = '') {
   return new Promise((resolve) => {
-    const cacheKey = `${title}_${year}`.toLowerCase().trim();
-    if (trailerCache.has(cacheKey)) {
-      return resolve(trailerCache.get(cacheKey));
-    }
-
-    const searchQuery = `${title} ${year} official trailer fragman`.trim();
-    const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
-
-    const opt = {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    try {
+      const cacheKey = `${title}_${year}`.toLowerCase().trim();
+      if (trailerCache.has(cacheKey)) {
+        return resolve(trailerCache.get(cacheKey));
       }
-    };
 
-    httpGet(ytUrl, { ...opt, agent: outboundAgent }, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        const jsonMatch = data.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
-        if (jsonMatch && jsonMatch[1]) {
-          trailerCache.set(cacheKey, jsonMatch[1]);
-          return resolve(jsonMatch[1]);
+      const searchQuery = `${title} ${year} official trailer fragman`.trim();
+      const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
+
+      const opt = {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+          'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
         }
+      };
 
-        const linkMatch = data.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
-        if (linkMatch && linkMatch[1]) {
-          trailerCache.set(cacheKey, linkMatch[1]);
-          return resolve(linkMatch[1]);
-        }
+      const req = httpGet(ytUrl, { ...opt, agent: outboundAgent }, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          const jsonMatch = data.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
+          if (jsonMatch && jsonMatch[1]) {
+            trailerCache.set(cacheKey, jsonMatch[1]);
+            return resolve(jsonMatch[1]);
+          }
 
+          const linkMatch = data.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+          if (linkMatch && linkMatch[1]) {
+            trailerCache.set(cacheKey, linkMatch[1]);
+            return resolve(linkMatch[1]);
+          }
+
+          resolve(null);
+        });
+      });
+      req.on('error', (err) => {
+        console.warn('YouTube arama hatası:', err.message);
         resolve(null);
       });
-    }).on('error', (err) => {
-      console.warn('YouTube arama hatası:', err.message);
+    } catch (err) {
+      // ÖZ3: senkron fırlama tüm sunucuyu çökertmesin
+      console.warn('YouTube çözücü istisnası:', err && err.message);
       resolve(null);
-    });
+    }
   });
 }
 

@@ -170,7 +170,8 @@ function check(name, ok, detail = '') {
         badImdb, badBackdrop
       };
     `);
-    check('açılış: 109 kart, tekil id, eksiksiz fragman', !!boot && boot.cards === 109 && boot.unique === boot.movies && boot.noTrailer === 0 && boot.badImdb === 0, boot);
+    // ÖZ3: katalog 109 → 179 büyütüldü; alt sınır + tekil id + eksiksiz fragman kontrolü
+    check('açılış: 150+ kart, tekil id, eksiksiz fragman', !!boot && boot.cards >= 150 && boot.unique === boot.movies && boot.noTrailer === 0 && boot.badImdb === 0, boot);
     check('veri: tüm backdrop 1280px', !!boot && boot.badBackdrop === 0, boot && boot.badBackdrop);
 
     // 2) Arama
