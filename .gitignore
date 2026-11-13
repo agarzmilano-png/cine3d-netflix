@@ -20,6 +20,9 @@ test_*.js
 server.js.bak
 # OST doğrulama önbelleği (üretilen çalışma dosyası)
 scripts/.ost-cache.json
+scripts/.trailer-cache.json
+scripts/.identity-matches.json
+data/catalog.json.tmp
 
 # Köprü (ZCode) çalışma dosyaları — repoya/yayına girmez
 zcode-kopru/

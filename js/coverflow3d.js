@@ -157,13 +157,13 @@ class Coverflow3D {
             ${streamInfo.providers.map(p => `
               <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="streaming-logo-pill ${p.badgeClass}" title="${p.name}'da ${current.title} İzle" onclick="event.stopPropagation();">
                 ${p.iconSvg}
-                <span>${p.name}'da İzle</span>
+                <span>${p.name} · ${p.actionLabel}</span>
               </a>
             `).join('')}
           ` : `
             <span class="hud-no-tr-pill" title="Bu yapımın Türkiye'de resmi bir yayıncısı bulunmamaktadır.">
               <span class="no-tr-dot"></span>
-              TR yayıncısı bulunamadı
+              ${streamInfo.statusText}
             </span>
             ${streamInfo.globalProviders && streamInfo.globalProviders.length > 0 ? `
               ${streamInfo.globalProviders.map(p => `

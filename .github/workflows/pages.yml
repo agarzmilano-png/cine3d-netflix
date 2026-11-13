@@ -31,13 +31,21 @@ jobs:
       - name: Pages ayarları
         uses: actions/configure-pages@v5
 
-      - name: Veri bütünlüğü doğrulaması
-        run: node scripts/verify-data.js
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Yayın öncesi tüm testler
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run verify
 
       - name: Siteyi hazırla (ses dosyaları CDN'den servis edilir)
         run: |
           mkdir -p site
-          rsync -a --exclude '.git' --exclude 'audio' --exclude 'scripts' --exclude 'tests' --exclude '.github' --exclude 'server.js' --exclude 'render.yaml' --exclude 'test_*.js' --exclude 'zcode-kopru' --exclude '.env*' ./ site/
+          cp index.html manifest.json sw.js robots.txt sitemap.xml .nojekyll site/
+          cp -R css js data icons site/
           du -sh site
 
       - name: Siteyi paketle

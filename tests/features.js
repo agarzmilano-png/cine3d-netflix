@@ -171,7 +171,7 @@ function check(name, ok, detail = '') {
       };
     `);
     // ÖZ3: katalog 109 → 179 büyütüldü; alt sınır + tekil id + eksiksiz fragman kontrolü
-    check('açılış: 150+ kart, tekil id, eksiksiz fragman', !!boot && boot.cards >= 150 && boot.unique === boot.movies && boot.noTrailer === 0 && boot.badImdb === 0, boot);
+    check('açılış: 36 kart / 150+ yapım, tekil id, eksiksiz fragman', !!boot && boot.cards === 36 && boot.movies >= 150 && boot.unique === boot.movies && boot.noTrailer === 0 && boot.badImdb === 0, boot);
     check('veri: tüm backdrop 1280px', !!boot && boot.badBackdrop === 0, boot && boot.badBackdrop);
 
     // 2) Arama
@@ -194,15 +194,87 @@ function check(name, ok, detail = '') {
       window.app.resetFilters();
       await new Promise(r => setTimeout(r, 300));
       const base = document.querySelectorAll('#movies-grid .movie-card').length;
+      const baseFiltered = window.app.filteredMovies.length;
+      document.getElementById('catalog-load-more').click();
+      const afterMore = document.querySelectorAll('#movies-grid .movie-card').length;
       window.app.setGenre('Komedi');
       await new Promise(r => setTimeout(r, 300));
       const cards = document.querySelectorAll('#movies-grid .movie-card').length;
       const filtered = window.app.filteredMovies.length;
       window.app.setGenre('Tümü');
       await new Promise(r => setTimeout(r, 300));
-      return { base, cards, filtered, back: document.querySelectorAll('#movies-grid .movie-card').length };
+      return { base, baseFiltered, afterMore, cards, filtered, back: document.querySelectorAll('#movies-grid .movie-card').length };
     `, 500);
-    check('filtre: kart sayısı == filteredMovies', !!filter && filter.base >= 100 && filter.cards === filter.filtered && filter.cards < filter.base && filter.back === filter.base, filter);
+    check('kademeli katalog: 36 → 72, filtre değişiminde ilk sayfa', !!filter && filter.base === 36 && filter.afterMore === 72 && filter.cards === Math.min(36, filter.filtered) && filter.filtered < filter.baseFiltered && filter.back === 36, filter);
+
+    const catalogUi = await ev(`
+      const app = window.app;
+      await app.catalogReady;
+      const names = [...document.querySelectorAll('[data-catalog-count]')].map(el => Number(el.textContent));
+      const topIds = [...document.querySelectorAll('.top10-card')].map(el => el.dataset.movieId);
+      const provider = document.getElementById('provider-filter');
+      provider.value = 'netflix'; provider.dispatchEvent(new Event('change'));
+      const matching = app.filteredMovies.length > 0 && app.filteredMovies.every(m => getMovieStreamingInfo(m).providers.some(p => p.id === 'netflix'));
+      const before = app.filteredMovies.map(m => m.id).join(',');
+      app.applyTheme('hbo', false);
+      const same = before === app.filteredMovies.map(m => m.id).join(',');
+      const pressed = document.querySelectorAll('.theme-pill-btn[aria-pressed="true"]').length === 1 && !document.querySelector('.theme-pill-btn[aria-checked]');
+      app.resetFilters(); app.applyTheme('netflix', false);
+      document.getElementById('top10-explore-btn').click();
+      const exactTop = app.filteredMovies.length === 10 && app.filteredMovies.every(m => topIds.includes(m.id));
+      app.resetFilters();
+      app.switchDiscoveryTab('platform-hubs-section');
+      const extras = document.getElementById('discovery-extra-tabs');
+      if (!extras.hidden) document.getElementById('discovery-more-toggle').click();
+      const collapsed = extras.hidden;
+      document.getElementById('discovery-more-toggle').click();
+      const expanded = !extras.hidden;
+      document.getElementById('discovery-more-toggle').click();
+      return { matching, same, pressed, exactTop, collapsed, expanded, count: names.every(n => n === app.ageAllowedMovies().length), topButtons: [...document.querySelectorAll('.top10-card')].every(el => el.tagName === 'BUTTON') };
+    `);
+    check('katalog: yayıncı filtresi temadan bağımsız + gerçek Top 10 + dinamik sayılar', !!catalogUi && catalogUi.matching && catalogUi.same && catalogUi.pressed && catalogUi.exactTop && catalogUi.count && catalogUi.topButtons, catalogUi);
+    check('keşif: diğer araçlar açılıp kapanıyor', !!catalogUi && catalogUi.collapsed && catalogUi.expanded, catalogUi);
+
+    const actionTargets = await ev(`
+      const buttons = [...document.querySelectorAll('#movies-grid .movie-card:first-child .card-action-btn')];
+      buttons[0].scrollIntoView({ block: 'center', behavior: 'instant' });
+      const clear = buttons.length === 3 && buttons.every(btn => {
+        const r = btn.getBoundingClientRect();
+        return r.width >= 24 && r.height >= 24 && [6, r.width / 2, r.width - 6].every(x => {
+          const hit = document.elementFromPoint(r.left + x, r.top + r.height / 2);
+          return hit && btn.contains(hit);
+        });
+      });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return { clear };
+    `);
+    check('kart: izledim/VS/favori butonları birbirini kapatmıyor', !!actionTargets && actionTargets.clear, actionTargets);
+
+    const metadataFallback = await ev(`
+      const app = window.app;
+      const index = window.cine3dCatalog;
+      const item = index.items.find(entry => !entry.yt);
+      const movie = index.toMovie(item);
+      const resolve = app.apiService.resolveTrailerVideoId;
+      app.apiService.resolveTrailerVideoId = async () => null;
+      try {
+        app.openModal(movie);
+        await app.switchModalToTrailer(movie);
+        const box = document.getElementById('modal-media-box');
+        const link = box.querySelector('a');
+        const honestFallback = !box.querySelector('iframe') && /Doğrulanmış fragman bağlantısı bulunamadı/.test(box.textContent) && /YouTube.da Fragman Ara/.test(link.textContent) && new URL(link.href).pathname === '/results';
+        const sourceVisible = !movie.ageRatingCountry || document.querySelector('.modal-age-tag').textContent.includes(movie.ageRatingCountry);
+        app.closeModal();
+        const report = document.getElementById('catalog-data-health-text').textContent;
+        // Arama testi kataloğa bağımsız çevrimiçi sonuçlar da ekler; garanti ana 250 yapım içindir.
+        const allProviders = MOVIES_DATA.length === 250 && MOVIES_DATA.every(reference => {
+          const current = app.movies.find(m => m.id === reference.id);
+          return current && getMovieStreamingInfo(current).verified;
+        });
+        return { honestFallback, sourceVisible, report: report.includes(String(index.items.length)) && /çocuk profilinde engellenir/.test(report), allProviders };
+      } finally { app.apiService.resolveTrailerVideoId = resolve; }
+    `);
+    check('kaynak verisi: 250 yayıncı eşleşmesi + açık fragman fallback + ülke etiketi + eksik veri bildirimi', !!metadataFallback && metadataFallback.honestFallback && metadataFallback.sourceVisible && metadataFallback.report && metadataFallback.allProviders, metadataFallback);
 
     // 4) Günlük görevler (+ tahmin kancası ve lig istatistiği)
     const daily = await ev(`
@@ -500,12 +572,31 @@ function check(name, ok, detail = '') {
       app.askPin = async () => '0000'; const wrong = await app.verifyActivePin('T');
       app.askPin = async () => '1234'; const right = await app.verifyActivePin('T');
       app.askPin = orig;
+      // Gerçek sınıflandırmaların beklentisi uygulama parser'ından türetilmez.
+      const ratingCases = [['TV-MA', false], ['R', false], ['NC-17', false], ['N/A', false], ['', false], ['belirsiz', false], ['Genel', true], ['PG-13', true], ['TV-Y7', true]];
+      const ratingsSafe = ratingCases.every(([ageRating, expected]) => app.isAgeAllowed({ ageRating }) === expected);
+      const indexedUnknown = window.cine3dCatalog.toMovie({ id: 'unknown-age', t: 'Test', type: 'movie', platforms: [] });
+      const indexSafe = !app.isAgeAllowed(indexedUnknown);
+      const profilesBefore = window.Cine3DStorage.profiles().length;
+      let pinAsked = 0;
+      app.askPin = async () => { pinAsked++; return null; };
+      document.getElementById('profile-new-name').value = 'PIN atlama testi';
+      document.getElementById('profile-add-btn').click();
+      await new Promise(r => setTimeout(r, 100));
+      app.askPin = orig;
+      const creationBlocked = pinAsked === 1 && window.Cine3DStorage.profiles().length === profilesBefore;
+      const storySafe = app.isAgeAllowed(app.storyAdventure.resolveDestinyMovie([]));
+      app.vsList = [];
+      app.selectRandomVSPair(false);
+      const duelSafe = app.vsList.every(m => app.isAgeAllowed(m));
+      app.vsList = []; app.updateVSDock(false);
       return { limit: window.app.getActiveAgeLimit(), cards: cards.length, maxAge, blocked,
         badge: !document.getElementById('kids-mode-badge').classList.contains('hidden'),
-        wrong, right, allowed: allowed.length };
+        wrong, right, allowed: allowed.length, ratingsSafe, indexSafe, creationBlocked, storySafe, duelSafe };
     `, 500);
     check('çocuk: yaş filtresi + 18+ engeli + rozet', !!kids && kids.limit === 13 && kids.maxAge <= 13 && kids.blocked && kids.badge && kids.allowed > 0, kids);
     check('çocuk: PIN yanlış/doğru doğrulama', !!kids && kids.wrong === false && kids.right === true, kids);
+    check('çocuk: TV-MA/R/bilinmeyen yaş engeli + PIN koruması + güvenli hikaye/düello', !!kids && kids.ratingsSafe && kids.indexSafe && kids.creationBlocked && kids.storySafe && kids.duelSafe, kids);
     await ev(`window.Cine3DStorage.setActiveProfile(window.Cine3DStorage.profiles().find(p => p.name !== 'Minik').pid); return true;`);
     await nav();
     const adult = await ev(`
@@ -537,6 +628,31 @@ function check(name, ok, detail = '') {
     `, 600);
     check('mobil: yatay taşma yok, Wrapped/öneri sığıyor', !!mobile && mobile.scrollW <= mobile.docW + 2 && mobile.wrappedFits && mobile.pickFits && mobile.overflowAfter <= mobile.docW + 2, mobile);
     await send('Emulation.clearDeviceMetricsOverride');
+
+    // İlk ziyaretin önbelleği ile gerçek çevrimdışı yeniden açılış (ayrı HTTP cache değil).
+    const offlineSetup = await ev(`
+      await navigator.serviceWorker.ready;
+      const cache = await caches.open('cine3d-cache-v9.4');
+      const critical = ['js/storage-adapter.js', 'js/vendor/three.min.js', 'data/catalog.json'];
+      const cached = await Promise.all(critical.map(p => cache.match(new URL(p, location.href).href, { ignoreSearch: true })));
+      return { cached: cached.every(Boolean), pid: window.Cine3DStorage.activePid() };
+    `);
+    check('çevrimdışı: tüm temel bağımlılıklar ilk ziyarette önbellekte', !!offlineSetup && offlineSetup.cached, offlineSetup);
+    await send('Network.enable');
+    await send('Network.setCacheDisabled', { cacheDisabled: true });
+    await send('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+    try {
+      await nav(2500);
+      const offline = await ev(`
+        window.cinemaApiService.omdbBlockedUntil = Infinity;
+        const found = await window.cinemaApiService.searchAndEnrich('Game of Thrones');
+        return { cards: document.querySelectorAll('#movies-grid .movie-card').length, storage: !!window.Cine3DStorage, pid: window.Cine3DStorage.activePid(), found: found.length, staticText: document.querySelector('.online-status-text').textContent };
+      `);
+      check('çevrimdışı: profil + katalog + indeks araması çalışıyor', !!offline && offline.cards === 36 && offline.storage && offline.pid === offlineSetup.pid && offline.found > 0 && /Çevrimdışı/.test(offline.staticText), offline);
+    } finally {
+      await send('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+      await send('Network.setCacheDisabled', { cacheDisabled: false });
+    }
 
     // 17) Konsol
     const realErrors = consoleErrors.filter((e) => !/[Ff]avicon|api.health/.test(e));

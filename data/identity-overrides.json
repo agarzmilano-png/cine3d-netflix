@@ -1,0 +1,1955 @@
+{
+  "tm92641": {
+    "imdbID": "tt1375666",
+    "year": 2010,
+    "title": "Inception",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:45.823Z"
+  },
+  "tm56184": {
+    "imdbID": "tt0468569",
+    "year": 2008,
+    "title": "The Dark Knight",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:45.847Z"
+  },
+  "tm157099": {
+    "imdbID": "tt0816692",
+    "year": 2014,
+    "title": "Interstellar",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:45.912Z"
+  },
+  "tm112130": {
+    "imdbID": "tt0110912",
+    "year": 1994,
+    "title": "Pulp Fiction",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.082Z"
+  },
+  "tm155580": {
+    "imdbID": "tt0068646",
+    "year": 1972,
+    "title": "The Godfather",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.153Z"
+  },
+  "tm119206": {
+    "imdbID": "tt0111161",
+    "year": 1994,
+    "title": "The Shawshank Redemption",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.178Z"
+  },
+  "tm42409": {
+    "imdbID": "tt0137523",
+    "year": 1999,
+    "title": "Fight Club",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.211Z"
+  },
+  "tm1111989": {
+    "imdbID": "tt15398776",
+    "year": 2023,
+    "title": "Oppenheimer",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.504Z"
+  },
+  "tm10": {
+    "imdbID": "tt0133093",
+    "year": 1999,
+    "title": "The Matrix",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.558Z"
+  },
+  "tm28142": {
+    "imdbID": "tt0172495",
+    "year": 2000,
+    "title": "Gladiator",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.722Z"
+  },
+  "tm48297": {
+    "imdbID": "tt0245429",
+    "year": 2001,
+    "title": "Spirited Away",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.757Z"
+  },
+  "tm1133934": {
+    "imdbID": "tt15239678",
+    "year": 2024,
+    "title": "Dune: Part Two",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.822Z"
+  },
+  "tm158646": {
+    "imdbID": "tt2582802",
+    "year": 2014,
+    "title": "Whiplash",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.875Z"
+  },
+  "tm15897": {
+    "imdbID": "tt0114369",
+    "year": 1995,
+    "title": "Seven",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:46.973Z"
+  },
+  "tm22747": {
+    "imdbID": "tt0482571",
+    "year": 2006,
+    "title": "The Prestige",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.014Z"
+  },
+  "tm222003": {
+    "imdbID": "tt4633694",
+    "year": 2018,
+    "title": "Spider-Man: Into the Spider-Verse",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.146Z"
+  },
+  "tm72398": {
+    "imdbID": "tt0078748",
+    "year": 1979,
+    "title": "Alien",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.185Z"
+  },
+  "tm97341": {
+    "imdbID": "tt0081505",
+    "year": 1980,
+    "title": "The Shining",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.267Z"
+  },
+  "tm239091": {
+    "imdbID": "tt1856101",
+    "year": 2017,
+    "title": "Blade Runner 2049",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.384Z"
+  },
+  "tm2": {
+    "imdbID": "tt0080684",
+    "year": 1980,
+    "title": "Star Wars: Episode V - The Empire Strikes Back",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.460Z"
+  },
+  "ts84392": {
+    "imdbID": "tt8111088",
+    "year": 2019,
+    "title": "The Mandalorian",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.481Z"
+  },
+  "ts86474": {
+    "imdbID": "tt9140554",
+    "year": 2021,
+    "title": "Loki",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.627Z"
+  },
+  "tm1855": {
+    "imdbID": "tt4154796",
+    "year": 2019,
+    "title": "Avengers: Endgame",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.687Z"
+  },
+  "tm51227": {
+    "imdbID": "tt0371746",
+    "year": 2008,
+    "title": "Iron Man",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.761Z"
+  },
+  "tm25151": {
+    "imdbID": "tt0910970",
+    "year": 2008,
+    "title": "WALL·E",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.915Z",
+    "vendorImdbID": "tt14055868"
+  },
+  "tm1": {
+    "imdbID": "tt0076759",
+    "year": 1977,
+    "title": "Star Wars: Episode IV - A New Hope",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:47.932Z"
+  },
+  "tm153612": {
+    "imdbID": "tt1049413",
+    "year": 2009,
+    "title": "Up",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.003Z"
+  },
+  "tm220546": {
+    "imdbID": "tt2380307",
+    "year": 2017,
+    "title": "Coco",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.060Z"
+  },
+  "ts314106": {
+    "imdbID": "tt14452776",
+    "year": 2022,
+    "title": "The Bear",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.088Z"
+  },
+  "tm113629": {
+    "imdbID": "tt0110357",
+    "year": 1994,
+    "title": "The Lion King",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.235Z"
+  },
+  "ts2": {
+    "imdbID": "tt0944947",
+    "year": 2011,
+    "title": "Game of Thrones",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.247Z"
+  },
+  "tm135853": {
+    "imdbID": "tt0499549",
+    "year": 2009,
+    "title": "Avatar",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.303Z"
+  },
+  "tm407114": {
+    "imdbID": "tt7775622",
+    "year": 2018,
+    "title": "Free Solo",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.361Z"
+  },
+  "ts88632": {
+    "imdbID": "tt7366338",
+    "year": 2019,
+    "title": "Chernobyl",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.453Z"
+  },
+  "ts77979": {
+    "imdbID": "tt7660850",
+    "year": 2018,
+    "title": "Succession",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.519Z"
+  },
+  "ts226904": {
+    "imdbID": "tt3581920",
+    "year": 2023,
+    "title": "The Last of Us",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.548Z"
+  },
+  "ts78125": {
+    "imdbID": "tt1190634",
+    "year": 2019,
+    "title": "The Boys",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.672Z"
+  },
+  "ts325752": {
+    "imdbID": "tt7631058",
+    "year": 2022,
+    "title": "The Lord of the Rings: The Rings of Power",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.831Z"
+  },
+  "tm349873": {
+    "imdbID": "tt7286456",
+    "year": 2019,
+    "title": "Joker",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:48.983Z"
+  },
+  "ts265779": {
+    "imdbID": "tt12637874",
+    "year": 2024,
+    "title": "Fallout",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.012Z"
+  },
+  "ts314375": {
+    "imdbID": "tt9288030",
+    "year": 2022,
+    "title": "Reacher",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.120Z"
+  },
+  "tm232799": {
+    "imdbID": "tt2382320",
+    "year": 2021,
+    "title": "No Time to Die",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.272Z"
+  },
+  "ts38796": {
+    "imdbID": "tt4574334",
+    "year": 2016,
+    "title": "Stranger Things",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.295Z"
+  },
+  "tm50154": {
+    "imdbID": "tt0241527",
+    "year": 2001,
+    "title": "Harry Potter and the Sorcerer's Stone",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.352Z"
+  },
+  "ts220305": {
+    "imdbID": "tt10919420",
+    "year": 2021,
+    "title": "Squid Game",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.408Z"
+  },
+  "ts4": {
+    "imdbID": "tt0903747",
+    "year": 2008,
+    "title": "Breaking Bad",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.579Z"
+  },
+  "ts55668": {
+    "imdbID": "tt5753856",
+    "year": 2017,
+    "title": "Dark",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.585Z"
+  },
+  "ts222333": {
+    "imdbID": "tt11126994",
+    "year": 2021,
+    "title": "Arcane",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.628Z"
+  },
+  "tm137072": {
+    "imdbID": "tt1119646",
+    "year": 2009,
+    "title": "The Hangover",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.723Z"
+  },
+  "tm68909": {
+    "imdbID": "tt0120382",
+    "year": 1998,
+    "title": "The Truman Show",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.766Z"
+  },
+  "tm72529": {
+    "imdbID": "tt0829482",
+    "year": 2007,
+    "title": "Superbad",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.871Z"
+  },
+  "tm123777": {
+    "imdbID": "tt1431045",
+    "year": 2016,
+    "title": "Deadpool",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.887Z"
+  },
+  "tm162843": {
+    "imdbID": "tt2278388",
+    "year": 2014,
+    "title": "The Grand Budapest Hotel",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:49.942Z"
+  },
+  "tm368361": {
+    "imdbID": "tt7748244",
+    "year": 2018,
+    "title": "Mortal World",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:50.545Z"
+  },
+  "tm1364281": {
+    "imdbID": "tt27933364",
+    "year": 2023,
+    "title": "Mortal World 2",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:50.582Z"
+  },
+  "tm82718": {
+    "imdbID": "tt0384116",
+    "year": 2004,
+    "title": "G.O.R.A.",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:50.648Z"
+  },
+  "tm843068": {
+    "imdbID": "tt6263850",
+    "year": 2024,
+    "title": "Deadpool & Wolverine",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:50.650Z"
+  },
+  "tm432043": {
+    "imdbID": "tt8946378",
+    "year": 2019,
+    "title": "Knives Out",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:50.877Z"
+  },
+  "ts21698": {
+    "imdbID": "tt0108778",
+    "year": 1994,
+    "title": "Friends",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.347Z"
+  },
+  "tm60593": {
+    "imdbID": "tt0118715",
+    "year": 1998,
+    "title": "The Big Lebowski",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.396Z"
+  },
+  "ts22138": {
+    "imdbID": "tt0386676",
+    "year": 2005,
+    "title": "The Office",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.610Z"
+  },
+  "ts11174": {
+    "imdbID": "tt2467372",
+    "year": 2013,
+    "title": "Brooklyn Nine-Nine",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.639Z"
+  },
+  "tm31827": {
+    "imdbID": "tt1637725",
+    "year": 2012,
+    "title": "Ted",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.728Z"
+  },
+  "tm182885": {
+    "imdbID": "tt0107048",
+    "year": 1993,
+    "title": "Groundhog Day",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.785Z"
+  },
+  "ts20605": {
+    "imdbID": "tt1442437",
+    "year": 2009,
+    "title": "Modern Family",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.908Z"
+  },
+  "tm460711": {
+    "imdbID": "tt6264654",
+    "year": 2021,
+    "title": "Free Guy",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.924Z"
+  },
+  "ts224087": {
+    "imdbID": "tt10986410",
+    "year": 2020,
+    "title": "Ted Lasso",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:51.980Z"
+  },
+  "tm46613": {
+    "imdbID": "tt1232829",
+    "year": 2012,
+    "title": "21 Jump Street",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.082Z"
+  },
+  "tm120929": {
+    "imdbID": "tt0110475",
+    "year": 1994,
+    "title": "The Mask",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.204Z"
+  },
+  "ts20233": {
+    "imdbID": "tt2861424",
+    "year": 2013,
+    "title": "Rick and Morty",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.345Z"
+  },
+  "tm54285": {
+    "imdbID": "tt0120689",
+    "year": 1999,
+    "title": "The Green Mile",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.513Z"
+  },
+  "tm88828": {
+    "imdbID": "tt0365748",
+    "year": 2004,
+    "title": "Shaun of the Dead",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.688Z"
+  },
+  "tm484934": {
+    "imdbID": "tt9675274",
+    "year": 2019,
+    "title": "Cinayet Süsü",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.718Z"
+  },
+  "tm188361": {
+    "imdbID": "tt0108052",
+    "year": 1993,
+    "title": "Schindler's List",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.797Z"
+  },
+  "tm191716": {
+    "imdbID": "tt0119217",
+    "year": 1997,
+    "title": "Good Will Hunting",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:52.851Z"
+  },
+  "tm191045": {
+    "imdbID": "tt0118799",
+    "year": 1997,
+    "title": "Life Is Beautiful",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.048Z"
+  },
+  "tm171907": {
+    "imdbID": "tt0476735",
+    "year": 2005,
+    "title": "My Father and My Son",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.166Z"
+  },
+  "tm347656": {
+    "imdbID": "tt6316138",
+    "year": 2017,
+    "title": "Ayla: The Daughter of War",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.464Z"
+  },
+  "tm812998": {
+    "imdbID": "tt10431500",
+    "year": 2019,
+    "title": "Miracle in Cell No. 7",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.551Z"
+  },
+  "tm94058": {
+    "imdbID": "tt0338013",
+    "year": 2004,
+    "title": "Eternal Sunshine of the Spotless Mind",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.746Z"
+  },
+  "tm141070": {
+    "imdbID": "tt1028532",
+    "year": 2009,
+    "title": "Hachi: A Dog's Tale",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.792Z"
+  },
+  "tm233523": {
+    "imdbID": "tt4034228",
+    "year": 2016,
+    "title": "Manchester by the Sea",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.859Z"
+  },
+  "tm836126": {
+    "imdbID": "tt10272386",
+    "year": 2020,
+    "title": "The Father",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.870Z"
+  },
+  "tm19313": {
+    "imdbID": "tt0209144",
+    "year": 2000,
+    "title": "Memento",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:53.895Z"
+  },
+  "tm99575": {
+    "imdbID": "tt1130884",
+    "year": 2010,
+    "title": "Shutter Island",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.097Z"
+  },
+  "ts320458": {
+    "imdbID": "tt11280740",
+    "year": 2022,
+    "title": "Severance",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.152Z"
+  },
+  "tm165603": {
+    "imdbID": "tt2866360",
+    "year": 2013,
+    "title": "Coherence",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.173Z"
+  },
+  "tm455670": {
+    "imdbID": "tt6723592",
+    "year": 2020,
+    "title": "Tenet",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.237Z"
+  },
+  "tm146588": {
+    "imdbID": "tt2397535",
+    "year": 2014,
+    "title": "Predestination",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.305Z"
+  },
+  "tm51923": {
+    "imdbID": "tt0246578",
+    "year": 2001,
+    "title": "Donnie Darko",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.391Z"
+  },
+  "ts278": {
+    "imdbID": "tt2085059",
+    "year": 2011,
+    "title": "Black Mirror",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.460Z"
+  },
+  "tm170839": {
+    "imdbID": "tt0945513",
+    "year": 2011,
+    "title": "Source Code",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.539Z"
+  },
+  "tm316242": {
+    "imdbID": "tt1745960",
+    "year": 2022,
+    "title": "Top Gun: Maverick",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:54.847Z"
+  },
+  "tm147127": {
+    "imdbID": "tt0485947",
+    "year": 2009,
+    "title": "Mr. Nobody",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.020Z"
+  },
+  "tm475372": {
+    "imdbID": "tt10366206",
+    "year": 2023,
+    "title": "John Wick: Chapter 4",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.138Z"
+  },
+  "tm139376": {
+    "imdbID": "tt1392190",
+    "year": 2015,
+    "title": "Mad Max: Fury Road",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.195Z"
+  },
+  "tm8613": {
+    "imdbID": "tt0103064",
+    "year": 1991,
+    "title": "Terminator 2: Judgment Day",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.416Z"
+  },
+  "tm8843": {
+    "imdbID": "tt0102926",
+    "year": 1991,
+    "title": "The Silence of the Lambs",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.434Z"
+  },
+  "tm166586": {
+    "imdbID": "tt1392214",
+    "year": 2013,
+    "title": "Prisoners",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.478Z"
+  },
+  "tm157735": {
+    "imdbID": "tt2267998",
+    "year": 2014,
+    "title": "Gone Girl",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.717Z"
+  },
+  "tm174605": {
+    "imdbID": "tt1675434",
+    "year": 2011,
+    "title": "The Intouchables",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.770Z"
+  },
+  "tm70557": {
+    "imdbID": "tt0382932",
+    "year": 2007,
+    "title": "Ratatouille",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:55.926Z"
+  },
+  "tm453583": {
+    "imdbID": "tt9603212",
+    "year": 2023,
+    "title": "Mission: Impossible - Dead Reckoning Part One",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.112Z"
+  },
+  "tm76351": {
+    "imdbID": "tt0443706",
+    "year": 2007,
+    "title": "Zodiac",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.128Z"
+  },
+  "tm1962": {
+    "imdbID": "tt0050083",
+    "year": 1957,
+    "title": "12 Angry Men",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.284Z"
+  },
+  "tm112061": {
+    "imdbID": "tt0071562",
+    "year": 1974,
+    "title": "The Godfather Part II",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.388Z"
+  },
+  "tm44313": {
+    "imdbID": "tt0120737",
+    "year": 2001,
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.491Z"
+  },
+  "tm50138": {
+    "imdbID": "tt0211915",
+    "year": 2001,
+    "title": "Amélie",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.516Z"
+  },
+  "tm11005": {
+    "imdbID": "tt0113277",
+    "year": 1995,
+    "title": "Heat",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.686Z"
+  },
+  "ts21538": {
+    "imdbID": "tt1475582",
+    "year": 2010,
+    "title": "Sherlock",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.713Z"
+  },
+  "tm16195": {
+    "imdbID": "tt0112641",
+    "year": 1995,
+    "title": "Casino",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:56.808Z"
+  },
+  "tm41792": {
+    "imdbID": "tt1853728",
+    "year": 2012,
+    "title": "Django Unchained",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.014Z"
+  },
+  "tm27911": {
+    "imdbID": "tt0407887",
+    "year": 2006,
+    "title": "The Departed",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.063Z"
+  },
+  "tm143861": {
+    "imdbID": "tt0361748",
+    "year": 2009,
+    "title": "Inglourious Basterds",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.081Z"
+  },
+  "tm155787": {
+    "imdbID": "tt0099685",
+    "year": 1990,
+    "title": "GoodFellas",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.183Z"
+  },
+  "tm188690": {
+    "imdbID": "tt0993846",
+    "year": 2013,
+    "title": "The Wolf of Wall Street",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.346Z"
+  },
+  "tm64957": {
+    "imdbID": "tt0848228",
+    "year": 2012,
+    "title": "The Avengers",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.360Z"
+  },
+  "tm591": {
+    "imdbID": "tt4154756",
+    "year": 2018,
+    "title": "Avengers: Infinity War",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.369Z"
+  },
+  "tm835252": {
+    "imdbID": "tt10872600",
+    "year": 2021,
+    "title": "Spider-Man: No Way Home",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.486Z"
+  },
+  "tm29815": {
+    "imdbID": "tt0936501",
+    "year": 2008,
+    "title": "Taken",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.645Z"
+  },
+  "tm108160": {
+    "imdbID": "tt0258463",
+    "year": 2002,
+    "title": "The Bourne Identity",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.668Z"
+  },
+  "tm163236": {
+    "imdbID": "tt0088247",
+    "year": 1984,
+    "title": "The Terminator",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.672Z"
+  },
+  "tm189434": {
+    "imdbID": "tt0106977",
+    "year": 1993,
+    "title": "The Fugitive",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.947Z"
+  },
+  "tm38774": {
+    "imdbID": "tt0240772",
+    "year": 2001,
+    "title": "Ocean's Eleven",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.967Z"
+  },
+  "tm184546": {
+    "imdbID": "tt1670345",
+    "year": 2013,
+    "title": "Now You See Me",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:57.968Z"
+  },
+  "tm52974": {
+    "imdbID": "tt0095016",
+    "year": 1988,
+    "title": "Die Hard",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.062Z"
+  },
+  "tm184362": {
+    "imdbID": "tt0434409",
+    "year": 2005,
+    "title": "V for Vendetta",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.241Z"
+  },
+  "tm211204": {
+    "imdbID": "tt3076658",
+    "year": 2015,
+    "title": "Creed",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.364Z"
+  },
+  "tm1217553": {
+    "imdbID": "tt0092099",
+    "year": 1986,
+    "title": "Top Gun",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.529Z"
+  },
+  "tm82169": {
+    "imdbID": "tt0075148",
+    "year": 1976,
+    "title": "Rocky",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.541Z"
+  },
+  "tm420873": {
+    "imdbID": "tt1950186",
+    "year": 2019,
+    "title": "Ford v Ferrari",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.666Z"
+  },
+  "tm404187": {
+    "imdbID": "tt6966692",
+    "year": 2018,
+    "title": "Green Book",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.703Z"
+  },
+  "tm134674": {
+    "imdbID": "tt0097165",
+    "year": 1989,
+    "title": "Dead Poets Society",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:58.994Z"
+  },
+  "tm166548": {
+    "imdbID": "tt1291584",
+    "year": 2011,
+    "title": "Warrior",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.009Z"
+  },
+  "tm176864": {
+    "imdbID": "tt1979320",
+    "year": 2013,
+    "title": "Rush",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.147Z"
+  },
+  "tm84505": {
+    "imdbID": "tt0317705",
+    "year": 2004,
+    "title": "The Incredibles",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.278Z"
+  },
+  "tm37560": {
+    "imdbID": "tt0198781",
+    "year": 2001,
+    "title": "Monsters, Inc.",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.314Z"
+  },
+  "tm122337": {
+    "imdbID": "tt2948356",
+    "year": 2016,
+    "title": "Zootopia",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.435Z"
+  },
+  "tm135878": {
+    "imdbID": "tt1631867",
+    "year": 2014,
+    "title": "Edge of Tomorrow",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.586Z"
+  },
+  "tm20959": {
+    "imdbID": "tt0454921",
+    "year": 2006,
+    "title": "The Pursuit of Happyness",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.587Z"
+  },
+  "tm141107": {
+    "imdbID": "tt3397884",
+    "year": 2015,
+    "title": "Sicario",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.636Z"
+  },
+  "tm166168": {
+    "imdbID": "tt0780504",
+    "year": 2011,
+    "title": "Drive",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.737Z"
+  },
+  "ts8": {
+    "imdbID": "tt3032476",
+    "year": 2015,
+    "title": "Better Call Saul",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.925Z"
+  },
+  "tm219267": {
+    "imdbID": "tt3890160",
+    "year": 2017,
+    "title": "Baby Driver",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:06:59.968Z"
+  },
+  "ts20110": {
+    "imdbID": "tt2442560",
+    "year": 2013,
+    "title": "Peaky Blinders",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.018Z"
+  },
+  "ts57327": {
+    "imdbID": "tt5180504",
+    "year": 2019,
+    "title": "The Witcher",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.215Z"
+  },
+  "tm219286": {
+    "imdbID": "tt2283362",
+    "year": 2017,
+    "title": "Jumanji: Welcome to the Jungle",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.334Z"
+  },
+  "ts36631": {
+    "imdbID": "tt2707408",
+    "year": 2015,
+    "title": "Narcos",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.456Z"
+  },
+  "ts42069": {
+    "imdbID": "tt4786824",
+    "year": 2016,
+    "title": "The Crown",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.501Z"
+  },
+  "ts42047": {
+    "imdbID": "tt5687612",
+    "year": 2016,
+    "title": "Fleabag",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.613Z"
+  },
+  "ts56768": {
+    "imdbID": "tt6468322",
+    "year": 2017,
+    "title": "Money Heist",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.760Z"
+  },
+  "ts10620": {
+    "imdbID": "tt0773262",
+    "year": 2006,
+    "title": "Dexter",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.773Z"
+  },
+  "ts21422": {
+    "imdbID": "tt0455275",
+    "year": 2005,
+    "title": "Prison Break",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.786Z"
+  },
+  "ts22280": {
+    "imdbID": "tt0412142",
+    "year": 2004,
+    "title": "House",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:00.833Z"
+  },
+  "ts22277": {
+    "imdbID": "tt1632701",
+    "year": 2011,
+    "title": "Suits",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.043Z"
+  },
+  "ts21483": {
+    "imdbID": "tt0460649",
+    "year": 2005,
+    "title": "How I Met Your Mother",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.082Z"
+  },
+  "ts12": {
+    "imdbID": "tt0898266",
+    "year": 2007,
+    "title": "The Big Bang Theory",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.163Z"
+  },
+  "ts17149": {
+    "imdbID": "tt0185906",
+    "year": 2001,
+    "title": "Band of Brothers",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.344Z"
+  },
+  "ts274631": {
+    "imdbID": "tt13443470",
+    "year": 2022,
+    "title": "Wednesday",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.370Z"
+  },
+  "ts22413": {
+    "imdbID": "tt2306299",
+    "year": 2013,
+    "title": "Vikings",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.660Z"
+  },
+  "ts20054": {
+    "imdbID": "tt2356777",
+    "year": 2014,
+    "title": "True Detective",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.817Z"
+  },
+  "ts6": {
+    "imdbID": "tt1856010",
+    "year": 2013,
+    "title": "House of Cards",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.935Z"
+  },
+  "ts89259": {
+    "imdbID": "tt10048342",
+    "year": 2020,
+    "title": "The Queen's Gambit",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:01.976Z"
+  },
+  "ts42405": {
+    "imdbID": "tt5290382",
+    "year": 2017,
+    "title": "Mindhunter",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.092Z"
+  },
+  "ts53559": {
+    "imdbID": "tt5834204",
+    "year": 2017,
+    "title": "The Handmaid's Tale",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.144Z"
+  },
+  "ts21848": {
+    "imdbID": "tt0411008",
+    "year": 2004,
+    "title": "Lost",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.273Z"
+  },
+  "ts9": {
+    "imdbID": "tt1520211",
+    "year": 2010,
+    "title": "The Walking Dead",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.397Z"
+  },
+  "ts222558": {
+    "imdbID": "tt11198330",
+    "year": 2022,
+    "title": "House of the Dragon",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.477Z"
+  },
+  "ts35476": {
+    "imdbID": "tt4158110",
+    "year": 2015,
+    "title": "Mr. Robot",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.507Z"
+  },
+  "ts20682": {
+    "imdbID": "tt2560140",
+    "year": 2013,
+    "title": "Attack on Titan",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.563Z"
+  },
+  "tm949044": {
+    "imdbID": "tt9362722",
+    "year": 2023,
+    "title": "Spider-Man: Across the Spider-Verse",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.735Z"
+  },
+  "ts8345": {
+    "imdbID": "tt2802850",
+    "year": 2014,
+    "title": "Fargo",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.783Z"
+  },
+  "ts21482": {
+    "imdbID": "tt1355642",
+    "year": 2009,
+    "title": "Fullmetal Alchemist: Brotherhood",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:02.954Z"
+  },
+  "ts78801": {
+    "imdbID": "tt7221388",
+    "year": 2018,
+    "title": "Cobra Kai",
+    "type": "series",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.017Z"
+  },
+  "tm244142": {
+    "imdbID": "tt1877830",
+    "year": 2022,
+    "title": "The Batman",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.041Z"
+  },
+  "tm39888": {
+    "imdbID": "tt1345836",
+    "year": 2012,
+    "title": "The Dark Knight Rises",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.249Z"
+  },
+  "tm76553": {
+    "imdbID": "tt0469494",
+    "year": 2007,
+    "title": "There Will Be Blood",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.542Z"
+  },
+  "tm123099": {
+    "imdbID": "tt0105236",
+    "year": 1992,
+    "title": "Reservoir Dogs",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.548Z"
+  },
+  "tm167206": {
+    "imdbID": "tt0372784",
+    "year": 2005,
+    "title": "Batman Begins",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.604Z"
+  },
+  "tm39030": {
+    "imdbID": "tt0381061",
+    "year": 2006,
+    "title": "Casino Royale",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.708Z"
+  },
+  "tm68666": {
+    "imdbID": "tt0477348",
+    "year": 2007,
+    "title": "No Country for Old Men",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.779Z"
+  },
+  "tm72846": {
+    "imdbID": "tt1074638",
+    "year": 2012,
+    "title": "Skyfall",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.833Z"
+  },
+  "tm86803": {
+    "imdbID": "tt1285016",
+    "year": 2010,
+    "title": "The Social Network",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:03.907Z"
+  },
+  "tm420155": {
+    "imdbID": "tt8579674",
+    "year": 2019,
+    "title": "1917",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.052Z"
+  },
+  "tm57554": {
+    "imdbID": "tt0120815",
+    "year": 1998,
+    "title": "Saving Private Ryan",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.147Z"
+  },
+  "tm122434": {
+    "imdbID": "tt0109830",
+    "year": 1994,
+    "title": "Forrest Gump",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.405Z"
+  },
+  "tm232797": {
+    "imdbID": "tt5013056",
+    "year": 2017,
+    "title": "Dunkirk",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.506Z"
+  },
+  "tm12503": {
+    "imdbID": "tt0112573",
+    "year": 1995,
+    "title": "Braveheart",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.535Z"
+  },
+  "tm111828": {
+    "imdbID": "tt0264464",
+    "year": 2002,
+    "title": "Catch Me If You Can",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.581Z"
+  },
+  "tm191110": {
+    "imdbID": "tt0120338",
+    "year": 1997,
+    "title": "Titanic",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.694Z"
+  },
+  "tm120596": {
+    "imdbID": "tt1485796",
+    "year": 2017,
+    "title": "The Greatest Showman",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.838Z"
+  },
+  "tm318913": {
+    "imdbID": "tt1727824",
+    "year": 2018,
+    "title": "Bohemian Rhapsody",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.843Z"
+  },
+  "tm266686": {
+    "imdbID": "tt1517451",
+    "year": 2018,
+    "title": "A Star Is Born",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:04.879Z"
+  },
+  "tm140877": {
+    "imdbID": "tt2084970",
+    "year": 2014,
+    "title": "The Imitation Game",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.143Z"
+  },
+  "tm143617": {
+    "imdbID": "tt3783958",
+    "year": 2016,
+    "title": "La La Land",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.175Z"
+  },
+  "tm236713": {
+    "imdbID": "tt4846340",
+    "year": 2016,
+    "title": "Hidden Figures",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.179Z"
+  },
+  "tm46003": {
+    "imdbID": "tt0268978",
+    "year": 2001,
+    "title": "A Beautiful Mind",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.218Z"
+  },
+  "tm205861": {
+    "imdbID": "tt2543164",
+    "year": 2016,
+    "title": "Arrival",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.327Z"
+  },
+  "tm138400": {
+    "imdbID": "tt3659388",
+    "year": 2015,
+    "title": "The Martian",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.431Z"
+  },
+  "tm179029": {
+    "imdbID": "tt1454468",
+    "year": 2013,
+    "title": "Gravity",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.453Z"
+  },
+  "tm40461": {
+    "imdbID": "tt0083658",
+    "year": 1982,
+    "title": "Blade Runner",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.514Z"
+  },
+  "tm139224": {
+    "imdbID": "tt0470752",
+    "year": 2014,
+    "title": "Ex Machina",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.628Z"
+  },
+  "tm129449": {
+    "imdbID": "tt0088763",
+    "year": 1985,
+    "title": "Back to the Future",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.737Z"
+  },
+  "tm184504": {
+    "imdbID": "tt0107290",
+    "year": 1993,
+    "title": "Jurassic Park",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.827Z"
+  },
+  "tm57536": {
+    "imdbID": "tt1392170",
+    "year": 2012,
+    "title": "The Hunger Games",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.913Z"
+  },
+  "tm128131": {
+    "imdbID": "tt0082971",
+    "year": 1981,
+    "title": "Raiders of the Lost Ark",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:05.937Z"
+  },
+  "tm244208": {
+    "imdbID": "tt1396484",
+    "year": 2017,
+    "title": "It",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.223Z"
+  },
+  "tm192682": {
+    "imdbID": "tt0119116",
+    "year": 1997,
+    "title": "The Fifth Element",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.254Z"
+  },
+  "tm160621": {
+    "imdbID": "tt1457767",
+    "year": 2013,
+    "title": "The Conjuring",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.321Z"
+  },
+  "tm64834": {
+    "imdbID": "tt0903624",
+    "year": 2012,
+    "title": "The Hobbit: An Unexpected Journey",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.505Z"
+  },
+  "tm312979": {
+    "imdbID": "tt6644200",
+    "year": 2018,
+    "title": "A Quiet Place",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.549Z"
+  },
+  "tm364165": {
+    "imdbID": "tt7784604",
+    "year": 2018,
+    "title": "Hereditary",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.596Z"
+  },
+  "tm266704": {
+    "imdbID": "tt5052448",
+    "year": 2017,
+    "title": "Get Out",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.689Z"
+  },
+  "tm47802": {
+    "imdbID": "tt0054215",
+    "year": 1960,
+    "title": "Psycho",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.705Z"
+  },
+  "tm55542": {
+    "imdbID": "tt0167404",
+    "year": 1999,
+    "title": "The Sixth Sense",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.794Z"
+  },
+  "tm77588": {
+    "imdbID": "tt0034583",
+    "year": 1942,
+    "title": "Casablanca",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.886Z"
+  },
+  "tm127410": {
+    "imdbID": "tt0073486",
+    "year": 1975,
+    "title": "One Flew Over the Cuckoo's Nest",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.977Z"
+  },
+  "tm43389": {
+    "imdbID": "tt0095953",
+    "year": 1988,
+    "title": "Rain Man",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:06.999Z"
+  },
+  "tm11500": {
+    "imdbID": "tt0066921",
+    "year": 1971,
+    "title": "A Clockwork Orange",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.088Z"
+  },
+  "tm22327": {
+    "imdbID": "tt0093058",
+    "year": 1987,
+    "title": "Full Metal Jacket",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.219Z"
+  },
+  "tm54060": {
+    "imdbID": "tt1010048",
+    "year": 2008,
+    "title": "Slumdog Millionaire",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.275Z"
+  },
+  "tm139658": {
+    "imdbID": "tt0319061",
+    "year": 2003,
+    "title": "Big Fish",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.283Z"
+  },
+  "tm63441": {
+    "imdbID": "tt0454876",
+    "year": 2012,
+    "title": "Life of Pi",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.414Z"
+  },
+  "tm135902": {
+    "imdbID": "tt2096673",
+    "year": 2015,
+    "title": "Inside Out",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.569Z"
+  },
+  "tm14765": {
+    "imdbID": "tt0114709",
+    "year": 1995,
+    "title": "Toy Story",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.677Z"
+  },
+  "tm375501": {
+    "imdbID": "tt2948372",
+    "year": 2020,
+    "title": "Soul",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.711Z"
+  },
+  "tm120111": {
+    "imdbID": "tt3521164",
+    "year": 2016,
+    "title": "Moana",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.737Z"
+  },
+  "tm135549": {
+    "imdbID": "tt0266543",
+    "year": 2003,
+    "title": "Finding Nemo",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.974Z"
+  },
+  "tm50314": {
+    "imdbID": "tt0126029",
+    "year": 2001,
+    "title": "Shrek",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:07.998Z"
+  },
+  "tm151348": {
+    "imdbID": "tt0432283",
+    "year": 2009,
+    "title": "Fantastic Mr. Fox",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.004Z"
+  },
+  "tm87484": {
+    "imdbID": "tt0892769",
+    "year": 2010,
+    "title": "How to Train Your Dragon",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.045Z"
+  },
+  "tm233164": {
+    "imdbID": "tt4425200",
+    "year": 2017,
+    "title": "John Wick: Chapter 2",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.299Z"
+  },
+  "tm12118": {
+    "imdbID": "tt3315342",
+    "year": 2017,
+    "title": "Logan",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.340Z"
+  },
+  "tm153649": {
+    "imdbID": "tt2911666",
+    "year": 2014,
+    "title": "John Wick",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.515Z"
+  },
+  "tm233425": {
+    "imdbID": "tt5323662",
+    "year": 2016,
+    "title": "A Silent Voice: The Movie",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.600Z"
+  },
+  "tm159149": {
+    "imdbID": "tt1843866",
+    "year": 2014,
+    "title": "Captain America: The Winter Soldier",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.648Z"
+  },
+  "tm140097": {
+    "imdbID": "tt2015381",
+    "year": 2014,
+    "title": "Guardians of the Galaxy",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.806Z"
+  },
+  "tm123360": {
+    "imdbID": "tt1211837",
+    "year": 2016,
+    "title": "Doctor Strange",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.896Z"
+  },
+  "tm418": {
+    "imdbID": "tt1825683",
+    "year": 2018,
+    "title": "Black Panther",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.946Z"
+  },
+  "tm155402": {
+    "imdbID": "tt1877832",
+    "year": 2014,
+    "title": "X-Men: Days of Future Past",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:08.975Z"
+  },
+  "tm12119": {
+    "imdbID": "tt3501632",
+    "year": 2017,
+    "title": "Thor: Ragnarok",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:09.086Z"
+  },
+  "tm113842": {
+    "imdbID": "tt0181689",
+    "year": 2002,
+    "title": "Minority Report",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:09.196Z"
+  },
+  "tm136410": {
+    "imdbID": "tt1136608",
+    "year": 2009,
+    "title": "District 9",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:09.238Z"
+  },
+  "tm50018": {
+    "imdbID": "tt1276104",
+    "year": 2012,
+    "title": "Looper",
+    "type": "movie",
+    "source": "IMDb suggestion + JustWatch title/year",
+    "checkedAt": "2026-11-13T21:07:09.297Z"
+  }
+}

@@ -14,7 +14,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.8,
   "imdbVotes": "2.5M",
   "duration": "2s 28dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Bilim Kurgu",
    "Aksiyon",
@@ -35,7 +35,6 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "YoHD9XEInc0",
   "isFeatured": true,
   "platforms": [
-   "netflix",
    "tvplus",
    "hbo"
   ],
@@ -44,7 +43,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "interstellar",
@@ -55,7 +56,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "2.1M",
   "duration": "2s 49dk",
-  "ageRating": "13+",
+  "ageRating": "TV-14",
   "genres": [
    "Bilim Kurgu",
    "Dram",
@@ -76,6 +77,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "zSWdZVtXT7E",
   "isFeatured": true,
   "platforms": [
+   "tvplus",
    "hbo"
   ],
   "themeColor": "#f59e0b",
@@ -84,7 +86,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "tearjerker",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "dark-knight",
@@ -95,7 +99,7 @@ const MOVIES_DATA = [
   "imdbRating": 9,
   "imdbVotes": "2.9M",
   "duration": "2s 32dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -126,7 +130,9 @@ const MOVIES_DATA = [
    "adrenaline",
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "pulp-fiction",
@@ -137,7 +143,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.9,
   "imdbVotes": "2.2M",
   "duration": "2s 34dk",
-  "ageRating": "18+",
+  "ageRating": "16+",
   "genres": [
    "Suç",
    "Dram"
@@ -164,7 +170,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "shawshank",
@@ -175,7 +183,7 @@ const MOVIES_DATA = [
   "imdbRating": 9.3,
   "imdbVotes": "2.95M",
   "duration": "2s 22dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram"
   ],
@@ -199,7 +207,9 @@ const MOVIES_DATA = [
    "prestige",
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "godfather",
@@ -236,7 +246,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "fight-club",
@@ -275,7 +287,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-matrix",
@@ -291,7 +305,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "2.0M",
   "duration": "2s 16dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Bilim Kurgu",
    "Aksiyon"
@@ -315,7 +329,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "parasite",
@@ -355,7 +371,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "spirited-away",
@@ -366,7 +384,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.6,
   "imdbVotes": "850K",
   "duration": "2s 05dk",
-  "ageRating": "Genel",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Macera",
@@ -392,7 +410,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "oppenheimer",
@@ -403,7 +423,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.9,
   "imdbVotes": "850K",
   "duration": "3s 00dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram",
    "Tarih",
@@ -428,7 +448,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "dune-2",
@@ -468,7 +490,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "gladiator",
@@ -508,7 +532,9 @@ const MOVIES_DATA = [
    "adrenaline",
    "tearjerker",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "prestige",
@@ -547,7 +573,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "whiplash",
@@ -558,7 +586,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "980K",
   "duration": "1s 47dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram",
    "Müzik"
@@ -582,7 +610,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "spider-verse",
@@ -593,7 +623,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "670K",
   "duration": "1s 57dk",
-  "ageRating": "Genel",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Aksiyon",
@@ -623,11 +653,13 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "seven",
-  "imdbID": "tt25601048",
+  "imdbID": "tt0114369",
   "platforms": [
    "netflix"
   ],
@@ -637,7 +669,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.6,
   "imdbVotes": "1.8M",
   "duration": "2s 07dk",
-  "ageRating": "18+",
+  "ageRating": "16+",
   "genres": [
    "Suç",
    "Gizem",
@@ -660,7 +692,9 @@ const MOVIES_DATA = [
   "themeColor": "#71717a",
   "moods": [
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "alien",
@@ -696,7 +730,9 @@ const MOVIES_DATA = [
   "themeColor": "#10b981",
   "moods": [
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "shining",
@@ -732,7 +768,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "blade-runner-2049",
@@ -748,7 +786,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "640K",
   "duration": "2s 44dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Bilim Kurgu",
    "Gizem",
@@ -777,7 +815,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "escapism",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "star-wars-empire",
@@ -788,7 +828,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "1.4M",
   "duration": "2s 4dk",
-  "ageRating": "10+",
+  "ageRating": "7+",
   "genres": [
    "Bilim Kurgu",
    "Macera",
@@ -822,7 +862,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-mandalorian",
@@ -865,7 +907,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "star-wars-new-hope",
@@ -876,7 +920,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.6,
   "imdbVotes": "1.5M",
   "duration": "2s 1dk",
-  "ageRating": "10+",
+  "ageRating": "13+",
   "genres": [
    "Bilim Kurgu",
    "Macera",
@@ -908,7 +952,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "avengers-endgame",
@@ -953,7 +999,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "iron-man",
@@ -995,7 +1043,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "loki",
@@ -1037,7 +1087,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "wall-e",
@@ -1048,7 +1100,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "1.2M",
   "duration": "1s 38dk",
-  "ageRating": "Genel",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Macera",
@@ -1080,7 +1132,9 @@ const MOVIES_DATA = [
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "up",
@@ -1091,7 +1145,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "1.1M",
   "duration": "1s 36dk",
-  "ageRating": "Genel",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Macera",
@@ -1123,7 +1177,9 @@ const MOVIES_DATA = [
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "coco",
@@ -1134,7 +1190,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "600K",
   "duration": "1s 45dk",
-  "ageRating": "Genel",
+  "ageRating": "7+",
   "genres": [
    "Animasyon",
    "Macera",
@@ -1167,7 +1223,9 @@ const MOVIES_DATA = [
    "tearjerker",
    "heartwarming",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "lion-king",
@@ -1178,7 +1236,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "1.1M",
   "duration": "1s 28dk",
-  "ageRating": "Genel",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Macera",
@@ -1211,7 +1269,9 @@ const MOVIES_DATA = [
    "heartwarming",
    "tearjerker",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-bear",
@@ -1253,7 +1313,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "avatar",
@@ -1294,7 +1356,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "free-solo",
@@ -1305,7 +1369,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "160K",
   "duration": "1s 40dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Belgesel",
    "Macera"
@@ -1335,7 +1399,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "game-of-thrones",
@@ -1368,8 +1434,8 @@ const MOVIES_DATA = [
   "isFeatured": true,
   "isSeries": true,
   "platforms": [
-   "hbo",
-   "tvplus"
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "hbo",
@@ -1381,7 +1447,9 @@ const MOVIES_DATA = [
    "escapism",
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-last-of-us",
@@ -1392,7 +1460,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "550K",
   "duration": "1 Sezon",
-  "ageRating": "18+",
+  "ageRating": "13+",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -1413,8 +1481,8 @@ const MOVIES_DATA = [
   "isFeatured": true,
   "isSeries": true,
   "platforms": [
-   "hbo",
-   "tvplus"
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "hbo",
@@ -1426,7 +1494,9 @@ const MOVIES_DATA = [
    "tearjerker",
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "succession",
@@ -1457,8 +1527,8 @@ const MOVIES_DATA = [
   "isFeatured": false,
   "isSeries": true,
   "platforms": [
-   "hbo",
-   "tvplus"
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "hbo",
@@ -1468,7 +1538,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "chernobyl",
@@ -1479,7 +1551,7 @@ const MOVIES_DATA = [
   "imdbRating": 9.3,
   "imdbVotes": "900K",
   "duration": "5 Bölüm Minidizi",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram",
    "Tarih",
@@ -1500,8 +1572,7 @@ const MOVIES_DATA = [
   "isFeatured": false,
   "isSeries": true,
   "platforms": [
-   "hbo",
-   "tvplus"
+   "hbo"
   ],
   "hubTags": [
    "hbo",
@@ -1512,7 +1583,9 @@ const MOVIES_DATA = [
    "thrill",
    "prestige",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "joker",
@@ -1544,8 +1617,10 @@ const MOVIES_DATA = [
   "isFeatured": false,
   "isSeries": false,
   "platforms": [
-   "hbo",
-   "prime"
+   "netflix",
+   "prime",
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "dc",
@@ -1556,7 +1631,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "harry-potter",
@@ -1567,7 +1644,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.6,
   "imdbVotes": "900K",
   "duration": "2s 32dk",
-  "ageRating": "Genel",
+  "ageRating": "10+",
   "genres": [
    "Macera",
    "Fantastik"
@@ -1587,6 +1664,8 @@ const MOVIES_DATA = [
   "isFeatured": false,
   "isSeries": false,
   "platforms": [
+   "prime",
+   "tvplus",
    "hbo"
   ],
   "hubTags": [
@@ -1598,7 +1677,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-boys",
@@ -1642,7 +1723,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "fallout",
@@ -1685,7 +1768,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "rings-of-power",
@@ -1726,7 +1811,9 @@ const MOVIES_DATA = [
   "themeColor": "#f59e0b",
   "moods": [
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "reacher",
@@ -1768,7 +1855,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "no-time-to-die",
@@ -1811,7 +1900,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "stranger-things",
@@ -1822,7 +1913,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "1.3M",
   "duration": "4 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram",
    "Fantastik",
@@ -1855,7 +1946,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "squid-game",
@@ -1897,7 +1990,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "breaking-bad",
@@ -1942,7 +2037,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "dark",
@@ -1953,7 +2050,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "450K",
   "duration": "3 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Suç",
    "Dram",
@@ -1984,7 +2081,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "arcane",
@@ -2029,7 +2128,9 @@ const MOVIES_DATA = [
    "escapism",
    "adrenaline",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-hangover",
@@ -2040,7 +2141,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "840K",
   "duration": "1s 40dk",
-  "ageRating": "18+",
+  "ageRating": "15+",
   "genres": [
    "Komedi"
   ],
@@ -2059,7 +2160,6 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "tcdUhdOlz9M",
   "isFeatured": false,
   "platforms": [
-   "netflix",
    "prime"
   ],
   "hubTags": [
@@ -2070,7 +2170,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#f59e0b"
+  "themeColor": "#f59e0b",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "superbad",
@@ -2081,7 +2183,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.6,
   "imdbVotes": "620K",
   "duration": "1s 53dk",
-  "ageRating": "18+",
+  "ageRating": "13+",
   "genres": [
    "Komedi"
   ],
@@ -2101,7 +2203,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "4eaZ_48ZYog",
   "isFeatured": false,
   "platforms": [
-   "netflix"
+   "mubi",
+   "prime"
   ],
   "hubTags": [
    "netflix"
@@ -2109,7 +2212,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#eab308"
+  "themeColor": "#eab308",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-truman-show",
@@ -2120,7 +2225,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.2M",
   "duration": "1s 43dk",
-  "ageRating": "13+",
+  "ageRating": "G",
   "genres": [
    "Komedi",
    "Dram"
@@ -2140,8 +2245,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "dlnmQbPGuls",
   "isFeatured": true,
   "platforms": [
-   "netflix",
-   "prime"
+   "tod"
   ],
   "hubTags": [
    "netflix",
@@ -2153,7 +2257,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#38bdf8",
-  "featuredBadge": "Kült Başyapıt"
+  "featuredBadge": "Kült Başyapıt",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-grand-budapest-hotel",
@@ -2164,7 +2270,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "900K",
   "duration": "1s 39dk",
-  "ageRating": "16+",
+  "ageRating": "R",
   "genres": [
    "Komedi",
    "Macera"
@@ -2194,7 +2300,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "prestige"
   ],
-  "themeColor": "#ec4899"
+  "themeColor": "#ec4899",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "deadpool",
@@ -2205,7 +2313,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "1.1M",
   "duration": "1s 48dk",
-  "ageRating": "18+",
+  "ageRating": "16+",
   "genres": [
    "Aksiyon",
    "Komedi",
@@ -2236,7 +2344,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "adrenaline"
   ],
-  "themeColor": "#ef4444"
+  "themeColor": "#ef4444",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "deadpool-wolverine",
@@ -2247,7 +2357,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "460K",
   "duration": "2s 8dk",
-  "ageRating": "18+",
+  "ageRating": "16+",
   "genres": [
    "Aksiyon",
    "Komedi",
@@ -2279,7 +2389,9 @@ const MOVIES_DATA = [
    "adrenaline"
   ],
   "themeColor": "#eab308",
-  "featuredBadge": "2024 Zirvesi"
+  "featuredBadge": "2024 Zirvesi",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "olumlu-dunya",
@@ -2290,7 +2402,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.6,
   "imdbVotes": "42K",
   "duration": "1s 47dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Komedi",
    "Aksiyon",
@@ -2313,7 +2425,10 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "jHlLVxkG-XY",
   "isFeatured": false,
   "platforms": [
-   "netflix"
+   "netflix",
+   "prime",
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "netflix"
@@ -2321,7 +2436,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#ef4444"
+  "themeColor": "#ef4444",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "olumlu-dunya-2",
@@ -2332,7 +2449,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.1,
   "imdbVotes": "25K",
   "duration": "1s 55dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Komedi",
    "Aksiyon"
@@ -2355,7 +2472,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "PnQrVt3Vvxc",
   "isFeatured": false,
   "platforms": [
-   "netflix"
+   "netflix",
+   "prime"
   ],
   "hubTags": [
    "netflix"
@@ -2363,7 +2481,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#e50914"
+  "themeColor": "#e50914",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "gora",
@@ -2374,7 +2494,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "74K",
   "duration": "2s 7dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Komedi",
    "Bilim Kurgu",
@@ -2397,7 +2517,11 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "b-xjnFcUGn8",
   "isFeatured": true,
   "platforms": [
-   "netflix"
+   "netflix",
+   "prime",
+   "tvplus",
+   "tod",
+   "hbo"
   ],
   "hubTags": [
    "netflix"
@@ -2407,7 +2531,9 @@ const MOVIES_DATA = [
    "escapism"
   ],
   "themeColor": "#06b6d4",
-  "featuredBadge": "Kült Komedi"
+  "featuredBadge": "Kült Komedi",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "arog",
@@ -2438,16 +2564,16 @@ const MOVIES_DATA = [
   "backdropUrl": "https://upload.wikimedia.org/wikipedia/en/8/83/A.R.O.G._%28movie_poster%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
   "trailerYoutubeId": "v00CtY2vEQg",
   "isFeatured": false,
-  "platforms": [
-   "netflix"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix"
   ],
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#d97706"
+  "themeColor": "#d97706",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "knives-out",
@@ -2479,9 +2605,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDU5ZTRkYmItZjg0Mi00ZTQwLThjMWItNWM3MTMxMzVjZmVjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "aEdV1RoBU_0",
   "isFeatured": false,
-  "platforms": [
-   "netflix"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix"
   ],
@@ -2489,7 +2613,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "prestige"
   ],
-  "themeColor": "#8b5cf6"
+  "themeColor": "#8b5cf6",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-big-lebowski",
@@ -2519,9 +2645,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BY2E3OWQ5OWYtYTRkMC00NjVjLWIzZDQtNmRmM2ZiYTIyYmYxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "cd-go0oBF4Y",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -2529,7 +2653,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "prestige"
   ],
-  "themeColor": "#f59e0b"
+  "themeColor": "#f59e0b",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "brooklyn-nine-nine",
@@ -2540,7 +2666,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "380K",
   "duration": "8 Sezon",
-  "ageRating": "13+",
+  "ageRating": "16+",
   "isSeries": true,
   "genres": [
    "Komedi",
@@ -2570,7 +2696,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#0284c7"
+  "themeColor": "#0284c7",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-office",
@@ -2581,7 +2709,7 @@ const MOVIES_DATA = [
   "imdbRating": 9,
   "imdbVotes": "730K",
   "duration": "9 Sezon",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "isSeries": true,
   "genres": [
    "Komedi"
@@ -2603,7 +2731,8 @@ const MOVIES_DATA = [
   "isFeatured": true,
   "platforms": [
    "netflix",
-   "prime"
+   "prime",
+   "disney"
   ],
   "hubTags": [
    "prime",
@@ -2614,7 +2743,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#22c55e",
-  "featuredBadge": "IMDb 9.0 Komedi"
+  "featuredBadge": "IMDb 9.0 Komedi",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "friends",
@@ -2625,7 +2756,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.9,
   "imdbVotes": "1.1M",
   "duration": "10 Sezon",
-  "ageRating": "13+",
+  "ageRating": "7+",
   "isSeries": true,
   "genres": [
    "Komedi",
@@ -2648,6 +2779,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "8wThS5WCzs4",
   "isFeatured": false,
   "platforms": [
+   "netflix",
+   "tvplus",
    "hbo"
   ],
   "hubTags": [
@@ -2658,7 +2791,9 @@ const MOVIES_DATA = [
    "heartwarming",
    "prestige"
   ],
-  "themeColor": "#7928ca"
+  "themeColor": "#7928ca",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ted",
@@ -2669,7 +2804,7 @@ const MOVIES_DATA = [
   "imdbRating": 6.9,
   "imdbVotes": "620K",
   "duration": "1s 46dk",
-  "ageRating": "18+",
+  "ageRating": "R",
   "genres": [
    "Komedi",
    "Fantastik"
@@ -2688,6 +2823,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "9fbo_pQvU7M",
   "isFeatured": false,
   "platforms": [
+   "netflix",
    "prime"
   ],
   "hubTags": [
@@ -2696,7 +2832,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#eab308"
+  "themeColor": "#eab308",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "groundhog-day",
@@ -2707,7 +2845,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "680K",
   "duration": "1s 41dk",
-  "ageRating": "13+",
+  "ageRating": "7+",
   "genres": [
    "Komedi",
    "Fantastik",
@@ -2727,7 +2865,10 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "GncQtURdcE4",
   "isFeatured": false,
   "platforms": [
-   "netflix"
+   "mubi",
+   "tvplus",
+   "tod",
+   "prime"
   ],
   "hubTags": [
    "netflix"
@@ -2736,7 +2877,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "mind-bending"
   ],
-  "themeColor": "#38bdf8"
+  "themeColor": "#38bdf8",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "modern-family",
@@ -2777,7 +2920,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "heartwarming"
   ],
-  "themeColor": "#0284c7"
+  "themeColor": "#0284c7",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ted-lasso",
@@ -2788,7 +2933,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.8,
   "imdbVotes": "350K",
   "duration": "3 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "isSeries": true,
   "genres": [
    "Komedi",
@@ -2818,7 +2963,9 @@ const MOVIES_DATA = [
    "heartwarming",
    "prestige"
   ],
-  "themeColor": "#facc15"
+  "themeColor": "#facc15",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "free-guy",
@@ -2829,7 +2976,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.1,
   "imdbVotes": "420K",
   "duration": "1s 55dk",
-  "ageRating": "13+",
+  "ageRating": "18+",
   "genres": [
    "Komedi",
    "Aksiyon",
@@ -2859,7 +3006,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "escapism"
   ],
-  "themeColor": "#38bdf8"
+  "themeColor": "#38bdf8",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "jump-street-21",
@@ -2870,7 +3019,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.2,
   "imdbVotes": "580K",
   "duration": "1s 49dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Komedi",
    "Aksiyon"
@@ -2890,16 +3039,16 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg2NjJiODctM2IyMS00MmQ5LWI1YmQtNTBjMTI4M2U2YzA5XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "RLoKtb4c4W0",
   "isFeatured": false,
-  "platforms": [
-   "netflix"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix"
   ],
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#f97316"
+  "themeColor": "#f97316",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-mask",
@@ -2937,7 +3086,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#22c55e"
+  "themeColor": "#22c55e",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "rick-and-morty",
@@ -2970,6 +3121,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "WNhH00OIPP0",
   "isFeatured": true,
   "platforms": [
+   "tvplus",
+   "hbo",
    "netflix"
   ],
   "hubTags": [
@@ -2980,7 +3133,9 @@ const MOVIES_DATA = [
    "mind-bending"
   ],
   "themeColor": "#10b981",
-  "featuredBadge": "IMDb 9.0 Çılgınlık"
+  "featuredBadge": "IMDb 9.0 Çılgınlık",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "cinayet-susu",
@@ -2991,7 +3146,7 @@ const MOVIES_DATA = [
   "imdbRating": 6.6,
   "imdbVotes": "28K",
   "duration": "1s 52dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Komedi",
    "Suç",
@@ -3013,7 +3168,9 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "TRfAs2qnlh0",
   "isFeatured": false,
   "platforms": [
-   "netflix"
+   "prime",
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "netflix"
@@ -3021,7 +3178,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#e50914"
+  "themeColor": "#e50914",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "shaun-of-the-dead",
@@ -3051,16 +3210,16 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNzNjZGE4YTUtOWU3OC00Mzg2LThjNWItMzUwYzEwMDgxYmVjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "ukOhdq1wQlQ",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
   "moods": [
    "chill-comedy"
   ],
-  "themeColor": "#b91c1c"
+  "themeColor": "#b91c1c",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-green-mile",
@@ -3071,7 +3230,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.6,
   "imdbVotes": "1.4M",
   "duration": "3s 9dk",
-  "ageRating": "16+",
+  "ageRating": "7+",
   "genres": [
    "Dram",
    "Fantastik",
@@ -3091,10 +3250,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTUxMzQyNjA5MF5BMl5BanBnXkFtZTYwOTU2NTY3._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "Ki4haFrqSrw",
   "isFeatured": true,
-  "platforms": [
-   "netflix",
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix",
    "prime"
@@ -3104,7 +3260,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#22c55e",
-  "featuredBadge": "IMDb #27 Başyapıt"
+  "featuredBadge": "IMDb #27 Başyapıt",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "life-is-beautiful",
@@ -3134,9 +3292,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZTBhOGYzZjQtYzE0Mi00MGIwLWE0MWYtNzMxNTM2OTFkM2NjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "pAYEQP8gx3w",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -3145,7 +3301,9 @@ const MOVIES_DATA = [
    "heartwarming",
    "prestige"
   ],
-  "themeColor": "#eab308"
+  "themeColor": "#eab308",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-pianist",
@@ -3191,14 +3349,14 @@ const MOVIES_DATA = [
  },
  {
   "id": "schindlers-list",
-  "imdbID": "tt2709758",
+  "imdbID": "tt0108052",
   "title": "Schindler'in Listesi",
   "originalTitle": "Schindler's List",
   "year": 1993,
   "imdbRating": 9,
   "imdbVotes": "1.5M",
   "duration": "3s 15dk",
-  "ageRating": "18+",
+  "ageRating": "15+",
   "genres": [
    "Biyografi",
    "Dram",
@@ -3217,10 +3375,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "gG22XNhtnoY",
   "isFeatured": false,
-  "platforms": [
-   "netflix",
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix",
    "prime"
@@ -3229,18 +3384,20 @@ const MOVIES_DATA = [
    "tearjerker",
    "prestige"
   ],
-  "themeColor": "#e50914"
+  "themeColor": "#e50914",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "good-will-hunting",
-  "imdbID": "tt1013648",
+  "imdbID": "tt0119217",
   "title": "Can Dostum",
   "originalTitle": "Good Will Hunting",
   "year": 1997,
   "imdbRating": 8.3,
   "imdbVotes": "1.1M",
   "duration": "2s 6dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram",
    "Romantik"
@@ -3261,7 +3418,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "PaZVjZEFkRs",
   "isFeatured": false,
   "platforms": [
-   "netflix"
+   "tvplus"
   ],
   "hubTags": [
    "netflix"
@@ -3271,7 +3428,9 @@ const MOVIES_DATA = [
    "heartwarming",
    "prestige"
   ],
-  "themeColor": "#38bdf8"
+  "themeColor": "#38bdf8",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "babam-ve-oglum",
@@ -3282,7 +3441,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "92K",
   "duration": "1s 52dk",
-  "ageRating": "13+",
+  "ageRating": "G",
   "genres": [
    "Dram",
    "Aile"
@@ -3303,7 +3462,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "KTmrUXNxwWI",
   "isFeatured": true,
   "platforms": [
-   "netflix"
+   "prime"
   ],
   "hubTags": [
    "netflix"
@@ -3312,7 +3471,9 @@ const MOVIES_DATA = [
    "tearjerker"
   ],
   "themeColor": "#e11d48",
-  "featuredBadge": "Milli Başyapıt"
+  "featuredBadge": "Milli Başyapıt",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ayla",
@@ -3323,7 +3484,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "44K",
   "duration": "2s 5dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Biyografi",
    "Dram",
@@ -3354,7 +3515,9 @@ const MOVIES_DATA = [
    "tearjerker",
    "heartwarming"
   ],
-  "themeColor": "#ef4444"
+  "themeColor": "#ef4444",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "miracle-in-cell-no-7",
@@ -3365,7 +3528,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "55K",
   "duration": "2s 12dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram"
   ],
@@ -3392,7 +3555,9 @@ const MOVIES_DATA = [
   "moods": [
    "tearjerker"
   ],
-  "themeColor": "#f59e0b"
+  "themeColor": "#f59e0b",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "hachiko",
@@ -3403,7 +3568,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "320K",
   "duration": "1s 33dk",
-  "ageRating": "Genel",
+  "ageRating": "G",
   "genres": [
    "Biyografi",
    "Dram",
@@ -3423,8 +3588,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "Y6U728AZnV0",
   "isFeatured": false,
   "platforms": [
-   "netflix",
-   "prime"
+   "tvplus"
   ],
   "hubTags": [
    "netflix",
@@ -3434,7 +3598,9 @@ const MOVIES_DATA = [
    "tearjerker",
    "heartwarming"
   ],
-  "themeColor": "#f59e0b"
+  "themeColor": "#f59e0b",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "grave-of-the-fireflies",
@@ -3445,7 +3611,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "330K",
   "duration": "1s 29dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Animasyon",
    "Dram",
@@ -3475,7 +3641,9 @@ const MOVIES_DATA = [
    "tearjerker",
    "prestige"
   ],
-  "themeColor": "#ef4444"
+  "themeColor": "#ef4444",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "eternal-sunshine",
@@ -3486,7 +3654,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "1.1M",
   "duration": "1s 48dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram",
    "Romantik",
@@ -3507,10 +3675,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTY4NzcwODg3Nl5BMl5BanBnXkFtZTcwNTEwOTMyMw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "07-QBnEkgXU",
   "isFeatured": false,
-  "platforms": [
-   "netflix",
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix",
    "prime"
@@ -3520,7 +3685,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "prestige"
   ],
-  "themeColor": "#06b6d4"
+  "themeColor": "#06b6d4",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "manchester-by-the-sea",
@@ -3531,7 +3698,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.8,
   "imdbVotes": "330K",
   "duration": "2s 17dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram"
   ],
@@ -3549,9 +3716,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTYxMjk0NDg4Ml5BMl5BanBnXkFtZTgwODcyNjA5OTE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "5TyNHoFcqFY",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -3559,18 +3724,20 @@ const MOVIES_DATA = [
    "tearjerker",
    "prestige"
   ],
-  "themeColor": "#475569"
+  "themeColor": "#475569",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-father",
-  "imdbID": "tt10409554",
+  "imdbID": "tt10272386",
   "title": "Baba",
   "originalTitle": "The Father",
   "year": 2020,
   "imdbRating": 8.2,
   "imdbVotes": "200K",
   "duration": "1s 37dk",
-  "ageRating": "13+",
+  "ageRating": "10+",
   "genres": [
    "Dram",
    "Gizem"
@@ -3590,6 +3757,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "PSZTFO-HSzw",
   "isFeatured": false,
   "platforms": [
+   "tvplus",
+   "tod",
    "hbo"
   ],
   "hubTags": [
@@ -3600,18 +3769,20 @@ const MOVIES_DATA = [
    "prestige",
    "mind-bending"
   ],
-  "themeColor": "#8b5cf6"
+  "themeColor": "#8b5cf6",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "memento",
-  "imdbID": "tt24735934",
+  "imdbID": "tt0209144",
   "title": "Akıl Defteri",
   "originalTitle": "Memento",
   "year": 2000,
   "imdbRating": 8.4,
   "imdbVotes": "1.3M",
   "duration": "1s 53dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Gizem",
    "Gerilim"
@@ -3630,6 +3801,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "4CV41hoyS8A",
   "isFeatured": true,
   "platforms": [
+   "mubi",
    "prime"
   ],
   "hubTags": [
@@ -3641,7 +3813,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#a855f7",
-  "featuredBadge": "Nolan Zirvesi"
+  "featuredBadge": "Nolan Zirvesi",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "shutter-island",
@@ -3652,7 +3826,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.5M",
   "duration": "2s 18dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Gizem",
    "Gerilim"
@@ -3671,10 +3845,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BN2FjNWExYzEtY2YzOC00YjNlLTllMTQtNmIwM2Q1YzBhOWM1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "5iaYLCiq5RM",
   "isFeatured": true,
-  "platforms": [
-   "netflix",
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "netflix",
    "prime"
@@ -3684,7 +3855,9 @@ const MOVIES_DATA = [
    "thrill"
   ],
   "themeColor": "#8b5cf6",
-  "featuredBadge": "Efsanevi Ters Köşe"
+  "featuredBadge": "Efsanevi Ters Köşe",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "tenet",
@@ -3695,7 +3868,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.3,
   "imdbVotes": "560K",
   "duration": "2s 30dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Aksiyon",
    "Bilim Kurgu",
@@ -3716,7 +3889,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "LdOM0x0XDMo",
   "isFeatured": false,
   "platforms": [
-   "prime"
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "wb",
@@ -3726,7 +3900,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "adrenaline"
   ],
-  "themeColor": "#38bdf8"
+  "themeColor": "#38bdf8",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "severance",
@@ -3771,7 +3947,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#06b6d4",
-  "featuredBadge": "Beyin Yakan Başyapıt"
+  "featuredBadge": "Beyin Yakan Başyapıt",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "coherence",
@@ -3782,7 +3960,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.2,
   "imdbVotes": "160K",
   "duration": "1s 29dk",
-  "ageRating": "16+",
+  "ageRating": "PG",
   "genres": [
    "Gizem",
    "Bilim Kurgu",
@@ -3801,9 +3979,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNzQ3ODUzNDY2M15BMl5BanBnXkFtZTgwNzg0ODY2MTE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "sEceDz1Rodc",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -3811,7 +3987,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "thrill"
   ],
-  "themeColor": "#6366f1"
+  "themeColor": "#6366f1",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "donnie-darko",
@@ -3822,7 +4000,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "850K",
   "duration": "1s 53dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram",
    "Gizem",
@@ -3842,9 +4020,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMWE3NTYzZmEtM2U5MS00MDZhLTk2ZTQtZTgzNjg0ZGQ5ZjM0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "bzLn8sYeM9o",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -3852,18 +4028,20 @@ const MOVIES_DATA = [
    "mind-bending",
    "thrill"
   ],
-  "themeColor": "#a855f7"
+  "themeColor": "#a855f7",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "predestination",
-  "imdbID": "tt4725946",
+  "imdbID": "tt2397535",
   "title": "Kader",
   "originalTitle": "Predestination",
   "year": 2014,
   "imdbRating": 7.4,
   "imdbVotes": "310K",
   "duration": "1s 37dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Dram",
@@ -3882,9 +4060,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjcxZjhkOTAtNTAyMC00ZjAwLWJmODAtNDA0Mjc3YzZjMWYyXkEyXkFqcGc@._V1_SX1280.jpg",
   "trailerYoutubeId": "dLwKlV5M0ro",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -3892,7 +4068,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "thrill"
   ],
-  "themeColor": "#8b5cf6"
+  "themeColor": "#8b5cf6",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "black-mirror",
@@ -3936,7 +4114,9 @@ const MOVIES_DATA = [
    "thrill"
   ],
   "themeColor": "#e50914",
-  "featuredBadge": "Netflix Fenomeni"
+  "featuredBadge": "Netflix Fenomeni",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "source-code",
@@ -3947,7 +4127,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.5,
   "imdbVotes": "550K",
   "duration": "1s 33dk",
-  "ageRating": "13+",
+  "ageRating": "7+",
   "genres": [
    "Aksiyon",
    "Gizem",
@@ -3967,9 +4147,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTY0MTc3MzMzNV5BMl5BanBnXkFtZTcwNDE4MjE0NA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "mnJegNyAb1w",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -3978,7 +4156,9 @@ const MOVIES_DATA = [
    "thrill",
    "adrenaline"
   ],
-  "themeColor": "#38bdf8"
+  "themeColor": "#38bdf8",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "mr-nobody",
@@ -3989,7 +4169,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "250K",
   "duration": "2s 21dk",
-  "ageRating": "16+",
+  "ageRating": "R",
   "genres": [
    "Dram",
    "Fantastik",
@@ -4010,9 +4190,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg4ODkzMDQ3Nl5BMl5BanBnXkFtZTgwNTEwMTkxMDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "vXf3gVYXlHg",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -4020,7 +4198,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "escapism"
   ],
-  "themeColor": "#8b5cf6"
+  "themeColor": "#8b5cf6",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "john-wick-4",
@@ -4031,7 +4211,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "360K",
   "duration": "2s 49dk",
-  "ageRating": "18+",
+  "ageRating": "16+",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -4053,7 +4233,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "qEVUtrk8_B4",
   "isFeatured": true,
   "platforms": [
-   "prime"
+   "tvplus"
   ],
   "hubTags": [
    "prime"
@@ -4063,7 +4243,9 @@ const MOVIES_DATA = [
    "thrill"
   ],
   "themeColor": "#ef4444",
-  "featuredBadge": "Saf Adrenalin Zirvesi"
+  "featuredBadge": "Saf Adrenalin Zirvesi",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "mad-max-fury-road",
@@ -4095,7 +4277,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "hEJnMQG9ev8",
   "isFeatured": false,
   "platforms": [
-   "prime"
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "wb",
@@ -4106,7 +4289,9 @@ const MOVIES_DATA = [
    "escapism",
    "prestige"
   ],
-  "themeColor": "#f97316"
+  "themeColor": "#f97316",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "top-gun-maverick",
@@ -4117,7 +4302,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "710K",
   "duration": "2s 10dk",
-  "ageRating": "13+",
+  "ageRating": "10+",
   "genres": [
    "Aksiyon",
    "Dram"
@@ -4138,8 +4323,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "giXco2jaZ_4",
   "isFeatured": false,
   "platforms": [
-   "netflix",
-   "prime"
+   "tvplus"
   ],
   "hubTags": [
    "netflix",
@@ -4148,7 +4332,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline"
   ],
-  "themeColor": "#0284c7"
+  "themeColor": "#0284c7",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "terminator-2",
@@ -4178,9 +4364,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNGMyMGNkMDUtMjc2Ni00NWFlLTgyODEtZTY2MzBiZTg0OWZiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "CRRlbK5w8AE",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -4189,7 +4373,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "prestige"
   ],
-  "themeColor": "#38bdf8"
+  "themeColor": "#38bdf8",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "mission-impossible-dead-reckoning",
@@ -4200,7 +4386,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "280K",
   "duration": "2s 43dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -4221,9 +4407,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BN2U4OTdmM2QtZTkxYy00ZmQyLTg2N2UtMDdmMGJmNDhlZDU1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "avz06PDqDbM",
   "isFeatured": false,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -4231,7 +4415,9 @@ const MOVIES_DATA = [
    "adrenaline",
    "thrill"
   ],
-  "themeColor": "#eab308"
+  "themeColor": "#eab308",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "silence-of-the-lambs",
@@ -4263,6 +4449,9 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "W6Mm8Sbe__o",
   "isFeatured": true,
   "platforms": [
+   "netflix",
+   "tvplus",
+   "hbo",
    "prime"
   ],
   "hubTags": [
@@ -4273,7 +4462,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#ef4444",
-  "featuredBadge": "5 Oscar Kazananı"
+  "featuredBadge": "5 Oscar Kazananı",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "prisoners",
@@ -4284,7 +4475,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "800K",
   "duration": "2s 33dk",
-  "ageRating": "18+",
+  "ageRating": "R",
   "genres": [
    "Suç",
    "Dram",
@@ -4306,7 +4497,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "bpXfcTF6iVk",
   "isFeatured": false,
   "platforms": [
-   "netflix",
+   "tvplus",
    "prime"
   ],
   "hubTags": [
@@ -4316,7 +4507,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill"
   ],
-  "themeColor": "#334155"
+  "themeColor": "#334155",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "gone-girl",
@@ -4348,8 +4541,8 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "2-_-1nJf8Vg",
   "isFeatured": false,
   "platforms": [
-   "disney",
-   "prime"
+   "tvplus",
+   "hbo"
   ],
   "hubTags": [
    "disney",
@@ -4358,7 +4551,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill"
   ],
-  "themeColor": "#0284c7"
+  "themeColor": "#0284c7",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "zodiac",
@@ -4369,7 +4564,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "600K",
   "duration": "2s 37dk",
-  "ageRating": "18+",
+  "ageRating": "16+",
   "genres": [
    "Suç",
    "Dram",
@@ -4391,7 +4586,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "yNncHPl1UXg",
   "isFeatured": false,
   "platforms": [
-   "prime"
+   "netflix"
   ],
   "hubTags": [
    "prime"
@@ -4400,7 +4595,9 @@ const MOVIES_DATA = [
    "thrill",
    "prestige"
   ],
-  "themeColor": "#475569"
+  "themeColor": "#475569",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-intouchables",
@@ -4411,7 +4608,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "930K",
   "duration": "1s 52dk",
-  "ageRating": "13+",
+  "ageRating": "18+",
   "genres": [
    "Biyografi",
    "Komedi",
@@ -4430,9 +4627,7 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTYxNDA3MDQwNl5BMl5BanBnXkFtZTcwNTU4Mzc1Nw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "34WIbmXkewU",
   "isFeatured": true,
-  "platforms": [
-   "prime"
-  ],
+  "platforms": [],
   "hubTags": [
    "prime"
   ],
@@ -4442,7 +4637,9 @@ const MOVIES_DATA = [
    "prestige"
   ],
   "themeColor": "#10b981",
-  "featuredBadge": "İç Isıtan Şaheser"
+  "featuredBadge": "İç Isıtan Şaheser",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "amelie",
@@ -4473,6 +4670,7 @@ const MOVIES_DATA = [
   "trailerYoutubeId": "HUECWi5pX7o",
   "isFeatured": false,
   "platforms": [
+   "mubi",
    "prime"
   ],
   "hubTags": [
@@ -4483,7 +4681,9 @@ const MOVIES_DATA = [
    "escapism",
    "prestige"
   ],
-  "themeColor": "#f43f5e"
+  "themeColor": "#f43f5e",
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ratatouille",
@@ -4494,7 +4694,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "820K",
   "duration": "1s 51dk",
-  "ageRating": "Genel",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Komedi",
@@ -4526,7 +4726,9 @@ const MOVIES_DATA = [
    "chill-comedy",
    "escapism"
   ],
-  "themeColor": "#eab308"
+  "themeColor": "#eab308",
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "baba-ii",
@@ -4537,7 +4739,7 @@ const MOVIES_DATA = [
   "imdbRating": 9,
   "imdbVotes": "1.5M",
   "duration": "3s 22dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Suç",
    "Dram"
@@ -4554,12 +4756,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDIxMzBlZDktZjMxNy00ZGI4LTgxNDEtYWRlNzRjMjJmOGQ1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDIxMzBlZDktZjMxNy00ZGI4LTgxNDEtYWRlNzRjMjJmOGQ1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "TWOKY4Bg0SI",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "12-ofkeli-adam",
@@ -4570,7 +4776,7 @@ const MOVIES_DATA = [
   "imdbRating": 9,
   "imdbVotes": "1M",
   "duration": "1s 36dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Suç",
    "Dram"
@@ -4587,12 +4793,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjE4NzdmOTYtYjc5Yi00YzBiLWEzNDEtNTgxZGQ2MWVkN2NiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjE4NzdmOTYtYjc5Yi00YzBiLWEzNDEtNTgxZGQ2MWVkN2NiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "TEN-2uTi2c0",
-  "platforms": [],
+  "platforms": [
+   "mubi",
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "yuzuklerin-efendisi-yuzuk-kardesligi",
@@ -4621,12 +4832,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzIxMDQ2YTctNDY4MC00ZTRhLTk4ODQtMTVlOWY4NTdiYmMwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNzIxMDQ2YTctNDY4MC00ZTRhLTk4ODQtMTVlOWY4NTdiYmMwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "aStYWD25fAQ",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "yuzuklerin-efendisi-iki-kule",
@@ -4705,7 +4922,7 @@ const MOVIES_DATA = [
   "imdbRating": 9,
   "imdbVotes": "1.1M",
   "duration": "4 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Suç",
    "Dram",
@@ -4723,13 +4940,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjRhZDdjMDYtMTg5Yy00NGI4LWI3ZDgtYjNkNDc4MzJkNDRjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjRhZDdjMDYtMTg5Yy00NGI4LWI3ZDgtYjNkNDc4MzJkNDRjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "Nj7ZSUkTTVI",
-  "platforms": [],
+  "platforms": [
+   "disney",
+   "tvplus"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "mind-bending",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "s-k-dostlar",
@@ -4740,7 +4962,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "1.4M",
   "duration": "2s 25dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Biyografi",
    "Suç",
@@ -4763,7 +4985,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "casino",
@@ -4774,7 +4998,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "629K",
   "duration": "2s 58dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Suç",
    "Dram"
@@ -4796,7 +5020,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "heat",
@@ -4807,7 +5033,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "821K",
   "duration": "2s 50dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -4830,7 +5056,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "kostebek",
@@ -4841,7 +5069,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "1.6M",
   "duration": "2s 31dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Suç",
    "Dram",
@@ -4864,7 +5092,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "django-unchained",
@@ -4875,7 +5105,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "1.9M",
   "duration": "2s 45dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram",
    "Western"
@@ -4892,12 +5122,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "0fUCuvNlOCg",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "adrenaline",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "inglourious-basterds",
@@ -4908,7 +5142,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "1.8M",
   "duration": "2s 33dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram",
    "Savaş"
@@ -4930,7 +5164,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-wolf-of-wall-street",
@@ -4941,7 +5177,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.8M",
   "duration": "3s 0dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Biyografi",
    "Komedi",
@@ -4964,7 +5200,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "chill-comedy"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "yenilmeziler",
@@ -4975,7 +5213,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "1.6M",
   "duration": "2s 23dk",
-  "ageRating": "13+",
+  "ageRating": "6+",
   "genres": [
    "Aksiyon",
    "Bilim Kurgu"
@@ -4992,12 +5230,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGE0YTVjNzUtNzJjOS00NGNlLTgxMzctZTY4YTE1Y2Y1ZTU4XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNGE0YTVjNzUtNzJjOS00NGNlLTgxMzctZTY4YTE1Y2Y1ZTU4XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "eOrNdBpGMv8",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "yenilmezler-sonsuzluk-savas",
@@ -5026,12 +5268,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjMxNjY2MDU1OV5BMl5BanBnXkFtZTgwNzY1MTUwNTM@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "6ZfuNTqbHE8",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "spider-man-no-way-home",
@@ -5042,7 +5288,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "1.1M",
   "duration": "2s 28dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -5060,12 +5306,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "JfVOs4VSpmA",
-  "platforms": [],
+  "platforms": [
+   "disney",
+   "tvplus",
+   "tod"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "terminator",
@@ -5076,7 +5328,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "1M",
   "duration": "1s 47dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -5094,12 +5346,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmE0YzIxM2QtMGNlMi00MjRmLWE3MWMtOWQzMGVjMmU0YTFmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZmE0YzIxM2QtMGNlMi00MjRmLWE3MWMtOWQzMGVjMmU0YTFmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "nGrW-OR2uDk",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "die-hard",
@@ -5110,7 +5367,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1M",
   "duration": "2s 12dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Gerilim"
@@ -5127,12 +5384,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGNlYmM1NmQtYWExMS00NmRjLTg5ZmEtMmYyYzJkMzljYWMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMGNlYmM1NmQtYWExMS00NmRjLTg5ZmEtMmYyYzJkMzljYWMxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "jaJuwKCmJbY",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "bourne-kimligi",
@@ -5143,7 +5404,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.8,
   "imdbVotes": "622K",
   "duration": "1s 59dk",
-  "ageRating": "13+",
+  "ageRating": "15+",
   "genres": [
    "Aksiyon",
    "Gizem",
@@ -5161,23 +5422,28 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTk1ZTcyMWMtMWUxYS00MmEzLTlmODYtOTk1MGRjOTg1ZjlmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYTk1ZTcyMWMtMWUxYS00MmEzLTlmODYtOTk1MGRjOTg1ZjlmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "FpKaB5dvQ4g",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "taken",
-  "imdbID": "tt1298720",
+  "imdbID": "tt0936501",
   "title": "Taken",
   "originalTitle": "Taken",
   "year": 2008,
   "imdbRating": 8.4,
   "imdbVotes": "25",
   "duration": "0s 5dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Short",
    "Komedi"
@@ -5198,7 +5464,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "kacak",
@@ -5209,7 +5477,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.8,
   "imdbVotes": "351K",
   "duration": "2s 10dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -5232,7 +5500,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "okyanus-un-on-biri",
@@ -5243,7 +5513,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "685K",
   "duration": "1s 56dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Suç",
    "Gerilim"
@@ -5260,12 +5530,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmNhZDkxYTgtMDM3ZC00NTQ3LWFjZTUtNzc1Y2QyNWZjNDRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmNhZDkxYTgtMDM3ZC00NTQ3LWFjZTUtNzc1Y2QyNWZjNDRmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "imm6OR605UI",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "chill-comedy",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "now-you-see-me",
@@ -5299,18 +5573,20 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "v-for-vendetta",
   "imdbID": "tt0434409",
   "title": "V for Vendetta",
   "originalTitle": "V for Vendetta",
-  "year": 2006,
+  "year": 2005,
   "imdbRating": 8.1,
   "imdbVotes": "1.3M",
   "duration": "2s 12dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Dram",
@@ -5333,7 +5609,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "top-gun",
@@ -5344,7 +5622,7 @@ const MOVIES_DATA = [
   "imdbRating": 7,
   "imdbVotes": "562K",
   "duration": "1s 49dk",
-  "ageRating": "7+",
+  "ageRating": "10+",
   "genres": [
    "Aksiyon",
    "Dram"
@@ -5366,7 +5644,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "rocky",
@@ -5377,7 +5657,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "703K",
   "duration": "2s 0dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Dram",
    "Spor"
@@ -5394,12 +5674,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDEyY2M2MGMtYjg5OC00ZWFjLWFkZDQtNmQzZTdiYmYzZTBkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDEyY2M2MGMtYjg5OC00ZWFjLWFkZDQtNmQzZTdiYmYzZTBkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "-Hk-LYcavrw",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "heartwarming",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "creed",
@@ -5428,12 +5714,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNWM3NjY2ZDctMGZiYy00OGFlLThkMTktOTY2MDM2YjE2OTliXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNWM3NjY2ZDctMGZiYy00OGFlLThkMTktOTY2MDM2YjE2OTliXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "Uv554B7YHk4",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "heartwarming",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "warrior",
@@ -5444,7 +5736,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "534K",
   "duration": "2s 20dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Dram",
@@ -5467,7 +5759,9 @@ const MOVIES_DATA = [
   "moods": [
    "tearjerker",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ford-ferrari-ye-kars",
@@ -5478,7 +5772,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "589K",
   "duration": "2s 32dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Biyografi",
@@ -5496,12 +5790,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTBjNTEyNjYtYjdkNi00YzE5LTljYzUtZjVlYmYwZmJmZWYxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTBjNTEyNjYtYjdkNi00YzE5LTljYzUtZjVlYmYwZmJmZWYxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "e8v_dqYvPx8",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "rush",
@@ -5512,7 +5810,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "568K",
   "duration": "2s 3dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Biyografi",
    "Dram",
@@ -5530,12 +5828,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTZhOGQxM2ItNGQyYy00YzE5LWI5MjMtNmMzNGQzNDE1OTUzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTZhOGQxM2ItNGQyYy00YzE5LWI5MjMtNmMzNGQzNDE1OTUzXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "4XA73ni9eVs",
-  "platforms": [],
+  "platforms": [
+   "mubi",
+   "prime"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "yesil-rehber",
@@ -5546,7 +5849,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "707K",
   "duration": "2s 10dk",
-  "ageRating": "13+",
+  "ageRating": "7+",
   "genres": [
    "Biyografi",
    "Komedi",
@@ -5564,12 +5867,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDU5YTNmMmItN2QxNy00OGQ0LTg5MTctNzFmYjEzZjcwN2UwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNDU5YTNmMmItN2QxNy00OGQ0LTg5MTctNzFmYjEzZjcwN2UwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "_rPFXcqBWuU",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "heartwarming",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "mutlulugun-pesinde",
@@ -5597,12 +5904,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ5NjQ0NDI3NF5BMl5BanBnXkFtZTcwNDI0MjEzMw@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTQ5NjQ0NDI3NF5BMl5BanBnXkFtZTcwNDI0MjEzMw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "DMOBlEcRuw8",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "tearjerker",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "olu-ozanlar-dernegi",
@@ -5613,7 +5924,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "672K",
   "duration": "2s 8dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Komedi",
    "Dram"
@@ -5630,12 +5941,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDYwNGVlY2ItMWYxMS00YjZiLWE5MTAtYWM5NWQ2ZWJjY2Q3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDYwNGVlY2ItMWYxMS00YjZiLWE5MTAtYWM5NWQ2ZWJjY2Q3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "ye4KFyWu2do",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "tearjerker",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "inan-lmazlar",
@@ -5646,7 +5961,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "919K",
   "duration": "1s 55dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Aksiyon",
@@ -5664,12 +5979,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY5OTU0OTc2NV5BMl5BanBnXkFtZTcwMzU4MDcyMQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTY5OTU0OTc2NV5BMl5BanBnXkFtZTcwMzU4MDcyMQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "-UaGUdNJdRQ",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "canavarlar-sirketi",
@@ -5680,7 +5999,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "1.1M",
   "duration": "1s 32dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Macera",
@@ -5698,12 +6017,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY1NTI0ODUyOF5BMl5BanBnXkFtZTgwNTEyNjQ0MDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTY1NTI0ODUyOF5BMl5BanBnXkFtZTgwNTEyNjQ0MDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "CGbgaHoapFM",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "chill-comedy"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "zootropolis",
@@ -5714,7 +6037,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "651K",
   "duration": "1s 48dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Aksiyon",
@@ -5732,12 +6055,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTMyMjEyNzIzMV5BMl5BanBnXkFtZTgwNzIyNjU0NzE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "Y0c3nKWhlIA",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "chill-comedy"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "yar-n-n-s-n-r-nda",
@@ -5748,7 +6075,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.9,
   "imdbVotes": "818K",
   "duration": "1s 53dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -5766,12 +6093,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "vw61gCe2oqI",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "sicario",
@@ -5782,7 +6113,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "552K",
   "duration": "2s 1dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -5800,12 +6131,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA5NjM3NTk1M15BMl5BanBnXkFtZTgwMzg1MzU2NjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjA5NjM3NTk1M15BMl5BanBnXkFtZTgwMzg1MzU2NjE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "G8tlEcnrGnU",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "drive",
@@ -5816,7 +6152,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.8,
   "imdbVotes": "776K",
   "duration": "1s 40dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Dram"
@@ -5838,7 +6174,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "baby-driver",
@@ -5872,7 +6210,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "jumanji-vahsi-orman",
@@ -5883,7 +6223,7 @@ const MOVIES_DATA = [
   "imdbRating": 6.9,
   "imdbVotes": "513K",
   "duration": "1s 59dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -5906,7 +6246,9 @@ const MOVIES_DATA = [
   "moods": [
    "escapism",
    "chill-comedy"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "better-call-saul",
@@ -5934,13 +6276,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTAxOTQ0MjUzMzJeQTJeQWpwZ15BbWU4MDY0NTAxNzMx._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTAxOTQ0MjUzMzJeQTJeQWpwZ15BbWU4MDY0NTAxNzMx._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "HN4oydykJFc",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "peaky-blinders",
@@ -5968,13 +6314,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGM0NGY3ZmItOGE2ZC00OWIxLTk0N2EtZWY4Yzg3ZDlhNGI3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOGM0NGY3ZmItOGE2ZC00OWIxLTk0N2EtZWY4Yzg3ZDlhNGI3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "oVzVdvGIC7U",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-witcher",
@@ -6003,13 +6353,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTQzMzNmMzUtODgwNS00YTdhLTg5N2MtOWU1YTc4YWY3NjRlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTQzMzNmMzUtODgwNS00YTdhLTg5N2MtOWU1YTc4YWY3NjRlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "sqTeQ6pVGKQ",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "escapism",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "kag-t-ev",
@@ -6046,7 +6400,9 @@ const MOVIES_DATA = [
    "thrill",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "narcos",
@@ -6083,7 +6439,9 @@ const MOVIES_DATA = [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-crown",
@@ -6119,7 +6477,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "fleabag",
@@ -6147,13 +6507,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA4MzU5NzQxNV5BMl5BanBnXkFtZTgwOTg3MDA5NzM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjA4MzU5NzQxNV5BMl5BanBnXkFtZTgwOTg3MDA5NzM@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "Nd3Qlo0qspU",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "chill-comedy",
    "tearjerker"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "prison-break",
@@ -6164,7 +6528,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "680K",
   "duration": "5 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -6182,13 +6546,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjE0ODQxNjI2MV5BMl5BanBnXkFtZTYwNTgzMzg3._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjE0ODQxNjI2MV5BMl5BanBnXkFtZTYwNTgzMzg3._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "AL9zLctDJaU",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "thrill",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "dr-house",
@@ -6199,7 +6567,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.7,
   "imdbVotes": "602K",
   "duration": "8 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram"
   ],
@@ -6215,13 +6583,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjgxYjAwNmMtYTAwZC00YmQxLWJlOTMtMWM0NGJmNDE0YmI2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjgxYjAwNmMtYTAwZC00YmQxLWJlOTMtMWM0NGJmNDE0YmI2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "MczMB8nU1sY",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "mind-bending",
    "prestige"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "dexter",
@@ -6250,13 +6623,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTE5ZGI2N2UtYmFiMi00ZGIxLWI1ZTMtYWJkZDYxNDZiOTQwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTE5ZGI2N2UtYmFiMi00ZGIxLWI1ZTMtYWJkZDYxNDZiOTQwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "YQeUmSD1c3g",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "tod"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "mind-bending"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "suits",
@@ -6284,13 +6662,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmE4MmNjZjUtNTEyNy00NTZiLWE4NTktYjM2NjBhYzQ1N2IzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYmE4MmNjZjUtNTEyNy00NTZiLWE4NTktYjM2NjBhYzQ1N2IzXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "cUnkjEIW2-o",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "prime"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "chill-comedy",
    "prestige"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "how-i-met-your-mother",
@@ -6301,7 +6684,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "791K",
   "duration": "9 Sezon",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Komedi",
    "Dram",
@@ -6319,13 +6702,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjg1MDQ5MjQ2N15BMl5BanBnXkFtZTYwNjI5NjA3._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjg1MDQ5MjQ2N15BMl5BanBnXkFtZTYwNjI5NjA3._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "cjJLEYMzpjc",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "chill-comedy",
    "heartwarming"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-big-bang-theory",
@@ -6336,7 +6723,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "948K",
   "duration": "12 Sezon",
-  "ageRating": "7+",
+  "ageRating": "TV-PG",
   "genres": [
    "Komedi",
    "Romantik"
@@ -6353,12 +6740,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZjgzY2QyNzItNDhhYi00ZWIwLWFjN2UtZDJkN2MxYWNjMmJjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZjgzY2QyNzItNDhhYi00ZWIwLWFjN2UtZDJkN2MxYWNjMmJjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "WBb3fojgW0Q",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "chill-comedy"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "vikings",
@@ -6387,13 +6779,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTFmZmExYTEtYmE0Mi00MzRmLWE4ZDYtOThiNzNlOTIyODljXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTFmZmExYTEtYmE0Mi00MzRmLWE4ZDYtOThiNzNlOTIyODljXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "xdm7Z3TQhDg",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "prestige"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "band-of-brothers",
@@ -6423,6 +6819,8 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjdlNGJlYjQtMDU2Mi00ZjA1LWEwYzgtYzlmNDM5MmE1ZGUwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "KKRBAFlN5ww",
   "platforms": [
+   "prime",
+   "tvplus",
    "hbo"
   ],
   "themeColor": "#38bdf8",
@@ -6430,7 +6828,9 @@ const MOVIES_DATA = [
    "prestige",
    "tearjerker"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "wednesday",
@@ -6441,7 +6841,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "514K",
   "duration": "3 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Komedi",
    "Suç",
@@ -6467,7 +6867,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "escapism"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-queen-s-gambit",
@@ -6502,7 +6904,9 @@ const MOVIES_DATA = [
    "prestige",
    "tearjerker"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-handmaid-s-tale",
@@ -6531,13 +6935,19 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWIxMzk4NmItZmM1YS00ODUyLWFlNjgtZDQ4MzljZTZmZDQ5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMWIxMzk4NmItZmM1YS00ODUyLWFlNjgtZDQ4MzljZTZmZDQ5XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "dVLiDETfx1c",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "house-of-cards",
@@ -6573,7 +6983,9 @@ const MOVIES_DATA = [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "true-detective",
@@ -6602,13 +7014,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjgwYzA1NWMtNDYyZi00ZGQyLWI5NTktMDYwZjE2OTIwZWEwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjgwYzA1NWMtNDYyZi00ZGQyLWI5NTktMDYwZjE2OTIwZWEwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "fVQUcaO4AvE",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "mind-bending"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "mindhunter",
@@ -6645,7 +7062,9 @@ const MOVIES_DATA = [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "mr-robot",
@@ -6680,7 +7099,9 @@ const MOVIES_DATA = [
    "mind-bending",
    "prestige"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "lost",
@@ -6691,7 +7112,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "684K",
   "duration": "6 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Macera",
    "Dram",
@@ -6709,13 +7130,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmZhY2ViYzYtMTQ0NS00NDcyLWIxZTYtMGUyODE0NDA0NmNkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZmZhY2ViYzYtMTQ0NS00NDcyLWIxZTYtMGUyODE0NDA0NmNkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "KTu8iDynwNc",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "mind-bending",
    "escapism"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-walking-dead",
@@ -6744,13 +7169,19 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWQwMGRhNGEtZTNhMy00MzVjLWJhMjItYjcwMDljMTkyNTg2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYWQwMGRhNGEtZTNhMy00MzVjLWJhMjItYjcwMDljMTkyNTg2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "m1lZWAwC5Bw",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "disney",
+   "tvplus"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "house-of-the-dragon",
@@ -6780,14 +7211,17 @@ const MOVIES_DATA = [
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOWU2ZDA0M2EtNWEyYy00MWUwLWI4NjAtYzkxMDFjYzZkNGFiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "DotnJ7tTA34",
   "platforms": [
-   "hbo"
+   "hbo",
+   "tvplus"
   ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "attack-on-titan",
@@ -6822,7 +7256,9 @@ const MOVIES_DATA = [
    "adrenaline",
    "escapism"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "fullmetal-alchemist-brotherhood",
@@ -6857,7 +7293,9 @@ const MOVIES_DATA = [
    "escapism",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "cobra-kai",
@@ -6868,7 +7306,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "247K",
   "duration": "6 Sezon",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Komedi",
@@ -6886,13 +7324,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjA3NDkwNzktNjJkYi00ODNhLWFhYzQtYzk5NjU4MDM0OWZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjA3NDkwNzktNjJkYi00ODNhLWFhYzQtYzk5NjU4MDM0OWZmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "xCwwxNbtK6Y",
-  "platforms": [],
+  "platforms": [
+   "netflix"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "chill-comedy",
    "adrenaline"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "fargo",
@@ -6921,13 +7363,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjMzMTIzMTUwN15BMl5BanBnXkFtZTgwNjE0NTg0MTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjMzMTIzMTUwN15BMl5BanBnXkFtZTgwNjE0NTg0MTE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "setgvHG3w48",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
   ],
-  "isSeries": true
+  "isSeries": true,
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "spider-man-across-the-spider-verse",
@@ -6938,7 +7384,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "557K",
   "duration": "2s 20dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Aksiyon",
@@ -6961,7 +7407,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "batman",
@@ -6990,12 +7438,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "mqqft2x_Aa4",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "batman-basl-yor",
@@ -7022,12 +7475,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzA2NDQzZDEtNDU5Ni00YTlkLTg2OWEtYmQwM2Y1YTBjMjFjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMzA2NDQzZDEtNDU5Ni00YTlkLTg2OWEtYmQwM2Y1YTBjMjFjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "neY2xVmOfUM",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "adrenaline",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "karanl-k-sovalye-yukseliyor",
@@ -7038,7 +7496,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.4,
   "imdbVotes": "2M",
   "duration": "2s 44dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Suç",
    "Gerilim"
@@ -7055,12 +7513,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTk4ODQzNDY3Ml5BMl5BanBnXkFtZTcwODA0NTM4Nw@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTk4ODQzNDY3Ml5BMl5BanBnXkFtZTcwODA0NTM4Nw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "GokKUqLcvD8",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "adrenaline",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ihtiyarlara-yer-yok",
@@ -7071,7 +7534,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.2M",
   "duration": "2s 2dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Suç",
    "Dram",
@@ -7089,23 +7552,27 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA5Njk3MjM4OV5BMl5BanBnXkFtZTcwMTc5MTE1MQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjA5Njk3MjM4OV5BMl5BanBnXkFtZTcwMTc5MTE1MQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "38A__WT3-o0",
-  "platforms": [],
+  "platforms": [
+   "tod"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "there-will-be-blood",
   "imdbID": "tt0469494",
   "title": "There Will Be Blood",
   "originalTitle": "There Will Be Blood",
-  "year": 2008,
+  "year": 2007,
   "imdbRating": 8.2,
   "imdbVotes": "721K",
   "duration": "2s 38dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram"
   ],
@@ -7121,12 +7588,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjAxODQ4MDU5NV5BMl5BanBnXkFtZTcwMDU4MjU1MQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjAxODQ4MDU5NV5BMl5BanBnXkFtZTcwMDU4MjU1MQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "FeSLPELpMeM",
-  "platforms": [],
+  "platforms": [
+   "tod"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "reservoir-dogs",
@@ -7137,7 +7608,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.2M",
   "duration": "1s 39dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Suç",
    "Gerilim"
@@ -7154,12 +7625,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "vayksn4Y93A",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "casino-royale",
@@ -7170,7 +7646,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "756K",
   "duration": "2s 24dk",
-  "ageRating": "13+",
+  "ageRating": "12A",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -7188,12 +7664,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWQ1ZDM4NDktMWY0NC00MjcxLWJlMDMtNmE2MGVhYzRjMWQ0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMWQ1ZDM4NDktMWY0NC00MjcxLWJlMDMtNmE2MGVhYzRjMWQ0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "36mnx8dBbGE",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "GB",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "skyfall",
@@ -7222,12 +7702,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjAzMWNkODUtM2FlMi00NzgyLWJhMGUtMWEyNDYyZGFiN2RlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjAzMWNkODUtM2FlMi00NzgyLWJhMGUtMWEyNDYyZGFiN2RlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "6kw1UVovByw",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "sosyal-ag",
@@ -7238,7 +7722,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.8,
   "imdbVotes": "831K",
   "duration": "2s 0dk",
-  "ageRating": "13+",
+  "ageRating": "15+",
   "genres": [
    "Biyografi",
    "Dram"
@@ -7255,12 +7739,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjlkNTE5ZTUtNGEwNy00MGVhLThmZjMtZjU1NDE5Zjk1NDZkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjlkNTE5ZTUtNGEwNy00MGVhLThmZjMtZjU1NDE5Zjk1NDZkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "lB95KLmpLR4",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "tod"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "forrest-gump",
@@ -7271,7 +7760,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.8,
   "imdbVotes": "2.5M",
   "duration": "2s 22dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Dram",
    "Romantik"
@@ -7288,12 +7777,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "bLvqoHBptjg",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "catch-me-if-you-can",
@@ -7304,7 +7797,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "1.3M",
   "duration": "2s 21dk",
-  "ageRating": "13+",
+  "ageRating": "G",
   "genres": [
    "Biyografi",
    "Suç",
@@ -7327,7 +7820,9 @@ const MOVIES_DATA = [
   "moods": [
    "chill-comedy",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "er-ryan-kurtarmak",
@@ -7338,7 +7833,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.6,
   "imdbVotes": "1.7M",
   "duration": "2s 49dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram",
    "Savaş"
@@ -7360,18 +7855,20 @@ const MOVIES_DATA = [
   "moods": [
    "tearjerker",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "1917",
   "imdbID": "tt8579674",
   "title": "1917",
   "originalTitle": "1917",
-  "year": 2020,
+  "year": 2019,
   "imdbRating": 8.2,
   "imdbVotes": "788K",
   "duration": "1s 59dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram",
    "Savaş"
@@ -7388,12 +7885,19 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzkxZjg2NDQtMGVjMy00NWZkLTk0ZDEtZWE3NDYwYjAyMTg1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzkxZjg2NDQtMGVjMy00NWZkLTk0ZDEtZWE3NDYwYjAyMTg1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "YqNYrYUiMfg",
-  "platforms": [],
+  "platforms": [
+   "mubi",
+   "tvplus",
+   "hbo",
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "dunkirk",
@@ -7422,12 +7926,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTE0Mjg4MTMwMDZeQTJeQWpwZ15BbWU4MDAwMDQ1ODAy._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTE0Mjg4MTMwMDZeQTJeQWpwZ15BbWU4MDAwMDQ1ODAy._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "L-IunJ5sBRI",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "cesur-yurek",
@@ -7438,7 +7948,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "1.2M",
   "duration": "2s 58dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram",
    "Savaş"
@@ -7455,12 +7965,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGMxZDBhNGQtYTZlNi00N2UzLWI4NDEtNmUzNWM2NTdmZDA0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNGMxZDBhNGQtYTZlNi00N2UzLWI4NDEtNmUzNWM2NTdmZDA0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "1NJO0jxBtMo",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "adrenaline",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "titanik",
@@ -7471,7 +7985,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "1.4M",
   "duration": "3s 14dk",
-  "ageRating": "13+",
+  "ageRating": "10+",
   "genres": [
    "Dram",
    "Romantik"
@@ -7488,12 +8002,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "CHekzSiZjrY",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "tearjerker",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "la-la-land",
@@ -7504,7 +8022,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "781K",
   "duration": "2s 8dk",
-  "ageRating": "13+",
+  "ageRating": "15+",
   "genres": [
    "Komedi",
    "Dram",
@@ -7522,12 +8040,19 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDllYjliOTUtMDJjZC00ODIzLWJmNGMtOWI2NzQxMjA2NzdlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDllYjliOTUtMDJjZC00ODIzLWJmNGMtOWI2NzQxMjA2NzdlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "0pdqf4P9MB8",
-  "platforms": [],
+  "platforms": [
+   "mubi",
+   "tvplus",
+   "tod",
+   "prime"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-greatest-showman",
@@ -7538,7 +8063,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.5,
   "imdbVotes": "354K",
   "duration": "1s 45dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Biyografi",
    "Dram",
@@ -7556,12 +8081,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI1NDYzNzY2Ml5BMl5BanBnXkFtZTgwODQwODczNTM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjI1NDYzNzY2Ml5BMl5BanBnXkFtZTgwODQwODczNTM@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "EodWwczRIe4",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "heartwarming",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "bir-y-ld-z-doguyor",
@@ -7572,7 +8101,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.6,
   "imdbVotes": "454K",
   "duration": "2s 16dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram",
    "Müzik",
@@ -7595,7 +8124,9 @@ const MOVIES_DATA = [
   "moods": [
    "tearjerker",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "bohemian-rhapsody",
@@ -7624,23 +8155,28 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTA2NDc3Njg5NDVeQTJeQWpwZ15BbWU4MDc1NDcxNTUz._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTA2NDc3Njg5NDVeQTJeQWpwZ15BbWU4MDc1NDcxNTUz._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "mP0VHJYFOAU",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ak-l-oyunlar",
   "imdbID": "tt0268978",
   "title": "Akıl Oyunları",
   "originalTitle": "A Beautiful Mind",
-  "year": 2002,
+  "year": 2001,
   "imdbRating": 8.2,
   "imdbVotes": "1.1M",
   "duration": "2s 15dk",
-  "ageRating": "13+",
+  "ageRating": "7+",
   "genres": [
    "Biyografi",
    "Dram",
@@ -7658,12 +8194,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjgzNjFkMmItOGJhNi00NWM3LWJlYTUtNDExMGQ3ZTI3NjJkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjgzNjFkMmItOGJhNi00NWM3LWJlYTUtNDExMGQ3ZTI3NjJkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "9wZM7CQY130",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-imitation-game",
@@ -7674,7 +8215,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "887K",
   "duration": "1s 54dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Biyografi",
    "Dram",
@@ -7697,18 +8238,20 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "hidden-figures",
   "imdbID": "tt4846340",
   "title": "Hidden Figures",
   "originalTitle": "Hidden Figures",
-  "year": 2017,
+  "year": 2016,
   "imdbRating": 7.8,
   "imdbVotes": "295K",
   "duration": "2s 7dk",
-  "ageRating": "7+",
+  "ageRating": "13+",
   "genres": [
    "Biyografi",
    "Dram",
@@ -7726,12 +8269,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2RhNDRhNzctZTllMy00NTc2LWJjZmUtMzg3MTNiNjhhODMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BY2RhNDRhNzctZTllMy00NTc2LWJjZmUtMzg3MTNiNjhhODMxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "5wfrDhgUMGI",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "heartwarming",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "marsl",
@@ -7742,7 +8289,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "1M",
   "duration": "2s 24dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Macera",
    "Dram",
@@ -7760,12 +8307,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "ej3ioOneTy8",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "escapism",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "gravity",
@@ -7776,7 +8327,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "908K",
   "duration": "1s 31dk",
-  "ageRating": "13+",
+  "ageRating": "10+",
   "genres": [
    "Dram",
    "Bilim Kurgu",
@@ -7799,7 +8350,9 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "arrival",
@@ -7810,7 +8363,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.9,
   "imdbVotes": "882K",
   "duration": "1s 56dk",
-  "ageRating": "13+",
+  "ageRating": "7+",
   "genres": [
    "Dram",
    "Gizem",
@@ -7828,12 +8381,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "hT5ZHqRBo_0",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "mind-bending",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "blade-runner",
@@ -7844,7 +8402,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "893K",
   "duration": "1s 57dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Aksiyon",
    "Dram",
@@ -7862,23 +8420,27 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWQ4YTBmNTQtMDYxMC00NGFjLTkwOGQtNzdhNmY1Nzc1MzUxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOWQ4YTBmNTQtMDYxMC00NGFjLTkwOGQtNzdhNmY1Nzc1MzUxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "eogpIG53Cis",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "mind-bending",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ex-machina",
   "imdbID": "tt0470752",
   "title": "Ex Machina",
   "originalTitle": "Ex Machina",
-  "year": 2015,
+  "year": 2014,
   "imdbRating": 7.7,
   "imdbVotes": "647K",
   "duration": "1s 48dk",
-  "ageRating": "16+",
+  "ageRating": "7+",
   "genres": [
    "Dram",
    "Bilim Kurgu",
@@ -7901,7 +8463,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "besinci-element",
@@ -7930,12 +8494,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BODU4ZTE5MWYtNmY2MC00NDkyLTk0NDgtNTk5YjgzMzc4NmQwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BODU4ZTE5MWYtNmY2MC00NDkyLTk0NDgtNTk5YjgzMzc4NmQwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "pqs9ycvKfD8",
-  "platforms": [],
+  "platforms": [
+   "tod"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "gelecege-donus",
@@ -7946,7 +8514,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "1.5M",
   "duration": "1s 56dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Macera",
    "Komedi",
@@ -7964,12 +8532,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmM3ZjE0NzctNjBiOC00MDZmLTgzMTUtNGVlOWFlOTNiZDJiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZmM3ZjE0NzctNjBiOC00MDZmLTgzMTUtNGVlOWFlOTNiZDJiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "qvsgGtivCgs",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "escapism",
    "chill-comedy"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "jurassic-park",
@@ -7997,12 +8569,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "bx46tthKXmc",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "raiders-of-the-lost-ark",
@@ -8034,7 +8611,9 @@ const MOVIES_DATA = [
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "acl-k-oyunlar",
@@ -8063,12 +8642,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWI1OGM4YjQtNmIxNi00YmE2LWJkNTAtY2Q0YjU4NTI5NWQyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMWI1OGM4YjQtNmIxNi00YmE2LWJkNTAtY2Q0YjU4NTI5NWQyXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "mfmrPu43DF8",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "hobbit-beklenmedik-yolculuk",
@@ -8096,12 +8679,19 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTcwNTE4MTUxMl5BMl5BanBnXkFtZTcwMDIyODM4OA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTcwNTE4MTUxMl5BMl5BanBnXkFtZTcwMDIyODM4OA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "SDnYMbYB-nU",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "escapism",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "it",
@@ -8112,7 +8702,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.3,
   "imdbVotes": "712K",
   "duration": "2s 15dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Korku"
   ],
@@ -8128,12 +8718,19 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZmOTZjNzUtOTE4OS00OGM3LWJiNGEtZjk4Yzg2M2Q1YzYxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZGZmOTZjNzUtOTE4OS00OGM3LWJiNGEtZjk4Yzg2M2Q1YzYxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "xKJmEC5ieOk",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#ef4444",
   "moods": [
    "thrill",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "the-conjuring",
@@ -8144,7 +8741,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.5,
   "imdbVotes": "635K",
   "duration": "1s 52dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Korku",
    "Gizem",
@@ -8162,12 +8759,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "ejMMn0t58Lc",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#ef4444",
   "moods": [
    "thrill",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "kac",
@@ -8178,7 +8780,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.8,
   "imdbVotes": "841K",
   "duration": "1s 44dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Korku",
    "Gizem",
@@ -8196,12 +8798,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjUxMDQwNjcyNl5BMl5BanBnXkFtZTgwNzcwMzc0MTI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjUxMDQwNjcyNl5BMl5BanBnXkFtZTgwNzcwMzc0MTI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "DzfpyUB60YY",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#ef4444",
   "moods": [
    "thrill",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "sessiz-bir-yer",
@@ -8212,7 +8818,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.5,
   "imdbVotes": "671K",
   "duration": "1s 30dk",
-  "ageRating": "13+",
+  "ageRating": "16+",
   "genres": [
    "Dram",
    "Korku",
@@ -8230,12 +8836,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM5NzM3NDM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM5NzM3NDM@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "WR7cc5t7tv8",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "disney"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "hereditary",
@@ -8246,7 +8857,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.3,
   "imdbVotes": "472K",
   "duration": "2s 7dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Dram",
    "Korku",
@@ -8264,12 +8875,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTEyZGQwODctYWJjZi00NjFmLTg3YmEtMzlhNjljOGZhMWMyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTEyZGQwODctYWJjZi00NjFmLTg3YmEtMzlhNjljOGZhMWMyXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "V6wWKNij_1M",
-  "platforms": [],
+  "platforms": [
+   "mubi",
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "alt-nc-his",
@@ -8280,7 +8896,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.2M",
   "duration": "1s 47dk",
-  "ageRating": "13+",
+  "ageRating": "15+",
   "genres": [
    "Dram",
    "Gizem",
@@ -8298,12 +8914,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZWQ2OTY0M2UtMTQxNC00MmIzLTllNDQtNDQ0MTQyYzI2M2ZiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZWQ2OTY0M2UtMTQxNC00MmIzLTllNDQtNDQ0MTQyYzI2M2ZiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "3-ZP95NF_Wk",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "disney"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "thrill",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "psycho",
@@ -8314,7 +8935,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.5,
   "imdbVotes": "796K",
   "duration": "1s 49dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Dram",
    "Korku",
@@ -8337,18 +8958,20 @@ const MOVIES_DATA = [
   "moods": [
    "thrill",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "casablanca",
   "imdbID": "tt0034583",
   "title": "Casablanca",
   "originalTitle": "Casablanca",
-  "year": 1943,
+  "year": 1942,
   "imdbRating": 8.5,
   "imdbVotes": "662K",
   "duration": "1s 42dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Dram",
    "Romantik",
@@ -8371,7 +8994,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "one-flew-over-the-cuckoo-s-nest",
@@ -8382,7 +9007,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.6,
   "imdbVotes": "1.2M",
   "duration": "2s 13dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram"
   ],
@@ -8403,7 +9028,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "rain-man",
@@ -8414,7 +9041,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "591K",
   "duration": "2s 13dk",
-  "ageRating": "16+",
+  "ageRating": "R",
   "genres": [
    "Dram"
   ],
@@ -8430,23 +9057,27 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDUzODNkNGUtNzJjNi00ODFlLTkzMzktMGNkOTIwYWM2YTQzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDUzODNkNGUtNzJjNi00ODFlLTkzMzktMGNkOTIwYWM2YTQzXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "mlNwXuHUA8I",
-  "platforms": [],
+  "platforms": [
+   "prime"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "heartwarming",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "otomatik-portakal",
   "imdbID": "tt0066921",
   "title": "Otomatik Portakal",
   "originalTitle": "A Clockwork Orange",
-  "year": 1972,
+  "year": 1971,
   "imdbRating": 8.2,
   "imdbVotes": "947K",
   "duration": "2s 16dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Suç",
    "Bilim Kurgu"
@@ -8468,7 +9099,9 @@ const MOVIES_DATA = [
   "moods": [
    "mind-bending",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "full-metal-jacket",
@@ -8479,7 +9112,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "861K",
   "duration": "1s 56dk",
-  "ageRating": "16+",
+  "ageRating": "18+",
   "genres": [
    "Dram",
    "Savaş"
@@ -8501,18 +9134,20 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "buyuk-bal-k",
   "imdbID": "tt0319061",
   "title": "Büyük Balık",
   "originalTitle": "Big Fish",
-  "year": 2004,
+  "year": 2003,
   "imdbRating": 7.9,
   "imdbVotes": "481K",
   "duration": "2s 5dk",
-  "ageRating": "13+",
+  "ageRating": "G",
   "genres": [
    "Macera",
    "Dram",
@@ -8535,7 +9170,9 @@ const MOVIES_DATA = [
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "milyoner",
@@ -8546,7 +9183,7 @@ const MOVIES_DATA = [
   "imdbRating": 8,
   "imdbVotes": "917K",
   "duration": "2s 0dk",
-  "ageRating": "16+",
+  "ageRating": "7+",
   "genres": [
    "Suç",
    "Dram",
@@ -8564,12 +9201,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTE5ZTRkYWEtZmU5MC00NDJjLTk3NmUtZGJlYTM2MmQ3NTJkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTE5ZTRkYWEtZmU5MC00NDJjLTk3NmUtZGJlYTM2MmQ3NTJkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "SQ7P5wEI2CA",
-  "platforms": [],
+  "platforms": [
+   "tod"
+  ],
   "themeColor": "#a78bfa",
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "pi-nin-hayat",
@@ -8580,7 +9221,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.9,
   "imdbVotes": "707K",
   "duration": "2s 7dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Macera",
    "Dram",
@@ -8598,12 +9239,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTg2OTY2ODg5OF5BMl5BanBnXkFtZTcwODM5MTYxOA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTg2OTY2ODg5OF5BMl5BanBnXkFtZTcwODM5MTYxOA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "3mMN693-F3U",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#f59e0b",
   "moods": [
    "escapism",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "muhtesem-bay-fox",
@@ -8632,12 +9277,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTA1ZTIxZDUtNGFjYS00YTc5LTgzNDMtZWNjYjBlMzI2OTk3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYTA1ZTIxZDUtNGFjYS00YTc5LTgzNDMtZWNjYjBlMzI2OTk3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "n2igjYFojUo",
-  "platforms": [],
+  "platforms": [
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "chill-comedy",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "oyuncak-hikayesi",
@@ -8648,7 +9298,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.3,
   "imdbVotes": "1.2M",
   "duration": "1s 21dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Macera",
@@ -8666,12 +9316,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTA3OWVjOWItNjE1NS00NzZiLWE1MjgtZDZhMWI1ZTlkNzYwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZTA3OWVjOWItNjE1NS00NzZiLWE1MjgtZDZhMWI1ZTlkNzYwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "v-PjgYDrg70",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ters-yuz",
@@ -8682,7 +9336,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "935K",
   "duration": "1s 35dk",
-  "ageRating": "7+",
+  "ageRating": "PG",
   "genres": [
    "Animasyon",
    "Macera",
@@ -8700,12 +9354,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTgxMDQwMDk0OF5BMl5BanBnXkFtZTgwNjU5OTg2NDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTgxMDQwMDk0OF5BMl5BanBnXkFtZTgwNjU5OTg2NDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "yRUAzGQ3nSY",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "tearjerker"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "soul",
@@ -8734,12 +9392,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTZkYjA5MDEtMjY1ZC00ODk5LThjOTUtZDYxODEzYWNjMTU2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZTZkYjA5MDEtMjY1ZC00ODk5LThjOTUtZDYxODEzYWNjMTU2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "oqMs6Cd7vyg",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "moana",
@@ -8750,7 +9412,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.6,
   "imdbVotes": "451K",
   "duration": "1s 47dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Macera",
@@ -8768,12 +9430,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI4MzU5NTExNF5BMl5BanBnXkFtZTgwNzY1MTEwMDI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjI4MzU5NTExNF5BMl5BanBnXkFtZTgwNzY1MTEwMDI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "qnIAbxMMf0E",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "escapism",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "nemo-yu-ar-yorum",
@@ -8784,7 +9450,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "1.2M",
   "duration": "1s 40dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Macera",
@@ -8802,12 +9468,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc5NjExNTA5OV5BMl5BanBnXkFtZTYwMTQ0ODY2._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTc5NjExNTA5OV5BMl5BanBnXkFtZTYwMTQ0ODY2._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "SPHfeNgogVs",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "shrek",
@@ -8836,12 +9506,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2FkMTRkNTUtYTI0NC00ZjI4LWI5MzUtMDFmOGY0NmU2OGY1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BN2FkMTRkNTUtYTI0NC00ZjI4LWI5MzUtMDFmOGY0NmU2OGY1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "CwXOrWvPBPk",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "prime",
+   "tvplus"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "chill-comedy",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "ejderhan-nas-l-eversin",
@@ -8852,7 +9528,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.1,
   "imdbVotes": "911K",
   "duration": "1s 38dk",
-  "ageRating": "7+",
+  "ageRating": "G",
   "genres": [
    "Animasyon",
    "Aksiyon",
@@ -8870,12 +9546,17 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA5NDQyMjc2NF5BMl5BanBnXkFtZTcwMjg5ODcyMw@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjA5NDQyMjc2NF5BMl5BanBnXkFtZTcwMjg5ODcyMw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "2AKsAxrhqgM",
-  "platforms": [],
+  "platforms": [
+   "netflix",
+   "prime"
+  ],
   "themeColor": "#34d399",
   "moods": [
    "heartwarming",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "sessiz-bir-ses",
@@ -8886,7 +9567,7 @@ const MOVIES_DATA = [
   "imdbRating": 8.2,
   "imdbVotes": "151K",
   "duration": "2s 10dk",
-  "ageRating": "16+",
+  "ageRating": "12",
   "genres": [
    "Animasyon",
    "Dram"
@@ -8908,7 +9589,9 @@ const MOVIES_DATA = [
   "moods": [
    "tearjerker",
    "heartwarming"
-  ]
+  ],
+  "ageRatingCountry": "GB",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "john-wick",
@@ -8937,12 +9620,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "C0BMx-qxsP4",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "john-wick-2",
@@ -8971,12 +9660,18 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "ChpLV9AMqm4",
-  "platforms": [],
+  "platforms": [
+   "prime",
+   "tvplus",
+   "hbo"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "logan",
@@ -9005,12 +9700,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2JjODdkMGMtNmY2YS00OGM2LThiY2YtZGYyNzE4Nzc2ODA0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BM2JjODdkMGMtNmY2YS00OGM2LThiY2YtZGYyNzE4Nzc2ODA0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "Div0iP65aZo",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "prestige",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "x-men-gelecegin-gecmis-gunleri",
@@ -9021,7 +9720,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.9,
   "imdbVotes": "799K",
   "duration": "2s 12dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -9039,12 +9738,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzNiYWE4NjMtMTU4OS00NmM4LWE4ZjAtYmE5OTA5NjkzODExXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNzNiYWE4NjMtMTU4OS00NmM4LWE4ZjAtYmE5OTA5NjkzODExXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "pK2zYHWDZKo",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "kaptan-amerika-k-s-askeri",
@@ -9055,7 +9758,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.7,
   "imdbVotes": "992K",
   "duration": "2s 16dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -9073,12 +9776,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "7SlILk2WMTI",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "galaksinin-koruyucular",
@@ -9107,12 +9814,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2ZmNjQ2MzAtNDlhNi00MmQyLWJhZDMtNmJiMjFlOWY4MzcxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BM2ZmNjQ2MzAtNDlhNi00MmQyLWJhZDMtNmJiMjFlOWY4MzcxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "d96cjJhvlMA",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "chill-comedy",
    "escapism"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "doctor-strange",
@@ -9123,7 +9834,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.5,
   "imdbVotes": "900K",
   "duration": "1s 55dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -9141,12 +9852,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjgwNzAzNjk1Nl5BMl5BanBnXkFtZTgwMzQ2NjI1OTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjgwNzAzNjk1Nl5BMl5BanBnXkFtZTgwMzQ2NjI1OTE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "h7gvFravm4A",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "escapism",
    "mind-bending"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "black-panther",
@@ -9175,12 +9890,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "xjDjIWPwcPU",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "adrenaline",
    "prestige"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "thor-ragnarok",
@@ -9191,7 +9910,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.9,
   "imdbVotes": "916K",
   "duration": "2s 10dk",
-  "ageRating": "13+",
+  "ageRating": "PG-13",
   "genres": [
    "Aksiyon",
    "Macera",
@@ -9209,12 +9928,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "ue80QwXMRHg",
-  "platforms": [],
+  "platforms": [
+   "disney"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "chill-comedy",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "US",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "suclu-raporu",
@@ -9225,7 +9948,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.6,
   "imdbVotes": "628K",
   "duration": "2s 25dk",
-  "ageRating": "13+",
+  "ageRating": "16+",
   "genres": [
    "Aksiyon",
    "Suç",
@@ -9243,12 +9966,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTdmNzM3YzItZTRkYS00MTY5LTg4ZmItNjFmNTk2N2Q2NmNlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYTdmNzM3YzItZTRkYS00MTY5LTg4ZmItNjFmNTk2N2Q2NmNlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "lG7DGMgfOb8",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "mind-bending",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "9-bolge",
@@ -9259,7 +9986,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.9,
   "imdbVotes": "759K",
   "duration": "1s 52dk",
-  "ageRating": "16+",
+  "ageRating": "15+",
   "genres": [
    "Aksiyon",
    "Bilim Kurgu",
@@ -9282,7 +10009,9 @@ const MOVIES_DATA = [
   "moods": [
    "prestige",
    "thrill"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  },
  {
   "id": "looper",
@@ -9293,7 +10022,7 @@ const MOVIES_DATA = [
   "imdbRating": 7.4,
   "imdbVotes": "634K",
   "duration": "1s 59dk",
-  "ageRating": "16+",
+  "ageRating": "13+",
   "genres": [
    "Aksiyon",
    "Dram",
@@ -9311,12 +10040,16 @@ const MOVIES_DATA = [
   "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg5NTA3NTg4NF5BMl5BanBnXkFtZTcwNTA0NDYzOA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
   "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg5NTA3NTg4NF5BMl5BanBnXkFtZTcwNTA0NDYzOA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "2iQuhsmtfHw",
-  "platforms": [],
+  "platforms": [
+   "tvplus"
+  ],
   "themeColor": "#38bdf8",
   "moods": [
    "mind-bending",
    "adrenaline"
-  ]
+  ],
+  "ageRatingCountry": "TR",
+  "ageRatingSource": "JustWatch"
  }
 ];
 
@@ -9425,7 +10158,7 @@ const STREAMING_PLATFORMS = {
     badgeClass: 'plat-tvplus',
     brandColor: '#FFB800',
     iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor"><rect width="24" height="24" rx="4"/><text x="12" y="16" font-size="9" font-weight="bold" fill="#000" text-anchor="middle">TV+</text></svg>`,
-    getUrl: (title) => `https://tvplus.com.tr/`
+    getUrl: (title) => `https://www.justwatch.com/tr/arama?q=${encodeURIComponent(title)}`
   },
   tod: {
     id: 'tod',
@@ -9433,7 +10166,7 @@ const STREAMING_PLATFORMS = {
     badgeClass: 'plat-tod',
     brandColor: '#10b981',
     iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor"><rect width="24" height="24" rx="4"/><text x="12" y="16" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">TOD</text></svg>`,
-    getUrl: (title) => `https://www.todtv.com.tr/`
+    getUrl: (title) => `https://www.justwatch.com/tr/arama?q=${encodeURIComponent(title)}`
   },
   exxen: {
     id: 'exxen',
@@ -9441,7 +10174,7 @@ const STREAMING_PLATFORMS = {
     badgeClass: 'plat-exxen',
     brandColor: '#F59E0B',
     iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor"><rect width="24" height="24" rx="4"/><text x="12" y="16" font-size="8" font-weight="bold" fill="#000" text-anchor="middle">EXXEN</text></svg>`,
-    getUrl: (title) => `https://www.exxen.com/`
+    getUrl: (title) => `https://www.justwatch.com/tr/arama?q=${encodeURIComponent(title)}`
   },
   gain: {
     id: 'gain',
@@ -9449,7 +10182,7 @@ const STREAMING_PLATFORMS = {
     badgeClass: 'plat-gain',
     brandColor: '#059669',
     iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor"><rect width="24" height="24" rx="4"/><text x="12" y="16" font-size="9" font-weight="bold" fill="#fff" text-anchor="middle">GAİN</text></svg>`,
-    getUrl: (title) => `https://www.gain.tv/`
+    getUrl: (title) => `https://www.justwatch.com/tr/arama?q=${encodeURIComponent(title)}`
   },
   mubi: {
     id: 'mubi',
@@ -9463,94 +10196,54 @@ const STREAMING_PLATFORMS = {
 
 // Film veya dizinin GERÇEK ve DOĞRULANMIŞ yayın bilgilerini döndürür
 function getMovieStreamingInfo(movie) {
-  if (!movie) {
-    return {
-      hasTrProvider: false,
-      statusText: "TR yayıncısı bulunamadı",
-      providers: [],
-      globalProviders: []
-    };
-  }
-
-  // 1. Canlı API sorgusundan gelen doğrulanmış streamingInfo
-  if (movie.streamingInfo) {
-    const info = movie.streamingInfo;
-    const providers = (info.providers || []).map(p => {
+  movie = movie || {};
+  const info = movie.streamingInfo || {};
+  const normalizeProviders = (items, isGlobal = false) => {
+    const unique = new Map();
+    (items || []).forEach(item => {
+      const p = typeof item === 'string' ? { id: item } : item;
+      if (!p || !p.id) return;
       const reg = STREAMING_PLATFORMS[p.id];
-      return {
+      // Yalnızca HTTPS bağlantılarına izin ver; arama ve ana sayfa doğrudan yapım değildir.
+      const suppliedUrl = /^https:\/\//i.test(p.url || '') ? p.url : null;
+      let direct = false;
+      let usableUrl = suppliedUrl;
+      if (suppliedUrl) {
+        try {
+          const u = new URL(suppliedUrl);
+          direct = u.pathname !== '/' && !/search|arama/i.test(u.pathname) && !u.hostname.endsWith('justwatch.com');
+          if (u.pathname === '/') usableUrl = null;
+        } catch (e) { /* arama bağlantısı kullanılacak */ }
+      }
+      unique.set(p.id, {
         id: p.id,
-        name: p.name || (reg ? reg.name : 'Yayıncı'),
-        badgeClass: p.badgeClass || (reg ? reg.badgeClass : 'plat-other'),
-        brandColor: p.brandColor || (reg ? reg.brandColor : '#475569'),
-        iconSvg: reg ? reg.iconSvg : STREAMING_PLATFORMS.netflix.iconSvg,
-        url: p.url || (reg ? reg.getUrl(movie.title) : '#')
-      };
+        name: reg ? reg.name : 'Diğer yayıncı',
+        badgeClass: reg ? reg.badgeClass : 'plat-other',
+        brandColor: reg ? reg.brandColor : '#475569',
+        iconSvg: reg ? reg.iconSvg : '',
+        url: usableUrl || (reg ? reg.getUrl(movie.title) : `https://www.justwatch.com/tr/arama?q=${encodeURIComponent(movie.title || '')}`),
+        actionLabel: direct ? 'Yapımı aç' : 'Yayını ara',
+        isGlobal
+      });
     });
-
-    const globalProviders = (info.globalProviders || []).map(p => {
-      const reg = STREAMING_PLATFORMS[p.id];
-      return {
-        id: p.id,
-        name: p.name || (reg ? reg.name : 'Küresel Yayıncı'),
-        badgeClass: p.badgeClass || (reg ? reg.badgeClass : 'plat-apple'),
-        brandColor: p.brandColor || (reg ? reg.brandColor : '#1e1e24'),
-        iconSvg: reg ? reg.iconSvg : STREAMING_PLATFORMS.apple.iconSvg,
-        url: p.url || (reg ? reg.getUrl(movie.title) : '#'),
-        isGlobal: true
-      };
-    });
-
-    return {
-      hasTrProvider: info.hasTrProvider === true && providers.length > 0,
-      statusText: (info.hasTrProvider === true && providers.length > 0) ? "Türkiye'de Yayında" : "TR yayıncısı bulunamadı",
-      providers,
-      globalProviders
-    };
-  }
-
-  // 2. Predefined katalog filmleri için platforms ve globalPlatforms
-  if (Array.isArray(movie.platforms)) {
-    const providers = movie.platforms.map(pid => {
-      const reg = STREAMING_PLATFORMS[pid];
-      if (!reg) return null;
-      return {
-        id: reg.id,
-        name: reg.name,
-        badgeClass: reg.badgeClass,
-        brandColor: reg.brandColor,
-        iconSvg: reg.iconSvg,
-        url: reg.getUrl(movie.title)
-      };
-    }).filter(Boolean);
-
-    const globalProviders = Array.isArray(movie.globalPlatforms) ? movie.globalPlatforms.map(pid => {
-      const reg = STREAMING_PLATFORMS[pid];
-      if (!reg) return null;
-      return {
-        id: reg.id,
-        name: reg.name,
-        badgeClass: reg.badgeClass,
-        brandColor: reg.brandColor,
-        iconSvg: reg.iconSvg,
-        url: reg.getUrl(movie.title),
-        isGlobal: true
-      };
-    }).filter(Boolean) : [];
-
-    const hasTr = providers.length > 0;
-    return {
-      hasTrProvider: hasTr,
-      statusText: hasTr ? "Türkiye'de Yayında" : "TR yayıncısı bulunamadı",
-      providers,
-      globalProviders
-    };
-  }
-
+    return [...unique.values()];
+  };
+  const providers = normalizeProviders(info.providers || movie.platforms);
+  const globalProviders = normalizeProviders(info.globalProviders || movie.globalPlatforms, true);
+  const checkedAt = Number.isFinite(Date.parse(info.checkedAt)) ? info.checkedAt : null;
+  const verified = info.verified === true && !!checkedAt;
+  const statusText = providers.length ? (verified ? "Türkiye'de Yayında" : 'Yayıncı bilgisi doğrulanmadı')
+    : (verified ? 'TR yayıncısı bulunamadı' : 'Yayıncı bilgisi doğrulanmadı');
   return {
-    hasTrProvider: false,
-    statusText: "TR yayıncısı bulunamadı",
-    providers: [],
-    globalProviders: []
+    hasTrProvider: providers.length > 0,
+    statusText,
+    providers,
+    globalProviders,
+    verified,
+    checkedAt,
+    verificationText: checkedAt
+      ? `${info.source === 'JustWatch Türkiye indeksi' ? 'JustWatch Türkiye indeksi' : 'JustWatch Türkiye'} · Son kontrol: ${new Date(checkedAt).toLocaleDateString('tr-TR')}. Abonelik/ücretsiz yayınlar; kataloglar değişebilir.`
+      : 'Son kontrol tarihi bilinmiyor. Güncel erişimi yayıncıda doğrulayın.'
   };
 }
 

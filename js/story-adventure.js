@@ -469,7 +469,7 @@ class StoryAdventureEngine {
   }
 
   resolveDestinyMovie(choices) {
-    const allMovies = this.app.movies && this.app.movies.length > 0 ? this.app.movies : MOVIES_DATA;
+    const allMovies = this.app.ageAllowedMovies();
 
     // 1. choices içindeki leadThemes havuzundan ağırlıklı puanlama
     const scoreMap = {};
@@ -524,6 +524,12 @@ class StoryAdventureEngine {
   }
 
   renderDestinyReveal(movie, choices) {
+    if (!movie || !this.app.isAgeAllowed(movie)) {
+      this.analyzingCard?.classList.add('hidden');
+      this.introCard?.classList.remove('hidden');
+      this.app.showToast('Bu profil için yaş sınırına uygun öneri bulunamadı.', 'info');
+      return;
+    }
     this.currentStep = 7;
     if (this.analyzingCard) this.analyzingCard.classList.add('hidden');
     if (!this.destinyCard) return;
@@ -607,13 +613,13 @@ class StoryAdventureEngine {
                   ${streamInfo.providers.map(p => `
                     <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="streaming-logo-pill ${p.badgeClass}" title="${p.name}'da ${movie.title} İzle">
                       ${p.iconSvg}
-                      <span>${p.name}'da İzle</span>
+                      <span>${p.name} · ${p.actionLabel}</span>
                     </a>
                   `).join('')}
                 ` : `
                   <div class="card-no-tr-pill" style="position:static;" title="Bu yapımın Türkiye'de resmi bir yayıncısı bulunmamaktadır.">
                     <span class="no-tr-dot"></span>
-                    <span>TR yayıncısı bulunamadı</span>
+                    <span>${streamInfo.statusText}</span>
                   </div>
                   ${streamInfo.globalProviders && streamInfo.globalProviders.length > 0 ? `
                     ${streamInfo.globalProviders.map(p => `
@@ -671,7 +677,7 @@ class StoryAdventureEngine {
     const c4 = choices[3] ? choices[3].title : '';
     const c5 = choices[4] ? choices[4].title : '';
 
-    return `Verdiğin 5 kararda <strong>${c1}</strong> ile yola çıktın, <strong>${c2}</strong> atmosferinde nefes aldın. Karakterinin <strong>${c3}</strong> yönünü ön plana çıkararak <strong>${c4}</strong> hamlesini yaptın ve finalde <strong>${c5}</strong> arzusuyla perdeyi kapattın. 109 başyapıtlık veri tabanımızda bu DNA haritasına en kusursuz yanıtı veren tek film <strong>${movie.title}</strong> oldu.`;
+    return `Verdiğin 5 kararda <strong>${c1}</strong> ile yola çıktın, <strong>${c2}</strong> atmosferinde nefes aldın. Karakterinin <strong>${c3}</strong> yönünü ön plana çıkararak <strong>${c4}</strong> hamlesini yaptın ve finalde <strong>${c5}</strong> arzusuyla perdeyi kapattın. ${this.app.ageAllowedMovies().length} yapımlık kataloğumuzda bu tercihlere uygun önerimiz <strong>${movie.title}</strong> oldu.`;
   }
 
   scrollToStory() {

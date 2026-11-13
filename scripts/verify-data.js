@@ -13,6 +13,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const { catalogHealth } = require('./catalog-health');
+const { knownRating } = require('./catalog-metadata');
 
 const ROOT = path.join(__dirname, '..');
 const problems = [];
@@ -84,21 +86,41 @@ movies.forEach((m, i) => {
 
   if (m.platforms === undefined) warn(`${where}: platforms anahtarı yok`);
   else if (!Array.isArray(m.platforms)) fail(`${where}: platforms dizi değil`);
-  else if (m.platforms.length === 0) warn(`${where}: platforms boş`);
   if (m.isSeries !== undefined && typeof m.isSeries !== 'boolean') fail(`${where}: isSeries boolean değil`);
-  if (m.ageRating && !/^\d{1,2}\+?$|Genel/.test(String(m.ageRating))) warn(`${where}: ageRating biçimi beklenmedik → ${m.ageRating}`);
+  if (m.ageRating && !knownRating(m.ageRating)) warn(`${where}: ageRating biçimi beklenmedik → ${m.ageRating}`);
 });
 
 if (movies.length < 100) fail(`film sayısı beklenenden az: ${movies.length} (>=100 beklenir)`);
 
 // ---------------------------------------------------------------- catalog
 let catalog = null;
+let health = null;
 try {
   catalog = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'catalog.json'), 'utf8'));
   const items = Array.isArray(catalog) ? catalog : catalog.items;
   if (!Array.isArray(items) || items.length < 100) fail(`catalog.json: yetersiz kayıt (${items ? items.length : 0})`);
   const lowRes = (items || []).filter(it => it.poster && /\/s(150|200|240|300|332)\//.test(it.poster));
-  if (lowRes.length) warn(`catalog.json: ${lowRes.length} poster düşük çözünürlüklü (s592 beklenir)`);
+  if (lowRes.length) fail(`catalog.json: ${lowRes.length} poster düşük çözünürlüklü (en az s592 gerekir)`);
+  const itemIds = new Set();
+  (items || []).forEach(item => {
+    if (!item.id || itemIds.has(item.id)) fail(`catalog.json: eksik/tekrar eden id → ${item.id}`);
+    itemIds.add(item.id);
+    if (!/^https:\/\//.test(item.poster || '')) fail(`catalog.json: geçersiz afiş → ${item.id}`);
+    if (item.ageRating && !knownRating(item.ageRating)) fail(`catalog.json: bilinmeyen yaş sınıfı → ${item.id}: ${item.ageRating}`);
+    if (item.ageRating && (!item.ageRatingCountry || !item.ageRatingSource)) fail(`catalog.json: yaş sınıfının kaynağı eksik → ${item.id}`);
+    if (item.imdbID && !/^tt\d{6,10}$/.test(item.imdbID)) fail(`catalog.json: geçersiz IMDb kimliği → ${item.id}`);
+    if (item.yt && !/^[\w-]{11}$/.test(item.yt)) fail(`catalog.json: geçersiz fragman kimliği → ${item.id}`);
+    if (!Array.isArray(item.platforms) || !Array.isArray(item.providers)) fail(`catalog.json: yayıncı şeması bozuk → ${item.id}`);
+    for (const provider of item.providers || []) {
+      if (provider.url && !/^https:\/\//.test(provider.url)) fail(`catalog.json: güvenli olmayan yayıncı bağlantısı → ${item.id}`);
+    }
+  });
+  health = catalogHealth(movies, catalog);
+  if (health.mainCatalog.unresolved.length) warn(`${health.mainCatalog.unresolved.length} ana katalog yapımının yayıncı bilgisi doğrulanamadı: ${health.mainCatalog.unresolved.map(m => m.title).join(', ')}`);
+  if (health.index.missingAge) warn(`${health.index.missingAge} indeks kaydında kaynak yaş sınıfı yok; çocuk profillerinde engellenir.`);
+  if (health.index.missingTrailer) warn(`${health.index.missingTrailer} indeks kaydında doğrulanmış doğrudan fragman yok; açıkça etiketlenmiş YouTube araması sunulur.`);
+  const savedHealth = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/catalog-health.json'), 'utf8'));
+  if (JSON.stringify(savedHealth) !== JSON.stringify(health)) fail('catalog-health.json güncel değil: npm run catalog:health çalıştırın.');
 } catch (e) {
   fail(`catalog.json okunamadı/geçersiz JSON: ${e.message}`);
 }
@@ -135,6 +157,11 @@ try {
 console.log(`Cine3D veri doğrulaması`);
 console.log(`  film: ${movies.length} · benzersiz id: ${ids.size} · imdbID: ${imdbs.size} · fragman: ${trailers.size}`);
 console.log(`  catalog: ${catalog ? ((Array.isArray(catalog) ? catalog : catalog.items) || []).length : 0} kayıt`);
+if (health) {
+  console.log(`  yayıncı: ${health.mainCatalog.matchedProviders}/${movies.length} doğrulandı · ${health.mainCatalog.withProviders} yayıncı eşleşmesi · ${health.mainCatalog.confirmedNoSubscription} doğrulanmış boş abonelik listesi`);
+  console.log(`  ham katalogdaki ${health.mainCatalog.rawEmptyPlatforms} boş platform alanı tek başına hata değildir; çalışma anındaki indeks eşleşmesi denetlendi.`);
+  console.log(`  afiş: ${health.index.lowResolutionPosters} düşük çözünürlük · yaş verisi eksik: ${health.index.missingAge} · fragman eksiği: ${health.index.missingTrailer}`);
+}
 
 if (warnings.length) {
   console.log(`\nUYARI (${warnings.length}):`);
@@ -148,4 +175,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log('\n✓ Veri bütünlüğü temiz.');
+console.log(`\n✓ Yapısal veri hatası yok.${warnings.length ? ' Kaynak veri eksikleri yukarıda açıkça listelendi.' : ''}`);

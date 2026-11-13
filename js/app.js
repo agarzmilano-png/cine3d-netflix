@@ -903,6 +903,9 @@ class Cine3DApp {
     this.searchQuery = "";
     this.sortBy = "imdb-desc";
     this.viewMode = "grid"; // 'grid' veya 'coverflow'
+    this.catalogPageSize = 36;
+    this.visibleMovieCount = this.catalogPageSize;
+    this.activeProvider = 'all';
     this.watchlist = this.loadWatchlist();
     // İzlediklerim Listesi & Aktif Çekmece Sekmesi (Faz 3)
     this.watchedList = this.loadWatchedList();
@@ -1047,6 +1050,16 @@ class Cine3DApp {
     this.renderHeroBanner();
     this.applyFilters();
     this.bindGlobalEvents();
+    document.getElementById('provider-filter')?.addEventListener('change', (e) => {
+      this.activeProvider = e.target.value;
+      this.applyFilters();
+    });
+    document.getElementById('catalog-load-more')?.addEventListener('click', () => {
+      const previous = Math.min(this.visibleMovieCount, this.filteredMovies.length);
+      this.visibleMovieCount += this.catalogPageSize;
+      this.renderMoviesGrid();
+      document.querySelectorAll('#movies-grid .card-detail-btn')[previous]?.focus({ preventScroll: true });
+    });
     this.initFocusTrap();
     this.initHeroAutoCycle();
 
@@ -1100,6 +1113,35 @@ class Cine3DApp {
 
     // PWA (Progressive Web App) Servis Çalışanı ve Kurulum Desteği
     this.initPWA();
+    this.updateCatalogCounts();
+    this.catalogReady = this.enrichCatalogProviders();
+  }
+
+  updateCatalogCounts() {
+    const count = this.ageAllowedMovies().length;
+    document.querySelectorAll('[data-catalog-count]').forEach(el => { el.textContent = count; });
+    this.updateRouletteCounts();
+  }
+
+  async enrichCatalogProviders() {
+    const index = window.cine3dCatalog;
+    if (!index) return;
+    await index.ensureLoaded();
+    if (!index.items) return;
+    this.movies.forEach(movie => index.applyProviders(movie));
+    const note = document.getElementById('provider-data-note');
+    if (note && index.generatedAt) {
+      const verified = this.movies.filter(movie => getMovieStreamingInfo(movie).verified).length;
+      note.textContent = `Tema yalnızca görünümü değiştirir. Yayıncı eşleşmesi: ${verified}/${this.movies.length}. İndeks: ${new Date(index.generatedAt).toLocaleDateString('tr-TR')} (JustWatch Türkiye).`;
+    }
+    const quality = document.getElementById('catalog-data-health-text');
+    if (quality) {
+      const missingAge = index.items.filter(item => !item.ageRating).length;
+      const missingTrailer = index.items.filter(item => !item.yt).length;
+      quality.textContent = `${index.items.length} kayıtlık arama indeksinde ${missingAge} yapımın kaynak yaş bilgisi, ${missingTrailer} yapımın doğrulanmış doğrudan fragmanı eksik. Bilinmeyen yaşlar çocuk profilinde engellenir; farklı ülkelere ait yaş sınıfları ülke koduyla belirtilir. Eksik fragmanda doğrudan oynatma yerine açıkça etiketlenmiş YouTube araması sunulur. Yayıncı kontrolü abonelik/ücretsiz seçenekleri kapsar; kiralama/satın alma ayrıca kontrol edilmelidir.`;
+    }
+    this.applyFilters();
+    this.renderHeroBanner();
   }
 
   // --- KEŞİF & MOD MERKEZİ SEKME YÖNETİMİ ---
@@ -1107,10 +1149,35 @@ class Cine3DApp {
     const hubWrapper = document.getElementById('discovery-hub-section');
     if (!hubWrapper) return;
 
+    const extra = document.getElementById('discovery-extra-tabs');
+    const toggle = document.getElementById('discovery-more-toggle');
+    toggle?.addEventListener('click', () => {
+      extra.hidden = !extra.hidden;
+      toggle.setAttribute('aria-expanded', String(!extra.hidden));
+      if (extra.hidden && extra.querySelector('.active')) this.switchDiscoveryTab('platform-hubs-section');
+    });
     hubWrapper.querySelectorAll('.discovery-tab-btn').forEach(btn => {
+      btn.id = 'tab-' + btn.dataset.tabPanel;
+      if (btn.dataset.tabPanel !== 'collapse') {
+        btn.setAttribute('aria-controls', btn.dataset.tabPanel);
+        const panel = document.getElementById(btn.dataset.tabPanel);
+        panel?.setAttribute('role', 'tabpanel');
+        panel?.setAttribute('aria-labelledby', btn.id);
+      }
+      btn.tabIndex = btn.classList.contains('active') ? 0 : -1;
       btn.addEventListener('click', () => {
         const panelId = btn.dataset.tabPanel;
         this.switchDiscoveryTab(panelId);
+      });
+      btn.addEventListener('keydown', (e) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+        const tabs = [...hubWrapper.querySelectorAll('.discovery-tab-btn')].filter(tab => tab.getClientRects().length);
+        const current = tabs.indexOf(btn);
+        const next = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1
+          : (current + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        e.preventDefault();
+        tabs[next].click();
+        tabs[next].focus();
       });
     });
   }
@@ -2056,11 +2123,17 @@ class Cine3DApp {
 
     const allBtns = hubWrapper.querySelectorAll('.discovery-tab-btn');
     const allPanels = hubWrapper.querySelectorAll('.discovery-panel');
+    const extra = document.getElementById('discovery-extra-tabs');
+    if (extra?.querySelector(`[data-tab-panel="${panelId}"]`)) {
+      extra.hidden = false;
+      document.getElementById('discovery-more-toggle')?.setAttribute('aria-expanded', 'true');
+    }
 
     allBtns.forEach(btn => {
       const isMatch = btn.dataset.tabPanel === panelId;
       btn.classList.toggle('active', isMatch);
       btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      btn.tabIndex = isMatch ? 0 : -1;
     });
 
     if (panelId === 'collapse') {
@@ -2110,9 +2183,9 @@ class Cine3DApp {
 
     container.innerHTML = `
       <div class="platform-hubs-title-row">
-        <h3 class="platform-hubs-title">
+        <h2 class="platform-hubs-title">
           <span>${meta.title}</span>
-        </h3>
+        </h2>
         <span class="platform-hubs-badge">${meta.badge}</span>
       </div>
       <div class="platform-hubs-grid">
@@ -2776,7 +2849,7 @@ class Cine3DApp {
   }
 
   toggleVS(movie) {
-    if (!movie) return;
+    if (!movie || !this.isAgeAllowed(movie)) return;
     const exists = this.isMovieInVS(movie.id);
 
     if (exists) {
@@ -2919,6 +2992,8 @@ class Cine3DApp {
   }
 
   openVSModal(movie1 = null, movie2 = null) {
+    if ((movie1 && !this.isAgeAllowed(movie1)) || (movie2 && !this.isAgeAllowed(movie2))) return;
+    this.vsList = this.vsList.filter(movie => this.isAgeAllowed(movie));
     if (movie1 && movie2) {
       this.vsList = [movie1, movie2];
     }
@@ -2927,7 +3002,7 @@ class Cine3DApp {
       if (this.vsList.length === 1) {
         // Otomatik olarak harika bir rakip öner ve eşle
         const m1 = this.vsList[0];
-        const candidate = this.movies.find(m => m.id !== m1.id && (m.genres.some(g => m1.genres.includes(g)) || m.imdbRating >= 8.7));
+        const candidate = this.ageAllowedMovies().find(m => m.id !== m1.id && (m.genres.some(g => m1.genres.includes(g)) || m.imdbRating >= 8.7));
         if (candidate) {
           this.vsList.push(candidate);
         }
@@ -3169,14 +3244,15 @@ class Cine3DApp {
   }
 
   loadVSPreset(id1, id2) {
-    const m1 = this.movies.find(m => m.id === id1) || this.movies[0];
-    const m2 = this.movies.find(m => m.id === id2) || this.movies[1];
+    const m1 = this.ageAllowedMovies().find(m => m.id === id1);
+    const m2 = this.ageAllowedMovies().find(m => m.id === id2);
+    if (!m1 || !m2) { this.showToast('Bu eşleşme aktif profilin yaş sınırına uygun değil.', 'info'); return; }
     this.vsList = [m1, m2];
     this.openVSModal(m1, m2);
   }
 
   selectRandomVSPair(openModalDirectly = true) {
-    const pool = this.movies.filter(m => m.imdbRating >= 8.5);
+    const pool = this.ageAllowedMovies().filter(m => m.imdbRating >= 8.5);
     if (pool.length < 2) return;
     const idx1 = Math.floor(Math.random() * pool.length);
     let idx2 = Math.floor(Math.random() * pool.length);
@@ -3254,15 +3330,16 @@ class Cine3DApp {
   }
 
   updateRouletteCounts() {
+    const movies = this.ageAllowedMovies();
     const countFor = (f) => {
-      if (f === 'masterpiece') return this.movies.filter(m => Number(m.imdbRating) >= 8.8).length;
-      if (f === 'scifi') return this.movies.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu')).length;
-      if (f === 'mind-bending') return this.movies.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending')).length;
-      if (f === 'series') return this.movies.filter(m => m.isSeries).length;
+      if (f === 'masterpiece') return movies.filter(m => Number(m.imdbRating) >= 8.8).length;
+      if (f === 'scifi') return movies.filter(m => Array.isArray(m.genres) && m.genres.includes('Bilim Kurgu')).length;
+      if (f === 'mind-bending') return movies.filter(m => Array.isArray(m.moods) && m.moods.includes('mind-bending')).length;
+      if (f === 'series') return movies.filter(m => m.isSeries).length;
       // R014/2: İzleme Listem sayacı (İzlemediklerim filtresine saygılı)
       if (f === 'watchlist') {
         const wlIds = new Set((this.watchlist || []).map(w => (typeof w === 'string') ? w : w.id));
-        let pool = this.movies.filter(m => wlIds.has(m.id));
+        let pool = movies.filter(m => wlIds.has(m.id));
         if (this.hideWatched) pool = pool.filter(m => !this.isMovieWatched(m.id));
         return pool.length;
       }
@@ -3278,9 +3355,9 @@ class Cine3DApp {
           (Array.isArray(wl) ? wl : []).forEach(w => seen.add((typeof w === 'string') ? w : w.id));
         });
         if (!pids.length) (this.watchedList || []).forEach(w => seen.add((typeof w === 'string') ? w : w.id));
-        return this.movies.filter(m => !seen.has(m.id)).length;
+        return movies.filter(m => !seen.has(m.id)).length;
       }
-      return this.movies.length;
+      return movies.length;
     };
     document.querySelectorAll('#roulette-filter-pills .roulette-filter-pill').forEach(pill => {
       const f = pill.dataset.rfilter || 'all';
@@ -3833,7 +3910,7 @@ class Cine3DApp {
   }
 
   openTicketModal(movie) {
-    if (!movie) return;
+    if (!movie || !this.isAgeAllowed(movie)) return;
     this.activeTicketMovie = movie;
 
     const modal = document.getElementById('ticket-modal');
@@ -4050,14 +4127,14 @@ class Cine3DApp {
               ${heroStreamInfo.providers.map(p => `
                 <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="hero-plat-btn ${p.badgeClass}" title="${p.name}'da ${heroMovie.title} İzle">
                   ${p.iconSvg}
-                  <span>${p.name}'da İzle</span>
+                  <span>${p.name} · ${p.actionLabel}</span>
                 </a>
               `).join('')}
             </div>
           ` : `
             <div class="hero-no-tr-pill" title="Bu yapımın Türkiye'de resmi bir yayıncısı bulunmamaktadır.">
               <span class="no-tr-dot"></span>
-              <span>TR yayıncısı bulunamadı</span>
+              <span>${heroStreamInfo.statusText}</span>
             </div>
             ${heroStreamInfo.globalProviders && heroStreamInfo.globalProviders.length > 0 ? `
               <div class="hero-streaming-list">
@@ -4225,7 +4302,9 @@ class Cine3DApp {
     const statusInfo = document.querySelector('.online-sync-bar .online-status-info');
     const statusText = document.querySelector('.online-sync-bar .online-status-text');
     if (statusText) {
-      statusText.textContent = 'Çevrimdışı katalog modu — arama ve güncelleme için uygulama sunucusu gerekir';
+      statusText.textContent = navigator.onLine === false
+        ? 'Çevrimdışı — kayıtlı katalog ve indeks kullanılabilir'
+        : 'Sunucusuz mod — indeks araması kullanılabilir; canlı sonuçlar API erişimine bağlıdır';
     }
     if (statusInfo) {
       statusInfo.classList.add('offline');
@@ -4236,9 +4315,11 @@ class Cine3DApp {
 
     const fetchMoreBtn = document.getElementById('fetch-more-online-btn');
     if (fetchMoreBtn) {
-      fetchMoreBtn.hidden = true;
-      fetchMoreBtn.setAttribute('aria-hidden', 'true');
-      fetchMoreBtn.tabIndex = -1;
+      fetchMoreBtn.hidden = false;
+      fetchMoreBtn.removeAttribute('aria-hidden');
+      fetchMoreBtn.tabIndex = 0;
+      fetchMoreBtn.title = 'Haftalık indeksten yeni yapımlar ekle';
+      fetchMoreBtn.querySelector('span').textContent = 'İndeksten Yeni Yapımlar Ekle';
     }
   }
 
@@ -4306,10 +4387,6 @@ class Cine3DApp {
 
   async fetchMoreOnline() {
     if (!this.apiService) return;
-    if (this.staticMode) {
-      this.showToast('Bu sürümde yeni yapım ekleme kapalı; katalog çevrimdışı modda çalışıyor.', 'info');
-      return;
-    }
     const btn = document.getElementById('fetch-more-online-btn');
     if (btn) {
       btn.classList.add('loading');
@@ -4325,7 +4402,7 @@ class Cine3DApp {
         const added = this.integrateOnlineMovies(items, true);
         this.showToast(`✨ ${added} yeni yapım kataloğa eklendi!`, 'success');
       } else {
-        this.showToast('İnternet bağlantısı sağlandı, yeni filmler güncel.', 'info');
+        this.showToast('Yeni yapım bulunamadı; bağlantı ve veri kaynağını kontrol edin.', 'info');
       }
     } catch (e) {
       this.showToast('Çevrimiçi veri çekilirken hata oluştu.', 'info');
@@ -4847,19 +4924,27 @@ class Cine3DApp {
       if (!open) renderList();
     });
 
-    addBtn?.addEventListener('click', () => {
-      const name = (nameInput && nameInput.value || '').trim();
-      if (!name) { this.showToast('Profil adı girin.', 'info'); return; }
-      const kids = !!(kidsToggle && kidsToggle.checked);
-      const maxAge = kids ? (parseInt(maxAgeSelect && maxAgeSelect.value, 10) || 13) : 0;
-      const pin = kids ? String(pinInput && pinInput.value || '').trim() : '';
-      if (kids && pin && !/^\d{4}$/.test(pin)) {
-        this.showToast('PIN 4 haneli olmalı.', 'error');
-        return;
+    addBtn?.addEventListener('click', async () => {
+      // Yeni yetişkin profil oluşturmak da çocuk profilinden çıkıştır.
+      if (addBtn.disabled) return;
+      addBtn.disabled = true;
+      try {
+        if (!(await this.verifyActivePin('Yeni profil oluşturmak için ebeveyn PIN’i'))) return;
+        const name = (nameInput && nameInput.value || '').trim();
+        if (!name) { this.showToast('Profil adı girin.', 'info'); return; }
+        const kids = !!(kidsToggle && kidsToggle.checked);
+        const maxAge = kids ? (parseInt(maxAgeSelect && maxAgeSelect.value, 10) || 13) : 0;
+        const pin = kids ? String(pinInput && pinInput.value || '').trim() : '';
+        if (kids && pin && !/^\d{4}$/.test(pin)) {
+          this.showToast('PIN 4 haneli olmalı.', 'error');
+          return;
+        }
+        const pid = S.addProfile(name, selectedEmoji, { maxAge, pinHash: (kids && pin) ? this.hashPin(pin) : null });
+        S.setActiveProfile(pid);
+        window.location.reload();
+      } finally {
+        addBtn.disabled = false;
       }
-      const pid = S.addProfile(name, selectedEmoji, { maxAge, pinHash: (kids && pin) ? this.hashPin(pin) : null });
-      S.setActiveProfile(pid);
-      window.location.reload();
     });
 
     document.addEventListener('click', (e) => {
@@ -5468,6 +5553,7 @@ class Cine3DApp {
       );
 
       if (!exists) {
+        window.cine3dCatalog?.applyProviders(item);
         this.movies.push(item);
         addedCount++;
 
@@ -5488,6 +5574,7 @@ class Cine3DApp {
     });
 
     if (addedCount > 0) {
+      this.updateCatalogCounts();
       this.renderGenreFilters();
       this.applyFilters();
     }
@@ -5655,15 +5742,22 @@ class Cine3DApp {
   }
 
   parseAgeRating(value) {
-    const m = String(value == null ? '' : value).match(/(\d{1,2})/);
-    return m ? Math.max(0, Math.min(18, parseInt(m[1], 10))) : 0;
+    const rating = String(value == null ? '' : value).trim().toUpperCase();
+    // Bilinmeyen sınıflandırma güvenli kabul edilmez (null).
+    const ratings = { 'GENEL': 0, 'G': 0, 'U': 0, '12A': 12, 'TV-Y': 0, 'TV-G': 0, 'TV-Y7': 7,
+      'TV-Y7-FV': 7, 'PG': 10, 'TV-PG': 10, 'PG-13': 13, 'TV-14': 14,
+      'R': 18, 'NC-17': 18, 'TV-MA': 18 };
+    if (Object.prototype.hasOwnProperty.call(ratings, rating)) return ratings[rating];
+    const m = rating.match(/^(\d{1,2})\+?$/);
+    return m && Number(m[1]) <= 18 ? Number(m[1]) : null;
   }
 
   /** Aktif profil çocuk profiliyse yaş sınırını uygular. */
   isAgeAllowed(movie) {
     const limit = this.getActiveAgeLimit();
     if (!limit) return true;
-    return this.parseAgeRating(movie && movie.ageRating) <= limit;
+    const age = this.parseAgeRating(movie && movie.ageRating);
+    return age !== null && age <= limit;
   }
 
   ageAllowedMovies() {
@@ -5774,6 +5868,11 @@ class Cine3DApp {
 
   applyFilters() {
     let result = this.ageAllowedMovies();
+    if (this.activeProvider !== 'all') {
+      result = result.filter(movie => getMovieStreamingInfo(movie).providers.some(p => p.id === this.activeProvider));
+    }
+    const top10Ids = this.activeHubFilter === 'top10'
+      ? new Set([...result].sort((a, b) => b.imdbRating - a.imdbRating).slice(0, 10).map(m => m.id)) : null;
 
     // 0. Ruh Hali (Mood) Filtresi (Beyin Yakan, Ağlatan, Komedi, Aksiyon, Büyü vb.)
     if (this.activeMoodFilter) {
@@ -5847,7 +5946,7 @@ class Cine3DApp {
           return (Array.isArray(m.hubTags) && m.hubTags.includes('awards')) || m.imdbRating >= 9.0;
         }
         if (fk === 'top10') {
-          return m.imdbRating >= 8.6;
+          return top10Ids.has(m.id);
         }
         if (fk === 'anime') {
           return (Array.isArray(m.hubTags) && m.hubTags.includes('anime')) || (Array.isArray(m.genres) && m.genres.includes('Animasyon'));
@@ -5942,6 +6041,7 @@ class Cine3DApp {
     });
 
     this.filteredMovies = result;
+    this.visibleMovieCount = this.catalogPageSize;
 
     // Arayüzü güncelle
     this.renderMoviesGrid();
@@ -6011,13 +6111,8 @@ class Cine3DApp {
         this.clearHubFilter();
       });
     } else {
-      const platformTitles = {
-        netflix: 'Netflix Film & Dizi Kataloğu',
-        hbo: 'HBO Max & Warner Bros. Kataloğu',
-        disney: 'Disney+ Büyülü Film & Dizi Koleksiyonu',
-        prime: 'Amazon Prime Video & MGM Arşivi'
-      };
-      titleText.textContent = platformTitles[this.activeTheme] || 'Film & Dizi Kataloğu';
+      const provider = STREAMING_PLATFORMS[this.activeProvider];
+      titleText.textContent = provider ? `${provider.name} Yayıncı Rehberi` : 'Film & Dizi Kataloğu — Tüm Yayıncılar';
     }
   }
 
@@ -6045,64 +6140,24 @@ class Cine3DApp {
     const theme = this.activeTheme || 'netflix';
     const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
-    // Platforma özel Top 10 havuzu:
-    let candidatePool = [...this.movies];
-    if (theme === 'disney') {
-      candidatePool = this.movies.filter(m => 
-        (Array.isArray(m.hubTags) && m.hubTags.includes('disney')) ||
-        (Array.isArray(m.platforms) && m.platforms.includes('disney')) ||
-        (m.title && (m.title.includes('Star Wars') || m.title.includes('Mandalorian') || m.title.includes('Avengers') || m.title.includes('VOL-İ') || m.title.includes('Koko') || m.title.includes('Aslan Kral')))
-      );
-    } else if (theme === 'hbo') {
-      candidatePool = this.movies.filter(m =>
-        (Array.isArray(m.hubTags) && (m.hubTags.includes('hbo') || m.hubTags.includes('max') || m.hubTags.includes('dc') || m.hubTags.includes('wb') || m.hubTags.includes('wizarding'))) ||
-        (Array.isArray(m.platforms) && m.platforms.includes('hbo')) ||
-        ['inception', 'interstellar', 'dark-knight', 'the-matrix', 'joker', 'chernobyl', 'game-of-thrones', 'the-last-of-us', 'succession', 'harry-potter'].includes(m.id)
-      );
-    } else if (theme === 'prime') {
-      candidatePool = this.movies.filter(m =>
-        (Array.isArray(m.hubTags) && (m.hubTags.includes('prime-originals') || m.hubTags.includes('prime') || m.hubTags.includes('mgm') || m.hubTags.includes('xray'))) ||
-        (Array.isArray(m.platforms) && m.platforms.includes('prime')) ||
-        ['the-boys', 'fallout', 'rings-of-power', 'reacher', 'no-time-to-die', 'gladiator', 'interstellar', 'dark-knight'].includes(m.id)
-      );
-    } else {
-      // netflix
-      const netflixPool = this.movies.filter(m =>
-        (Array.isArray(m.hubTags) && (m.hubTags.includes('netflix-originals') || m.hubTags.includes('netflix'))) ||
-        (Array.isArray(m.platforms) && m.platforms.includes('netflix'))
-      );
-      if (netflixPool.length >= 6) {
-        candidatePool = netflixPool;
-      }
-    }
-
-    const sortedCandidates = [...candidatePool].filter(m => this.isAgeAllowed(m)).sort((a, b) => b.imdbRating - a.imdbRating);
-    const top10 = [...sortedCandidates];
-    if (top10.length < 10) {
-      const remaining = [...this.movies]
-        .filter(m => this.isAgeAllowed(m))
-        .sort((a, b) => b.imdbRating - a.imdbRating)
-        .filter(m => !top10.some(t => t.id === m.id));
-      top10.push(...remaining.slice(0, 10 - top10.length));
-    }
-    const finalTop10 = top10.slice(0, 10);
+    // Tema görünümü değiştirir; gerçek yayıncı filtresi seçkiyi belirler.
+    const finalTop10 = this.ageAllowedMovies()
+      .filter(m => this.activeProvider === 'all' || getMovieStreamingInfo(m).providers.some(p => p.id === this.activeProvider))
+      .sort((a, b) => b.imdbRating - a.imdbRating).slice(0, 10);
+    this.top10MovieIds = finalTop10.map(m => m.id);
 
     // Başlık aksiyon butonunu dinamik bağla
     const subtitleElem = document.getElementById('top10-subtitle-text');
     if (subtitleElem) {
-      const btnText = theme === 'disney' ? '✦ Star Wars & Disney Yıldızlarını Listele' : '✦ Bu Yapımları Aşağıda Listele';
+      const btnText = '✦ Bu Yapımları Aşağıda Listele';
       subtitleElem.innerHTML = `
         <div class="top10-header-actions">
-          <span>${theme === 'disney' ? 'Star Wars, Marvel & Pixar Zirvesi' : 'Platformun En İyileri'}</span>
+          <span>${this.activeProvider === 'all' ? 'Tüm Yayıncılar' : 'Seçili Yayıncı'} · IMDb sıralaması</span>
           <button class="top10-explore-btn" id="top10-explore-btn">${btnText}</button>
         </div>
       `;
       document.getElementById('top10-explore-btn')?.addEventListener('click', () => {
-        if (theme === 'disney') {
-          this.setHubFilter('disney', 'Disney+ Yıldızlar Geçidi', ['star wars', 'mandalorian', 'avengers', 'disney', 'pixar']);
-        } else {
-          this.setHubFilter('top10', 'Top 10 Başyapıt', []);
-        }
+        this.setHubFilter('top10', 'Top 10 Başyapıt', []);
       });
     }
 
@@ -6113,17 +6168,17 @@ class Cine3DApp {
       }
 
       return `
-        <div class="top10-card" data-movie-id="${movie.id}">
+        <button type="button" class="top10-card" data-movie-id="${movie.id}">
           <span class="top10-rank">${rankText}</span>
           <div class="top10-poster-wrap card-3d-tilt">
             <img src="${movie.posterUrl}" ${this.posterSrcset(movie.posterUrl) ? `srcset="${this.posterSrcset(movie.posterUrl)}" sizes="(max-width: 600px) 46vw, 280px"` : ''} alt="${movie.title}" loading="lazy" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
             <div class="top10-rating-badge">⭐ ${movie.imdbRating}</div>
           </div>
           <div class="top10-info">
-            <h4 class="top10-title">${movie.title}</h4>
+            <span class="top10-title">${movie.title}</span>
             <span class="top10-meta">${movie.genres[0]} • ${movie.year}</span>
           </div>
-        </div>
+        </button>
       `;
     }).join('');
 
@@ -6143,6 +6198,13 @@ class Cine3DApp {
   renderMoviesGrid() {
     const grid = document.getElementById('movies-grid');
     if (!grid) return;
+    const visibleMovies = this.filteredMovies.slice(0, this.visibleMovieCount);
+    const pagination = document.getElementById('catalog-pagination');
+    if (pagination) pagination.hidden = this.filteredMovies.length === 0;
+    const pageStatus = document.getElementById('catalog-page-status');
+    if (pageStatus) pageStatus.textContent = `${visibleMovies.length} / ${this.filteredMovies.length} yapım gösteriliyor`;
+    const loadMore = document.getElementById('catalog-load-more');
+    if (loadMore) loadMore.hidden = visibleMovies.length >= this.filteredMovies.length;
 
     if (this.filteredMovies.length === 0) {
       // DÜZELTME: Statik barındırmada (sunucu yok) "Çevrimiçi Veritabanı Taranıyor"
@@ -6168,26 +6230,14 @@ class Cine3DApp {
           <button class="btn btn-secondary" style="margin-top: 14px;" id="reset-filters-btn">Filtreleri Sıfırla</button>
         </div>`;
 
-      grid.innerHTML = this.staticMode ? staticBilgi : onlineBilgi;
+      grid.innerHTML = this.isOnlineSearching ? onlineBilgi : staticBilgi;
       document.getElementById('reset-filters-btn')?.addEventListener('click', () => {
         this.resetFilters();
       });
       return;
     }
 
-    const theme = this.activeTheme || 'netflix';
-    let brandBadgeHtml = '';
-    if (theme === 'netflix') {
-      brandBadgeHtml = `<div class="card-brand-badge card-brand-netflix"><span class="badge-brand-symbol">N</span> <span>DİZİ/FİLM</span></div>`;
-    } else if (theme === 'disney') {
-      brandBadgeHtml = `<div class="card-brand-badge card-brand-disney"><span class="badge-brand-symbol">✦</span> <span>DISNEY+</span></div>`;
-    } else if (theme === 'hbo') {
-      brandBadgeHtml = `<div class="card-brand-badge card-brand-hbo"><span class="badge-brand-symbol">●</span> <span>MAX</span></div>`;
-    } else if (theme === 'prime') {
-      brandBadgeHtml = `<div class="card-brand-badge card-brand-prime"><span class="badge-prime-check">✓</span> <span>prime</span></div>`;
-    }
-
-    grid.innerHTML = this.filteredMovies.map(movie => {
+    grid.innerHTML = visibleMovies.map(movie => {
       const isFav = this.isMovieInWatchlist(movie.id);
     const watchedRec = this.getMovieWatchedRecord ? this.getMovieWatchedRecord(movie.id) : null;
     const watchedSeasons = (watchedRec && watchedRec.watchedSeasons) ? Number(watchedRec.watchedSeasons) : 0;
@@ -6203,14 +6253,13 @@ class Cine3DApp {
       else if (movie.imdbRating >= 8.7) imdbClass = "imdb-master";
 
       return `
-        <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}" role="button" tabindex="0" aria-label="${escapeHtmlText(movie.title)} — detayları aç">
+        <div class="movie-card card-3d-tilt" data-movie-id="${movie.id}" role="group" aria-label="${escapeHtmlText(movie.title)}">
           <div class="card-inner">
             <div class="card-poster">
               <img src="${movie.posterUrl}" ${this.posterSrcset(movie.posterUrl) ? `srcset="${this.posterSrcset(movie.posterUrl)}" sizes="(max-width: 600px) 46vw, 280px"` : ''} alt="${movie.title}" loading="lazy" decoding="async" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
               <div class="card-glare"></div>
 
               <!-- Platform Marka Rozeti -->
-              ${brandBadgeHtml}
 
               <!-- Kart Üzerinde Hover Play İkonu -->
               <div class="card-hover-play-btn" title="Fragmanı Oynat">
@@ -6230,16 +6279,16 @@ class Cine3DApp {
                   <span class="streaming-badge-label">Nerede İzlenir?</span>
                   <div class="streaming-logo-row">
                     ${streamInfo.providers.map(p => `
-                      <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="streaming-logo-pill ${p.badgeClass}" title="${p.name}'da ${movie.title} İzle" onclick="event.stopPropagation();">
+                      <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="streaming-logo-pill ${p.badgeClass}" title="${p.actionLabel}: ${movie.title}" onclick="event.stopPropagation();">
                         ${p.iconSvg}
                         <span>${p.name}</span>
                       </a>
                     `).join('')}
                   </div>
                 ` : `
-                  <div class="card-no-tr-pill" title="Bu yapımın Türkiye'de resmi bir yayıncısı bulunmamaktadır.">
+                  <div class="card-no-tr-pill" title="${escapeHtmlText(streamInfo.verificationText)}">
                     <span class="no-tr-dot"></span>
-                    <span>TR yayıncısı bulunamadı</span>
+                    <span>${streamInfo.statusText}</span>
                   </div>
                   ${streamInfo.globalProviders && streamInfo.globalProviders.length > 0 ? `
                     <div class="streaming-logo-row" style="margin-top: 3px;">
@@ -6255,7 +6304,7 @@ class Cine3DApp {
               </div>
 
               <!-- Yaş Sınırı -->
-              <span class="card-age-tag">${movie.ageRating}</span>
+              <span class="card-age-tag" title="${escapeHtmlText(movie.ageRatingCountry ? `${movie.ageRatingCountry} sınıflandırması · ${movie.ageRatingSource || 'Kaynak'}` : 'Katalog yaş bilgisi')}">${movie.ageRating}</span>
 
               <!-- Film / Dizi Türü Rozeti -->
               <span class="card-type-tag">${movie.isSeries ? '📺 Dizi' : '🎬 Film'}</span>
@@ -6314,14 +6363,14 @@ class Cine3DApp {
                 ${streamInfo.hasTrProvider && streamInfo.providers.length > 0 ? `
                   <span class="card-streaming-txt">Yayın:</span>
                   ${streamInfo.providers.map(p => `
-                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="inline-plat-badge ${p.badgeClass}" title="${p.name}'da ${movie.title} İzle" onclick="event.stopPropagation();">
+                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="inline-plat-badge ${p.badgeClass}" title="${p.actionLabel}: ${movie.title}" onclick="event.stopPropagation();">
                       ${p.iconSvg}
                       <span>${p.name}</span>
                     </a>
                   `).join('')}
                 ` : `
                   <span class="card-streaming-txt-warn">Yayın:</span>
-                  <span class="inline-no-tr-badge">TR yayıncısı bulunamadı</span>
+                  <span class="inline-no-tr-badge">${streamInfo.statusText}</span>
                   ${streamInfo.globalProviders && streamInfo.globalProviders.length > 0 ? `
                     ${streamInfo.globalProviders.map(p => `
                       <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="inline-plat-badge ${p.badgeClass}" title="${p.name} (Global)" onclick="event.stopPropagation();">
@@ -6343,7 +6392,7 @@ class Cine3DApp {
 
               <!-- Alt Aksiyonlar -->
               <div class="card-footer">
-                <button class="card-detail-btn" data-movie-id="${movie.id}">
+                <button class="card-detail-btn" data-movie-id="${movie.id}" aria-label="Konuyu Oku & Fragman — ${escapeHtmlText(movie.title)}">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                   Konuyu Oku & Fragman
                 </button>
@@ -6356,14 +6405,6 @@ class Cine3DApp {
 
     // Olay dinleyicilerini bağla
     grid.querySelectorAll('.movie-card').forEach(card => {
-      // Klavye: Enter/Space kartın tıklama davranışını tetikler
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-          e.preventDefault();
-          card.click();
-        }
-      });
-
       card.addEventListener('click', (e) => {
         if (e.target.closest('.card-fav-btn') || e.target.closest('.card-vs-btn') || e.target.closest('.card-watched-btn')) return;
         const id = card.dataset.movieId;
@@ -6526,9 +6567,7 @@ class Cine3DApp {
       try {
         const idx = window.cine3dCatalog;
         if (Array.isArray(idx.items)) {
-          const norm = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
-          const key = norm(movie.originalTitle || movie.title);
-          const hit = idx.items.find(i => i.yt && (norm(i.o) === key || norm(i.t) === key));
+          const hit = idx.findMovie(movie);
           if (hit && hit.yt) movie.trailerYoutubeId = hit.yt;
         }
       } catch (err) { /* yoksay */ }
@@ -6538,7 +6577,7 @@ class Cine3DApp {
       this.apiService.resolveTrailerVideoId(movie.title, movie.year).then(vid => {
         if (vid) {
           movie.trailerYoutubeId = vid;
-          const extBtn = document.getElementById('modal-external-yt-link');
+          const extBtn = this.activeMovieForModal?.id === movie.id ? document.getElementById('modal-external-yt-link') : null;
           if (extBtn) {
             extBtn.href = `https://www.youtube.com/watch?v=${vid}`;
           }
@@ -6568,7 +6607,7 @@ class Cine3DApp {
               <div class="play-pulse-circle">
                 <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
               </div>
-              <span>Fragmanı Başlat (${movie.isSeries ? 'Dizi Tanıtımı' : 'Resmi Fragman'})</span>
+              <span>${movie.trailerYoutubeId ? 'Fragmanı Başlat' : 'Fragman Bağlantısını Ara'}</span>
             </button>
           </div>
         </div>
@@ -6603,20 +6642,20 @@ class Cine3DApp {
                     Nerede İzlenir?
                   </span>
                   <span class="modal-streaming-badge ${modalStreamInfo.hasTrProvider ? '' : 'badge-warn'}">
-                    ${modalStreamInfo.hasTrProvider ? `${modalStreamInfo.providers.length} TR Platformu` : 'TR Yayıncısı Yok'}
+                    ${modalStreamInfo.hasTrProvider ? `${modalStreamInfo.providers.length} TR Platformu` : modalStreamInfo.statusText}
                   </span>
                 </div>
 
                 ${modalStreamInfo.hasTrProvider && modalStreamInfo.providers.length > 0 ? `
                   <div class="modal-plat-list">
                     ${modalStreamInfo.providers.map(p => `
-                      <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="modal-plat-btn ${p.badgeClass}" title="${p.name}'da ${movie.title} İzle">
+                      <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="modal-plat-btn ${p.badgeClass}" title="${p.actionLabel}: ${movie.title}">
                         <div class="plat-icon-wrap">
                           ${p.iconSvg}
                           <span class="plat-name">${p.name}</span>
                         </div>
                         <span class="plat-watch-action">
-                          <span>Şimdi İzle</span>
+                          <span>${p.actionLabel}</span>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </span>
                       </a>
@@ -6626,9 +6665,9 @@ class Cine3DApp {
                   <div class="modal-no-tr-box">
                     <div class="no-tr-status-line">
                       <span class="no-tr-warn-icon">⚠️</span>
-                      <span class="no-tr-warn-title">TR yayıncısı bulunamadı</span>
+                      <span class="no-tr-warn-title">${modalStreamInfo.statusText}</span>
                     </div>
-                    <p class="no-tr-warn-desc">Bu yapım şu an Türkiye'deki resmi dijital yayın platformlarında (Netflix, Prime Video, Disney+, TV+, BluTV vb.) yer almamaktadır.</p>
+                    <p class="no-tr-warn-desc">${modalStreamInfo.verified ? 'Son kontrolde eşleşen abonelik/ücretsiz yayın bulunamadı. Kiralama ve satın alma seçeneklerini JustWatch üzerinden kontrol edebilirsiniz.' : 'Doğrulanmış güncel yayıncı bilgisi yok. Bu durum, yapımın Türkiye’de yayınlanmadığı anlamına gelmez.'}</p>
                   </div>
                   ${modalStreamInfo.globalProviders && modalStreamInfo.globalProviders.length > 0 ? `
                     <div class="modal-global-section">
@@ -6650,6 +6689,7 @@ class Cine3DApp {
                     </div>
                   ` : ''}
                 `}
+                <p class="provider-verification-note">${escapeHtmlText(modalStreamInfo.verificationText)}</p>
               </div>
             </div>
 
@@ -6671,7 +6711,7 @@ class Cine3DApp {
                 <a class="modal-imdb-link modal-jw-link" href="https://www.justwatch.com/tr/arama?q=${encodeURIComponent(movie.title)}" target="_blank" rel="noopener noreferrer" title="JustWatch'ta nerede izlenir?">Nerede İzlenir? ↗</a>
                 <span class="modal-duration-tag">⏱️ ${movie.duration}</span>
                 ${this.renderFamilyRatingBadges(movie.id)}
-                <span class="modal-age-tag">🔞 ${movie.ageRating}</span>
+                <span class="modal-age-tag">🔞 ${movie.ageRating}${movie.ageRatingCountry ? ` · ${movie.ageRatingCountry}` : ''}</span>
                 <span class="modal-awards-tag">🏆 ${movie.awards || 'Popüler Sinema/Dizi'}</span>
                 ${movie.isOnlineFetched ? '<span class="card-online-badge" style="position:static;">🌐 Canlı İnternet Verisi</span>' : ''}
               </div>
@@ -6965,9 +7005,9 @@ class Cine3DApp {
     }
 
     // Eğer yayın bilgisi henüz yoksa canlı çöz ve modalı güncelle
-    if (!movie.streamingInfo && !Array.isArray(movie.platforms) && this.apiService) {
+    if (!modalStreamInfo.verified && this.apiService) {
       this.apiService.resolveStreamingProviders(movie.title, movie.year, movie.originalTitle).then(res => {
-        if (res && this.activeMovieForModal && this.activeMovieForModal.id === movie.id) {
+        if (res?.verified && this.activeMovieForModal && this.activeMovieForModal.id === movie.id) {
           movie.streamingInfo = res;
           const box = document.getElementById('modal-streaming-box');
           if (box) {
@@ -6979,19 +7019,19 @@ class Cine3DApp {
                   Nerede İzlenir?
                 </span>
                 <span class="modal-streaming-badge ${updated.hasTrProvider ? '' : 'badge-warn'}">
-                  ${updated.hasTrProvider ? `${updated.providers.length} TR Platformu` : 'TR Yayıncısı Yok'}
+                  ${updated.hasTrProvider ? `${updated.providers.length} TR Platformu` : updated.statusText}
                 </span>
               </div>
               ${updated.hasTrProvider && updated.providers.length > 0 ? `
                 <div class="modal-plat-list">
                   ${updated.providers.map(p => `
-                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="modal-plat-btn ${p.badgeClass}" title="${p.name}'da ${movie.title} İzle">
+                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="modal-plat-btn ${p.badgeClass}" title="${p.actionLabel}: ${movie.title}">
                       <div class="plat-icon-wrap">
                         ${p.iconSvg}
                         <span class="plat-name">${p.name}</span>
                       </div>
                       <span class="plat-watch-action">
-                        <span>Şimdi İzle</span>
+                        <span>${p.actionLabel}</span>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                       </span>
                     </a>
@@ -7001,9 +7041,9 @@ class Cine3DApp {
                 <div class="modal-no-tr-box">
                   <div class="no-tr-status-line">
                     <span class="no-tr-warn-icon">⚠️</span>
-                    <span class="no-tr-warn-title">TR yayıncısı bulunamadı</span>
+                    <span class="no-tr-warn-title">${updated.statusText}</span>
                   </div>
-                  <p class="no-tr-warn-desc">Bu yapım şu an Türkiye'deki resmi dijital yayın platformlarında yer almamaktadır.</p>
+                  <p class="no-tr-warn-desc">Son kontrolde eşleşen abonelik/ücretsiz yayın bulunamadı. Güncel kiralama ve satın alma seçeneklerini ayrıca kontrol edin.</p>
                 </div>
                 ${updated.globalProviders && updated.globalProviders.length > 0 ? `
                   <div class="modal-global-section">
@@ -7025,6 +7065,7 @@ class Cine3DApp {
                   </div>
                 ` : ''}
               `}
+              <p class="provider-verification-note">${escapeHtmlText(updated.verificationText)}</p>
             `;
           }
         }
@@ -7033,6 +7074,7 @@ class Cine3DApp {
   }
 
   async switchModalToTrailer(movie) {
+    if (!movie || this.activeMovieForModal?.id !== movie.id) return;
     // Fragman başlarken çalan tema müziğini durdur (ses çakışmasını önle)
     this.stopMovieOst();
 
@@ -7045,7 +7087,7 @@ class Cine3DApp {
         <div class="trailer-loading-box">
           <div class="spinner-ring" style="width:38px;height:38px;border-width:3px;"></div>
           <span style="font-size:1.1rem;font-weight:700;color:#fff;">"${movie.title}" Fragmanı Hazırlanıyor...</span>
-          <span style="font-size:0.85rem;color:#a3a3b2;">Resmi YouTube kaynağı canlı taranıyor</span>
+          <span style="font-size:0.85rem;color:#a3a3b2;">Doğrulanmış fragman bağlantısı kontrol ediliyor</span>
         </div>
       `;
 
@@ -7059,6 +7101,7 @@ class Cine3DApp {
       }
     }
 
+    if (!mediaBox.isConnected || this.activeMovieForModal?.id !== movie.id) return;
     const fallbackYtUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(movie.title + ' ' + (movie.year || '') + ' fragman official trailer')}`;
 
     if (movie.trailerYoutubeId) {
@@ -7091,11 +7134,11 @@ class Cine3DApp {
       mediaBox.innerHTML = `
         <div class="trailer-fallback-box">
           <div style="font-size:3rem;margin-bottom:8px;">🎬</div>
-          <h3 style="color:#fff;margin-bottom:6px;">"${escapeHtmlText(movie.title)}" Fragmanı Hazır</h3>
-          <p style="color:#a3a3b2;font-size:0.9rem;margin-bottom:16px;">Fragman gömülü oynatıcıda açılamadı. Aşağıdaki butonla resmi YouTube sayfasında açabilirsiniz.</p>
+          <h3 style="color:#fff;margin-bottom:6px;">Doğrulanmış fragman bağlantısı bulunamadı</h3>
+          <p style="color:#a3a3b2;font-size:0.9rem;margin-bottom:16px;">"${escapeHtmlText(movie.title)}" için aşağıdaki bağlantı YouTube arama sonuçlarını açar; doğrudan veya resmî fragman garantisi değildir.</p>
           <a href="${fallbackYtUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            Fragmanı YouTube'da Başlat
+            YouTube'da Fragman Ara
           </a>
         </div>
       `;
@@ -9433,6 +9476,9 @@ class Cine3DApp {
 
   resetFilters() {
     this.activeGenre = "Tümü";
+    this.activeProvider = 'all';
+    const providerFilter = document.getElementById('provider-filter');
+    if (providerFilter) providerFilter.value = 'all';
     this.minImdb = 0;
     this.searchQuery = "";
     this.activePaletteFilter = null;
@@ -10191,7 +10237,7 @@ class Cine3DApp {
     document.querySelectorAll('.theme-pill-btn').forEach(btn => {
       const isActive = btn.dataset.theme === theme;
       btn.classList.toggle('active', isActive);
-      btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
 
     // 2. Platform Arayüz & Marka Meta Verileri
@@ -10310,7 +10356,18 @@ class Cine3DApp {
       }
     };
 
-    const currentMeta = platformUIMeta[theme] || platformUIMeta.netflix;
+    const currentMeta = {
+      ...(platformUIMeta[theme] || platformUIMeta.netflix),
+      logoTitle: 'CINE3D',
+      titleText: 'Cine3D | IMDb Puanlı Film & Dizi Keşif Platformu',
+      movies: 'Katalog',
+      top10: 'Top 10 IMDb',
+      top10Title: 'IMDb En Yüksek Puanlı Top 10',
+      top10Sub: 'Tüm yayıncılar · IMDb sıralaması',
+      catalogTitle: 'Film & Dizi Kataloğu — Tüm Yayıncılar',
+      footerTitle: 'CINE3D',
+      footerDesc: 'Film ve dizi keşif rehberi. Görünüm temaları yayıncı filtresi değildir; güncel erişimi ilgili platformda doğrulayın.'
+    };
 
     // 3. Navbar Logo ve Menü Linklerini Güncelle
     const logoIconWrap = document.getElementById('logo-icon-wrap');
@@ -10386,6 +10443,8 @@ class Cine3DApp {
     this.renderHeroBanner();
     this.renderTop10Row();
     this.renderMoviesGrid();
+
+    this.updateCatalogHeader();
 
     // 6. Three.js 3D Sahne Işık ve Partiküllerini Güncelle
     if (window.cinema3D && typeof window.cinema3D.setTheme === 'function') {

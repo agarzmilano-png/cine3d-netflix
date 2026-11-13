@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-11-13T20:57:26.454Z",
+  "mainCatalog": {
+    "total": 250,
+    "rawEmptyPlatforms": 61,
+    "matchedProviders": 250,
+    "withProviders": 190,
+    "confirmedNoSubscription": 60,
+    "unresolved": []
+  },
+  "index": {
+    "total": 879,
+    "lowResolutionPosters": 0,
+    "missingAge": 46,
+    "nonTurkishAge": 179,
+    "missingTrailer": 519,
+    "verifiedTrailers": 7
+  }
+}

@@ -209,8 +209,8 @@ function check(name, ok, detail = '') {
         app: !!window.app
       };
     `);
-    check('sayfa açıldı', page && page.card !== 0 && page.app === true, page && page.title && page.title.slice(0, 40));
-    check('kart >= 100', page && page.cards >= 100, page && page.cards + ' kart');
+    check('sayfa açıldı', page && page.cards > 0 && page.app === true, page && page.title && page.title.slice(0, 40));
+    check('ilk sayfa: 36 kart', page && page.cards === 36, page && page.cards + ' kart');
 
     // Arama geçmişi (Enter)
     const search = await evaluate(`

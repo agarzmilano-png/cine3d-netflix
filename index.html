@@ -68,10 +68,10 @@
   <link rel="dns-prefetch" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Stiller -->
-  <link rel="stylesheet" href="css/style.css?v=9.2" />
-  <link rel="stylesheet" href="css/modal.css?v=9.2" />
-  <link rel="stylesheet" href="css/vs-duel.css?v=9.2" />
-  <link rel="stylesheet" href="css/features.css?v=9.2" />
+  <link rel="stylesheet" href="css/style.css?v=9.4" />
+  <link rel="stylesheet" href="css/modal.css?v=9.4" />
+  <link rel="stylesheet" href="css/vs-duel.css?v=9.4" />
+  <link rel="stylesheet" href="css/features.css?v=9.4" />
 </head>
 <body>
   <a class="skip-link" href="#movies-anchor">İçeriğe atla</a>
@@ -110,20 +110,20 @@
 
       <div class="nav-right">
         <!-- Platform Tema Seçici (Kompakt ve Zarif) -->
-        <div class="theme-switcher-bar compact-theme-bar" id="theme-switcher-bar" role="radiogroup" aria-label="Platform Teması">
-          <button class="theme-pill-btn active" data-theme="netflix" title="Netflix Teması" aria-checked="true">
+        <div class="theme-switcher-bar compact-theme-bar" id="theme-switcher-bar" role="group" aria-label="Görünüm teması — yayıncı filtresi değildir">
+          <button class="theme-pill-btn active" data-theme="netflix" title="Netflix görünüm teması (kataloğu filtrelemez)" aria-pressed="true">
             <span class="theme-pill-logo">N</span>
             <span class="theme-pill-text">Netflix</span>
           </button>
-          <button class="theme-pill-btn" data-theme="hbo" title="HBO Max Teması" aria-checked="false">
+          <button class="theme-pill-btn" data-theme="hbo" title="HBO Max görünüm teması (kataloğu filtrelemez)" aria-pressed="false">
             <span class="theme-pill-logo">MAX</span>
             <span class="theme-pill-text">HBO</span>
           </button>
-          <button class="theme-pill-btn" data-theme="disney" title="Disney+ Teması" aria-checked="false">
+          <button class="theme-pill-btn" data-theme="disney" title="Disney+ görünüm teması (kataloğu filtrelemez)" aria-pressed="false">
             <span class="theme-pill-logo">D+</span>
             <span class="theme-pill-text">Disney</span>
           </button>
-          <button class="theme-pill-btn" data-theme="prime" title="Prime Video Teması" aria-checked="false">
+          <button class="theme-pill-btn" data-theme="prime" title="Prime Video görünüm teması (kataloğu filtrelemez)" aria-pressed="false">
             <span class="theme-pill-logo">PRIME</span>
             <span class="theme-pill-text">Prime</span>
           </button>
@@ -144,6 +144,7 @@
             <input 
               type="text" 
               id="search-input" 
+              aria-label="Film, dizi, yönetmen veya oyuncu ara"
               class="search-input" 
               placeholder="Ara" 
               autocomplete="off"
@@ -244,8 +245,10 @@
           <div class="discovery-nav-header-row">
             <div class="discovery-title-pill">
               <span class="d-pulse-dot"></span>
-              <span class="d-title-text">KEŞİF & MOD MERKEZİ</span>
+              <span class="d-title-text">KEŞFET</span>
             </div>
+            <a class="discovery-catalog-link" href="#controls-section">Kataloğa git ↓</a>
+            <button type="button" class="discovery-more-toggle" id="discovery-more-toggle" aria-expanded="false" aria-controls="discovery-extra-tabs">Oyunlar ve diğer araçlar</button>
 
             <!-- Sekmeler / Mod Seçici Butonları -->
             <div class="discovery-tabs-bar" role="tablist">
@@ -261,6 +264,7 @@
                 <span class="d-tab-icon">🎨</span>
                 <span class="d-tab-title" id="d-tab-palette-title">Renk Paleti</span>
               </button>
+              <div class="discovery-extra-tabs" id="discovery-extra-tabs" hidden>
               <button class="discovery-tab-btn" data-tab-panel="story-adventure-section" role="tab" aria-selected="false">
                 <span class="d-tab-icon">🎲</span>
                 <span class="d-tab-title">Kendi Hikayen</span>
@@ -296,6 +300,7 @@
                 <span class="d-tab-title">Birlikte Ne İzleyelim?</span>
                 <span class="d-tab-sparkle-badge" style="background:linear-gradient(135deg, #ec4899, #8b5cf6); color:#fff;">İKİ KİŞİ</span>
               </button>
+              </div>
               <button class="discovery-tab-btn d-tab-collapse" data-tab-panel="collapse" role="tab" aria-selected="false" title="Keşif kartlarını gizleyip doğrudan kataloğu gör">
                 <span class="d-tab-icon">✕</span>
                 <span class="d-tab-title">Paneli Kapat</span>
@@ -431,7 +436,7 @@
             </div>
             <h2 class="story-main-title">Kendi Seçimini Kendin Yarat</h2>
             <p class="story-subtitle-desc">
-              Karşına çıkan sinematik dönemeçlerde kendi hikayeni şekillendir. 5 adımda yapacağın kritik seçimler seni 109 başyapıt arasından ruhuna en uygun <strong>tek bir filme</strong> götürsün!
+              Karşına çıkan sinematik dönemeçlerde kendi hikayeni şekillendir. 5 adımda yapacağın kritik seçimler seni <span data-catalog-count></span> yapım arasından ruhuna en uygun <strong>tek bir filme</strong> götürsün!
             </p>
           </div>
         </div>
@@ -509,7 +514,7 @@
             <div class="analyzing-center-icon">🎬</div>
           </div>
           <h3 class="analyzing-title">Sinematik Kaderin Hesaplanıyor...</h3>
-          <p class="analyzing-sub">5 kritik seçimin, 109 başyapıtlık veri tabanımızdaki tür genleri, yönetmen vizyonları ve IMDb puanlarıyla harmanlanıyor.</p>
+          <p class="analyzing-sub">5 kritik seçimin, <span data-catalog-count></span> yapımlık kataloğumuzdaki türler, yönetmenler ve IMDb puanlarıyla eşleştiriliyor.</p>
           <div class="analyzing-steps-ticker">
             <span class="ticker-item active">✦ Tercih ettiğin atmosfer inceleniyor</span>
             <span class="ticker-item">✦ Kahramanının motivasyonu taranıyor</span>
@@ -537,7 +542,7 @@
             </p>
           </div>
           <div class="roulette-filter-pills" id="roulette-filter-pills">
-            <button class="roulette-filter-pill active" data-rfilter="all">Tümü (109 Yapım)</button>
+            <button class="roulette-filter-pill active" data-rfilter="all">Tümü (<span data-catalog-count></span> Yapım)</button>
             <button class="roulette-filter-pill" data-rfilter="masterpiece">🏆 8.8+ Başyapıt</button>
             <button class="roulette-filter-pill" data-rfilter="scifi">🚀 Bilim Kurgu</button>
             <button class="roulette-filter-pill" data-rfilter="mind-bending">🧠 Zihin Açıcı</button>
@@ -617,7 +622,7 @@
             </div>
             <div class="guess-slider-wrap">
               <span class="guess-slider-min">6.0</span>
-              <input type="range" id="guess-range-slider" class="guess-range-input" min="6" max="9.5" step="0.1" value="7.5" />
+              <input type="range" id="guess-range-slider" class="guess-range-input" min="6" max="9.5" step="0.1" value="7.5" aria-label="IMDb puanı tahminin" />
               <span class="guess-slider-max">9.5</span>
               <span class="guess-range-value" id="guess-range-value">7.5</span>
             </div>
@@ -667,6 +672,28 @@
 
         <!-- Film Türleri Yatay Filtre Çubuğu -->
         <div class="genre-filter-row" id="genre-filters"></div>
+        <div class="provider-filter-row">
+          <label for="provider-filter">Türkiye yayıncısı:</label>
+          <select id="provider-filter" class="sort-select">
+            <option value="all">Tüm yayıncılar</option>
+            <option value="netflix">Netflix</option>
+            <option value="hbo">HBO Max</option>
+            <option value="disney">Disney+</option>
+            <option value="prime">Prime Video</option>
+            <option value="apple">Apple TV+</option>
+            <option value="tvplus">TV+</option>
+            <option value="blutv">BluTV</option>
+            <option value="tod">TOD</option>
+            <option value="exxen">Exxen</option>
+            <option value="gain">GAİN</option>
+            <option value="mubi">MUBI</option>
+          </select>
+          <span class="provider-data-note" id="provider-data-note">Tema yalnızca görünümü değiştirir. Yayıncı bilgileri doğrulandıkça güncellenir.</span>
+        </div>
+        <details class="provider-data-note" id="catalog-data-health">
+          <summary>Veri kaynakları ve eksikler</summary>
+          <p id="catalog-data-health-text">Yaşı bilinmeyen yapımlar çocuk profillerinde gösterilmez. Doğrudan fragman doğrulanamazsa YouTube araması sunulur.</p>
+        </details>
 
         <!-- Süre & Format Filtreleme Çubuğu (Faz 1) -->
         <div class="duration-filter-row" id="duration-filters">
@@ -708,6 +735,7 @@
               <input 
                 type="range" 
                 id="imdb-range-slider" 
+                aria-label="En düşük IMDb puanı"
                 class="imdb-range-input" 
                 min="0" 
                 max="9.3" 
@@ -721,7 +749,7 @@
           <div class="view-and-sort-group">
             <!-- Sıralama -->
             <div class="sort-select-wrap">
-              <select id="sort-select" class="sort-select">
+              <select id="sort-select" class="sort-select" aria-label="Kataloğu sırala">
                 <option value="imdb-desc">IMDb Puanı (Yüksekten Düşüğe)</option>
                 <option value="imdb-asc">IMDb Puanı (Düşükten Yükseğe)</option>
                 <option value="year-desc">Yapım Yılı (Yeniden Eskiye)</option>
@@ -803,6 +831,10 @@
 
         <!-- 3D Tilt Kart Izgarası -->
         <div class="movies-grid" id="movies-grid"></div>
+        <div class="catalog-pagination" id="catalog-pagination" hidden>
+          <p id="catalog-page-status" role="status" aria-live="polite"></p>
+          <button type="button" class="btn btn-secondary" id="catalog-load-more">Daha fazla göster</button>
+        </div>
       </section>
 
       <!-- 3. 3D Sinematik Coverflow Karusel Bölümü (Geçiş Yapıldığında Gösterilir) -->
@@ -981,17 +1013,17 @@
   <div class="toast-popup" id="toast-notification"></div>
 
   <!-- JavaScript Dosyaları (three.min.js 603 KB ilk boyamadan sonra boşta yüklenir — R032 lazy-load) -->
-  <script src="js/movies-data.js?v=9.2"></script>
-  <script src="js/movie-soundtracks.js?v=9.2"></script>
-  <script src="js/storage-adapter.js?v=9.2"></script>
-  <script src="js/config.js?v=9.2"></script>
-  <script src="js/catalog-index.js?v=9.2"></script>
-  <script src="js/api-service.js?v=9.2"></script>
-  <script src="js/audio.js?v=9.2"></script>
-  <script src="js/three-scene.js?v=9.2"></script>
-  <script src="js/coverflow3d.js?v=9.2"></script>
-  <script src="js/story-adventure.js?v=9.2"></script>
-  <script src="js/app.js?v=9.2"></script>
-  <script src="js/features.js?v=9.2"></script>
+  <script src="js/movies-data.js?v=9.4"></script>
+  <script src="js/movie-soundtracks.js?v=9.4"></script>
+  <script src="js/storage-adapter.js?v=9.4"></script>
+  <script src="js/config.js?v=9.4"></script>
+  <script src="js/catalog-index.js?v=9.4"></script>
+  <script src="js/api-service.js?v=9.4"></script>
+  <script src="js/audio.js?v=9.4"></script>
+  <script src="js/three-scene.js?v=9.4"></script>
+  <script src="js/coverflow3d.js?v=9.4"></script>
+  <script src="js/story-adventure.js?v=9.4"></script>
+  <script src="js/app.js?v=9.4"></script>
+  <script src="js/features.js?v=9.4"></script>
 </body>
 </html>

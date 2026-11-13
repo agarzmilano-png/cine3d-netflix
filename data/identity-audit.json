@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-11-13T21:07:09.302Z",
+  "verified": 244,
+  "total": 250,
+  "changes": [
+    {
+      "id": "wall-e",
+      "title": "VOL-İ",
+      "previousImdbID": "tt14055868",
+      "imdbID": "tt0910970",
+      "previousYear": 2008,
+      "year": 2008,
+      "source": "tm25151"
+    },
+    {
+      "id": "coherence",
+      "title": "Paralel Evren",
+      "previousImdbID": "tt2866360",
+      "imdbID": "tt2866360",
+      "previousYear": 2014,
+      "year": 2013,
+      "source": "tm165603"
+    },
+    {
+      "id": "v-for-vendetta",
+      "title": "V for Vendetta",
+      "previousImdbID": "tt0434409",
+      "imdbID": "tt0434409",
+      "previousYear": 2006,
+      "year": 2005,
+      "source": "tm184362"
+    },
+    {
+      "id": "ex-machina",
+      "title": "Ex Machina",
+      "previousImdbID": "tt0470752",
+      "imdbID": "tt0470752",
+      "previousYear": 2015,
+      "year": 2014,
+      "source": "tm139224"
+    },
+    {
+      "id": "casablanca",
+      "title": "Casablanca",
+      "previousImdbID": "tt0034583",
+      "imdbID": "tt0034583",
+      "previousYear": 1943,
+      "year": 1942,
+      "source": "tm77588"
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "parasite",
+      "title": "Parazit"
+    },
+    {
+      "id": "arog",
+      "title": "A.R.O.G."
+    },
+    {
+      "id": "the-pianist",
+      "title": "Piyanist"
+    },
+    {
+      "id": "grave-of-the-fireflies",
+      "title": "Ateşböceklerinin Mezarı"
+    },
+    {
+      "id": "yuzuklerin-efendisi-iki-kule",
+      "title": "Yüzüklerin Efendisi: İki Kule"
+    },
+    {
+      "id": "yuzuklerin-efendisi-kral-n-donusu",
+      "title": "Yüzüklerin Efendisi: Kralın Dönüşü"
+    }
+  ]
+}

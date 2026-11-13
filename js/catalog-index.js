@@ -53,37 +53,75 @@
     items: null,
     loading: null,
     loadedAt: 0,
+    generatedAt: null,
 
     async ensureLoaded() {
       if (this.items) return this.items;
       if (this.loading) return this.loading;
-      this.loading = fetch(INDEX_URL, { cache: 'force-cache' })
+      this.loading = fetch(INDEX_URL, { cache: 'no-cache' })
         .then((res) => {
           if (!res.ok) throw new Error(`indeks yüklenemedi (${res.status})`);
           return res.json();
         })
         .then((data) => {
+          if (data.country !== 'TR' || !Array.isArray(data.items)) throw new Error('Geçersiz Türkiye indeksi');
           this.items = Array.isArray(data.items) ? data.items : [];
+          this.generatedAt = Number.isFinite(Date.parse(data.generatedAt)) ? data.generatedAt : null;
           this.loadedAt = Date.now();
           console.info(`[Cine3D] Katalog indeksi hazır: ${this.items.length} yapım`);
           return this.items;
         })
         .catch((err) => {
           console.warn('[Cine3D] Katalog indeksi yüklenemedi:', err.message);
-          this.items = [];
-          return this.items;
+          // Geçici ağ hatasını kalıcı boş indeks olarak saklama; tekrar denenebilir.
+          return [];
         })
         .finally(() => { this.loading = null; });
       return this.loading;
+    },
+
+    /** Aynı başlıklı yeniden çevrimleri karıştırmamak için yıl + format da eşleşir. */
+    findMovie(movie) {
+      if (!this.items || !movie) return null;
+      if (movie.imdbID) {
+        const identified = this.items.filter(item => item.imdbID === movie.imdbID && (item.type === 'series') === !!movie.isSeries);
+        if (identified.length) return identified.length === 1 ? identified[0] : null;
+      }
+      const names = [movie.originalTitle, movie.title].map(normalize).filter(Boolean);
+      const year = parseInt(movie.year, 10);
+      if (!names.length || !year) return null;
+      const matches = this.items.filter(item => item.y === year &&
+        !(item.imdbID && movie.imdbID && item.imdbID !== movie.imdbID) &&
+        (item.type === 'series') === !!movie.isSeries &&
+        [item.o, item.t, item.e].some(name => name && names.includes(normalize(name))));
+      return matches.length === 1 ? matches[0] : null;
+    },
+
+    applyProviders(movie, item = this.findMovie(movie)) {
+      if (!item) return false;
+      const checkedAt = item.providerCheckedAt || this.generatedAt;
+      // Daha yeni canlı sorgu, haftalık indeks tarafından ezilmez.
+      if (Date.parse(movie.streamingInfo?.checkedAt) > Date.parse(checkedAt)) return false;
+      movie.platforms = [...new Set(item.platforms || [])];
+      movie.providerCheckedAt = checkedAt;
+      movie.streamingInfo = {
+        hasTrProvider: movie.platforms.length > 0,
+        providers: movie.platforms.map(id => ({ id, url: (item.providers || []).find(p => p.id === id)?.url || null })),
+        globalProviders: [],
+        checkedAt,
+        source: 'JustWatch Türkiye indeksi',
+        verified: Number.isFinite(Date.parse(checkedAt))
+      };
+      return true;
     },
 
     /** İndeks kaydını uygulamanın film nesnesine çevirir. */
     toMovie(item) {
       const isSeries = item.type === 'series';
       const genres = (item.genres || []).map((g) => GENRE_MAP[g] || g).filter(Boolean);
-      return {
+      const movie = {
         id: `idx_${item.id}`,
-        imdbID: null,
+        imdbID: item.imdbID || null,
         title: item.t,
         originalTitle: item.o,
         searchText: `${item.t} ${item.o} ${item.e || ''}`.toLocaleLowerCase('tr'),
@@ -91,7 +129,9 @@
         imdbRating: item.imdb,
         imdbVotes: formatVotes(item.votes),
         duration: formatDuration(item.runtime, isSeries),
-        ageRating: isSeries ? '16+' : '13+',
+        ageRating: item.ageRating || 'Yaş bilgisi bilinmiyor',
+        ageRatingCountry: item.ageRatingCountry || null,
+        ageRatingSource: item.ageRatingSource || null,
         genres: genres.length ? genres : ['Sinema'],
         director: 'Belirtilmemiş',
         cast: ['Oyuncular listelenmedi'],
@@ -101,6 +141,7 @@
         posterUrl: item.poster,
         backdropUrl: item.poster,
         trailerYoutubeId: item.yt || null,
+        trailerVerification: item.trailerVerification || null,
         platforms: item.platforms || [],
         isFeatured: false,
         isOnlineFetched: true,
@@ -109,6 +150,8 @@
         mediaType: isSeries ? 'series' : 'movie',
         isSeries
       };
+      this.applyProviders(movie, item);
+      return movie;
     },
 
     /** Başlık/özgün ad üzerinde ağırlıklı arama. */

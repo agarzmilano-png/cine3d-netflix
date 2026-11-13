@@ -1070,8 +1070,8 @@ body {
 }
 
 .hero-dot {
-  width: 12px;
-  height: 12px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   border: none;
@@ -1728,6 +1728,11 @@ body {
 }
 
 .top10-card {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   display: flex;
   align-items: flex-end;
   flex-shrink: 0;
@@ -2039,7 +2044,7 @@ body {
 
 .card-year {
   font-size: 0.85rem;
-  color: var(--text-dim);
+  color: var(--text-muted);
   font-weight: 600;
   flex-shrink: 0;
 }
@@ -2517,6 +2522,16 @@ body {
   gap: 6px;
   z-index: 5;
   transform: translateZ(20px);
+}
+
+/* Eski tekil favori/VS konumları eylem satırına sızıp diğer butonları kapatmasın. */
+.card-actions-row .card-action-btn {
+  position: static;
+  inset: auto;
+  transform: none;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
 }
 
 .card-action-btn {
@@ -3364,7 +3379,7 @@ body {
   padding: 2px 8px;
   border-radius: var(--radius-full);
   background: var(--primary-accent-glow);
-  color: var(--primary-accent);
+  color: #fff;
   border: 1px solid var(--border-red);
   text-transform: uppercase;
 }
@@ -5986,7 +6001,7 @@ body {
   font-size: 0.74rem;
   font-weight: 800;
   letter-spacing: 1.4px;
-  color: var(--primary-accent);
+  color: #f5c518;
   text-transform: uppercase;
 }
 
@@ -6005,6 +6020,33 @@ body {
 .discovery-tabs-bar::-webkit-scrollbar {
   display: none;
 }
+.footer-text, .footer-meta { color: var(--text-muted); }
+
+/* İkincil araçlar isteğe bağlı açılır; ana akış arama ve katalogdur. */
+.discovery-extra-tabs { display: flex; align-items: center; gap: 6px; }
+.discovery-extra-tabs[hidden], .catalog-pagination[hidden], #catalog-load-more[hidden] { display: none; }
+.discovery-more-toggle, .discovery-catalog-link {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 18px;
+  background: #20202a;
+  color: #f1f1f5;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.discovery-more-toggle[aria-expanded="true"] { border-color: #f5c518; }
+.discovery-tabs-bar { max-width: 100%; }
+.provider-filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.provider-filter-row label { color: var(--text-primary); font-size: 0.88rem; }
+.provider-filter-row select { max-width: 100%; }
+.provider-data-note, .provider-verification-note { color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; }
+.provider-verification-note { margin-top: 12px; }
+.catalog-pagination { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 24px 0; color: var(--text-muted); }
+.top10-title { display: block; }
+.top10-card:focus-visible { outline: 3px solid #f5c518; outline-offset: 4px; }
+.compact-theme-bar .theme-pill-btn { min-width: 44px; min-height: 36px; flex-shrink: 0; }
 
 .discovery-tab-btn {
   display: inline-flex;
@@ -6046,7 +6088,7 @@ body {
 }
 
 .d-tab-collapse {
-  opacity: 0.7;
+  opacity: 1;
   margin-left: 4px;
   border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: var(--radius-full);

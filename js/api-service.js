@@ -299,12 +299,10 @@ class CinemaApiService {
       const parsed = this.normalizeMovieData(item, trPlot, verifiedPoster);
 
       // TR yayıncıları: haftalık güncellenen indeksten (JustWatch tarayıcıdan engelli)
-      const idxPlatforms = this.findPlatformsFromIndex(item.Title || initialTitle, item.Year);
-      if (idxPlatforms.length) {
-        parsed.platforms = idxPlatforms;
-      } else {
+      const index = window.cine3dCatalog;
+      if (!index?.applyProviders(parsed)) {
         const streamInfo = await this.resolveStreamingProviders(item.Title || initialTitle, item.Year, item.Title);
-        if (streamInfo && streamInfo.providers && streamInfo.providers.length) {
+        if (streamInfo && streamInfo.verified) {
           parsed.streamingInfo = streamInfo;
         }
       }
@@ -325,7 +323,7 @@ class CinemaApiService {
 
     const staticFallback = {
       hasTrProvider: false,
-      statusText: 'TR yayıncısı bulunamadı',
+      statusText: 'Yayıncı bilgisi doğrulanmadı',
       providers: [],
       globalProviders: []
     };
@@ -348,7 +346,7 @@ class CinemaApiService {
 
     return {
       hasTrProvider: false,
-      statusText: 'TR yayıncısı bulunamadı',
+      statusText: 'Yayıncı bilgisi doğrulanmadı',
       providers: [],
       globalProviders: []
     };
@@ -476,7 +474,7 @@ class CinemaApiService {
       imdbRating: imdbRating,
       imdbVotes: esc(omdb.imdbVotes && omdb.imdbVotes !== 'N/A' ? omdb.imdbVotes : '150K'),
       duration: durationText,
-      ageRating: esc(omdb.Rated && omdb.Rated !== 'N/A' ? omdb.Rated : (isSeries ? '16+' : 'Genel')),
+      ageRating: esc(omdb.Rated && omdb.Rated !== 'N/A' ? omdb.Rated : 'Yaş bilgisi bilinmiyor'),
       genres: genres,
       director: esc(omdb.Director && omdb.Director !== 'N/A' ? omdb.Director : (isSeries ? 'Dizi Yapımı' : 'Belirtilmemiş')),
       cast: omdb.Actors && omdb.Actors !== 'N/A' ? omdb.Actors.split(',').map(a => esc(a.trim())) : ['Oyuncular listelenmedi'],

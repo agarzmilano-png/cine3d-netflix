@@ -572,7 +572,7 @@
         const quota = Math.min(4, Math.floor(this.size / 2));
         Array.from(document.querySelectorAll('#rec-scroller .rec-card'))
           .map(c => getMovieById(c.dataset.recId))
-          .filter(Boolean)
+          .filter(m => m && (!app.isAgeAllowed || app.isAgeAllowed(m)))
           .forEach(m => {
             if (fighters.length < quota && !fighters.includes(m)) fighters.push(m);
           });
@@ -584,7 +584,7 @@
 
       // Hâlâ eksikse tüm katalogdan tamamla
       if (fighters.length < this.size) {
-        shuffle((app.movies || []).slice()).forEach(m => {
+        shuffle((app.movies || []).filter(m => !app.isAgeAllowed || app.isAgeAllowed(m))).forEach(m => {
           if (fighters.length < this.size && !fighters.includes(m)) fighters.push(m);
         });
       }

@@ -20,11 +20,14 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const metadata = require('./catalog-metadata');
 
 const TARGET = Number(process.argv[2] || 600);
 const OUT = path.join(__dirname, '..', 'data', 'catalog.json');
 const PAGE = 50;
 const TIMEOUT = 20000;
+let identityOverrides = {};
+try { identityOverrides = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data/identity-overrides.json'), 'utf8')); } catch (e) { /* ilk denetim */ }
 
 // Popüler listede yer almayan ama sık aranan yapımlar
 const SEEDS = [
@@ -75,6 +78,7 @@ const SEEDS = [
 ];
 
 const CONTENT_FIELDS = `
+        id
         objectType
         content(country: $country, language: $language) {
           title
@@ -83,12 +87,18 @@ const CONTENT_FIELDS = `
           shortDescription
           posterUrl
           runtime
+          ageCertification
+          externalIds { imdbId }
           genres { shortName }
           scoring { imdbScore imdbVotes }
         }
         contentEn: content(country: $country, language: en) { title }
+        contentUs: content(country: US, language: en) { ageCertification }
+        contentGb: content(country: GB, language: en) { ageCertification }
+        contentDe: content(country: DE, language: de) { ageCertification }
         offers(country: $country, platform: WEB) {
           monetizationType
+          standardWebURL
           package { clearName technicalName }
         }`;
 
@@ -158,17 +168,21 @@ function slugify(text) {
 
 function toItem(node) {
   const c = node.content || {};
+  const identity = identityOverrides[node.id];
   const imdb = c.scoring && c.scoring.imdbScore;
   if (!c.title || !c.posterUrl || !imdb) return null;
 
-  const poster = /^https:\/\//.test(c.posterUrl)
-    ? c.posterUrl
-    : 'https://images.justwatch.com' + String(c.posterUrl).replace('{profile}', 's332').replace('{format}', 'jpg');
+  const poster = metadata.posterUrl(c.posterUrl);
 
   const offers = (node.offers || [])
-    .filter((o) => o.monetizationType === 'FLATRATE' || o.monetizationType === 'FREE')
-    .map((o) => mapPlatform(o.package && o.package.technicalName, o.package && o.package.clearName))
-    .filter(Boolean);
+    .filter((o) => o.monetizationType === 'FLATRATE' || o.monetizationType === 'FREE');
+  const providers = new Map();
+  for (const offer of offers) {
+    const id = mapPlatform(offer.package && offer.package.technicalName, offer.package && offer.package.clearName);
+    if (!id) continue;
+    const url = /^https:\/\//.test(offer.standardWebURL || '') ? offer.standardWebURL : null;
+    if (!providers.has(id) || (!providers.get(id).url && url)) providers.set(id, { id, url });
+  }
 
   const baseSlug = slugify(c.originalTitle) || slugify(c.title) || 'yapim';
   const id = `${baseSlug}-${c.originalReleaseYear || ''}`.replace(/-+$/, '');
@@ -176,41 +190,23 @@ function toItem(node) {
 
   return {
     id,
+    jwId: node.id,
+    imdbID: identity?.imdbID || (/^tt\d+$/.test(c.externalIds?.imdbId || '') ? c.externalIds.imdbId : null),
     t: c.title,
     o: c.originalTitle || c.title,
-    y: c.originalReleaseYear || 0,
+    y: identity?.year || c.originalReleaseYear || 0,
     imdb: Math.round(imdb * 10) / 10,
     votes: (c.scoring && c.scoring.imdbVotes) || 0,
     poster,
     plot: (c.shortDescription || '').slice(0, 420),
     genres: (c.genres || []).map((g) => g.shortName).filter(Boolean).slice(0, 4),
     runtime: c.runtime || 0,
+    ...metadata.certification(node),
     e: (node.contentEn && node.contentEn.title && node.contentEn.title !== c.title) ? node.contentEn.title : undefined,
     type: node.objectType === 'SHOW' ? 'series' : 'movie',
-    platforms: [...new Set(offers)]
+    platforms: [...providers.keys()],
+    providers: [...providers.values()]
   };
-}
-
-function fetchTrailerId(title, year) {
-  return new Promise((resolve) => {
-    const query = encodeURIComponent(`${title} ${year || ''} official trailer fragman`);
-    const req = https.get(`https://www.youtube.com/results?search_query=${query}&hl=tr`, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept-Language': 'tr-TR,tr;q=0.9,en;q=0.8',
-        'Accept': 'text/html'
-      }
-    }, (res) => {
-      let body = '';
-      res.on('data', (c) => { if (body.length < 2_500_000) body += c; });
-      res.on('end', () => {
-        const m = body.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
-        resolve(m ? m[1] : null);
-      });
-    });
-    req.setTimeout(15000, () => req.destroy(new Error('timeout')));
-    req.on('error', () => resolve(null));
-  });
 }
 
 function normTitle(text) {
@@ -232,8 +228,11 @@ function curatedTrailerMap() {
     const data = eval(block[1].replace(/;$/, '')); // yerel, güvenilir dosya
     for (const m of data) {
       if (!m.trailerYoutubeId) continue;
-      if (m.originalTitle) map.set(normTitle(m.originalTitle), m.trailerYoutubeId);
-      if (m.title) map.set(normTitle(m.title), m.trailerYoutubeId);
+      // Başlık tek başına yeterli değil; yeniden çevrimleri karıştırma.
+      const key = `${m.year}|${m.isSeries ? 'series' : 'movie'}|`;
+      if (m.imdbID) map.set(m.imdbID, m.trailerYoutubeId);
+      if (m.originalTitle) map.set(key + normTitle(m.originalTitle), m.trailerYoutubeId);
+      if (m.title) map.set(key + normTitle(m.title), m.trailerYoutubeId);
     }
   } catch (e) {
     console.warn('movies-data.js okunamadı:', e.message);
@@ -245,7 +244,7 @@ async function attachTrailers(items) {
   const previous = new Map();
   try {
     const old = JSON.parse(fs.readFileSync(OUT, 'utf8'));
-    for (const it of old.items || []) if (it.yt) previous.set(it.id, it.yt);
+    for (const it of old.items || []) if (it.yt) previous.set(it.id, it);
   } catch (e) { /* ilk çalıştırma */ }
 
   const curated = curatedTrailerMap();
@@ -255,8 +254,9 @@ async function attachTrailers(items) {
 
   for (const it of items) {
     const known = previous.get(it.id);
-    if (known) { it.yt = known; reused++; continue; }
-    const curatedId = curated.get(normTitle(it.o)) || curated.get(normTitle(it.t));
+    if (known) { it.yt = known.yt; it.trailerVerification = known.trailerVerification || { source: 'existing-catalog' }; reused++; continue; }
+    const key = `${it.y}|${it.type}|`;
+    const curatedId = (it.imdbID && curated.get(it.imdbID)) || curated.get(key + normTitle(it.o)) || curated.get(key + normTitle(it.t));
     if (curatedId) { it.yt = curatedId; fromCurated++; continue; }
     missing.push(it);
   }
@@ -266,16 +266,22 @@ async function attachTrailers(items) {
     console.log(`✓ Fragmanlar: ${reused} kayıt önceki indeksten korundu`);
     return;
   }
+  if (process.argv.includes('--skip-trailer-search')) {
+    console.log(`✓ Bilinen fragmanlar korundu; ${missing.length} yeni kayıtta arama bağlantısı kullanılacak`);
+    return;
+  }
 
   console.log(`  fragman aranıyor: ${missing.length} yapım (${reused} devralınan)`);
-  const CONCURRENCY = 3;
+  const CONCURRENCY = 4;
   let index = 0;
   let done = 0;
 
   async function worker() {
     while (index < missing.length) {
       const item = missing[index++];
-      item.yt = await fetchTrailerId(item.o || item.t, item.y);
+      const trailer = await metadata.findTrailer(item);
+      item.yt = trailer ? trailer.id : null;
+      item.trailerVerification = trailer ? { source: 'YouTube oEmbed', title: trailer.title, author: trailer.author, checkedAt: trailer.checkedAt } : null;
       done++;
       if (done % 25 === 0) process.stdout.write(`\r  ${done}/${missing.length}`);
       await new Promise((r) => setTimeout(r, 350));
@@ -287,7 +293,7 @@ async function attachTrailers(items) {
   console.log(`\n✓ Fragman: ${found}/${missing.length} bulundu, ${reused} devralındı`);
 }
 
-(async () => {
+async function buildCatalog() {
   const out = new Map();
   let after = null;
   let pageCount = 0;
@@ -315,7 +321,9 @@ async function attachTrailers(items) {
   console.log(`\n✓ Popüler listesi: ${out.size} yapım`);
 
   // 2) Tohum başlıklar (popüler listede olmayan klasikler)
-  const seedUnique = [...new Set(SEEDS)];
+  const movieSource = fs.readFileSync(path.join(__dirname, '..', 'js', 'movies-data.js'), 'utf8');
+  const curatedMovies = new Function(movieSource + '\nreturn MOVIES_DATA;')();
+  const seedUnique = [...new Set([...SEEDS, ...curatedMovies.map(m => m.originalTitle || m.title)])];
   const seedHits = [];
   for (const title of seedUnique) {
     const key = normTitle(title);
@@ -331,14 +339,16 @@ async function attachTrailers(items) {
     while (si < seedHits.length) {
       const title = seedHits[si++];
       const res = await graphql(SEARCH_QUERY, 'Search', {
-        country: 'TR', language: 'tr', first: 3, filter: { searchQuery: title }
+        country: 'TR', language: 'tr', first: 20, filter: { searchQuery: title }
       });
       const edges = (res && res.data && res.data.popularTitles && res.data.popularTitles.edges) || [];
-      // JustWatch TR yerelleştirilmiş adlar döndürüyor ("Parasite" -> "Parazit"),
-      // bu yüzden birebir eşleşme yerine aramanın en iyi sonucunu alıyoruz.
+      // İlk sonucu körlemesine alma: özgün/TR/EN başlık ve biliniyorsa yıl-format eşleşmeli.
+      const known = curatedMovies.filter(m => normTitle(m.originalTitle || m.title) === normTitle(title));
       for (const edge of edges) {
         const item = toItem(edge.node);
         if (!item || item.imdb < 5) continue;
+        if (known.length ? !known.some(m => metadata.sameIdentity(item, m))
+          : ![item.t, item.o, item.e].some(t => t && normTitle(t) === normTitle(title))) continue;
         if (!out.has(item.id)) { out.set(item.id, item); added++; }
         break;
       }
@@ -350,16 +360,29 @@ async function attachTrailers(items) {
 
   // 3) Fragmanlar
   const list = [...out.values()];
+  // Geçici API hatası sağlam indeksi boş/küçük bir dosyayla ezmesin.
+  let previousCount = 0;
+  try { previousCount = JSON.parse(fs.readFileSync(OUT, 'utf8')).items.length; } catch (e) { /* ilk üretim */ }
+  if (list.length < Math.max(100, previousCount * 0.8)) {
+    throw new Error(`Katalog yenilenemedi: yalnızca ${list.length} kayıt geldi; mevcut dosya korundu.`);
+  }
   await attachTrailers(list);
 
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
-  fs.writeFileSync(OUT, JSON.stringify({
+  const catalog = {
     generatedAt: new Date().toISOString(),
     country: 'TR',
     count: list.length,
     items: list
-  }));
+  };
+  const temp = OUT + '.tmp';
+  fs.writeFileSync(temp, JSON.stringify(catalog));
+  fs.renameSync(temp, OUT);
+  require('./catalog-health').writeHealth(catalog);
 
   const kb = Math.round(fs.statSync(OUT).size / 1024);
   console.log(`✓ ${list.length} yapım -> data/catalog.json (${kb} KB)`);
-})();
+}
+
+if (require.main === module) buildCatalog().catch((err) => { console.error(err.message); process.exitCode = 1; });
+module.exports = { graphql, CONTENT_FIELDS, SEARCH_QUERY, toItem, normTitle, attachTrailers, curatedTrailerMap, buildCatalog };

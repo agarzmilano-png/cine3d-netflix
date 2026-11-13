@@ -7,7 +7,7 @@
  * - `ignoreSearch`: asset'ler `?v=3.1` sorgusuyla istendiği için eşleşme sorunu yok.
  * - Önbellekte karşılık bulunamayan isteklerde `respondWith(undefined)` hatası giderildi.
  */
-const CACHE_VERSION = '9.2';
+const CACHE_VERSION = '9.4';
 const CACHE_NAME = `cine3d-cache-v${CACHE_VERSION}`;
 
 // Service worker'ın bulunduğu dizin (site kökü veya alt dizin)
@@ -24,6 +24,10 @@ const PRECACHE_PATHS = [
   'css/features.css',
   'js/movies-data.js',
   'js/movie-soundtracks.js',
+  'js/storage-adapter.js',
+  'js/vendor/three.min.js',
+  'data/catalog.json',
+  'data/catalog-health.json',
   'js/config.js',
   'js/catalog-index.js',
   'js/api-service.js',
@@ -59,7 +63,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.map((key) => (key !== CACHE_NAME ? caches.delete(key) : undefined))
+        keys.map((key) => (key.startsWith('cine3d-cache-v') && key !== CACHE_NAME ? caches.delete(key) : undefined))
       )
     ).then(() => self.clients.claim())
   );
@@ -85,6 +89,7 @@ async function networkFirst(request) {
     if (fresh && fresh.status === 200) {
       cache.put(request, fresh.clone()).catch(() => {});
     }
+    if (fresh.status >= 500) throw new Error('Sunucu geçici olarak kullanılamıyor');
     return fresh;
   } catch (err) {
     const cached = await cache.match(request, { ignoreSearch: true });
@@ -108,6 +113,7 @@ async function networkFirstAsset(request) {
     if (fresh && fresh.status === 200) {
       cache.put(request, fresh.clone()).catch(() => {});
     }
+    if (fresh.status >= 500) throw new Error('Kaynak geçici olarak kullanılamıyor');
     return fresh;
   } catch (err) {
     const cached = await cache.match(request, { ignoreSearch: true });

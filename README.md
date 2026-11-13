@@ -4,6 +4,48 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 
 ---
 
+## Veri kalitesi ve yayın düzeltmeleri — 9.4
+
+- İndeks afişleri en az 592px üretilir; daha yüksek çözünürlük korunur. Düşük çözünürlük artık yayın öncesi test hatasıdır.
+- Yapım kimliği eşleştirmesi IMDb kimliğiyle güçlendirildi. Ana katalog kimlikleri/yılları IMDb arama verisi ve JustWatch ile çapraz kontrol edilir; kısa film/making-of sonuçları ana film yerine seçilmez. Kaynak çelişkileri `data/identity-overrides.json` içinde kayıtlıdır.
+- Türkiye’de yaş sınıfı yoksa mevcut US/GB/DE kaynak sınıfı ülke koduyla kullanılır; hiçbir kaynakta bilgi yoksa yaş bilinmiyor olarak kalır ve çocuk profilinde engellenir.
+- Fragman araması başlık, yıl, kanal ve YouTube oEmbed ile doğrulanır. Doğrulanamayan sonuç “hazır/resmî fragman” diye sunulmaz; açıkça YouTube araması olarak etiketlenir.
+- `data/catalog-health.json` ham boş alanları, indeksle tamamlanan yayıncıları, doğrulanmış boş abonelik listelerini ve gerçek veri eksiklerini ayırır. Aynı bilgi sitedeki “Veri kaynakları ve eksikler” bölümünde açıklanır.
+- GitHub Pages dağıtımı tüm testler geçmeden yayın yapmaz; yalnızca açıkça seçilmiş statik dosyalar paketlenir.
+
+Bakım komutları:
+
+```bash
+npm run catalog:health       # Veri kalite raporunu güncelle
+npm run catalog:trailers     # Eksik fragmanları doğrulayarak ara
+npm run catalog:identities   # Ana katalog kimliklerini bağımsız IMDb verisiyle karşılaştır
+node scripts/audit-identities.js --apply-index
+npm run seo
+npm run verify
+```
+
+Kaynakta bulunmayan yaş/fragman verisi tahminle doldurulmaz. Sıfır yazılım hatası ile yüzde yüz dış veri kapsamı farklı hedeflerdir; kalan veri eksikleri raporda görünür tutulur.
+
+## Denetim düzeltmeleri — 9.3
+
+- Çocuk profilinde `TV-MA`, `R`, `NC-17` ve bilinmeyen yaşlar engellenir. Profil oluşturma da aktif çocuk profilinin PIN doğrulamasını kullanır. Hikaye, turnuva ve düello havuzları yaş sınırını korur.
+- İndeks gerçek `ageCertification` değerini taşır; eksik sınıflandırmaya tahmini yaş atanmaz.
+- İlk ziyaret önbelleği profil adaptörünü, Three.js'i ve katalog indeksini içerir. Görsel önbelleği güncellemelerde korunur.
+- Yayıncılar açılışta Türkiye indeksinden başlık + yıl + format ile eşleştirilir. Son kontrol tarihi gösterilir; bilinmeyen bilgi, “Türkiye’de yayınlanmıyor” diye sunulmaz.
+- Doğrudan yapım bağlantısı varsa “Yapımı aç”, yoksa “Yayını ara” kullanılır. İndekste yalnızca abonelik/ücretsiz yayınlar vardır; kiralama/satın alma ayrıca kontrol edilmelidir.
+- Görünüm teması ve gerçek yayıncı filtresi ayrıdır. Top 10 tema değişiminden etkilenmez.
+- Katalog ilk açılışta 36 kart gösterir; “Daha fazla göster” ile devam eder. Oyunlar ve diğer araçlar açılır bölümde korunur.
+- Klavye erişimi, form etiketleri, kontrast ve dokunma alanları iyileştirildi. Yapım sayıları aktif profilin kataloğundan hesaplanır.
+
+Kontrol: `npm run verify` (veri, ağsız regresyon, smoke ve tarayıcı özellik testleri; gerçek çevrimdışı yeniden açılış dahil).
+
+Yayıncı indeksini yenilemek: `node scripts/build-catalog.js 600 --skip-trailer-search`.
+Bu seçenek bilinen fragmanları korur; yeni fragman araması yapılmayan yapımlarda YouTube arama bağlantısı kullanılır.
+
+**Sınırlar:** PIN cihaz içi arayüz kilididir; tarayıcı verilerine/geliştirici araçlarına erişimi olan birine karşı sunucu taraflı kimlik doğrulama değildir. Harici yayıncı, IMDb ve YouTube verilerinin doğruluğu ve kullanılabilirliği üçüncü taraflara bağlıdır.
+
+---
+
 ## 🌐 Canlı İnternet Veri Entegrasyonu (Yeni)
 
 Kullanıcı arama yaptığında aranan yapım başlangıç kataloğunda bulunmasa bile:

@@ -452,54 +452,18 @@ async function resolvePoster(title, year = '', imdbId = '') {
 }
 
 // --- YOUTUBE FRAGMAN ÇÖZÜCÜ ---
-function resolveYoutubeVideoId(title, year = '') {
-  return new Promise((resolve) => {
-    try {
-      const cacheKey = `${title}_${year}`.toLowerCase().trim();
-      if (trailerCache.has(cacheKey)) {
-        return resolve(trailerCache.get(cacheKey));
-      }
-
-      const searchQuery = `${title} ${year} official trailer fragman`.trim();
-      const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
-
-      const opt = {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-          'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-        }
-      };
-
-      const req = httpGet(ytUrl, { ...opt, agent: outboundAgent }, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => {
-          const jsonMatch = data.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
-          if (jsonMatch && jsonMatch[1]) {
-            trailerCache.set(cacheKey, jsonMatch[1]);
-            return resolve(jsonMatch[1]);
-          }
-
-          const linkMatch = data.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
-          if (linkMatch && linkMatch[1]) {
-            trailerCache.set(cacheKey, linkMatch[1]);
-            return resolve(linkMatch[1]);
-          }
-
-          resolve(null);
-        });
-      });
-      req.on('error', (err) => {
-        console.warn('YouTube arama hatası:', err.message);
-        resolve(null);
-      });
-    } catch (err) {
-      // ÖZ3: senkron fırlama tüm sunucuyu çökertmesin
-      console.warn('YouTube çözücü istisnası:', err && err.message);
-      resolve(null);
-    }
-  });
+async function resolveYoutubeVideoId(title, year = '') {
+  const cacheKey = `${title}_${year}`.toLowerCase().trim();
+  if (trailerCache.has(cacheKey)) return trailerCache.get(cacheKey);
+  try {
+    // Aramanın ilk videosu fragman kabul edilmez; çevrimdışı üreticiyle aynı doğrulama.
+    const result = await require('./scripts/catalog-metadata').findTrailer({ t: title, o: title, y: parseInt(year, 10) || null }, { timeoutMs: 7000 });
+    if (result) trailerCache.set(cacheKey, result.id);
+    return result ? result.id : null;
+  } catch (err) {
+    console.warn('YouTube doğrulaması yapılamadı:', err.message);
+    return null;
+  }
 }
 
 // --- JUSTWATCH CANLI YAYIN PLATFORMU ÇÖZÜCÜ ---
@@ -513,6 +477,7 @@ query GetSuggestedTitles($country: Country!, $language: Language!, $first: Int!,
         objectType
         content(country: $country, language: $language) {
           title
+          originalTitle
           originalReleaseYear
         }
         offers(country: $country, platform: WEB) {
@@ -653,7 +618,8 @@ function normalizePlatform(p, targetTitle) {
     name: cleanName,
     badgeClass,
     brandColor,
-    url: p.url || fallbackUrl
+    url: p.url || fallbackUrl,
+    direct: !!p.url
   };
 }
 
@@ -667,18 +633,21 @@ async function resolveStreamingProviders(title, year = '', originalTitle = '') {
   if (originalTitle && originalTitle.trim()) queriesToTry.push(originalTitle.trim());
   if (title && title.trim() && !queriesToTry.includes(title.trim())) queriesToTry.push(title.trim());
 
+  const normalizeTitle = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/ı/g, 'i').replace(/[^a-z0-9]+/g, ' ').trim();
+  const names = queriesToTry.map(normalizeTitle);
+  const matchNode = edges => (edges || []).map(e => e.node).find(node => {
+    const c = node.content || {};
+    return (!year || Number(c.originalReleaseYear) === parseInt(year, 10)) &&
+      [c.title, c.originalTitle].some(t => t && names.includes(normalizeTitle(t)));
+  });
   let trOffers = [];
+  let trMatched = false;
   for (const q of queriesToTry) {
     const edges = await queryJustWatchGraphQL(q, 'TR', 'tr');
-    if (edges && edges.length > 0) {
-      let bestNode = edges[0].node;
-      for (const e of edges) {
-        const c = e.node.content;
-        if (year && c.originalReleaseYear && Math.abs(parseInt(c.originalReleaseYear, 10) - parseInt(year, 10)) <= 1) {
-          bestNode = e.node;
-          break;
-        }
-      }
+    const bestNode = matchNode(edges);
+    if (bestNode) {
+      trMatched = true;
       const subs = (bestNode.offers || []).filter(o => o.monetizationType === 'FLATRATE' || o.monetizationType === 'FREE');
       if (subs.length > 0) {
         trOffers = subs.map(o => ({
@@ -704,6 +673,9 @@ async function resolveStreamingProviders(title, year = '', originalTitle = '') {
   if (trProviders.length > 0) {
     const result = {
       hasTrProvider: true,
+      verified: true,
+      checkedAt: new Date().toISOString(),
+      source: 'JustWatch Türkiye',
       statusText: "Türkiye'de Yayında",
       providers: trProviders,
       globalProviders: []
@@ -716,15 +688,8 @@ async function resolveStreamingProviders(title, year = '', originalTitle = '') {
   let usOffers = [];
   for (const q of queriesToTry) {
     const edges = await queryJustWatchGraphQL(q, 'US', 'en');
-    if (edges && edges.length > 0) {
-      let bestNode = edges[0].node;
-      for (const e of edges) {
-        const c = e.node.content;
-        if (year && c.originalReleaseYear && Math.abs(parseInt(c.originalReleaseYear, 10) - parseInt(year, 10)) <= 1) {
-          bestNode = e.node;
-          break;
-        }
-      }
+    const bestNode = matchNode(edges);
+    if (bestNode) {
       const subs = (bestNode.offers || []).filter(o => o.monetizationType === 'FLATRATE' || o.monetizationType === 'FREE');
       if (subs.length > 0) {
         usOffers = subs.map(o => ({
@@ -748,12 +713,15 @@ async function resolveStreamingProviders(title, year = '', originalTitle = '') {
 
   const result = {
     hasTrProvider: false,
+    verified: trMatched,
+    checkedAt: trMatched ? new Date().toISOString() : null,
+    source: 'JustWatch Türkiye',
     statusText: "TR yayıncısı bulunamadı",
     providers: [],
     globalProviders: globalProviders
   };
 
-  providersCache.set(cacheKey, result);
+  if (trMatched) providersCache.set(cacheKey, result);
   return result;
 }
 
