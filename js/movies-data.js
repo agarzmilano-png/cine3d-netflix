@@ -6928,6 +6928,2395 @@ const MOVIES_DATA = [
    "thrill"
   ],
   "isSeries": true
+ },
+ {
+  "id": "spider-man-across-the-spider-verse",
+  "imdbID": "tt9362722",
+  "title": "Spider-Man: Across the Spider-Verse",
+  "originalTitle": "Spider-Man: Across the Spider-Verse",
+  "year": 2023,
+  "imdbRating": 8.5,
+  "imdbVotes": "557K",
+  "duration": "2s 20dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Aksiyon",
+   "Macera"
+  ],
+  "director": "Joaquim Dos Santos",
+  "cast": [
+   "Shameik Moore",
+   "Hailee Steinfeld",
+   "Brian Tyree Henry"
+  ],
+  "tagline": "Her evrende bir örümcek var.",
+  "awards": "Nominated for 1 Oscar. 107 wins & 164 nominations total",
+  "summary": "Miles Morales, çoklu evrenin tüm örümcek kahramanlarını bir arada tutan bir teftiş ekibiyle karşılaşır; kendi kaderini değiştirmeye karar verdiğinde her şey sarsılır. Görsel olarak her karesi bir sanat eseri olan bu animasyon, türünün doruğudur.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "shW9i6k8cB0",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "adrenaline",
+   "escapism"
+  ]
+ },
+ {
+  "id": "batman",
+  "imdbID": "tt1877830",
+  "title": "Batman",
+  "originalTitle": "The Batman",
+  "year": 2022,
+  "imdbRating": 7.8,
+  "imdbVotes": "952K",
+  "duration": "2s 56dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Suç",
+   "Gizem"
+  ],
+  "director": "Matt Reeves",
+  "cast": [
+   "Robert Pattinson",
+   "Zoë Kravitz",
+   "Jeffrey Wright"
+  ],
+  "tagline": "Gecenin kendisi.",
+  "awards": "Nominated for 3 Oscars. 40 wins & 176 nominations total",
+  "summary": "Bruce Wayne, Gotham'ı karanlık bir katilin bilmeceleriyle boğuşan şehir olarak keşfeder; Selina Kyle ve Gordon ile Riddler'ın izini sürer. Robert Pattinson'ın genç dedektif Batman'i, karaktere bir noir-nefes getirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "mqqft2x_Aa4",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "thrill",
+   "prestige"
+  ]
+ },
+ {
+  "id": "batman-basl-yor",
+  "imdbID": "tt0372784",
+  "title": "Batman Başlıyor",
+  "originalTitle": "Batman Begins",
+  "year": 2005,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.7M",
+  "duration": "2s 20dk",
+  "ageRating": "13+",
+  "genres": [
+   "Suç"
+  ],
+  "director": "Christopher Nolan",
+  "cast": [
+   "Christian Bale",
+   "Michael Caine",
+   "Ken Watanabe"
+  ],
+  "tagline": "Korkudan güç doğar.",
+  "awards": "Nominated for 1 Oscar. 15 wins & 79 nominations total",
+  "summary": "Bruce Wayne, ailesinin katiliyle değil kendi korkusuyla yüzleşir; Ra's al Ghul'un gölgesinde dövüşmeyi öğrenir ve Gotham'ın sembolü olur. Nolan'ın üçlemesinin bu ilk bölümü, süper kahraman sinemasına gerçekçilik getiren temel taşır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzA2NDQzZDEtNDU5Ni00YTlkLTg2OWEtYmQwM2Y1YTBjMjFjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMzA2NDQzZDEtNDU5Ni00YTlkLTg2OWEtYmQwM2Y1YTBjMjFjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "neY2xVmOfUM",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "adrenaline",
+   "prestige"
+  ]
+ },
+ {
+  "id": "karanl-k-sovalye-yukseliyor",
+  "imdbID": "tt1345836",
+  "title": "Karanlık Şövalye Yükseliyor",
+  "originalTitle": "The Dark Knight Rises",
+  "year": 2012,
+  "imdbRating": 8.4,
+  "imdbVotes": "2M",
+  "duration": "2s 44dk",
+  "ageRating": "13+",
+  "genres": [
+   "Suç",
+   "Gerilim"
+  ],
+  "director": "Christopher Nolan",
+  "cast": [
+   "Christian Bale",
+   "Tom Hardy",
+   "Anne Hathaway"
+  ],
+  "tagline": "Bir kahraman yükselir.",
+  "awards": "Nominated for 1 BAFTA Award. 45 wins & 104 nominations total",
+  "summary": "Sekiz yıl saklanan Bruce Wayne, Gotham'ı çok güçlü bir Bane'in pençesinden kurtarmak için yaralı bedeniyle kemerini yeniden takar. Üçlemenin finalinde şehir, bir kahramanın bedelini topluca öder.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTk4ODQzNDY3Ml5BMl5BanBnXkFtZTcwODA0NTM4Nw@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTk4ODQzNDY3Ml5BMl5BanBnXkFtZTcwODA0NTM4Nw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "GokKUqLcvD8",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "adrenaline",
+   "prestige"
+  ]
+ },
+ {
+  "id": "ihtiyarlara-yer-yok",
+  "imdbID": "tt0477348",
+  "title": "İhtiyarlara Yer Yok",
+  "originalTitle": "No Country for Old Men",
+  "year": 2007,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.2M",
+  "duration": "2s 2dk",
+  "ageRating": "16+",
+  "genres": [
+   "Suç",
+   "Dram",
+   "Gerilim"
+  ],
+  "director": "Ethan Coen",
+  "cast": [
+   "Tommy Lee Jones",
+   "Javier Bardem",
+   "Josh Brolin"
+  ],
+  "tagline": "Kaderin matematiği.",
+  "awards": "Won 4 Oscars. 165 wins & 139 nominations total",
+  "summary": "Bir çöl hattında bulduğu satchel parası, pasaklı Llewelyn Moss'u ölümcül bir katilin peşine takar; yaşlı Şerif Bell şiddeti anlamakta yetersizleşir. Coen kardeşlerin Oscar'lı bu gerilimi, kaderin soğuk matematiğini neredeyse hiç konuşmadan anlatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA5Njk3MjM4OV5BMl5BanBnXkFtZTcwMTc5MTE1MQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjA5Njk3MjM4OV5BMl5BanBnXkFtZTcwMTc5MTE1MQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "38A__WT3-o0",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "prestige"
+  ]
+ },
+ {
+  "id": "there-will-be-blood",
+  "imdbID": "tt0469494",
+  "title": "There Will Be Blood",
+  "originalTitle": "There Will Be Blood",
+  "year": 2008,
+  "imdbRating": 8.2,
+  "imdbVotes": "721K",
+  "duration": "2s 38dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram"
+  ],
+  "director": "Paul Thomas Anderson",
+  "cast": [
+   "Daniel Day-Lewis",
+   "Paul Dano",
+   "Ciarán Hinds"
+  ],
+  "tagline": "Zenginlik kanla gelir.",
+  "awards": "Won 2 Oscars. 114 wins & 138 nominations total",
+  "summary": "Daniel Plainview, 20. yüzyıl başında petrolle zenginleşen bir girişimcidir; vaaz veren genç bir papazla olan savaşı, ruhunun en karanlık katmanını açığa çıkarır. Daniel Day-Lewis'in Oscar'lı performansı, hırsın anatomisini sinema diline çevirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjAxODQ4MDU5NV5BMl5BanBnXkFtZTcwMDU4MjU1MQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjAxODQ4MDU5NV5BMl5BanBnXkFtZTcwMDU4MjU1MQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "FeSLPELpMeM",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "prestige",
+   "thrill"
+  ]
+ },
+ {
+  "id": "reservoir-dogs",
+  "imdbID": "tt0105236",
+  "title": "Reservoir Dogs",
+  "originalTitle": "Reservoir Dogs",
+  "year": 1992,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.2M",
+  "duration": "1s 39dk",
+  "ageRating": "16+",
+  "genres": [
+   "Suç",
+   "Gerilim"
+  ],
+  "director": "Quentin Tarantino",
+  "cast": [
+   "Harvey Keitel",
+   "Tim Roth",
+   "Michael Madsen"
+  ],
+  "tagline": "Soygun ters gitti.",
+  "awards": "13 wins & 23 nominations total",
+  "summary": "Bir elmas soygunu kanlı biter; hayatta kalan renk kodlu suçlular, aralarında bir ihbarcı olduğunu anlar. Tarantino'nun ilk filmi, tek mekân gerilimini konuşma kültürüne çeviren bir milat işidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMmMzYjg4NDctYWY0Mi00OGViLWIzMTMtYWNlZGY5ZDJmYjk3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "vayksn4Y93A",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "prestige"
+  ]
+ },
+ {
+  "id": "casino-royale",
+  "imdbID": "tt0381061",
+  "title": "Casino Royale",
+  "originalTitle": "Casino Royale",
+  "year": 2006,
+  "imdbRating": 8,
+  "imdbVotes": "756K",
+  "duration": "2s 24dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Gerilim"
+  ],
+  "director": "Martin Campbell",
+  "cast": [
+   "Daniel Craig",
+   "Eva Green",
+   "Judi Dench"
+  ],
+  "tagline": "Serin başlangıcı.",
+  "awards": "Won 1 BAFTA Award. 28 wins & 44 nominations total",
+  "summary": "James Bond, terör finansmanını kumarda yenmek için çift 0 lisansını yeni kazandığı haliyle sahaya çıkar; Vesper Lynd ile güven dersleri yaşarken kalbi de oyuna girer. Daniel Craig döneminin sert başlangıcı, seriyi gerçekçi gerilime çevirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWQ1ZDM4NDktMWY0NC00MjcxLWJlMDMtNmE2MGVhYzRjMWQ0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMWQ1ZDM4NDktMWY0NC00MjcxLWJlMDMtNmE2MGVhYzRjMWQ0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "36mnx8dBbGE",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "thrill"
+  ]
+ },
+ {
+  "id": "skyfall",
+  "imdbID": "tt1074638",
+  "title": "Skyfall",
+  "originalTitle": "Skyfall",
+  "year": 2012,
+  "imdbRating": 7.8,
+  "imdbVotes": "782K",
+  "duration": "2s 23dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Gerilim"
+  ],
+  "director": "Sam Mendes",
+  "cast": [
+   "Daniel Craig",
+   "Javier Bardem",
+   "Naomie Harris"
+  ],
+  "tagline": "Geçmiş geri döndü.",
+  "awards": "Won 2 Oscars. 82 wins & 125 nominations total",
+  "summary": "Mİ6 saldırıya uğrar; ölü sandığı Bond, eski dostu Silva'nın M'e kurduğu tuzakla yüzleşmek için döner. Oscar'lı şarkısıyla bu Bond, geçmişle hesaplaşmanın en zarifidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjAzMWNkODUtM2FlMi00NzgyLWJhMGUtMWEyNDYyZGFiN2RlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjAzMWNkODUtM2FlMi00NzgyLWJhMGUtMWEyNDYyZGFiN2RlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "6kw1UVovByw",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "thrill"
+  ]
+ },
+ {
+  "id": "sosyal-ag",
+  "imdbID": "tt1285016",
+  "title": "Sosyal Ağ",
+  "originalTitle": "The Social Network",
+  "year": 2010,
+  "imdbRating": 7.8,
+  "imdbVotes": "831K",
+  "duration": "2s 0dk",
+  "ageRating": "13+",
+  "genres": [
+   "Biyografi",
+   "Dram"
+  ],
+  "director": "David Fincher",
+  "cast": [
+   "Jesse Eisenberg",
+   "Andrew Garfield",
+   "Justin Timberlake"
+  ],
+  "tagline": "Bir fikri çalarlar mı?",
+  "awards": "Won 3 Oscars. 174 wins & 188 nominations total",
+  "summary": "Harvard'lı genç Mark Zuckerberg, bir gece projesini dünyanın en büyük sosyal ağına çevirir; dava masasında dostluklar ve hisseler bölünür. Fincher'ın keskin diyaloğu, dijital çağın ilk büyük ihanet hikâyesini yazıyor.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjlkNTE5ZTUtNGEwNy00MGVhLThmZjMtZjU1NDE5Zjk1NDZkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjlkNTE5ZTUtNGEwNy00MGVhLThmZjMtZjU1NDE5Zjk1NDZkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "lB95KLmpLR4",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "prestige",
+   "mind-bending"
+  ]
+ },
+ {
+  "id": "forrest-gump",
+  "imdbID": "tt0109830",
+  "title": "Forrest Gump",
+  "originalTitle": "Forrest Gump",
+  "year": 1994,
+  "imdbRating": 8.8,
+  "imdbVotes": "2.5M",
+  "duration": "2s 22dk",
+  "ageRating": "13+",
+  "genres": [
+   "Dram",
+   "Romantik"
+  ],
+  "director": "Robert Zemeckis",
+  "cast": [
+   "Tom Hanks",
+   "Robin Wright",
+   "Gary Sinise"
+  ],
+  "tagline": "Hayat bir kutu çikolata.",
+  "awards": "Won 6 Oscars. 51 wins & 74 nominations total",
+  "summary": "IQ'su düşük ama kalbi dev bir adam, tarihin dönüm noktalarının ortasında koşarak hayatını yaşar; tek sevgisi Jenny'ye dönüşen sabır, hikâyenin altın ipliğidir. Zemeckis'in klasik şefkatli epik destanı, şansın ve sevginin tarihini anlatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "bLvqoHBptjg",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "heartwarming",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "catch-me-if-you-can",
+  "imdbID": "tt0264464",
+  "title": "Catch Me If You Can",
+  "originalTitle": "Catch Me If You Can",
+  "year": 2002,
+  "imdbRating": 8.1,
+  "imdbVotes": "1.3M",
+  "duration": "2s 21dk",
+  "ageRating": "13+",
+  "genres": [
+   "Biyografi",
+   "Suç",
+   "Dram"
+  ],
+  "director": "Steven Spielberg",
+  "cast": [
+   "Leonardo DiCaprio",
+   "Tom Hanks",
+   "Christopher Walken"
+  ],
+  "tagline": "Gerçek bir dolandırıcılık.",
+  "awards": "Nominated for 2 Oscars. 16 wins & 46 nominations total",
+  "summary": "Yirmi yaş altı genç Frank Abagnale, pilot, doktor ve avukat kılıklarında milyonları dolandırır; FBI ajanı Carl Hanratty onu yıllarca kovalar. Spielberg'in zeki ve zarif klasik gerilim komedisi, takip oyununu baba-oğul ilişkisine çevirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY5MzYzNjc5NV5BMl5BanBnXkFtZTYwNTUyNTc2._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTY5MzYzNjc5NV5BMl5BanBnXkFtZTYwNTUyNTc2._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "s-7pyIxz8Qg",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "chill-comedy",
+   "thrill"
+  ]
+ },
+ {
+  "id": "er-ryan-kurtarmak",
+  "imdbID": "tt0120815",
+  "title": "Er Ryan'ı Kurtarmak",
+  "originalTitle": "Saving Private Ryan",
+  "year": 1998,
+  "imdbRating": 8.6,
+  "imdbVotes": "1.7M",
+  "duration": "2s 49dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Savaş"
+  ],
+  "director": "Steven Spielberg",
+  "cast": [
+   "Tom Hanks",
+   "Matt Damon",
+   "Tom Sizemore"
+  ],
+  "tagline": "Bir asker için sekiz can.",
+  "awards": "Won 5 Oscars. 79 wins & 75 nominations total",
+  "summary": "D-Day'in kanlı Normandiya sahilinden başlayarak, üç kardeşi ölen Ryan'ı bulmak için yola çıkan bir asker ekibi her cephede bedel öder. Spielberg'in açılış 25 dakikası sinema tarihinin en gerçek savaş karesidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZhZGQ1ZWUtZTZjYS00MDJhLWFkYjctN2ZlYjE5NWYwZDM2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZGZhZGQ1ZWUtZTZjYS00MDJhLWFkYjctN2ZlYjE5NWYwZDM2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "9CiW_DgxCnQ",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "tearjerker",
+   "prestige"
+  ]
+ },
+ {
+  "id": "1917",
+  "imdbID": "tt8579674",
+  "title": "1917",
+  "originalTitle": "1917",
+  "year": 2020,
+  "imdbRating": 8.2,
+  "imdbVotes": "788K",
+  "duration": "1s 59dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Savaş"
+  ],
+  "director": "Sam Mendes",
+  "cast": [
+   "Dean-Charles Chapman",
+   "George MacKay",
+   "Daniel Mays"
+  ],
+  "tagline": "Saat işliyor.",
+  "awards": "Won 3 Oscars. 137 wins & 202 nominations total",
+  "summary": "Birinci Dünya Savaşı'nda iki genç asker, 1600 askerin pusuya düşmemesi için tek bir mesajı düşman hattı boyunca taşımak zorundadır. Tek kesim gibi kurgulanan bu savaş gerilimi, zamanı nefesin ritmine bağlar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzkxZjg2NDQtMGVjMy00NWZkLTk0ZDEtZWE3NDYwYjAyMTg1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzkxZjg2NDQtMGVjMy00NWZkLTk0ZDEtZWE3NDYwYjAyMTg1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "YqNYrYUiMfg",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "dunkirk",
+  "imdbID": "tt5013056",
+  "title": "Dunkirk",
+  "originalTitle": "Dunkirk",
+  "year": 2017,
+  "imdbRating": 7.8,
+  "imdbVotes": "829K",
+  "duration": "1s 46dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Dram",
+   "Tarih"
+  ],
+  "director": "Christopher Nolan",
+  "cast": [
+   "Fionn Whitehead",
+   "Barry Keoghan",
+   "Mark Rylance"
+  ],
+  "tagline": "Kurtarma başlıyor.",
+  "awards": "Won 3 Oscars. 69 wins & 237 nominations total",
+  "summary": "1940'ta 400 bin asker Dunkirk sahillerinde kuşatılmıştır; kara, deniz ve hava üç zaman diliminde kurtarma savaşını bir arada anlatır. Nolan'ın minimal diyaloglu bu eser, gerilimi ses ve mekânla kurar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTE0Mjg4MTMwMDZeQTJeQWpwZ15BbWU4MDAwMDQ1ODAy._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTE0Mjg4MTMwMDZeQTJeQWpwZ15BbWU4MDAwMDQ1ODAy._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "L-IunJ5sBRI",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "thrill",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "cesur-yurek",
+  "imdbID": "tt0112573",
+  "title": "Cesur Yürek",
+  "originalTitle": "Braveheart",
+  "year": 1995,
+  "imdbRating": 8.3,
+  "imdbVotes": "1.2M",
+  "duration": "2s 58dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Savaş"
+  ],
+  "director": "Mel Gibson",
+  "cast": [
+   "Mel Gibson",
+   "Sophie Marceau",
+   "Patrick McGoohan"
+  ],
+  "tagline": "Özgürlük için.",
+  "awards": "Won 5 Oscars. 34 wins & 34 nominations total",
+  "summary": "William Wallace, İskoçya'nın İngiliz zulmüne karşı silah kalkışmasının simgesi olur; ailesini kaybeden bu savaşçı, özgürlük kelimesini bayrak yapar. Mel Gibson'ın Oscar'lı destanı, tarihi epik sinemasının duygusal zirvesidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGMxZDBhNGQtYTZlNi00N2UzLWI4NDEtNmUzNWM2NTdmZDA0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNGMxZDBhNGQtYTZlNi00N2UzLWI4NDEtNmUzNWM2NTdmZDA0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "1NJO0jxBtMo",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "adrenaline",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "titanik",
+  "imdbID": "tt0120338",
+  "title": "Titanik",
+  "originalTitle": "Titanic",
+  "year": 1997,
+  "imdbRating": 8,
+  "imdbVotes": "1.4M",
+  "duration": "3s 14dk",
+  "ageRating": "13+",
+  "genres": [
+   "Dram",
+   "Romantik"
+  ],
+  "director": "James Cameron",
+  "cast": [
+   "Leonardo DiCaprio",
+   "Kate Winslet",
+   "Billy Zane"
+  ],
+  "tagline": "Aşk enkazdan güçlü.",
+  "awards": "Won 11 Oscars. 126 wins & 84 nominations total",
+  "summary": "Doksan yıllık gemi enkazının içinde, sınıf farkıyla ayrılmış iki genç bir yolculukta aşkı yaşar; buz dağı, tarihin en bilinen felaketini bu aşkın sonuna yazar. Cameron'ın 11 Oscar'lı destanı, epik sinemanın duygusal mihenk taşıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "CHekzSiZjrY",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "tearjerker",
+   "escapism"
+  ]
+ },
+ {
+  "id": "la-la-land",
+  "imdbID": "tt3783958",
+  "title": "La La Land",
+  "originalTitle": "La La Land",
+  "year": 2016,
+  "imdbRating": 8,
+  "imdbVotes": "781K",
+  "duration": "2s 8dk",
+  "ageRating": "13+",
+  "genres": [
+   "Komedi",
+   "Dram",
+   "Müzik"
+  ],
+  "director": "Damien Chazelle",
+  "cast": [
+   "Ryan Gosling",
+   "Emma Stone",
+   "Rosemarie DeWitt"
+  ],
+  "tagline": "Şehir yıldız dolu.",
+  "awards": "Won 6 Oscars. 247 wins & 316 nominations total",
+  "summary": "Los Angeles'ta oyunculuk hayali kuran Mia ve caz piyanisti Sebastian, birbirlerinin hayallerini tutkunla büyütür; başarı geldiğinde aşkın bedeli de netleşir. Altın çağ müzikallerine saygı duruşu olan bu film, Oscar'ları alıp kalbi kırar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDllYjliOTUtMDJjZC00ODIzLWJmNGMtOWI2NzQxMjA2NzdlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDllYjliOTUtMDJjZC00ODIzLWJmNGMtOWI2NzQxMjA2NzdlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "0pdqf4P9MB8",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "heartwarming",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "the-greatest-showman",
+  "imdbID": "tt1485796",
+  "title": "The Greatest Showman",
+  "originalTitle": "The Greatest Showman",
+  "year": 2017,
+  "imdbRating": 7.5,
+  "imdbVotes": "354K",
+  "duration": "1s 45dk",
+  "ageRating": "7+",
+  "genres": [
+   "Biyografi",
+   "Dram",
+   "Müzikal"
+  ],
+  "director": "Michael Gracey",
+  "cast": [
+   "Hugh Jackman",
+   "Michelle Williams",
+   "Zac Efron"
+  ],
+  "tagline": "Gösteri başlıyor.",
+  "awards": "Nominated for 1 Oscar. 18 wins & 32 nominations total",
+  "summary": "P.T. Barnum, dışlanmış yetenekleri tek sahnede topladığı sirk şovuyla dünyayı değiştirir; hayal ve aile bedelini birlikte öder. Kült şarkılarıyla bu müzikal, gösteri sinemasının en doyumsuz halidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI1NDYzNzY2Ml5BMl5BanBnXkFtZTgwODQwODczNTM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjI1NDYzNzY2Ml5BMl5BanBnXkFtZTgwODQwODczNTM@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "EodWwczRIe4",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "heartwarming",
+   "escapism"
+  ]
+ },
+ {
+  "id": "bir-y-ld-z-doguyor",
+  "imdbID": "tt1517451",
+  "title": "Bir Yıldız Doğuyor",
+  "originalTitle": "A Star Is Born",
+  "year": 2018,
+  "imdbRating": 7.6,
+  "imdbVotes": "454K",
+  "duration": "2s 16dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Müzik",
+   "Romantik"
+  ],
+  "director": "Bradley Cooper",
+  "cast": [
+   "Lady Gaga",
+   "Bradley Cooper",
+   "Sam Elliott"
+  ],
+  "tagline": "Bir yıldız doğuyor.",
+  "awards": "Won 1 Oscar. 101 wins & 289 nominations total",
+  "summary": "Yaşlanan rock yıldızı Jackson Maine, garsonluk yapan güçlü sesli Ally'yi sahnede keşfeder; yıldızı parlar, ikisinin dengesi bozulur. Lady Gaga ile Cooper'ın Oscar'lı melodramı, ünün ve aşkın imtihanını şarkılarla anlatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGUxZTc0NTAtNzQwMy00MmM2LTgzMGYtZWIyY2E1MGFjYmM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNGUxZTc0NTAtNzQwMy00MmM2LTgzMGYtZWIyY2E1MGFjYmM5XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "nSbzyEJ8X9E",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "tearjerker",
+   "prestige"
+  ]
+ },
+ {
+  "id": "bohemian-rhapsody",
+  "imdbID": "tt1727824",
+  "title": "Bohemian Rhapsody",
+  "originalTitle": "Bohemian Rhapsody",
+  "year": 2018,
+  "imdbRating": 7.9,
+  "imdbVotes": "656K",
+  "duration": "2s 14dk",
+  "ageRating": "13+",
+  "genres": [
+   "Biyografi",
+   "Dram",
+   "Müzik"
+  ],
+  "director": "Bryan Singer",
+  "cast": [
+   "Rami Malek",
+   "Lucy Boynton",
+   "Gwilym Lee"
+  ],
+  "tagline": "Operetin ruhu.",
+  "awards": "Won 4 Oscars. 50 wins & 81 nominations total",
+  "summary": "Freddie Mercury ve Queen, müziğe ve kimliğe aykırı duruşlarıyla rock tarihinin en büyük sahnesini kurar; Live Aid'deki 20 dakika, hayatın en büyük geri dönüşüdür. Oscar'lı biyografi,ikonik şarkılarıyla konser filmi gibi taşır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTA2NDc3Njg5NDVeQTJeQWpwZ15BbWU4MDc1NDcxNTUz._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTA2NDc3Njg5NDVeQTJeQWpwZ15BbWU4MDc1NDcxNTUz._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "mP0VHJYFOAU",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "prestige",
+   "heartwarming"
+  ]
+ },
+ {
+  "id": "ak-l-oyunlar",
+  "imdbID": "tt0268978",
+  "title": "Akıl Oyunları",
+  "originalTitle": "A Beautiful Mind",
+  "year": 2002,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.1M",
+  "duration": "2s 15dk",
+  "ageRating": "13+",
+  "genres": [
+   "Biyografi",
+   "Dram",
+   "Gizem"
+  ],
+  "director": "Ron Howard",
+  "cast": [
+   "Russell Crowe",
+   "Ed Harris",
+   "Jennifer Connelly"
+  ],
+  "tagline": "Zihin savaşları.",
+  "awards": "Won 4 Oscars. 37 wins & 69 nominations total",
+  "summary": "Matematik dâhisi John Nash, şizofreni tanısıyla gerçekle kurduklarını ayırt etmeye çalışır; karısı Alicia'nın inadı, iyileşmenin tek köprüsüdür. Oscar'lı bu biyografi, zeka ile delilik arasındaki ince çizgiyi saygıyla çizer.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjgzNjFkMmItOGJhNi00NWM3LWJlYTUtNDExMGQ3ZTI3NjJkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjgzNjFkMmItOGJhNi00NWM3LWJlYTUtNDExMGQ3ZTI3NjJkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "9wZM7CQY130",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "prestige",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "the-imitation-game",
+  "imdbID": "tt2084970",
+  "title": "The Imitation Game",
+  "originalTitle": "The Imitation Game",
+  "year": 2014,
+  "imdbRating": 8,
+  "imdbVotes": "887K",
+  "duration": "1s 54dk",
+  "ageRating": "13+",
+  "genres": [
+   "Biyografi",
+   "Dram",
+   "Gerilim"
+  ],
+  "director": "Morten Tyldum",
+  "cast": [
+   "Benedict Cumberbatch",
+   "Keira Knightley",
+   "Matthew Goode"
+  ],
+  "tagline": "Şifre kırılır.",
+  "awards": "Won 1 Oscar. 49 wins & 169 nominations total",
+  "summary": "Alan Turing, Nazi şifresi Enigma'yı çözmek için kurulan ekipin başına geçer; icadı savaşı kısaltırken kimliği yasakla takip edilir. Benedict Cumberbatch'in Oscar adaylık gösterimi, dâhinin bedelini toplumculukla anlatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjI3NjY1Mjg3MV5BMl5BanBnXkFtZTgwMzk5MDQ3MjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjI3NjY1Mjg3MV5BMl5BanBnXkFtZTgwMzk5MDQ3MjE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "nuPZUUED5uk",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "prestige",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "hidden-figures",
+  "imdbID": "tt4846340",
+  "title": "Hidden Figures",
+  "originalTitle": "Hidden Figures",
+  "year": 2017,
+  "imdbRating": 7.8,
+  "imdbVotes": "295K",
+  "duration": "2s 7dk",
+  "ageRating": "7+",
+  "genres": [
+   "Biyografi",
+   "Dram",
+   "Tarih"
+  ],
+  "director": "Theodore Melfi",
+  "cast": [
+   "Taraji P. Henson",
+   "Octavia Spencer",
+   "Janelle Monáe"
+  ],
+  "tagline": "Gökyüzü sınırları aşar.",
+  "awards": "Nominated for 3 Oscars. 37 wins & 96 nominations total",
+  "summary": "NASA'nın uzay yarışında üç siyah kadın matematikçi, hem hesapları hem ayrımcılığı aşarak tarihe imza atar. Uplifting gerçek hikâye, becerikli zekâyla duygusal bir güç gösterisi sunar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2RhNDRhNzctZTllMy00NTc2LWJjZmUtMzg3MTNiNjhhODMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BY2RhNDRhNzctZTllMy00NTc2LWJjZmUtMzg3MTNiNjhhODMxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "5wfrDhgUMGI",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "heartwarming",
+   "prestige"
+  ]
+ },
+ {
+  "id": "marsl",
+  "imdbID": "tt3659388",
+  "title": "Marslı",
+  "originalTitle": "The Martian",
+  "year": 2015,
+  "imdbRating": 8,
+  "imdbVotes": "1M",
+  "duration": "2s 24dk",
+  "ageRating": "13+",
+  "genres": [
+   "Macera",
+   "Dram",
+   "Bilim Kurgu"
+  ],
+  "director": "Ridley Scott",
+  "cast": [
+   "Matt Damon",
+   "Jessica Chastain",
+   "Kristen Wiig"
+  ],
+  "tagline": "Tek başına bir gezegen.",
+  "awards": "Nominated for 7 Oscars. 41 wins & 199 nominations total",
+  "summary": "Mars'ta ölü sayılan astronot Mark Watney, patates tarlasıyla ve mizahıyla hayatta kalmayı öğrenir; Dünya'da bir kurtarma operasyonu büyür. Ridley Scott'ın esprili bilim destanı, insan zekâsının uzağa gidebildiğini gösterir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "ej3ioOneTy8",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "escapism",
+   "heartwarming"
+  ]
+ },
+ {
+  "id": "gravity",
+  "imdbID": "tt1454468",
+  "title": "Gravity",
+  "originalTitle": "Gravity",
+  "year": 2013,
+  "imdbRating": 7.7,
+  "imdbVotes": "908K",
+  "duration": "1s 31dk",
+  "ageRating": "13+",
+  "genres": [
+   "Dram",
+   "Bilim Kurgu",
+   "Gerilim"
+  ],
+  "director": "Alfonso Cuarón",
+  "cast": [
+   "Sandra Bullock",
+   "George Clooney",
+   "Ed Harris"
+  ],
+  "tagline": "Boşlukta tek nefes.",
+  "awards": "Won 7 Oscars. 242 wins & 189 nominations total",
+  "summary": "Uzayda hasar gören bir keşif görevinden hayatta kalan tek astronot Ryan Stone, yörüngede tek başına Dünya'ya dönme çabası içindedir. Cuaron'ın tek nefeste kesilen görüntü dili, uzayı hem göz alıcı hem nefes kesici yapar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjE5MzYwMzYxMF5BMl5BanBnXkFtZTcwOTk4MTk0OQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjE5MzYwMzYxMF5BMl5BanBnXkFtZTcwOTk4MTk0OQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "OiTiKOy59o4",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "escapism"
+  ]
+ },
+ {
+  "id": "arrival",
+  "imdbID": "tt2543164",
+  "title": "Arrival",
+  "originalTitle": "Arrival",
+  "year": 2016,
+  "imdbRating": 7.9,
+  "imdbVotes": "882K",
+  "duration": "1s 56dk",
+  "ageRating": "13+",
+  "genres": [
+   "Dram",
+   "Gizem",
+   "Bilim Kurgu"
+  ],
+  "director": "Denis Villeneuve",
+  "cast": [
+   "Amy Adams",
+   "Jeremy Renner",
+   "Forest Whitaker"
+  ],
+  "tagline": "Dil zamanı değiştirir.",
+  "awards": "Won 1 Oscar. 73 wins & 276 nominations total",
+  "summary": "Dilbilimci Louise Banks, dünyaya inen uzay gemilerinin diliyle iletişim kurmaya çalışır; öğrendiği dil zamanı bambaşka bir çizgide açar. Villeneuve'ün sessiz ve fikir dolu bilimkurgusu, duyguyu gramerle birleştirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTExMzU0ODcxNDheQTJeQWpwZ15BbWU4MDE1OTI4MzAy._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "hT5ZHqRBo_0",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "mind-bending",
+   "prestige"
+  ]
+ },
+ {
+  "id": "blade-runner",
+  "imdbID": "tt0083658",
+  "title": "Blade Runner",
+  "originalTitle": "Blade Runner",
+  "year": 1982,
+  "imdbRating": 8.1,
+  "imdbVotes": "893K",
+  "duration": "1s 57dk",
+  "ageRating": "16+",
+  "genres": [
+   "Aksiyon",
+   "Dram",
+   "Bilim Kurgu"
+  ],
+  "director": "Ridley Scott",
+  "cast": [
+   "Harrison Ford",
+   "Rutger Hauer",
+   "Sean Young"
+  ],
+  "tagline": "İnsan ne demek?",
+  "awards": "Nominated for 2 Oscars. 16 wins & 22 nominations total",
+  "summary": "2019 Los Angeles'ında emekliye yakın dedektif Deckard, kaçan replikantları avlamak için geri çağrılır; son sorgu, insanın ne olduğunu sorgular. Ridley Scott'ın yağmurlu neonoir destanı, bilimkurgu estetiğini kalıcı biçimde değiştirdi.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWQ4YTBmNTQtMDYxMC00NGFjLTkwOGQtNzdhNmY1Nzc1MzUxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOWQ4YTBmNTQtMDYxMC00NGFjLTkwOGQtNzdhNmY1Nzc1MzUxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "eogpIG53Cis",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "mind-bending",
+   "prestige"
+  ]
+ },
+ {
+  "id": "ex-machina",
+  "imdbID": "tt0470752",
+  "title": "Ex Machina",
+  "originalTitle": "Ex Machina",
+  "year": 2015,
+  "imdbRating": 7.7,
+  "imdbVotes": "647K",
+  "duration": "1s 48dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Bilim Kurgu",
+   "Gerilim"
+  ],
+  "director": "Alex Garland",
+  "cast": [
+   "Alicia Vikander",
+   "Domhnall Gleeson",
+   "Oscar Isaac"
+  ],
+  "tagline": "Test başlıyor.",
+  "awards": "Won 1 Oscar. 74 wins & 163 nominations total",
+  "summary": "Genç programcı Caleb, dâhi patronunun yapay zekâsı Ava'yı test etmek için izole bir malikaneye çağrılır; testler, kimin kimin kafesinde olduğunu sorar. Garland'ın cılız ve zeki bilimkurgu gerilimi, Turing'i gövdelerle oynatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTUxNzc0OTIxMV5BMl5BanBnXkFtZTgwNDI3NzU2NDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTUxNzc0OTIxMV5BMl5BanBnXkFtZTgwNDI3NzU2NDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "n0wNwiU5iwc",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "mind-bending",
+   "thrill"
+  ]
+ },
+ {
+  "id": "besinci-element",
+  "imdbID": "tt0119116",
+  "title": "Beşinci Element",
+  "originalTitle": "The Fifth Element",
+  "year": 1997,
+  "imdbRating": 7.6,
+  "imdbVotes": "553K",
+  "duration": "2s 6dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Bilim Kurgu"
+  ],
+  "director": "Luc Besson",
+  "cast": [
+   "Bruce Willis",
+   "Milla Jovovich",
+   "Gary Oldman"
+  ],
+  "tagline": "Evren bir dansa ihtiyaç duyuyor.",
+  "awards": "Nominated for 1 Oscar. 10 wins & 39 nominations total",
+  "summary": "Taksici Korben Dallas, dünyayı kurtaracak \"beşinci element\"in peşine düşer; opera sahnelerinden flying taksi kovalamacalarına uzanan bir retro-fütürist macera açılır. Luc Besson'ın renkli bilimkurgu komedisi, hem absürt hem sevimlidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BODU4ZTE5MWYtNmY2MC00NDkyLTk0NDgtNTk5YjgzMzc4NmQwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BODU4ZTE5MWYtNmY2MC00NDkyLTk0NDgtNTk5YjgzMzc4NmQwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "pqs9ycvKfD8",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "escapism",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "gelecege-donus",
+  "imdbID": "tt0088763",
+  "title": "Geleceğe Dönüş",
+  "originalTitle": "Back to the Future",
+  "year": 1985,
+  "imdbRating": 8.5,
+  "imdbVotes": "1.5M",
+  "duration": "1s 56dk",
+  "ageRating": "7+",
+  "genres": [
+   "Macera",
+   "Komedi",
+   "Bilim Kurgu"
+  ],
+  "director": "Robert Zemeckis",
+  "cast": [
+   "Michael J. Fox",
+   "Christopher Lloyd",
+   "Lea Thompson"
+  ],
+  "tagline": "Zaman yolculuğu başlıyor.",
+  "awards": "Won 1 Oscar. 30 wins & 28 nominations total",
+  "summary": "Genç Marty McFly, Delorean aracında yanlışlıkla 1955'e gider; kendi annesine âşık olma riskiyle ailesinin hikâyesini düzeltmek zorundadır. Zemeckis'in kusursuz kurgulu klasik komedi bilimkurgusu, saat ile mizahı aynı hızda döndürür.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmM3ZjE0NzctNjBiOC00MDZmLTgzMTUtNGVlOWFlOTNiZDJiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZmM3ZjE0NzctNjBiOC00MDZmLTgzMTUtNGVlOWFlOTNiZDJiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "qvsgGtivCgs",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "escapism",
+   "chill-comedy"
+  ]
+ },
+ {
+  "id": "jurassic-park",
+  "imdbID": "tt0107290",
+  "title": "Jurassic Park",
+  "originalTitle": "Jurassic Park",
+  "year": 1993,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.2M",
+  "duration": "2s 7dk",
+  "ageRating": "13+",
+  "genres": [
+   "Macera",
+   "Bilim Kurgu"
+  ],
+  "director": "Steven Spielberg",
+  "cast": [
+   "Sam Neill",
+   "Laura Dern",
+   "Jeff Goldblum"
+  ],
+  "tagline": "Hayat yol bulur.",
+  "awards": "Won 3 Oscars. 44 wins & 27 nominations total",
+  "summary": "Dinozor DNA'sıyla canlılar kuran bir temalı park, güvenlik testi sırasında kâbusa döner; paleontolog Grant, çocukları T-Rex'in pençesinden kurtarmak zorundadır. Spielberg'in devrimci efekti, felaket sinemasının kalıcı anıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "bx46tthKXmc",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "adrenaline",
+   "escapism"
+  ]
+ },
+ {
+  "id": "raiders-of-the-lost-ark",
+  "imdbID": "tt0082971",
+  "title": "Raiders of the Lost Ark",
+  "originalTitle": "Raiders of the Lost Ark",
+  "year": 1981,
+  "imdbRating": 8.4,
+  "imdbVotes": "1.1M",
+  "duration": "1s 55dk",
+  "ageRating": "7+",
+  "genres": [
+   "Macera"
+  ],
+  "director": "Steven Spielberg",
+  "cast": [
+   "Harrison Ford",
+   "Karen Allen",
+   "Paul Freeman"
+  ],
+  "tagline": "Sandık aranıyor.",
+  "awards": "Won 4 Oscars. 46 wins & 26 nominations total",
+  "summary": "Arkeoloji profesörü Indiana Jones, Nazi'lerden önce Musa'nın Sandığını bulmak için yarışır; solucan dolu çukurlar, altın heykeller ve kamyon kovalamacaları sırayla gelir. Spielberg'in macera şablonu, türün altın standardıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGNhMjg2ZjgtYzk4Ni00MTViLTg1MmUtYzM2MDZiYjZlMmU3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOGNhMjg2ZjgtYzk4Ni00MTViLTg1MmUtYzM2MDZiYjZlMmU3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "Rh_BJXG1-44",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "adrenaline",
+   "escapism"
+  ]
+ },
+ {
+  "id": "acl-k-oyunlar",
+  "imdbID": "tt1392170",
+  "title": "Açlık Oyunları",
+  "originalTitle": "The Hunger Games",
+  "year": 2012,
+  "imdbRating": 7.2,
+  "imdbVotes": "1.1M",
+  "duration": "2s 22dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Bilim Kurgu"
+  ],
+  "director": "Gary Ross",
+  "cast": [
+   "Jennifer Lawrence",
+   "Josh Hutcherson",
+   "Liam Hemsworth"
+  ],
+  "tagline": "Oyunlar başlıyor.",
+  "awards": "Won 1 BAFTA Award. 34 wins & 51 nominations total",
+  "summary": "Distopik Panem'de her yıl 12 bölgeden birer genç ölümcül bir televizyon turnuvasına alınır; Katniss Everdeen, kardeşinin yerine geçer. Açlık ve isyanın ilk bölümü, genç distopya dalgasının en sert örneğidir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWI1OGM4YjQtNmIxNi00YmE2LWJkNTAtY2Q0YjU4NTI5NWQyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMWI1OGM4YjQtNmIxNi00YmE2LWJkNTAtY2Q0YjU4NTI5NWQyXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "mfmrPu43DF8",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "escapism"
+  ]
+ },
+ {
+  "id": "hobbit-beklenmedik-yolculuk",
+  "imdbID": "tt0903624",
+  "title": "Hobbit: Beklenmedik Yolculuk",
+  "originalTitle": "The Hobbit: An Unexpected Journey",
+  "year": 2012,
+  "imdbRating": 7.8,
+  "imdbVotes": "939K",
+  "duration": "2s 49dk",
+  "ageRating": "13+",
+  "genres": [
+   "Macera",
+   "Fantastik"
+  ],
+  "director": "Peter Jackson",
+  "cast": [
+   "Martin Freeman",
+   "Ian McKellen",
+   "Richard Armitage"
+  ],
+  "tagline": "Yolculuk başlıyor.",
+  "awards": "Nominated for 3 Oscars. 11 wins & 76 nominations total",
+  "summary": "Hobbit Bilbo Baggins, 13 cüceyle Ejderha Smaug'dan yuvalarını geri almak için yola çıkar; yolculuğa Gollum'un halkasıyla tanışması da sızar. Jackson'ın Orta Dünya'ya dönüşü, hem sevimli hem epiktir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTcwNTE4MTUxMl5BMl5BanBnXkFtZTcwMDIyODM4OA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTcwNTE4MTUxMl5BMl5BanBnXkFtZTcwMDIyODM4OA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "SDnYMbYB-nU",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "escapism",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "it",
+  "imdbID": "tt1396484",
+  "title": "It",
+  "originalTitle": "It",
+  "year": 2017,
+  "imdbRating": 7.3,
+  "imdbVotes": "712K",
+  "duration": "2s 15dk",
+  "ageRating": "16+",
+  "genres": [
+   "Korku"
+  ],
+  "director": "Andy Muschietti",
+  "cast": [
+   "Bill Skarsgård",
+   "Jaeden Martell",
+   "Finn Wolfhard"
+  ],
+  "tagline": "Hepimiz yukarı yüzüyoruz.",
+  "awards": "13 wins & 49 nominations total",
+  "summary": "Derry kasabasında kaybolan çocukların peşinde bir palyaço vardır; dışlanan bir çocuk çetesi, korkularıyla yüzleşmek için yere iner. King uyarlaması, çocukluk dostluğunu üstel korkuyla birleştirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZmOTZjNzUtOTE4OS00OGM3LWJiNGEtZjk4Yzg2M2Q1YzYxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZGZmOTZjNzUtOTE4OS00OGM3LWJiNGEtZjk4Yzg2M2Q1YzYxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "xKJmEC5ieOk",
+  "platforms": [],
+  "themeColor": "#ef4444",
+  "moods": [
+   "thrill",
+   "escapism"
+  ]
+ },
+ {
+  "id": "the-conjuring",
+  "imdbID": "tt1457767",
+  "title": "The Conjuring",
+  "originalTitle": "The Conjuring",
+  "year": 2013,
+  "imdbRating": 7.5,
+  "imdbVotes": "635K",
+  "duration": "1s 52dk",
+  "ageRating": "16+",
+  "genres": [
+   "Korku",
+   "Gizem",
+   "Gerilim"
+  ],
+  "director": "James Wan",
+  "cast": [
+   "Patrick Wilson",
+   "Vera Farmiga",
+   "Ron Livingston"
+  ],
+  "tagline": "Karanlık gerçek.",
+  "awards": "16 wins & 22 nominations total",
+  "summary": "Doğaüstü araştırmacılar Ed ve Lorraine Warren, terörize olmuş bir ailenin çiftlik evindeki karanlığı ortaya çıkarır. Wan'ın gerilim ustalığı, modern doğaüstü korkunun referans noktasıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTM3NjA1NDMyMV5BMl5BanBnXkFtZTcwMDQzNDMzOQ@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "ejMMn0t58Lc",
+  "platforms": [],
+  "themeColor": "#ef4444",
+  "moods": [
+   "thrill",
+   "escapism"
+  ]
+ },
+ {
+  "id": "kac",
+  "imdbID": "tt5052448",
+  "title": "Kaç",
+  "originalTitle": "Get Out",
+  "year": 2017,
+  "imdbRating": 7.8,
+  "imdbVotes": "841K",
+  "duration": "1s 44dk",
+  "ageRating": "16+",
+  "genres": [
+   "Korku",
+   "Gizem",
+   "Gerilim"
+  ],
+  "director": "Jordan Peele",
+  "cast": [
+   "Daniel Kaluuya",
+   "Allison Williams",
+   "Bradley Whitford"
+  ],
+  "tagline": "Kaçabilirsen.",
+  "awards": "Won 1 Oscar. 154 wins & 215 nominations total",
+  "summary": "Genç fotoğrafçı Chris, beyaz kız arkadaşının ailesiyle hafta sonuna gider; kusursuz kibarlık altında korkunç bir plan bulunur. Jordan Peele'in çıkışı, ırksal gerilimi korku cinasına keskin biçimde taşır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjUxMDQwNjcyNl5BMl5BanBnXkFtZTgwNzcwMzc0MTI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjUxMDQwNjcyNl5BMl5BanBnXkFtZTgwNzcwMzc0MTI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "DzfpyUB60YY",
+  "platforms": [],
+  "themeColor": "#ef4444",
+  "moods": [
+   "thrill",
+   "mind-bending"
+  ]
+ },
+ {
+  "id": "sessiz-bir-yer",
+  "imdbID": "tt6644200",
+  "title": "Sessiz Bir Yer",
+  "originalTitle": "A Quiet Place",
+  "year": 2018,
+  "imdbRating": 7.5,
+  "imdbVotes": "671K",
+  "duration": "1s 30dk",
+  "ageRating": "13+",
+  "genres": [
+   "Dram",
+   "Korku",
+   "Bilim Kurgu"
+  ],
+  "director": "John Krasinski",
+  "cast": [
+   "Emily Blunt",
+   "John Krasinski",
+   "Millicent Simmonds"
+  ],
+  "tagline": "Sessiz kal.",
+  "awards": "Nominated for 1 Oscar. 38 wins & 129 nominations total",
+  "summary": "Ses duyarlı canlıların istilasına uğrayan dünyada bir aile, çıplak ayakla yaşamayı öğrenir; bir çocuğun doğumu, sessizliğin en riskli anında başlar. Krasinski'nin gerilimi, sessizliği silah gibi kullanır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM5NzM3NDM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjI0MDMzNTQ0M15BMl5BanBnXkFtZTgwMTM5NzM3NDM@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "WR7cc5t7tv8",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "hereditary",
+  "imdbID": "tt7784604",
+  "title": "Hereditary",
+  "originalTitle": "Hereditary",
+  "year": 2018,
+  "imdbRating": 7.3,
+  "imdbVotes": "472K",
+  "duration": "2s 7dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Korku",
+   "Gizem"
+  ],
+  "director": "Ari Aster",
+  "cast": [
+   "Toni Collette",
+   "Milly Shapiro",
+   "Gabriel Byrne"
+  ],
+  "tagline": "Aile kaderdir.",
+  "awards": "52 wins & 112 nominations total",
+  "summary": "Büyükannesinin ölümünden sonra Graham ailesi, nesilden nesile geçen karanlık bir mirasın içinde kaybolur. Ari Aster'ın çıkışı, aile travmasını sinema tarihinin en rahatsız edici karesine çevirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTEyZGQwODctYWJjZi00NjFmLTg3YmEtMzlhNjljOGZhMWMyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTEyZGQwODctYWJjZi00NjFmLTg3YmEtMzlhNjljOGZhMWMyXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "V6wWKNij_1M",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "mind-bending"
+  ]
+ },
+ {
+  "id": "alt-nc-his",
+  "imdbID": "tt0167404",
+  "title": "Altıncı His",
+  "originalTitle": "The Sixth Sense",
+  "year": 1999,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.2M",
+  "duration": "1s 47dk",
+  "ageRating": "13+",
+  "genres": [
+   "Dram",
+   "Gizem",
+   "Gerilim"
+  ],
+  "director": "M. Night Shyamalan",
+  "cast": [
+   "Bruce Willis",
+   "Haley Joel Osment",
+   "Toni Collette"
+  ],
+  "tagline": "Ölüleri görüyorum.",
+  "awards": "Nominated for 6 Oscars. 37 wins & 56 nominations total",
+  "summary": "Çocuk psikoloğu Malcolm Crowe, ölüleri gören sessiz bir çocuğun vakasını üstlenir; iyileştirme girişimi, doktorun kendi gerçekini sarsar. Shyamalan'ın klasik gerilimi, sinema tarihinin en meşhur final bükülmesinden birini sunar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZWQ2OTY0M2UtMTQxNC00MmIzLTllNDQtNDQ0MTQyYzI2M2ZiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZWQ2OTY0M2UtMTQxNC00MmIzLTllNDQtNDQ0MTQyYzI2M2ZiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "3-ZP95NF_Wk",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "mind-bending"
+  ]
+ },
+ {
+  "id": "psycho",
+  "imdbID": "tt0054215",
+  "title": "Psycho",
+  "originalTitle": "Psycho",
+  "year": 1960,
+  "imdbRating": 8.5,
+  "imdbVotes": "796K",
+  "duration": "1s 49dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Korku",
+   "Gizem"
+  ],
+  "director": "Alfred Hitchcock",
+  "cast": [
+   "Anthony Perkins",
+   "Janet Leigh",
+   "Vera Miles"
+  ],
+  "tagline": "Anneni arama.",
+  "awards": "Nominated for 4 Oscars. 9 wins & 14 nominations total",
+  "summary": "Çalıntı parayla kaçan Marion Crane, tenha bir motelde Norman Bates ile tanışır; duş sahne de dahil, korku sineması yeniden yazılır. Hitchcock'un bu klasiği, gerilim dilinin gramatiğini kurdu.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjZhMzFiZjItODA3ZC00MmRhLWIzMGYtMmVjOWUwYTA3MTRjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjZhMzFiZjItODA3ZC00MmRhLWIzMGYtMmVjOWUwYTA3MTRjXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "Wz719b9QUqY",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "thrill",
+   "prestige"
+  ]
+ },
+ {
+  "id": "casablanca",
+  "imdbID": "tt0034583",
+  "title": "Casablanca",
+  "originalTitle": "Casablanca",
+  "year": 1943,
+  "imdbRating": 8.5,
+  "imdbVotes": "662K",
+  "duration": "1s 42dk",
+  "ageRating": "7+",
+  "genres": [
+   "Dram",
+   "Romantik",
+   "Savaş"
+  ],
+  "director": "Michael Curtiz",
+  "cast": [
+   "Humphrey Bogart",
+   "Ingrid Bergman",
+   "Paul Henreid"
+  ],
+  "tagline": "Oynat yine Sam.",
+  "awards": "Won 3 Oscars. 18 wins & 12 nominations total",
+  "summary": "II. Dünya Savaşı'nda Kazablanka'da kafe sahibi Rick, eskiden sevdiği Ilsa'yı kocasıyla şehirden kaçırmak zorunda kalır. Bogart ile Bergman'ın bu klasik aşk destanı, sinemanın en ünlü repliklerinden birini doğurur.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNWEzN2U1YTYtYTQyMS00NTVkLWE2NGQtZWFlMmM0MDNjMmRiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNWEzN2U1YTYtYTQyMS00NTVkLWE2NGQtZWFlMmM0MDNjMmRiXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "MF7JH_54d8c",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "prestige",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "one-flew-over-the-cuckoo-s-nest",
+  "imdbID": "tt0073486",
+  "title": "One Flew Over the Cuckoo's Nest",
+  "originalTitle": "One Flew Over the Cuckoo's Nest",
+  "year": 1975,
+  "imdbRating": 8.6,
+  "imdbVotes": "1.2M",
+  "duration": "2s 13dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram"
+  ],
+  "director": "Miloš Forman",
+  "cast": [
+   "Jack Nicholson",
+   "Louise Fletcher",
+   "Michael Berryman"
+  ],
+  "tagline": "En az bir kez uçmayı dene.",
+  "awards": "Won 5 Oscars. 38 wins & 15 nominations total",
+  "summary": "Sahte delilikla kuruma yerleşen Jack Nicholson karakteri McMurphy, hemşire Ratched'ın demir düzenine isyan bayrağı açar. Beş Oscar kazanan bu klasiğin finali, özgürlüğün bedelini kalıcı biçimde gösterir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjBkMjgzMzYtNzRiMS00NDc3LWE4YTUtZjYxYjZhNjNhYzhhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYjBkMjgzMzYtNzRiMS00NDc3LWE4YTUtZjYxYjZhNjNhYzhhXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "OXrcDonY-B8",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "prestige",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "rain-man",
+  "imdbID": "tt0095953",
+  "title": "Rain Man",
+  "originalTitle": "Rain Man",
+  "year": 1988,
+  "imdbRating": 8,
+  "imdbVotes": "591K",
+  "duration": "2s 13dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram"
+  ],
+  "director": "Barry Levinson",
+  "cast": [
+   "Dustin Hoffman",
+   "Tom Cruise",
+   "Valeria Golino"
+  ],
+  "tagline": "Kardeşlik uzun yol.",
+  "awards": "Won 4 Oscars. 27 wins & 27 nominations total",
+  "summary": "Showbizde geçinen Charlie, babasından miras kalan servetin otistik ağabeyi Raymond'a kaldığını öğrenir; kumar heyecanı ve kardeşlik yolculuğu başlar. Hoffman'ın Oscar'lı gösterimi ile Cruise'un dönüşü, aile komedisi dramına dönüşür.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDUzODNkNGUtNzJjNi00ODFlLTkzMzktMGNkOTIwYWM2YTQzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZDUzODNkNGUtNzJjNi00ODFlLTkzMzktMGNkOTIwYWM2YTQzXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "mlNwXuHUA8I",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "heartwarming",
+   "prestige"
+  ]
+ },
+ {
+  "id": "otomatik-portakal",
+  "imdbID": "tt0066921",
+  "title": "Otomatik Portakal",
+  "originalTitle": "A Clockwork Orange",
+  "year": 1972,
+  "imdbRating": 8.2,
+  "imdbVotes": "947K",
+  "duration": "2s 16dk",
+  "ageRating": "16+",
+  "genres": [
+   "Suç",
+   "Bilim Kurgu"
+  ],
+  "director": "Stanley Kubrick",
+  "cast": [
+   "Malcolm McDowell",
+   "Patrick Magee",
+   "Michael Bates"
+  ],
+  "tagline": "Özgür irade yok.",
+  "awards": "Nominated for 4 Oscars. 12 wins & 26 nominations total",
+  "summary": "Alex ve çetesi, şiddeti eğlenceye çeviren genç bir gruptur; devletin \"tedavi\" deneyi, özgür iradeyi robotlaştırır. Kubrick'in ürkütücü klasiği, estetik şiddeti felsefi bir sorguya çevirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY3MjM1Mzc4N15BMl5BanBnXkFtZTgwODM0NzAxMDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTY3MjM1Mzc4N15BMl5BanBnXkFtZTgwODM0NzAxMDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "2meAsIclTzQ",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "mind-bending",
+   "prestige"
+  ]
+ },
+ {
+  "id": "full-metal-jacket",
+  "imdbID": "tt0093058",
+  "title": "Full Metal Jacket",
+  "originalTitle": "Full Metal Jacket",
+  "year": 1987,
+  "imdbRating": 8.2,
+  "imdbVotes": "861K",
+  "duration": "1s 56dk",
+  "ageRating": "16+",
+  "genres": [
+   "Dram",
+   "Savaş"
+  ],
+  "director": "Stanley Kubrick",
+  "cast": [
+   "Matthew Modine",
+   "R. Lee Ermey",
+   "Vincent D&apos;Onofrio"
+  ],
+  "tagline": "Savaş zihni değiştirir.",
+  "awards": "Nominated for 1 Oscar. 8 wins & 17 nominations total",
+  "summary": "Vietnam'a gitmeden önce acemi askerler boot camp'in insanlıktan çıkaran disiplininden geçer; sonra savaş, ruhun kalanını alır. Kubrick'in iki bölümlü savaş klasiği, savaşı hem fiziksel hem zihinsel bir fabrika olarak gösterir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWUzNzZkNzUtNDdiYy00Nzk5LTgxMmItNTk0MjRjNjdjNDA0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYWUzNzZkNzUtNDdiYy00Nzk5LTgxMmItNTk0MjRjNjdjNDA0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "n2i917l5RFc",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "prestige",
+   "thrill"
+  ]
+ },
+ {
+  "id": "buyuk-bal-k",
+  "imdbID": "tt0319061",
+  "title": "Büyük Balık",
+  "originalTitle": "Big Fish",
+  "year": 2004,
+  "imdbRating": 7.9,
+  "imdbVotes": "481K",
+  "duration": "2s 5dk",
+  "ageRating": "13+",
+  "genres": [
+   "Macera",
+   "Dram",
+   "Fantastik"
+  ],
+  "director": "Tim Burton",
+  "cast": [
+   "Ewan McGregor",
+   "Albert Finney",
+   "Billy Crudup"
+  ],
+  "tagline": "Masallar gerçek.",
+  "awards": "Nominated for 1 Oscar. 69 nominations total",
+  "summary": "Ölüm döşeğindeki Edward Bloom'un abartılı masalları, gerçekçi oğlu Will'in inadıyla çarpışır; her hikâyenin çekirdeğinde bir gerçek bulunur. Tim Burton'ın şefkatli fantastik destanı, babayla barışmanın en şiirsel hallerinden biridir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTVlNjc4ZmItMDZjYy00YWZjLTg1OWEtOTNlZjJlN2FlMjEwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTVlNjc4ZmItMDZjYy00YWZjLTg1OWEtOTNlZjJlN2FlMjEwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "D0kiS4ROWkQ",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "heartwarming",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "milyoner",
+  "imdbID": "tt1010048",
+  "title": "Milyoner",
+  "originalTitle": "Slumdog Millionaire",
+  "year": 2008,
+  "imdbRating": 8,
+  "imdbVotes": "917K",
+  "duration": "2s 0dk",
+  "ageRating": "16+",
+  "genres": [
+   "Suç",
+   "Dram",
+   "Romantik"
+  ],
+  "director": "Danny Boyle",
+  "cast": [
+   "Dev Patel",
+   "Freida Pinto",
+   "Saurabh Shukla"
+  ],
+  "tagline": "Hayat cevaplardır.",
+  "awards": "Won 8 Oscars. 154 wins & 133 nominations total",
+  "summary": "Mumbai'nin gecekondusundan yetişen Jamal, kimseyle yarışamayacağı bir bilgiyle milyoner olur; her soru, hayatının bir parçasını açar. Boyle'nin Oscar'lı filmi, yoksulluğu enerjiyle dans ettiren bir aşk destanıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTE5ZTRkYWEtZmU5MC00NDJjLTk3NmUtZGJlYTM2MmQ3NTJkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTE5ZTRkYWEtZmU5MC00NDJjLTk3NmUtZGJlYTM2MmQ3NTJkXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "SQ7P5wEI2CA",
+  "platforms": [],
+  "themeColor": "#a78bfa",
+  "moods": [
+   "heartwarming",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "pi-nin-hayat",
+  "imdbID": "tt0454876",
+  "title": "Pi'nin Hayatı",
+  "originalTitle": "Life of Pi",
+  "year": 2012,
+  "imdbRating": 7.9,
+  "imdbVotes": "707K",
+  "duration": "2s 7dk",
+  "ageRating": "7+",
+  "genres": [
+   "Macera",
+   "Dram",
+   "Fantastik"
+  ],
+  "director": "Ang Lee",
+  "cast": [
+   "Suraj Sharma",
+   "Irrfan Khan",
+   "Ayush Tandon"
+  ],
+  "tagline": "Okyanusta tek masal.",
+  "awards": "Won 4 Oscars. 81 wins & 134 nominations total",
+  "summary": "Gemisi batan genç Pi, bir Bengal kapisiyle okyanus ortasında tek bir sandalda hayatta kalır; hikâye anlatmak, hayatta kalmanın ikinci yarısıdır. Ang Lee'nin Oscar'lı görüntü mücevheri, inanç ile masal arasındaki dengeyi kurar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTg2OTY2ODg5OF5BMl5BanBnXkFtZTcwODM5MTYxOA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNTg2OTY2ODg5OF5BMl5BanBnXkFtZTcwODM5MTYxOA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "3mMN693-F3U",
+  "platforms": [],
+  "themeColor": "#f59e0b",
+  "moods": [
+   "escapism",
+   "heartwarming"
+  ]
+ },
+ {
+  "id": "muhtesem-bay-fox",
+  "imdbID": "tt0432283",
+  "title": "Muhteşem Bay Fox",
+  "originalTitle": "Fantastic Mr. Fox",
+  "year": 2009,
+  "imdbRating": 7.9,
+  "imdbVotes": "312K",
+  "duration": "1s 27dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Wes Anderson",
+  "cast": [
+   "George Clooney",
+   "Meryl Streep",
+   "Bill Murray"
+  ],
+  "tagline": "Tilki her zaman tilki.",
+  "awards": "Nominated for 2 Oscars. 32 wins & 63 nominations total",
+  "summary": "Tilki Mr. Fox, aile sorumluluğu ile tavuk çiftliklerine karşı doğal hırsı arasında kalır; üç kötü çiftçi onu kuşatır. Wes Anderson'ın stop-motion klasiği, aile komedisini incelikli bir çizgi estetiğiyle taşır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTA1ZTIxZDUtNGFjYS00YTc5LTgzNDMtZWNjYjBlMzI2OTk3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYTA1ZTIxZDUtNGFjYS00YTc5LTgzNDMtZWNjYjBlMzI2OTk3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "n2igjYFojUo",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "chill-comedy",
+   "heartwarming"
+  ]
+ },
+ {
+  "id": "oyuncak-hikayesi",
+  "imdbID": "tt0114709",
+  "title": "Oyuncak Hikayesi",
+  "originalTitle": "Toy Story",
+  "year": 1995,
+  "imdbRating": 8.3,
+  "imdbVotes": "1.2M",
+  "duration": "1s 21dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "John Lasseter",
+  "cast": [
+   "Tom Hanks",
+   "Tim Allen",
+   "Don Rickles"
+  ],
+  "tagline": "Oyuncaklar yaşıyor.",
+  "awards": "Nominated for 3 Oscars. 29 wins & 24 nominations total",
+  "summary": "Andy'nin sevgili oyuncağı kovboy Woody, uzaylı oyuncak Buzz Lightyear'ın gelişiyle tahtını kaybeder; ikisi evden uzakta birlikte eve dönmek zorundadır. Pixar'ın ilk uzun filmi, animasyon tarihini tamamen değiştirdi.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTA3OWVjOWItNjE1NS00NzZiLWE1MjgtZDZhMWI1ZTlkNzYwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZTA3OWVjOWItNjE1NS00NzZiLWE1MjgtZDZhMWI1ZTlkNzYwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "v-PjgYDrg70",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "heartwarming",
+   "escapism"
+  ]
+ },
+ {
+  "id": "ters-yuz",
+  "imdbID": "tt2096673",
+  "title": "Ters Yüz",
+  "originalTitle": "Inside Out",
+  "year": 2015,
+  "imdbRating": 8.1,
+  "imdbVotes": "935K",
+  "duration": "1s 35dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Ronnie Del Carmen",
+  "cast": [
+   "Amy Poehler",
+   "Bill Hader",
+   "Lewis Black"
+  ],
+  "tagline": "Duygular bir ekip.",
+  "awards": "Won 1 Oscar. 99 wins & 120 nominations total",
+  "summary": "11 yaşındaki Riley'nin beyninde sevinç, korku, öfke, tiksinti ve üzüntü bir kontrol panelinde çalışır; taşınma günü panel bozulur. Pixar'ın Oscar'lı eseri, duyguların işleyişini en esprili ve en hassas haliyle anlatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTgxMDQwMDk0OF5BMl5BanBnXkFtZTgwNjU5OTg2NDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTgxMDQwMDk0OF5BMl5BanBnXkFtZTgwNjU5OTg2NDE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "yRUAzGQ3nSY",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "heartwarming",
+   "tearjerker"
+  ]
+ },
+ {
+  "id": "soul",
+  "imdbID": "tt2948372",
+  "title": "Soul",
+  "originalTitle": "Soul",
+  "year": 2020,
+  "imdbRating": 8,
+  "imdbVotes": "459K",
+  "duration": "1s 40dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Pete Docter",
+  "cast": [
+   "Jamie Foxx",
+   "Tina Fey",
+   "Graham Norton"
+  ],
+  "tagline": "Yaşamak müzik.",
+  "awards": "Won 2 Oscars. 125 wins & 91 nominations total",
+  "summary": "Caz piyanisti Joe Gardner, büyük konserinden hemen önce bedeninden ayrılır; ruhlara hayat sevinci aşılayan 22 numaralı ruhla geri dönüş yolculuğu başlar. Pixar'ın felsefi eseri, \"ne için yaşıyorsun\" sorusunu müzikle cevaplar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTZkYjA5MDEtMjY1ZC00ODk5LThjOTUtZDYxODEzYWNjMTU2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BZTZkYjA5MDEtMjY1ZC00ODk5LThjOTUtZDYxODEzYWNjMTU2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "oqMs6Cd7vyg",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "heartwarming",
+   "mind-bending"
+  ]
+ },
+ {
+  "id": "moana",
+  "imdbID": "tt3521164",
+  "title": "Moana",
+  "originalTitle": "Moana",
+  "year": 2016,
+  "imdbRating": 7.6,
+  "imdbVotes": "451K",
+  "duration": "1s 47dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Ron Clements",
+  "cast": [
+   "Auli&apos;i Cravalho",
+   "Dwayne Johnson",
+   "Rachel House"
+  ],
+  "tagline": "Okyanus çağırıyor.",
+  "awards": "Nominated for 2 Oscars. 22 wins & 91 nominations total",
+  "summary": "Ada şefinin kızı Moana, okyanus seçmiş bir kahramandır; yarı tanrı Maui ile yolu düzeltmek için denize açılır. Disney'in şarkı dolu bu epik macerası, cesaretin kalıtını taşıyan bir kızın destanıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI4MzU5NTExNF5BMl5BanBnXkFtZTgwNzY1MTEwMDI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjI4MzU5NTExNF5BMl5BanBnXkFtZTgwNzY1MTEwMDI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "qnIAbxMMf0E",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "escapism",
+   "heartwarming"
+  ]
+ },
+ {
+  "id": "nemo-yu-ar-yorum",
+  "imdbID": "tt0266543",
+  "title": "Nemo'yu Arıyorum",
+  "originalTitle": "Finding Nemo",
+  "year": 2003,
+  "imdbRating": 8.2,
+  "imdbVotes": "1.2M",
+  "duration": "1s 40dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Andrew Stanton",
+  "cast": [
+   "Albert Brooks",
+   "Ellen DeGeneres",
+   "Alexander Gould"
+  ],
+  "tagline": "Okyanus büyük, aile büyük.",
+  "awards": "Won 1 Oscar. 49 wins & 63 nominations total",
+  "summary": "Koruma babası balık Marlin, oğlu Nemo akvaryuma kaçırılınca okyanusu kat eder; unutkan Dory ile yol boyu dostluklar kurulur. Pixar'ın Oscar'lı deniz destanı, ebeveynlik ve gevşemeyi aynı dalgada anlatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc5NjExNTA5OV5BMl5BanBnXkFtZTYwMTQ0ODY2._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTc5NjExNTA5OV5BMl5BanBnXkFtZTYwMTQ0ODY2._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "SPHfeNgogVs",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "heartwarming",
+   "escapism"
+  ]
+ },
+ {
+  "id": "shrek",
+  "imdbID": "tt0126029",
+  "title": "Shrek",
+  "originalTitle": "Shrek",
+  "year": 2001,
+  "imdbRating": 7.9,
+  "imdbVotes": "823K",
+  "duration": "1s 30dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Andrew Adamson",
+  "cast": [
+   "Mike Myers",
+   "Eddie Murphy",
+   "Cameron Diaz"
+  ],
+  "tagline": "Masallar ters dönüyor.",
+  "awards": "Won 1 Oscar. 40 wins & 60 nominations total",
+  "summary": "Bataklığında sakin yaşamak isteyen yeşil dev Shrek, krallığın kovuşturduğu masal yaratıklarını geri götürmek için prenses Fiona'yı kurtarma görevine çıkar. DreamWorks'in Oscar'lı komedisi, masal klişelerini zekice yıkar.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2FkMTRkNTUtYTI0NC00ZjI4LWI5MzUtMDFmOGY0NmU2OGY1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BN2FkMTRkNTUtYTI0NC00ZjI4LWI5MzUtMDFmOGY0NmU2OGY1XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "CwXOrWvPBPk",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "chill-comedy",
+   "escapism"
+  ]
+ },
+ {
+  "id": "ejderhan-nas-l-eversin",
+  "imdbID": "tt0892769",
+  "title": "Ejderhanı Nasıl Eversin",
+  "originalTitle": "How to Train Your Dragon",
+  "year": 2010,
+  "imdbRating": 8.1,
+  "imdbVotes": "911K",
+  "duration": "1s 38dk",
+  "ageRating": "7+",
+  "genres": [
+   "Animasyon",
+   "Aksiyon",
+   "Macera"
+  ],
+  "director": "Dean DeBlois",
+  "cast": [
+   "Jay Baruchel",
+   "Gerard Butler",
+   "Christopher Mintz-Plasse"
+  ],
+  "tagline": "Dostluk uçmayı öğretir.",
+  "awards": "Nominated for 2 Oscars. 25 wins & 63 nominations total",
+  "summary": "Viking köyünde başarısız bir genç Hiccup, vurduğu nadir bir ejderhayı öldürmek yerine iyileştirir; kabile imkansızı öğrenir. DreamWorks'in Oscar adaylı destanı, dostluğun kanatlarını açıyor.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA5NDQyMjc2NF5BMl5BanBnXkFtZTcwMjg5ODcyMw@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjA5NDQyMjc2NF5BMl5BanBnXkFtZTcwMjg5ODcyMw@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "2AKsAxrhqgM",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "heartwarming",
+   "escapism"
+  ]
+ },
+ {
+  "id": "sessiz-bir-ses",
+  "imdbID": "tt5323662",
+  "title": "Sessiz Bir Ses",
+  "originalTitle": "A Silent Voice: The Movie",
+  "year": 2016,
+  "imdbRating": 8.2,
+  "imdbVotes": "151K",
+  "duration": "2s 10dk",
+  "ageRating": "16+",
+  "genres": [
+   "Animasyon",
+   "Dram"
+  ],
+  "director": "Naoko Yamada",
+  "cast": [
+   "Miyu Irino",
+   "Saori Hayami",
+   "Aoi Yûki"
+  ],
+  "tagline": "Sesler duymaya başlar.",
+  "awards": "6 wins & 9 nominations total",
+  "summary": "İlkokulda işitme engelli sınıf arkadaşını zorbalıkla dışlayan Shoya, yıllar sonra affetmek için geri döner; sessizliğin içinde bir bağ kurulur. Kyoto Animation'ın dokunaklı eseri, suçluluk ve affetmeyi şiir gibi çizer.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTFiNzRiOWEtYTQwNy00NmRiLWE0ZWYtNTE0YjExZjFmZjkwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BOTFiNzRiOWEtYTQwNy00NmRiLWE0ZWYtNTE0YjExZjFmZjkwXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "nfK6UgLra7g",
+  "platforms": [],
+  "themeColor": "#34d399",
+  "moods": [
+   "tearjerker",
+   "heartwarming"
+  ]
+ },
+ {
+  "id": "john-wick",
+  "imdbID": "tt2911666",
+  "title": "John Wick",
+  "originalTitle": "John Wick",
+  "year": 2014,
+  "imdbRating": 7.5,
+  "imdbVotes": "843K",
+  "duration": "1s 41dk",
+  "ageRating": "16+",
+  "genres": [
+   "Aksiyon",
+   "Suç",
+   "Gerilim"
+  ],
+  "director": "Chad Stahelski",
+  "cast": [
+   "Keanu Reeves",
+   "Michael Nyqvist",
+   "Alfie Allen"
+  ],
+  "tagline": "Yazık o köpeğe.",
+  "awards": "5 wins & 12 nominations total",
+  "summary": "Emekli kiralık katil John Wick, ölen eşinin hediye köpeğini öldüren gangsterlere karşı geri döner; dünyanın en düzenli suç ekonomisi sarsılır. Keanu Reeves'in dönüş filmi, aksiyon koreografisinin referans noktasıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "C0BMx-qxsP4",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "thrill"
+  ]
+ },
+ {
+  "id": "john-wick-2",
+  "imdbID": "tt4425200",
+  "title": "John Wick 2",
+  "originalTitle": "John Wick: Chapter 2",
+  "year": 2017,
+  "imdbRating": 7.4,
+  "imdbVotes": "580K",
+  "duration": "2s 2dk",
+  "ageRating": "16+",
+  "genres": [
+   "Aksiyon",
+   "Suç",
+   "Gerilim"
+  ],
+  "director": "Chad Stahelski",
+  "cast": [
+   "Keanu Reeves",
+   "Riccardo Scamarcio",
+   "Ian McShane"
+  ],
+  "tagline": "Kural geçerli.",
+  "awards": "4 wins & 11 nominations total",
+  "summary": "Emeklilik isteği kısa sürer; itaat damgasıyla bağlanan John, Roma'ya kadar uzanan bir kontratın içinde bulur. Serinin genişleyen suç dünyası, pistten çıkılmayan bir aksiyon cilası taşır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjE2NDkxNTY2M15BMl5BanBnXkFtZTgwMDc2NzE0MTI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "ChpLV9AMqm4",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "thrill"
+  ]
+ },
+ {
+  "id": "logan",
+  "imdbID": "tt3315342",
+  "title": "Logan",
+  "originalTitle": "Logan",
+  "year": 2017,
+  "imdbRating": 8.1,
+  "imdbVotes": "943K",
+  "duration": "2s 17dk",
+  "ageRating": "16+",
+  "genres": [
+   "Aksiyon",
+   "Dram",
+   "Bilim Kurgu"
+  ],
+  "director": "James Mangold",
+  "cast": [
+   "Hugh Jackman",
+   "Patrick Stewart",
+   "Dafne Keen"
+  ],
+  "tagline": "Bir kahramanın vedası.",
+  "awards": "Nominated for 1 Oscar. 29 wins & 82 nominations total",
+  "summary": "2029'da yaşlanan Wolverine, zayıflamış mutantların sonuna doğru geriler; küçük bir mutant kız X-23'ü güvene taşımak son görevi olur. Jackman ile Stewart'ın veda filmi, süper kahraman sinemasına western duygusu kazandırır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2JjODdkMGMtNmY2YS00OGM2LThiY2YtZGYyNzE4Nzc2ODA0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BM2JjODdkMGMtNmY2YS00OGM2LThiY2YtZGYyNzE4Nzc2ODA0XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "Div0iP65aZo",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "prestige",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "x-men-gelecegin-gecmis-gunleri",
+  "imdbID": "tt1877832",
+  "title": "X-Men: Geleceğin Geçmiş Günleri",
+  "originalTitle": "X-Men: Days of Future Past",
+  "year": 2014,
+  "imdbRating": 7.9,
+  "imdbVotes": "799K",
+  "duration": "2s 12dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Bilim Kurgu"
+  ],
+  "director": "Bryan Singer",
+  "cast": [
+   "Patrick Stewart",
+   "Ian McKellen",
+   "Hugh Jackman"
+  ],
+  "tagline": "Geçmişi değiştir.",
+  "awards": "Nominated for 1 Oscar. 16 wins & 48 nominations total",
+  "summary": "Robotlar mutantları yok etmeye yaklaştığında Wolverine, zihinlerini 1973'e gönderir; genç ve eski kuşak tek tarihi düzeltmek için buluşur. X-Men serisinin en iddialı kavuşması, iki dönemi aynı sahnede birleştirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzNiYWE4NjMtMTU4OS00NmM4LWE4ZjAtYmE5OTA5NjkzODExXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNzNiYWE4NjMtMTU4OS00NmM4LWE4ZjAtYmE5OTA5NjkzODExXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "pK2zYHWDZKo",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "escapism"
+  ]
+ },
+ {
+  "id": "kaptan-amerika-k-s-askeri",
+  "imdbID": "tt1843866",
+  "title": "Kaptan Amerika: Kış Askeri",
+  "originalTitle": "Captain America: The Winter Soldier",
+  "year": 2014,
+  "imdbRating": 7.7,
+  "imdbVotes": "992K",
+  "duration": "2s 16dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Bilim Kurgu"
+  ],
+  "director": "Anthony Russo",
+  "cast": [
+   "Chris Evans",
+   "Samuel L. Jackson",
+   "Scarlett Johansson"
+  ],
+  "tagline": "Dost düşman olabilir.",
+  "awards": "Nominated for 1 Oscar. 5 wins & 53 nominations total",
+  "summary": "Steve Rogers, S.H.I.E.L.D. içindeki bir ihaneti çözerken eski dostu Bucky'yi beyin yıkamış bir suikastçı olarak karşılar. Casus gerilimiyle süper kahramanı harmanlayan bu bölüm, serinin kritik mihenk taşıdır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNWY1NjFmNDItZDhmOC00NjI1LWE0ZDItMTM0MjBjZThiOTQ2XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "7SlILk2WMTI",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "thrill"
+  ]
+ },
+ {
+  "id": "galaksinin-koruyucular",
+  "imdbID": "tt2015381",
+  "title": "Galaksinin Koruyucuları",
+  "originalTitle": "Guardians of the Galaxy",
+  "year": 2014,
+  "imdbRating": 8,
+  "imdbVotes": "1.4M",
+  "duration": "2s 1dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "James Gunn",
+  "cast": [
+   "Chris Pratt",
+   "Vin Diesel",
+   "Bradley Cooper"
+  ],
+  "tagline": "Ekibe katıl.",
+  "awards": "Nominated for 2 Oscars. 53 wins & 106 nominations total",
+  "summary": "Hırsız Peter Quill, güç taşı çalarken beklenmedik bir ekiple: öfkeli rakun, ağaç, intikamcı ve katil bile birlik olur. Marvel'ın en esprili uzay ekibi, retro müzik listesiyle taşınan bir macera konseri olur.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2ZmNjQ2MzAtNDlhNi00MmQyLWJhZDMtNmJiMjFlOWY4MzcxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BM2ZmNjQ2MzAtNDlhNi00MmQyLWJhZDMtNmJiMjFlOWY4MzcxXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "d96cjJhvlMA",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "chill-comedy",
+   "escapism"
+  ]
+ },
+ {
+  "id": "doctor-strange",
+  "imdbID": "tt1211837",
+  "title": "Doctor Strange",
+  "originalTitle": "Doctor Strange",
+  "year": 2016,
+  "imdbRating": 7.5,
+  "imdbVotes": "900K",
+  "duration": "1s 55dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Fantastik"
+  ],
+  "director": "Scott Derrickson",
+  "cast": [
+   "Benedict Cumberbatch",
+   "Chiwetel Ejiofor",
+   "Rachel McAdams"
+  ],
+  "tagline": "Boyutlar açılıyor.",
+  "awards": "Nominated for 1 Oscar. 21 wins & 69 nominations total",
+  "summary": "Kibirli cerrah Stephen Strange, el kazasıyla kariyerini kaybeder; mistik Kamar-Taj'da boyut ve zamanı büken sihre girer. Marvel'ın gerçeklik katmanını açan bu giriş, görsel kâbus estetiğiyle ödüllendirilir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjgwNzAzNjk1Nl5BMl5BanBnXkFtZTgwMzQ2NjI1OTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BNjgwNzAzNjk1Nl5BMl5BanBnXkFtZTgwMzQ2NjI1OTE@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "h7gvFravm4A",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "escapism",
+   "mind-bending"
+  ]
+ },
+ {
+  "id": "black-panther",
+  "imdbID": "tt1825683",
+  "title": "Black Panther",
+  "originalTitle": "Black Panther",
+  "year": 2018,
+  "imdbRating": 7.3,
+  "imdbVotes": "929K",
+  "duration": "2s 14dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Bilim Kurgu"
+  ],
+  "director": "Ryan Coogler",
+  "cast": [
+   "Chadwick Boseman",
+   "Michael B. Jordan",
+   "Lupita Nyong&apos;o"
+  ],
+  "tagline": "Wakanda sonsuza kadar.",
+  "awards": "Won 3 Oscars. 125 wins & 289 nominations total",
+  "summary": "T'Challa, teknolojisi saklı Wakanda'nın tahtına oturur; kayıp kardeşi Killmonger'ın hırsı, ülkenin dünyaya açılma sorusunu şiddetle sorar. Oscar'lı bu bölüm, süper kahraman sinemasına kültürel bir bayrak diker.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "xjDjIWPwcPU",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "adrenaline",
+   "prestige"
+  ]
+ },
+ {
+  "id": "thor-ragnarok",
+  "imdbID": "tt3501632",
+  "title": "Thor: Ragnarok",
+  "originalTitle": "Thor: Ragnarok",
+  "year": 2017,
+  "imdbRating": 7.9,
+  "imdbVotes": "916K",
+  "duration": "2s 10dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Macera",
+   "Komedi"
+  ],
+  "director": "Taika Waititi",
+  "cast": [
+   "Chris Hemsworth",
+   "Tom Hiddleston",
+   "Cate Blanchett"
+  ],
+  "tagline": "Evren yok oluyor.",
+  "awards": "6 wins & 52 nominations total",
+  "summary": "Thor, asgardını yok eden kader Ragnarok'u durdurmak için eski dost Hulk ile gladyatör arenasına düşer; kız kardeşi Hela tahtı ele geçirmiştir. Waititi'nin komedili dokunuşu, seriye en renkli macerasını giydirir.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "ue80QwXMRHg",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "chill-comedy",
+   "adrenaline"
+  ]
+ },
+ {
+  "id": "suclu-raporu",
+  "imdbID": "tt0181689",
+  "title": "Suçlu Raporu",
+  "originalTitle": "Minority Report",
+  "year": 2002,
+  "imdbRating": 7.6,
+  "imdbVotes": "628K",
+  "duration": "2s 25dk",
+  "ageRating": "13+",
+  "genres": [
+   "Aksiyon",
+   "Suç",
+   "Gizem"
+  ],
+  "director": "Steven Spielberg",
+  "cast": [
+   "Tom Cruise",
+   "Colin Farrell",
+   "Samantha Morton"
+  ],
+  "tagline": "Suç işlenmeden yakalan.",
+  "awards": "Nominated for 1 Oscar. 20 wins & 91 nominations total",
+  "summary": "Gelecekte cinayetler işlenmeden önlenir; \"Precog\" sistemini yöneten John Anderton bir gün kendi cinayetini gören raporla kaçak olur. Spielberg ile Cruise'un neo-noir bilimkurgusu, özgür iradeyi gözlerle oynatır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTdmNzM3YzItZTRkYS00MTY5LTg4ZmItNjFmNTk2N2Q2NmNlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYTdmNzM3YzItZTRkYS00MTY5LTg4ZmItNjFmNTk2N2Q2NmNlXkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "lG7DGMgfOb8",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "mind-bending",
+   "thrill"
+  ]
+ },
+ {
+  "id": "9-bolge",
+  "imdbID": "tt1136608",
+  "title": "9. Bölge",
+  "originalTitle": "District 9",
+  "year": 2009,
+  "imdbRating": 7.9,
+  "imdbVotes": "759K",
+  "duration": "1s 52dk",
+  "ageRating": "16+",
+  "genres": [
+   "Aksiyon",
+   "Bilim Kurgu",
+   "Gerilim"
+  ],
+  "director": "Neill Blomkamp",
+  "cast": [
+   "Sharlto Copley",
+   "David James",
+   "Jason Cope"
+  ],
+  "tagline": "İnsanlık sorgulanıyor.",
+  "awards": "Nominated for 4 Oscars. 32 wins & 117 nominations total",
+  "summary": "Johannesburg üzerinde duran uzay gemisi, milyonlarca mülteci uzaylıyı bir gecekondu mahallesine mahkûm eder; tahliye görevi Wikus'un bedenini dönüştürür. Blomkamp'ın çıkışı, belgesel estetiğiyle bilimkurgu ayrımcılığını çarpıtır.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTM4OTI1OTM5NF5BMl5BanBnXkFtZTcwMzk5MTU1Mg@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTM4OTI1OTM5NF5BMl5BanBnXkFtZTcwMzk5MTU1Mg@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "DyLUwOcR5pk",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "prestige",
+   "thrill"
+  ]
+ },
+ {
+  "id": "looper",
+  "imdbID": "tt1276104",
+  "title": "Looper",
+  "originalTitle": "Looper",
+  "year": 2012,
+  "imdbRating": 7.4,
+  "imdbVotes": "634K",
+  "duration": "1s 59dk",
+  "ageRating": "16+",
+  "genres": [
+   "Aksiyon",
+   "Dram",
+   "Bilim Kurgu"
+  ],
+  "director": "Rian Johnson",
+  "cast": [
+   "Joseph Gordon-Levitt",
+   "Bruce Willis",
+   "Emily Blunt"
+  ],
+  "tagline": "Kendini avla.",
+  "awards": "18 wins & 47 nominations total",
+  "summary": "2074'te mafya, hedeflerini geçmişe gönderip oradaki \"looper\"lara öldürtür; Joe kendi yaşlı halini beklerken döngü bozulur. Johnson'ın zekice kurulan zaman döngüsü, aksiyon ile felsefeyi aynı pistte koşturur.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg5NTA3NTg4NF5BMl5BanBnXkFtZTcwNTA0NDYzOA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMTg5NTA3NTg4NF5BMl5BanBnXkFtZTcwNTA0NDYzOA@@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "trailerYoutubeId": "2iQuhsmtfHw",
+  "platforms": [],
+  "themeColor": "#38bdf8",
+  "moods": [
+   "mind-bending",
+   "adrenaline"
+  ]
  }
 ];
 
