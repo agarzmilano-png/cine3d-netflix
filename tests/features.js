@@ -632,10 +632,12 @@ function check(name, ok, detail = '') {
     // İlk ziyaretin önbelleği ile gerçek çevrimdışı yeniden açılış (ayrı HTTP cache değil).
     const offlineSetup = await ev(`
       await navigator.serviceWorker.ready;
-      const cache = await caches.open('cine3d-cache-v9.4');
+      const names = await caches.keys();
+      const cacheName = names.find(n => n.startsWith('cine3d-cache-v')) || names[0];
+      const cache = await caches.open(cacheName);
       const critical = ['js/storage-adapter.js', 'js/vendor/three.min.js', 'data/catalog.json'];
       const cached = await Promise.all(critical.map(p => cache.match(new URL(p, location.href).href, { ignoreSearch: true })));
-      return { cached: cached.every(Boolean), pid: window.Cine3DStorage.activePid() };
+      return { cached: cached.every(Boolean), pid: window.Cine3DStorage.activePid(), cacheName };
     `);
     check('çevrimdışı: tüm temel bağımlılıklar ilk ziyarette önbellekte', !!offlineSetup && offlineSetup.cached, offlineSetup);
     await send('Network.enable');

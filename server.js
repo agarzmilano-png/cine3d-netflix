@@ -75,7 +75,9 @@ const MIME = {
   '.m4a': 'audio/mp4',
   '.wav': 'audio/wav',
   '.ogg': 'audio/ogg',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8'
 };
 
 // --- STATİK DOSYA BEYAZ LİSTESİ ---
@@ -84,11 +86,18 @@ const MIME = {
 const PUBLIC_EXT = new Set([
   '.html', '.css', '.js', '.json', '.webmanifest',
   '.png', '.jpg', '.jpeg', '.svg', '.ico',
-  '.mp3', '.m4a', '.wav', '.ogg'
+  '.mp3', '.m4a', '.wav', '.ogg',
+  '.txt', '.xml'
 ]);
 const BLOCKED_FILES = new Set([
   'server.js', 'server.js.bak', 'test_audio_debug.js',
   'package.json', 'package-lock.json', 'render.yaml'
+]);
+// Yol öneki beyaz listesi: uzantı kontrolü tek başına yetmiyordu (tests/, scripts/
+// ve .github/ altındaki tüm .js dosyaları yayında indirilebiliyordu).
+const PUBLIC_DIRS = ['css/', 'js/', 'icons/', 'data/', 'audio/'];
+const PUBLIC_FILES = new Set([
+  'index.html', 'manifest.json', 'sw.js', 'robots.txt', 'sitemap.xml'
 ]);
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
@@ -99,7 +108,45 @@ const SECURITY_HEADERS = {
 function isPublicAsset(relPath, ext) {
   if (!PUBLIC_EXT.has(ext)) return false;
   if (relPath.split('/').some(seg => seg.startsWith('.'))) return false;
-  return !BLOCKED_FILES.has(relPath.toLowerCase());
+  const lower = relPath.toLowerCase();
+  if (BLOCKED_FILES.has(lower)) return false;
+  if (PUBLIC_FILES.has(lower)) return true;
+  if (!PUBLIC_DIRS.some(dir => lower.startsWith(dir))) return false;
+  // data/ yalnızca yayınlanan JSON verisini servis eder (test/çalışma dosyası değil)
+  if (lower.startsWith('data/')) return /^data\/[a-z0-9._-]+\.json$/.test(lower);
+  return true;
+}
+
+// --- API kötüye kullanım koruması: origin kapısı + IP başına hız sınırı ---
+// OMDb/JustWatch proxy'leri herkese açıktı; başka siteler bu sunucu üzerinden
+// günlük kotayı tüketebiliyordu. Aynı köken ve kendi yayın adres(ler)i serbest.
+const DEFAULT_ALLOWED_ORIGINS = ['https://agarzmilano-png.github.io'];
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
+  .split(',').map(value => value.trim()).filter(Boolean);
+const API_RATE_LIMIT = Number(process.env.API_RATE_LIMIT || 60);
+const API_RATE_WINDOW_MS = 60 * 1000;
+const rateBuckets = new Map();
+
+function originAllowed(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true; // tarayıcı dışı / aynı köken GET
+  if (/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(origin)) return true;
+  const list = ALLOWED_ORIGINS.length ? ALLOWED_ORIGINS : DEFAULT_ALLOWED_ORIGINS;
+  return list.includes('*') || list.includes(origin);
+}
+
+function rateLimited(req) {
+  if (!(API_RATE_LIMIT > 0)) return false;
+  const key = req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const bucket = rateBuckets.get(key);
+  if (!bucket || now - bucket.start > API_RATE_WINDOW_MS) {
+    if (rateBuckets.size > 5000) rateBuckets.clear();
+    rateBuckets.set(key, { start: now, count: 1 });
+    return false;
+  }
+  bucket.count += 1;
+  return bucket.count > API_RATE_LIMIT;
 }
 
 function sendText(res, status, message, extraHeaders = {}) {
@@ -748,6 +795,16 @@ const server = http.createServer(async (req, res) => {
     return sendText(res, 405, 'Yalnızca GET ve HEAD destekleniyor.', { 'Allow': 'GET, HEAD, OPTIONS' });
   }
 
+  // API uçları: yabancı origin ve aşırı istek engellenir (sağlık kontrolü hariç).
+  if (reqPath.startsWith('/api/') && reqPath !== '/api/health') {
+    if (!originAllowed(req)) {
+      return sendText(res, 403, 'Bu origin için API erişimi kapalı.', { 'Access-Control-Allow-Origin': 'null' });
+    }
+    if (rateLimited(req)) {
+      return sendText(res, 429, 'Çok fazla istek. Bir dakika sonra tekrar deneyin.', { 'Retry-After': '60' });
+    }
+  }
+
   // --- API: Sağlık kontrolü (istemci statik/sunuculu modu buradan anlar) ---
   if (reqPath === '/api/health') {
     res.writeHead(200, {
@@ -1211,12 +1268,14 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(PORT, HOST, () => {
-  console.log(`Cine3D Netflix server running at http://${HOST}:${PORT}`);
-  if (HOST === '127.0.0.1') {
-    console.log('İpucu: LAN cihazlarından erişmek için HOST=0.0.0.0 ile başlatın.');
-  }
-});
+if (require.main === module) {
+  server.listen(PORT, HOST, () => {
+    console.log(`Cine3D Netflix server running at http://${HOST}:${PORT}`);
+    if (HOST === '127.0.0.1') {
+      console.log('İpucu: LAN cihazlarından erişmek için HOST=0.0.0.0 ile başlatın.');
+    }
+  });
+}
 
 // Beklenmeyen hatalar süreci sessizce öldürüp tüneli düşürüyordu; loglayıp devam et.
 process.on('unhandledRejection', (err) => {
@@ -1229,3 +1288,5 @@ process.on('uncaughtException', (err) => {
 server.on('clientError', (err, socket) => {
   if (socket.writable) socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
+
+module.exports = { isPublicAsset, originAllowed, rateLimited, MIME, PUBLIC_EXT, server };

@@ -85,12 +85,12 @@ function getJson(url) {
   });
 }
 
-function httpStatus(url) {
+function httpStatus(url, extraHeaders = {}) {
   return new Promise((resolve) => {
     // R016 (ZCode): https afiş URL'leri için protokol desteği + timeout
     const mod = url.startsWith('https:') ? https : http;
     try {
-      const req = mod.get(url, (res) => { res.resume(); resolve(res.statusCode); });
+      const req = mod.get(url, { headers: extraHeaders }, (res) => { res.resume(); resolve(res.statusCode); });
       req.on('error', () => resolve(0));
       req.setTimeout(15000, () => { req.destroy(); resolve(0); });
     } catch (e) {
@@ -148,6 +148,36 @@ function check(name, ok, detail = '') {
       htmlVersions.length === 1 && swVersion !== null && htmlVersions[0] === swVersion,
       'index: ' + (htmlVersions.join(', ') || 'yok') + ' / sw: ' + (swVersion || 'yok')
     );
+
+    // 9.5: gerçek sunucu (server.js) beyaz listesi ve API origin kapısı
+    const APP_PORT = Number(process.env.SMOKE_APP_PORT || 8125);
+    const APP_BASE = `http://127.0.0.1:${APP_PORT}/`;
+    let appServer = null;
+    try {
+      appServer = spawn(process.execPath, [path.join(ROOT, 'server.js')], {
+        env: { ...process.env, PORT: String(APP_PORT), HOST: '127.0.0.1', API_RATE_LIMIT: '1000' },
+        stdio: 'ignore'
+      });
+      let appReady = false;
+      for (let i = 0; i < 50 && !appReady; i++) {
+        await sleep(150);
+        appReady = (await httpStatus(APP_BASE + 'api/health')) === 200;
+      }
+      check('server.js ayakta', appReady);
+      if (appReady) {
+        const robots = await httpStatus(APP_BASE + 'robots.txt');
+        const sitemap = await httpStatus(APP_BASE + 'sitemap.xml');
+        check('server.js SEO dosyaları 200', robots === 200 && sitemap === 200, `robots ${robots} / sitemap ${sitemap}`);
+        const t = await httpStatus(APP_BASE + 'tests/features.js');
+        const s = await httpStatus(APP_BASE + 'scripts/audit-identities.js');
+        check('server.js test/araç dosyalarını servis etmez', t === 404 && s === 404, `tests ${t} / scripts ${s}`);
+        const blocked = await httpStatus(APP_BASE + 'api/search?q=matrix', { Origin: 'https://evil.example' });
+        const allowed = await httpStatus(APP_BASE + 'api/search?q=matrix', { Origin: 'https://agarzmilano-png.github.io' });
+        check('server.js API origin kapısı', blocked === 403 && allowed === 200, `evil ${blocked} / izinli ${allowed}`);
+      }
+    } finally {
+      try { if (appServer) appServer.kill(); } catch (e) { /* yoksay */ }
+    }
 
     // --- Chrome ---
     const chromePath = findChrome();
@@ -273,6 +303,18 @@ function check(name, ok, detail = '') {
       return { cards };
     `);
     check('coverflow kartları', !!(cf && cf.cards > 0), cf && cf.cards + ' kart');
+
+    // 9.5: mobil hero noktaları viewport içinde kalmalı (390px'te sol kenar -76px idi)
+    await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
+    await sleep(900);
+    const dots = await evaluate(`
+      const el = document.querySelector('.hero-nav-dots');
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), vw: document.documentElement.clientWidth, scrollW: document.documentElement.scrollWidth };
+    `);
+    check('mobil: hero noktaları ekran içinde', !!dots && dots.left >= 0 && dots.right <= dots.vw + 1 && dots.scrollW <= dots.vw + 1, dots && JSON.stringify(dots));
+    await send('Emulation.clearDeviceMetricsOverride');
 
     // Konsol hataları
     const realErrors = consoleErrors.filter((e) => !/[Ff]avicon|api.health/.test(e));

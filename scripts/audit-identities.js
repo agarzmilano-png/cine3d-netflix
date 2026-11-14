@@ -6,8 +6,17 @@ const { graphql, SEARCH_QUERY, toItem } = require('./build-catalog');
 const { normalize, getText } = require('./catalog-metadata');
 const { writeHealth } = require('./catalog-health');
 const ROOT = path.join(__dirname, '..');
-const SOURCE = path.join(ROOT, 'js/movies-data.js');
+const SOURCE = path.join(ROOT, 'js', 'movies-data.js');
 const CACHE = path.join(__dirname, '.identity-matches.json');
+
+// Yerel "1s 34dk" biçimini dakikaya çevirir (dizi kayıtlarında null).
+// 9.5: JustWatch süresiyle iki kat fark eden kayıtlar (ör. 5 dk'lık kısa film
+// künyesinin 94 dk'lık asıl filme yapışması) denetimde ayrıca raporlanır.
+function durationMinutes(value) {
+  const match = String(value || '').match(/^(\d+)s(?:\s+(\d+)dk)?$/);
+  if (!match) return null;
+  return Number(match[1]) * 60 + Number(match[2] || 0);
+}
 
 function selectImdbIdentity(results, movie, item) {
   const pool = (results || []).filter(entry => /^tt\d+$/.test(entry.id || '') &&
@@ -52,6 +61,7 @@ async function auditIdentities() {
   const movies = new Function(original + '\nreturn MOVIES_DATA;')();
   const matches = [];
   const changes = [];
+  const suspects = [];
   const unresolved = [];
   let overrides = {};
   try { overrides = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/identity-overrides.json'), 'utf8')); } catch (e) { /* ilk denetim */ }
@@ -95,6 +105,14 @@ async function auditIdentities() {
           movie.ageRatingCountry = item.ageRatingCountry;
           movie.ageRatingSource = item.ageRatingSource;
         }
+        const localMinutes = durationMinutes(movie.duration);
+        if (item.runtime && localMinutes && item.type !== 'series') {
+          const diff = Math.abs(localMinutes - item.runtime);
+          if (diff > Math.max(20, item.runtime * 0.5)) {
+            suspects.push({ id: movie.id, title: movie.title, localDuration: movie.duration, localMinutes,
+              indexRuntime: item.runtime, jwId: item.jwId, imdbID: item.imdbID });
+          }
+        }
       }
       done++;
       if (done % 25 === 0) console.log(`${done}/${movies.length} kimlik denetlendi · ${changes.length} düzeltme`);
@@ -108,8 +126,8 @@ async function auditIdentities() {
   fs.writeFileSync(SOURCE, updated);
   fs.writeFileSync(CACHE, JSON.stringify(matches));
   fs.writeFileSync(path.join(ROOT, 'data/identity-overrides.json'), JSON.stringify(overrides, null, 2) + '\n');
-  fs.writeFileSync(path.join(ROOT, 'data/identity-audit.json'), JSON.stringify({ checkedAt: new Date().toISOString(), verified: matches.length, total: movies.length, changes, unresolved }, null, 2) + '\n');
-  console.log(JSON.stringify({ verified: matches.length, corrected: changes.length, unresolved }, null, 2));
+  fs.writeFileSync(path.join(ROOT, 'data/identity-audit.json'), JSON.stringify({ checkedAt: new Date().toISOString(), verified: matches.length, total: movies.length, changes, suspects, unresolved }, null, 2) + '\n');
+  console.log(JSON.stringify({ verified: matches.length, corrected: changes.length, suspects, unresolved }, null, 2));
 }
 if (require.main === module) auditIdentities().catch(error => { console.error(error.message); process.exitCode = 1; });
-module.exports = { selectIdentity, selectImdbIdentity };
+module.exports = { selectIdentity, selectImdbIdentity, durationMinutes };

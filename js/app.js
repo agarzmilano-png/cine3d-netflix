@@ -24,6 +24,13 @@ function escapeHtmlText(value) {
     .replace(/'/g, '&#39;');
 }
 
+// Kaynaktan gelen boş künye değerlerini (“N/A”, “Belirtilmemiş”) arayüzde gizle.
+const EMPTY_META_VALUES = new Set(['n/a', 'na', 'null', 'undefined', '-', '', 'belirtilmemiş', 'bilinmiyor']);
+function metaValue(value) {
+  const text = value == null ? '' : String(value).trim();
+  return EMPTY_META_VALUES.has(text.toLowerCase()) ? '' : text;
+}
+
 // Inline onerror JS'i için başlık kaçış yardımcısı: kesme işareti olan
 // başlıklar (ör. "Ocean's Eleven") JS dizesini kırıyordu; features.js'teki
 // posterFallback deseniyle aynı davranış.
@@ -3091,7 +3098,7 @@ class Cine3DApp {
             <img src="${m1.posterUrl}" class="vs-fighter-poster" alt="${escapeHtmlText(m1.title)}" onerror="this.src=getFallbackPoster('${posterFallbackTitle(m1.title)}', '${posterFallbackTitle(m1.genres[0])}', '${m1.imdbRating}');" />
             <div class="vs-fighter-info">
               <h3 class="vs-fighter-title">${m1.title}</h3>
-              <div class="vs-fighter-meta">${m1.originalTitle} • ${m1.year} • ${m1.director}</div>
+              <div class="vs-fighter-meta">${escapeHtmlText([m1.originalTitle, m1.year, metaValue(m1.director)].filter(Boolean).join(' • '))}</div>
               <div class="vs-fighter-genres">
                 ${m1.genres.map(g => `<span class="vs-genre-tag ${sharedGenres.includes(g) ? 'shared' : ''}">${g}</span>`).join('')}
               </div>
@@ -3119,7 +3126,7 @@ class Cine3DApp {
             <img src="${m2.posterUrl}" class="vs-fighter-poster" alt="${escapeHtmlText(m2.title)}" onerror="this.src=getFallbackPoster('${posterFallbackTitle(m2.title)}', '${posterFallbackTitle(m2.genres[0])}', '${m2.imdbRating}');" />
             <div class="vs-fighter-info">
               <h3 class="vs-fighter-title">${m2.title}</h3>
-              <div class="vs-fighter-meta">${m2.originalTitle} • ${m2.year} • ${m2.director}</div>
+              <div class="vs-fighter-meta">${escapeHtmlText([m2.originalTitle, m2.year, metaValue(m2.director)].filter(Boolean).join(' • '))}</div>
               <div class="vs-fighter-genres">
                 ${m2.genres.map(g => `<span class="vs-genre-tag ${sharedGenres.includes(g) ? 'shared' : ''}">${g}</span>`).join('')}
               </div>
@@ -3541,6 +3548,12 @@ class Cine3DApp {
     ].filter(Boolean).join('');
     const safeGenre = escapeHtmlText((targetMovie.genres && targetMovie.genres[0]) || 'Sinema');
 
+    const revealMeta = [
+      targetMovie.imdbRating ? `⭐ ${escapeHtmlText(targetMovie.imdbRating)} IMDb` : '',
+      escapeHtmlText(targetMovie.year),
+      escapeHtmlText(metaValue(targetMovie.duration)),
+      escapeHtmlText(metaValue(targetMovie.director))
+    ].filter(Boolean).join(' • ');
     revealCard.innerHTML = `
       <img src="${escapeHtmlText(targetMovie.posterUrl)}" class="roulette-reveal-thumb" alt="${safeTitle}" loading="eager"
            data-title="${safeTitle}" data-genre="${safeGenre}" data-rating="${escapeHtmlText(targetMovie.imdbRating)}"
@@ -3548,7 +3561,7 @@ class Cine3DApp {
       <div class="roulette-reveal-info">
         <div class="reveal-crown-line">👑 ŞANSININ SEÇTİĞİ BAŞYAPIT</div>
         <h3 class="reveal-title">${safeTitle}</h3>
-        <div class="reveal-meta">⭐ ${escapeHtmlText(targetMovie.imdbRating)} IMDb • ${escapeHtmlText(targetMovie.year)} • ${escapeHtmlText(targetMovie.duration)} • ${escapeHtmlText(targetMovie.director)}</div>
+        <div class="reveal-meta">${revealMeta}</div>
         ${ctxChips ? `<div class="reveal-context-row">${ctxChips}</div>` : ''}
         <div class="reveal-tagline">“${escapeHtmlText((targetMovie.tagline || targetMovie.summary || '').slice(0, 110))}…”</div>
         <div class="reveal-actions">
@@ -3593,11 +3606,44 @@ class Cine3DApp {
     document.getElementById('roulette-re-spin-btn')?.addEventListener('click', () => this.spinRoulette());
   }
 
-  // --- R016/1 (ZCode): afiş srcset — Amazon URL boyut varyantları (1x=380px, 2x=592px) ---
+  // --- R016/1 + 9.5: afiş srcset — tüm Amazon varyantlarını 592px'e yükseltir ---
+  // Eski sürüm yalnız `_V1_QL75_UX380_CR0,0,380,562_` tam eşleşmesini yükseltiyordu;
+  // farklı CR kırpmaları, UY (yükseklik tabanlı) ve SX300 varyantları 380/300px'te kalıyordu.
+  posterVariants(url) {
+    const base = String(url || '');
+    if (!/m\.media-amazon\.com/.test(base)) return null;
+    const widthOf = (value) => {
+      const ux = value.match(/_UX(\d+)_/);
+      if (ux) return Number(ux[1]);
+      const sx = value.match(/_SX(\d+)(?=[._])/);
+      if (sx) return Number(sx[1]);
+      if (/_UY\d+_/.test(value)) return 380; // 2:3 dikey varyant ~380px genişlik
+      return null;
+    };
+    const baseW = widthOf(base);
+    const largeW = 592;
+    if (!baseW || baseW >= largeW) return null; // zaten yüksek çözünürlük
+
+    const scaleCrop = (value, scale) => value.replace(/_CR(\d+),(\d+),(\d+),(\d+)_/, (m, l, t, w, h) =>
+      `_CR${Math.round(Number(l) * scale)},${Math.round(Number(t) * scale)},${Math.round(Number(w) * scale)},${Math.round(Number(h) * scale)}_`);
+
+    let large = base;
+    if (/_UX\d+_/.test(base)) {
+      const scale = largeW / baseW;
+      large = scaleCrop(base.replace(/_UX\d+_/, `_UX${largeW}_`), scale);
+    } else if (/_UY\d+_/.test(base)) {
+      const oldH = Number(base.match(/_UY(\d+)_/)[1]);
+      const newH = Math.round(oldH * largeW / baseW);
+      large = scaleCrop(base.replace(/_UY\d+_/, `_UY${newH}_`), newH / oldH);
+    } else if (/_SX\d+(?=[._])/.test(base)) {
+      large = base.replace(/_SX\d+/, `_SX${largeW}`);
+    }
+    return large === base ? null : { base, baseW, large, largeW };
+  }
+
   posterSrcset(url) {
-    if (!url || url.indexOf('_V1_QL75_UX380_CR0,0,380,562_') < 0) return '';
-    const large = url.replace('_V1_QL75_UX380_CR0,0,380,562_', '_V1_QL75_UX592_CR0,0,592,876_');
-    return url + ' 380w, ' + large + ' 592w';
+    const variants = this.posterVariants(url);
+    return variants ? `${variants.base} ${variants.baseW}w, ${variants.large} ${variants.largeW}w` : '';
   }
 
   // --- R014/3: AİLE PUAN KARŞILAŞTIRMASI ---
@@ -4001,7 +4047,7 @@ class Cine3DApp {
 
     ctx.fillStyle = '#cbd5e1';
     ctx.font = '13px sans-serif';
-    ctx.fillText(`Yönetmen: ${this.decodeHtmlEntities(movie.director || 'Sinema Başyapıtı')}`, stubX + 35, 138);
+    ctx.fillText(`Yönetmen: ${this.decodeHtmlEntities(metaValue(movie.director) || 'Sinema Başyapıtı')}`, stubX + 35, 138);
 
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 12px sans-serif';
@@ -5115,7 +5161,7 @@ class Cine3DApp {
       { label: 'Yıl', cell: m => escapeHtmlText(m.year) },
       { label: 'Süre', cell: m => escapeHtmlText(m.duration || '—'), best: m => this.nightPlanMinutes(m) },
       { label: 'Türler', cell: m => escapeHtmlText((m.genres || []).join(', ')) },
-      { label: 'Yönetmen', cell: m => escapeHtmlText(m.director || '—') },
+      { label: 'Yönetmen', cell: m => escapeHtmlText(metaValue(m.director) || '—') },
       { label: 'Türkiye Yayıncıları', cell: m => (Array.isArray(m.platforms) && m.platforms.length) ? escapeHtmlText(m.platforms.join(', ')) : '—' }
     ];
 
@@ -6618,7 +6664,7 @@ class Cine3DApp {
             <!-- Sol Kolon: Poster ve IMDb Rozeti -->
             <div class="modal-col-left">
               <div class="modal-poster-wrap card-3d-tilt">
-                <img src="${movie.posterUrl}" alt="${movie.title}" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
+                <img src="${movie.posterUrl}" ${this.posterSrcset(movie.posterUrl) ? `srcset="${this.posterSrcset(movie.posterUrl)}" sizes="300px"` : ''} alt="${movie.title}" data-title="${escapeHtmlText(movie.title)}" data-genre="${escapeHtmlText((movie.genres && movie.genres[0]) || 'Sinema')}" data-rating="${escapeHtmlText(movie.imdbRating)}" onerror="this.onerror=null; this.src=getFallbackPoster(this.dataset.title, this.dataset.genre, this.dataset.rating);" />
               </div>
 
               <!-- IMDb Süper Rozeti -->
@@ -6761,10 +6807,10 @@ class Cine3DApp {
                 <div class="credit-row">
                   <span class="credit-label">Yönetmen / Yapım:</span>
                   <div class="credit-value">
-                    ${movie.director ? `
-                      <button class="credit-pill-btn" data-person="${String(movie.director).replace(/"/g, '&quot;')}" title="${movie.director} filmografisini göster">
+                    ${metaValue(movie.director) ? `
+                      <button class="credit-pill-btn" data-person="${String(metaValue(movie.director)).replace(/"/g, '&quot;')}" title="${metaValue(movie.director)} filmografisini göster">
                         <span>🎬</span>
-                        <span>${movie.director}</span>
+                        <span>${metaValue(movie.director)}</span>
                       </button>
                     ` : '<span>Bilinmiyor</span>'}
                   </div>
@@ -7267,7 +7313,7 @@ class Cine3DApp {
     if (this._ostCache.has(cacheKey)) return this._ostCache.get(cacheKey);
 
     const titles = [movie.originalTitle, movie.title].filter(Boolean);
-    const composer = curatedComposer || (movie.director && movie.director !== 'Belirtilmemiş' ? movie.director : '');
+    const composer = curatedComposer || metaValue(movie.director) || '';
 
     // Aksan/uzatma bağımsız karşılaştırma (Shōgun -> shogun)
     const fold = (s) => String(s || '')
@@ -9753,8 +9799,8 @@ class Cine3DApp {
       sameAs: 'https://www.imdb.com/title/' + imdbId + '/'
     };
 
-    if (movie.director && movie.director !== 'Belirtilmemiş') {
-      ld.director = { '@type': 'Person', name: this.decodeHtmlEntities(movie.director) };
+    if (metaValue(movie.director)) {
+      ld.director = { '@type': 'Person', name: this.decodeHtmlEntities(metaValue(movie.director)) };
     }
 
     const ratingValue = Number(movie.imdbRating);

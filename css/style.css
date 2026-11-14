@@ -1086,6 +1086,30 @@ body {
   box-shadow: 0 0 12px var(--netflix-red-glow);
 }
 
+/* Mobil: 12 nokta sabit 28px + 10px boşlukla 450px yer kaplıyordu ve sol
+   kenar ekran dışına taşıyordu (390px'te -76px). Küçültüp ortala. */
+@media (max-width: 480px) {
+  .hero-nav-dots {
+    left: 50%;
+    right: auto;
+    bottom: 14px;
+    transform: translateX(-50%);
+    gap: 5px;
+    max-width: calc(100% - 20px);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-dot {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hero-dot.active {
+    width: 22px;
+  }
+}
+
 /* --- KONTROL & FİLTRELEME ÇUBUĞU (SABİT / NORMAL AKIŞ) --- */
 .controls-section {
   position: relative;

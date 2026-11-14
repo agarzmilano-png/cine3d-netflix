@@ -4,6 +4,21 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 
 ---
 
+## Düzeltme turu — 9.5
+
+- **"96 Saat / Taken" künyesi onarıldı:** kayıt 5 dakikalık bir kısa filmin verisini (süre, tür, yönetmen, 25 oy, ölü afiş) asıl filmin IMDb kimliğiyle taşıyordu. Süre 1s 34dk, tür Aksiyon/Suç/Gerilim, yönetmen Pierre Morel, oy 681K ve doğrulanmış 592/1280px görsellerle yenilendi. Kısa film karışmasını yakalayan süre denetimi `scripts/audit-identities.js`'e eklendi.
+- **SEO dosyaları sunucu modunda açıldı:** `robots.txt` ve `sitemap.xml` Node sunucusunda 404 dönüyordu; MIME + beyaz liste tamamlandı.
+- **Statik servis yol önekine göre kısıtlandı:** yalnız `index.html`, `manifest.json`, `sw.js`, `robots.txt`, `sitemap.xml` ile `css/ js/ icons/ data/ audio/` altı servis edilir. `tests/`, `scripts/`, `.github/` ve gizli dosyalar 404.
+- **API kötüye kullanım koruması:** OMDb/JustWatch proxy uçları artık yabancı origin'e 403, IP başına dakikada 60 istekten sonra 429 döner (`ALLOWED_ORIGINS`, `API_RATE_LIMIT`).
+- **Mobilde hero noktaları:** 390px'te 450px genişlikle sol kenarı −76px'e taşıyordu (320px'te −143px). 480px altında küçültülüp ortalandı.
+- **“N/A” künye temizliği:** 29 dizide yönetmen alanı `N/A` idi; OMDb yaratıcı bilgisiyle dolduruldu ve `metaValue()` filtresiyle tüm künye yüzeylerinde boş değerler gizlenir.
+- **Afiş kalitesi:** `srcset` yalnız tek bir Amazon URL kalıbını yükseltiyordu (187/250). Farklı kırpma (`CR`), yükseklik (`UY`) ve `SX300` varyantları da 592px'e ölçekleniyor; modal afişi de 2x kaynak alıyor.
+- **Sürüm tek kaynak:** `package.json` (9.5.0), `index.html ?v=9.5` ve `sw.js CACHE_VERSION 9.5` birbiriyle doğrulanıyor; `/api/health` artık doğru sürümü bildirir.
+- **Fragman şeffaflığı:** `catalog-health.json` doğrulanmış (7) ve devralınmış (353) fragman kaynağını ayrı raporlar.
+- **Veri hijyeni:** künyelerdeki `&apos;` gibi HTML entity'leri düz metne çevrildi; `verify-data` artık N/A künye ve gömülü entity'yi hata sayar.
+
+Kontroller: `npm run verify` → 23 regresyon + 22 smoke + 34 tarayıcı özellik testi.
+
 ## Veri kalitesi ve yayın düzeltmeleri — 9.4
 
 - İndeks afişleri en az 592px üretilir; daha yüksek çözünürlük korunur. Düşük çözünürlük artık yayın öncesi test hatasıdır.

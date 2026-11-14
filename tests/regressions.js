@@ -144,6 +144,22 @@ test('IMDb denetimi kısa film/making-of sonucunu asıl film yerine seçmez', ()
   assert.equal(result.id, 'tt0910970');
   assert.equal(selectIdentity([{ ...vendor, type: 'series' }], movie), null);
 });
+test('kısa film künyesi asıl filme karışmaz', () => {
+  const movies = new Function(read('js/movies-data.js') + '\nreturn MOVIES_DATA;')();
+  const taken = movies.find(movie => movie.id === 'taken');
+  assert.ok(taken, 'taken kaydı var');
+  assert.equal(taken.imdbID, 'tt0936501');
+  assert.equal(taken.year, 2008);
+  assert.ok(!taken.genres.includes('Short'), 'kısa film türü sızmamalı');
+  assert.equal(taken.duration, '1s 34dk');
+  assert.equal(taken.director, 'Pierre Morel');
+  assert.ok(taken.cast.includes('Liam Neeson'));
+  assert.ok(taken.imdbRating >= 7 && taken.imdbRating <= 8.5);
+  const indexItem = JSON.parse(read('data/catalog.json')).items.find(item => item.imdbID === taken.imdbID);
+  assert.ok(indexItem, 'asıl film indekste bulunmalı');
+  assert.equal(indexItem.type, 'movie');
+  assert.ok(Math.abs(indexItem.runtime - 94) <= 5, 'indeks süresi asıl filmle uyumlu');
+});
 test('veri raporu ham boş platform ile çözülemeyen yayıncıyı ayırır ve günceldir', () => {
   const catalog = JSON.parse(read('data/catalog.json'));
   const movies = new Function(read('js/movies-data.js') + '\nreturn MOVIES_DATA;')();
@@ -155,5 +171,80 @@ test('veri raporu ham boş platform ile çözülemeyen yayıncıyı ayırır ve 
   assert.deepEqual(JSON.parse(read('data/catalog-health.json')), report);
   assert.equal(movies.find(movie => movie.id === 'wall-e').imdbID, 'tt0910970');
   assert.equal(movies.find(movie => movie.id === 'seven').imdbID, 'tt0114369');
+});
+test('statik beyaz liste kaynak/test dosyalarını servis etmez, SEO dosyalarını eder', () => {
+  const { isPublicAsset } = require('../server');
+  assert.equal(isPublicAsset('index.html', '.html'), true);
+  assert.equal(isPublicAsset('robots.txt', '.txt'), true);
+  assert.equal(isPublicAsset('sitemap.xml', '.xml'), true);
+  assert.equal(isPublicAsset('js/app.js', '.js'), true);
+  assert.equal(isPublicAsset('js/vendor/three.min.js', '.js'), true);
+  assert.equal(isPublicAsset('data/catalog.json', '.json'), true);
+  assert.equal(isPublicAsset('audio/ost/inception.mp3', '.mp3'), true);
+  assert.equal(isPublicAsset('tests/features.js', '.js'), false);
+  assert.equal(isPublicAsset('scripts/build-catalog.js', '.js'), false);
+  assert.equal(isPublicAsset('server.js', '.js'), false);
+  assert.equal(isPublicAsset('.env', ''), false);
+  assert.equal(isPublicAsset('data/notes.txt', '.txt'), false);
+  assert.equal(isPublicAsset('data/.cache.json', '.json'), false);
+  assert.equal(isPublicAsset('zcode-kopru/RAPOR/R001.md', '.md'), false);
+});
+test('API yalnız izinli origin ve hız sınırı ile açılır', () => {
+  const { originAllowed, rateLimited } = require('../server');
+  assert.equal(originAllowed({ headers: {} }), true);
+  assert.equal(originAllowed({ headers: { origin: 'https://evil.example' } }), false);
+  assert.equal(originAllowed({ headers: { origin: 'https://agarzmilano-png.github.io' } }), true);
+  assert.equal(originAllowed({ headers: { origin: 'http://localhost:3300' } }), true);
+  assert.equal(originAllowed({ headers: { origin: 'http://127.0.0.1:8123' } }), true);
+  const socket = { remoteAddress: '10.0.0.99' };
+  for (let i = 0; i < 60; i++) assert.equal(rateLimited({ socket }), false);
+  assert.equal(rateLimited({ socket }), true);
+});
+test('afiş üretici tüm Amazon varyantlarını 592px\'e yükseltir', () => {
+  const instance = Object.create(context.App.prototype);
+  const base = 'https://m.media-amazon.com/images/M/X@._V1_QL75_UX380_CR0,0,380,562_.jpg';
+  assert.match(instance.posterSrcset(base), /_UX592_CR0,0,592,876_\.jpg 592w$/);
+  const crop = 'https://m.media-amazon.com/images/M/X@._V1_QL75_UX380_CR0,4,380,562_.jpg';
+  assert.match(instance.posterSrcset(crop), /_UX592_CR0,6,592,876_\.jpg 592w$/);
+  const heightBased = 'https://m.media-amazon.com/images/M/X@._V1_QL75_UY562_CR1,0,380,562_.jpg';
+  assert.match(instance.posterSrcset(heightBased), /_UY876_CR2,0,592,876_\.jpg 592w$/);
+  const small = 'https://m.media-amazon.com/images/M/X@._V1_SX300.jpg';
+  assert.match(instance.posterSrcset(small), /_SX592\.jpg 592w$/);
+  const alreadyLarge = 'https://m.media-amazon.com/images/M/X@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg';
+  assert.equal(instance.posterSrcset(alreadyLarge), '');
+  assert.equal(instance.posterSrcset('https://example.com/poster.jpg'), '');
+  assert.equal(instance.posterSrcset(''), '');
+});
+test('tüm alt çözünürlüklü katalog afişleri 2x kaynak üretebiliyor', () => {
+  const instance = Object.create(context.App.prototype);
+  const movies = vm.runInContext('MOVIES_DATA', context);
+  const widthOf = (url) => {
+    const ux = String(url).match(/_UX(\d+)_/);
+    if (ux) return Number(ux[1]);
+    const sx = String(url).match(/_SX(\d+)(?=[._])/);
+    if (sx) return Number(sx[1]);
+    return /_UY\d+_/.test(String(url)) ? 380 : null;
+  };
+  const missing = movies.filter(movie => {
+    const width = widthOf(movie.posterUrl);
+    return width && width < 592 && !instance.posterSrcset(movie.posterUrl);
+  });
+  assert.equal(missing.length, 0, 'yükseltilemeyen afiş: ' + missing.map(movie => movie.id).join(', '));
+});
+test('süre uyuşmazlığı denetimi kısa film karışmasını yakalar', () => {
+  const { durationMinutes } = require('../scripts/audit-identities');
+  assert.equal(durationMinutes('1s 34dk'), 94);
+  assert.equal(durationMinutes('2s 10dk'), 130);
+  assert.equal(durationMinutes('0s 5dk'), 5);
+  assert.equal(durationMinutes('3 Sezon'), null);
+  assert.equal(durationMinutes(''), null);
+});
+test('künyede boş (N/A) değerler gizleniyor', () => {
+  const metaValue = vm.runInContext('metaValue', context);
+  for (const value of ['N/A', 'n/a', 'Belirtilmemiş', 'bilinmiyor', '', null, undefined, '-']) {
+    assert.equal(metaValue(value), '');
+  }
+  assert.equal(metaValue('Pierre Morel'), 'Pierre Morel');
+  assert.equal(metaValue('Mark Gatiss, Steven Moffat'), 'Mark Gatiss, Steven Moffat');
 });
 console.log(`\n${passed}/${passed} regresyon testi geçti`);

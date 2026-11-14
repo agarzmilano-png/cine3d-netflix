@@ -4928,7 +4928,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gizem"
   ],
-  "director": "N/A",
+  "director": "Mark Gatiss, Steven Moffat",
   "cast": [
    "Benedict Cumberbatch",
    "Martin Freeman",
@@ -5437,27 +5437,29 @@ const MOVIES_DATA = [
  {
   "id": "taken",
   "imdbID": "tt0936501",
-  "title": "Taken",
+  "title": "96 Saat",
   "originalTitle": "Taken",
   "year": 2008,
-  "imdbRating": 8.4,
-  "imdbVotes": "25",
-  "duration": "0s 5dk",
+  "imdbRating": 7.7,
+  "imdbVotes": "681K",
+  "duration": "1s 34dk",
   "ageRating": "13+",
   "genres": [
-   "Short",
-   "Komedi"
+   "Aksiyon",
+   "Suç",
+   "Gerilim"
   ],
-  "director": "Don Sniffin",
+  "director": "Pierre Morel",
   "cast": [
-   "Ryan Dean",
-   "Ellen Ranson"
+   "Liam Neeson",
+   "Maggie Grace",
+   "Famke Janssen"
   ],
   "tagline": "Onu bulacağım.",
-  "awards": "Popüler Sinema/Dizi",
-  "summary": "Eski ajan Bryan Mills, Paris'te kaçırılan kızını 96 saat içinde kurtarmak için becerilerini yeniden kullanır. Telefon konuşması sahnesi, intikam aksiyonunun en bilinen anlaşma cümlesini kurdu.",
-  "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDVlZDNhMGItNGI4Yy00MWU0LTg0ZDctZDA3ZGFmMzU0OGQzL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQzODk0NTU@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BMDVlZDNhMGItNGI4Yy00MWU0LTg0ZDctZDA3ZGFmMzU0OGQzL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQzODk0NTU@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
+  "awards": "2 ödül, 2 adaylık",
+  "summary": "Eski gizli ajan Bryan Mills, Paris'te kaçırılan kızını 96 saat içinde kurtarmak için tüm becerilerini devreye sokar. Telefon konuşması sahnesi, intikam aksiyonunun en bilinen anlaşma cümlesini kurdu.",
+  "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTAxNTY2NjMtYjk5Yy00Nzg4LTkyMmItYmMzMDM2OWQ1ZGQ3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+  "backdropUrl": "https://m.media-amazon.com/images/M/MV5BYTAxNTY2NjMtYjk5Yy00Nzg4LTkyMmItYmMzMDM2OWQ1ZGQ3XkEyXkFqcGc@._V1_QL75_UX1280_CR0,0,1280,1893_.jpg",
   "trailerYoutubeId": "XK9zL0ze9O4",
   "platforms": [],
   "themeColor": "#38bdf8",
@@ -5742,7 +5744,7 @@ const MOVIES_DATA = [
    "Dram",
    "Spor"
   ],
-  "director": "Gavin O&apos;Connor",
+  "director": "Gavin O'Connor",
   "cast": [
    "Tom Hardy",
    "Nick Nolte",
@@ -6264,7 +6266,7 @@ const MOVIES_DATA = [
    "Suç",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Vince Gilligan, Peter Gould",
   "cast": [
    "Bob Odenkirk",
    "Rhea Seehorn",
@@ -6302,7 +6304,7 @@ const MOVIES_DATA = [
    "Suç",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Steven Knight",
   "cast": [
    "Cillian Murphy",
    "Paul Anderson",
@@ -6380,7 +6382,7 @@ const MOVIES_DATA = [
    "Suç",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Álex Pina",
   "cast": [
    "Úrsula Corberó",
    "Álvaro Morte",
@@ -6419,7 +6421,7 @@ const MOVIES_DATA = [
    "Suç",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Carlo Bernard, Chris Brancato, Doug Miro",
   "cast": [
    "Pedro Pascal",
    "Wagner Moura",
@@ -6458,7 +6460,7 @@ const MOVIES_DATA = [
    "Dram",
    "Tarih"
   ],
-  "director": "N/A",
+  "director": "Peter Morgan",
   "cast": [
    "Claire Foy",
    "Olivia Colman",
@@ -6495,7 +6497,7 @@ const MOVIES_DATA = [
    "Komedi",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Phoebe Waller-Bridge",
   "cast": [
    "Phoebe Waller-Bridge",
    "Sian Clifford",
@@ -6534,7 +6536,7 @@ const MOVIES_DATA = [
    "Suç",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Paul T. Scheuring",
   "cast": [
    "Dominic Purcell",
    "Wentworth Miller",
@@ -6571,7 +6573,7 @@ const MOVIES_DATA = [
   "genres": [
    "Dram"
   ],
-  "director": "N/A",
+  "director": "David Shore",
   "cast": [
    "Hugh Laurie",
    "Omar Epps",
@@ -6611,7 +6613,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gizem"
   ],
-  "director": "N/A",
+  "director": "James Manos Jr.",
   "cast": [
    "Michael C. Hall",
    "Jennifer Carpenter",
@@ -6650,7 +6652,7 @@ const MOVIES_DATA = [
    "Komedi",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Aaron Korsh",
   "cast": [
    "Gabriel Macht",
    "Patrick J. Adams",
@@ -6690,7 +6692,7 @@ const MOVIES_DATA = [
    "Dram",
    "Romantik"
   ],
-  "director": "N/A",
+  "director": "Carter Bays, Craig Thomas",
   "cast": [
    "Josh Radnor",
    "Jason Segel",
@@ -6728,7 +6730,7 @@ const MOVIES_DATA = [
    "Komedi",
    "Romantik"
   ],
-  "director": "N/A",
+  "director": "Chuck Lorre, Bill Prady",
   "cast": [
    "Johnny Galecki",
    "Jim Parsons",
@@ -6767,7 +6769,7 @@ const MOVIES_DATA = [
    "Macera",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Michael Hirst",
   "cast": [
    "Katheryn Winnick",
    "Gustaf Skarsgård",
@@ -6806,7 +6808,7 @@ const MOVIES_DATA = [
    "Dram",
    "Tarih"
   ],
-  "director": "N/A",
+  "director": "Tom Hanks, Steven Spielberg",
   "cast": [
    "Scott Grimes",
    "Damian Lewis",
@@ -6847,7 +6849,7 @@ const MOVIES_DATA = [
    "Suç",
    "Fantastik"
   ],
-  "director": "N/A",
+  "director": "Alfred Gough, Miles Millar",
   "cast": [
    "Jenna Ortega",
    "Emma Myers",
@@ -6884,7 +6886,7 @@ const MOVIES_DATA = [
   "genres": [
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Scott Frank, Allan Scott",
   "cast": [
    "Anya Taylor-Joy",
    "Chloe Pirrie",
@@ -6923,7 +6925,7 @@ const MOVIES_DATA = [
    "Bilim Kurgu",
    "Gerilim"
   ],
-  "director": "N/A",
+  "director": "Bruce Miller",
   "cast": [
    "Elisabeth Moss",
    "Yvonne Strahovski",
@@ -6963,7 +6965,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gerilim"
   ],
-  "director": "N/A",
+  "director": "Beau Willimon",
   "cast": [
    "Kevin Spacey",
    "Michel Gill",
@@ -7002,7 +7004,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gizem"
   ],
-  "director": "N/A",
+  "director": "Nic Pizzolatto, Issa López",
   "cast": [
    "Vince Vaughn",
    "Colin Farrell",
@@ -7042,7 +7044,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gizem"
   ],
-  "director": "N/A",
+  "director": "Joe Penhall",
   "cast": [
    "Jonathan Groff",
    "Holt McCallany",
@@ -7081,7 +7083,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gerilim"
   ],
-  "director": "N/A",
+  "director": "Sam Esmail",
   "cast": [
    "Rami Malek",
    "Christian Slater",
@@ -7118,7 +7120,7 @@ const MOVIES_DATA = [
    "Dram",
    "Fantastik"
   ],
-  "director": "N/A",
+  "director": "J.J. Abrams, Jeffrey Lieber, Damon Lindelof",
   "cast": [
    "Naveen Andrews",
    "Matthew Fox",
@@ -7157,7 +7159,7 @@ const MOVIES_DATA = [
    "Korku",
    "Gerilim"
   ],
-  "director": "N/A",
+  "director": "Frank Darabont",
   "cast": [
    "Andrew Lincoln",
    "Norman Reedus",
@@ -7198,10 +7200,10 @@ const MOVIES_DATA = [
    "Macera",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Ryan J. Condal, George R.R. Martin",
   "cast": [
    "Matt Smith",
-   "Emma D&apos;Arcy",
+   "Emma D'Arcy",
    "Olivia Cooke"
   ],
   "tagline": "Ejderhalar uyanıyor.",
@@ -7238,7 +7240,7 @@ const MOVIES_DATA = [
    "Aksiyon",
    "Macera"
   ],
-  "director": "N/A",
+  "director": "Yasuko Kobayashi, Hiroshi Seko",
   "cast": [
    "Jessie James Grelle",
    "Bryce Papenbrook",
@@ -7275,7 +7277,7 @@ const MOVIES_DATA = [
    "Aksiyon",
    "Macera"
   ],
-  "director": "N/A",
+  "director": "Hiromu Arakawa",
   "cast": [
    "Kent Williams",
    "Iemasa Kayumi",
@@ -7312,7 +7314,7 @@ const MOVIES_DATA = [
    "Komedi",
    "Dram"
   ],
-  "director": "N/A",
+  "director": "Josh Heald, Jon Hurwitz, Hayden Schlossberg",
   "cast": [
    "Ralph Macchio",
    "William Zabka",
@@ -7351,7 +7353,7 @@ const MOVIES_DATA = [
    "Dram",
    "Gerilim"
   ],
-  "director": "N/A",
+  "director": "Noah Hawley",
   "cast": [
    "Billy Bob Thornton",
    "Martin Freeman",
@@ -9121,7 +9123,7 @@ const MOVIES_DATA = [
   "cast": [
    "Matthew Modine",
    "R. Lee Ermey",
-   "Vincent D&apos;Onofrio"
+   "Vincent D'Onofrio"
   ],
   "tagline": "Savaş zihni değiştirir.",
   "awards": "Nominated for 1 Oscar. 8 wins & 17 nominations total",
@@ -9420,7 +9422,7 @@ const MOVIES_DATA = [
   ],
   "director": "Ron Clements",
   "cast": [
-   "Auli&apos;i Cravalho",
+   "Auli'i Cravalho",
    "Dwayne Johnson",
    "Rachel House"
   ],
@@ -9882,7 +9884,7 @@ const MOVIES_DATA = [
   "cast": [
    "Chadwick Boseman",
    "Michael B. Jordan",
-   "Lupita Nyong&apos;o"
+   "Lupita Nyong'o"
   ],
   "tagline": "Wakanda sonsuza kadar.",
   "awards": "Won 3 Oscars. 125 wins & 289 nominations total",

@@ -88,6 +88,20 @@ movies.forEach((m, i) => {
   else if (!Array.isArray(m.platforms)) fail(`${where}: platforms dizi değil`);
   if (m.isSeries !== undefined && typeof m.isSeries !== 'boolean') fail(`${where}: isSeries boolean değil`);
   if (m.ageRating && !knownRating(m.ageRating)) warn(`${where}: ageRating biçimi beklenmedik → ${m.ageRating}`);
+
+  // 9.5: kaynaktan gelen “N/A”/boş künye arayüze sızmasın
+  if (/^(N\/A|NA|null|undefined|-)$/i.test(String(m.director || '').trim())) {
+    fail(`${where}: director kaynakta boş (N/A)`);
+  }
+  if (Array.isArray(m.cast) && m.cast.some(actor => /^(N\/A|NA)$/i.test(String(actor).trim()))) {
+    fail(`${where}: cast içinde N/A kaydı var`);
+  }
+  // 9.5: HTML entity'leri veri katmanında taşınmaz (escapeHtmlText ile çift kaçış riski)
+  const entityFields = [m.title, m.originalTitle, m.director, m.tagline, m.summary, m.awards]
+    .concat(Array.isArray(m.cast) ? m.cast : []);
+  if (entityFields.some(value => typeof value === 'string' && /&(apos|amp|quot|lt|gt|#\d+);/i.test(value))) {
+    fail(`${where}: HTML entity'si veriye gömülmüş (düz metin olmalı)`);
+  }
 });
 
 if (movies.length < 100) fail(`film sayısı beklenenden az: ${movies.length} (>=100 beklenir)`);
@@ -119,6 +133,7 @@ try {
   if (health.mainCatalog.unresolved.length) warn(`${health.mainCatalog.unresolved.length} ana katalog yapımının yayıncı bilgisi doğrulanamadı: ${health.mainCatalog.unresolved.map(m => m.title).join(', ')}`);
   if (health.index.missingAge) warn(`${health.index.missingAge} indeks kaydında kaynak yaş sınıfı yok; çocuk profillerinde engellenir.`);
   if (health.index.missingTrailer) warn(`${health.index.missingTrailer} indeks kaydında doğrulanmış doğrudan fragman yok; açıkça etiketlenmiş YouTube araması sunulur.`);
+  if (health.index.legacyTrailers) warn(`${health.index.legacyTrailers} indeks kaydındaki fragman kaynağı devralınmış (oEmbed kaydı yok); arayüzde “doğrulanmış” diye sunulmuyor.`);
   const savedHealth = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/catalog-health.json'), 'utf8'));
   if (JSON.stringify(savedHealth) !== JSON.stringify(health)) fail('catalog-health.json güncel değil: npm run catalog:health çalıştırın.');
 } catch (e) {
@@ -144,10 +159,15 @@ try {
 try {
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+  const pkgVersion = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
   const htmlVersions = [...new Set((html.match(/\?v=([\d.]+)/g) || []).map(s => s.slice(3)))];
   const swVersion = (sw.match(/CACHE_VERSION = '([^']+)'/) || [])[1] || null;
   if (htmlVersions.length !== 1 || !swVersion || htmlVersions[0] !== swVersion) {
     fail(`sürüm etiketleri tutarsız: index=${htmlVersions.join(',') || 'yok'} / sw=${swVersion || 'yok'}`);
+  }
+  // 9.5: package.json sürümü de aynı hattı göstermeli (health ucu buradan okuyor)
+  if (!swVersion || (pkgVersion !== swVersion && !pkgVersion.startsWith(swVersion + '.'))) {
+    fail(`package.json sürümü site sürümüyle uyuşmuyor: package=${pkgVersion} / sw=${swVersion || 'yok'}`);
   }
 } catch (e) {
   fail(`sürüm kontrolü yapılamadı: ${e.message}`);
