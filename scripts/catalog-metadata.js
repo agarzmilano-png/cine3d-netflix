@@ -30,6 +30,20 @@ function certification(node) {
   return { ageRating: null, ageRatingCountry: null, ageRatingSource: null };
 }
 
+// Yaş sınıfını kaba bir sıraya çevirir; denetim mevcut sınıflandırmayı
+// gevşetmemek için kullanır (ör. R/18 → 15 geçişi kabul edilmez).
+function ageRank(value) {
+  const text = String(value || '').trim().toUpperCase();
+  if (!text || /^(N\/A|NR|UNRATED|NOT RATED)$/.test(text)) return null;
+  if (/^(NC-17|R|TV-MA|18\+?|18|X)$/.test(text)) return 18;
+  if (/^(15\+?|15|TV-14|MA15\+)$/.test(text)) return 15;
+  if (/^(12A|12\+?|PG-13|13\+?|13|TV-PG|M)$/.test(text)) return 13;
+  if (/^(PG|10\+?|10|TV-Y7|7\+?|7)$/.test(text)) return 7;
+  if (/^(G|U|GENEL|TV-G|TV-Y|6\+?|6)$/.test(text)) return 0;
+  const numeric = parseInt(text, 10);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
 function sameIdentity(item, movie) {
   if (item.imdbID && movie.imdbID) return item.imdbID === movie.imdbID;
   return item.y === Number(movie.year) && (item.type === 'series') === !!movie.isSeries &&
@@ -104,4 +118,4 @@ async function findTrailer(item, { timeoutMs = 20000 } = {}) {
   return null;
 }
 
-module.exports = { normalize, posterUrl, knownRating, certification, sameIdentity, getText, videoMetadata, trailerMatches, searchVideoIds, findTrailer };
+module.exports = { normalize, posterUrl, knownRating, certification, ageRank, sameIdentity, getText, videoMetadata, trailerMatches, searchVideoIds, findTrailer };

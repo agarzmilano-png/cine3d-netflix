@@ -21,6 +21,7 @@ server.js.bak
 # OST doğrulama önbelleği (üretilen çalışma dosyası)
 scripts/.ost-cache.json
 scripts/.trailer-cache.json
+scripts/.trailer-verify-cache.json
 scripts/.identity-matches.json
 data/catalog.json.tmp
 

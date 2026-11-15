@@ -33,7 +33,8 @@ function catalogHealth(movies, catalog) {
       nonTurkishAge: index.items.filter(item => item.ageRatingCountry && item.ageRatingCountry !== 'TR').length,
       missingTrailer: index.items.filter(item => !item.yt).length,
       // 9.5: tam kaynak kaydı (oEmbed: başlık/kanal/tarih) ile devralınmış kaydı ayır
-      verifiedTrailers: index.items.filter(item => item.yt && item.trailerVerification?.checkedAt).length,
+      verifiedTrailers: index.items.filter(item => item.yt && item.trailerVerification?.checkedAt && item.trailerVerification.match !== 'weak').length,
+      weakTrailers: index.items.filter(item => item.yt && item.trailerVerification?.checkedAt && item.trailerVerification.match === 'weak').length,
       legacyTrailers: index.items.filter(item => item.yt && !item.trailerVerification?.checkedAt).length
     }
   };

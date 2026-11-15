@@ -1,78 +1,46 @@
 {
-  "checkedAt": "2026-11-13T21:07:09.302Z",
-  "verified": 244,
+  "checkedAt": "2026-11-15T00:01:14.105Z",
+  "verified": 250,
   "total": 250,
-  "changes": [
-    {
-      "id": "wall-e",
-      "title": "VOL-İ",
-      "previousImdbID": "tt14055868",
-      "imdbID": "tt0910970",
-      "previousYear": 2008,
-      "year": 2008,
-      "source": "tm25151"
-    },
-    {
-      "id": "coherence",
-      "title": "Paralel Evren",
-      "previousImdbID": "tt2866360",
-      "imdbID": "tt2866360",
-      "previousYear": 2014,
-      "year": 2013,
-      "source": "tm165603"
-    },
-    {
-      "id": "v-for-vendetta",
-      "title": "V for Vendetta",
-      "previousImdbID": "tt0434409",
-      "imdbID": "tt0434409",
-      "previousYear": 2006,
-      "year": 2005,
-      "source": "tm184362"
-    },
-    {
-      "id": "ex-machina",
-      "title": "Ex Machina",
-      "previousImdbID": "tt0470752",
-      "imdbID": "tt0470752",
-      "previousYear": 2015,
-      "year": 2014,
-      "source": "tm139224"
-    },
-    {
-      "id": "casablanca",
-      "title": "Casablanca",
-      "previousImdbID": "tt0034583",
-      "imdbID": "tt0034583",
-      "previousYear": 1943,
-      "year": 1942,
-      "source": "tm77588"
-    }
-  ],
-  "unresolved": [
+  "changes": [],
+  "confirmedByImdb": [
     {
       "id": "parasite",
-      "title": "Parazit"
+      "title": "Parazit",
+      "imdbID": "tt6751668",
+      "source": "OMDb başlık/yıl/tür"
     },
     {
       "id": "arog",
-      "title": "A.R.O.G."
+      "title": "A.R.O.G.",
+      "imdbID": "tt1286126",
+      "source": "OMDb başlık/yıl/tür"
     },
     {
       "id": "the-pianist",
-      "title": "Piyanist"
+      "title": "Piyanist",
+      "imdbID": "tt0253474",
+      "source": "OMDb başlık/yıl/tür"
     },
     {
       "id": "grave-of-the-fireflies",
-      "title": "Ateşböceklerinin Mezarı"
+      "title": "Ateşböceklerinin Mezarı",
+      "imdbID": "tt0095327",
+      "source": "OMDb başlık/yıl/tür"
     },
     {
       "id": "yuzuklerin-efendisi-iki-kule",
-      "title": "Yüzüklerin Efendisi: İki Kule"
+      "title": "Yüzüklerin Efendisi: İki Kule",
+      "imdbID": "tt0167261",
+      "source": "OMDb başlık/yıl/tür"
     },
     {
       "id": "yuzuklerin-efendisi-kral-n-donusu",
-      "title": "Yüzüklerin Efendisi: Kralın Dönüşü"
+      "title": "Yüzüklerin Efendisi: Kralın Dönüşü",
+      "imdbID": "tt0167260",
+      "source": "OMDb başlık/yıl/tür"
     }
-  ]
+  ],
+  "suspects": [],
+  "unresolved": []
 }

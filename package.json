@@ -1,6 +1,6 @@
 {
   "name": "cine3d-netflix",
-  "version": "9.5.0",
+  "version": "9.6.0",
   "description": "Cine3D Netflix - 3D Sinematik Film & Dizi Keşif Platformu (Three.js + OMDb + JustWatch entegrasyonlu)",
   "main": "server.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "catalog": "node scripts/build-catalog.js",
     "catalog:health": "node scripts/catalog-health.js",
     "catalog:trailers": "node scripts/repair-trailers.js",
+    "catalog:verify-trailers": "node scripts/verify-trailers.js",
     "catalog:identities": "node scripts/audit-identities.js",
     "imdb": "node scripts/enrich-imdb.js",
     "smoke": "node tests/smoke.js",

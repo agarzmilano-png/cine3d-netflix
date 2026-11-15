@@ -190,12 +190,19 @@ test('statik beyaz liste kaynak/test dosyalarını servis etmez, SEO dosyaların
   assert.equal(isPublicAsset('zcode-kopru/RAPOR/R001.md', '.md'), false);
 });
 test('API yalnız izinli origin ve hız sınırı ile açılır', () => {
-  const { originAllowed, rateLimited } = require('../server');
+  const { originAllowed, rateLimited, isRateLimitedPath } = require('../server');
   assert.equal(originAllowed({ headers: {} }), true);
   assert.equal(originAllowed({ headers: { origin: 'https://evil.example' } }), false);
   assert.equal(originAllowed({ headers: { origin: 'https://agarzmilano-png.github.io' } }), true);
   assert.equal(originAllowed({ headers: { origin: 'http://localhost:3300' } }), true);
   assert.equal(originAllowed({ headers: { origin: 'http://127.0.0.1:8123' } }), true);
+  // Akış ucu Range istekleriyle çalışır; JSON API kotasına dahil edilmez.
+  assert.equal(isRateLimitedPath('/api/search'), true);
+  assert.equal(isRateLimitedPath('/api/details'), true);
+  assert.equal(isRateLimitedPath('/api/trailer'), true);
+  assert.equal(isRateLimitedPath('/api/stream-ost'), false);
+  assert.equal(isRateLimitedPath('/api/health'), false);
+  assert.equal(isRateLimitedPath('/js/app.js'), false);
   const socket = { remoteAddress: '10.0.0.99' };
   for (let i = 0; i < 60; i++) assert.equal(rateLimited({ socket }), false);
   assert.equal(rateLimited({ socket }), true);
@@ -247,4 +254,41 @@ test('künyede boş (N/A) değerler gizleniyor', () => {
   assert.equal(metaValue('Pierre Morel'), 'Pierre Morel');
   assert.equal(metaValue('Mark Gatiss, Steven Moffat'), 'Mark Gatiss, Steven Moffat');
 });
-console.log(`\n${passed}/${passed} regresyon testi geçti`);
+test('devralınmış fragman sınıflandırması canlı/ölü/yanlış ayrımı yapar', () => {
+  const { classifyOembed } = require('../scripts/verify-trailers');
+  const item = { o: 'Dune', t: 'Dune', y: 2021, type: 'movie' };
+  assert.equal(classifyOembed(200, { title: 'Dune Official Trailer (2021)', author_name: 'Warner Bros. Pictures' }, item).match, 'strong');
+  assert.equal(classifyOembed(200, { title: 'Dune Fragman', author_name: 'Bilinmeyen Kanal' }, item).match, 'weak');
+  assert.equal(classifyOembed(400, null, item).verdict, 'rejected');
+  assert.equal(classifyOembed(404, null, item).verdict, 'rejected');
+  assert.equal(classifyOembed(200, { title: 'Dune Official Trailer (1984)', author_name: 'Warner Bros. Pictures' }, item).verdict, 'rejected');
+  assert.equal(classifyOembed(200, { title: 'Dune full movie', author_name: 'Warner Bros. Pictures' }, item).verdict, 'rejected');
+  assert.equal(classifyOembed(0, null, item).verdict, 'skipped');
+  assert.equal(classifyOembed(503, null, item).verdict, 'skipped');
+});
+test('yaş sınıfı sıralaması gevşetmeyi engeller', () => {
+  const { ageRank } = require('../scripts/catalog-metadata');
+  assert.equal(ageRank('R'), 18);
+  assert.equal(ageRank('TV-MA'), 18);
+  assert.equal(ageRank('15'), 15);
+  assert.equal(ageRank('PG-13'), 13);
+  assert.equal(ageRank('12A'), 13);
+  assert.equal(ageRank('PG'), 7);
+  assert.equal(ageRank('G'), 0);
+  assert.equal(ageRank('N/A'), null);
+  assert.equal(ageRank(''), null);
+  assert.ok(ageRank('R') > ageRank('15'));
+  assert.ok(ageRank('15') > ageRank('PG-13'));
+});
+
+test('OMDb kimlik doğrulaması yerelleştirilmiş başlıkta yıl+tür ister', () => {
+  const { omdbIdentityMatches } = require('../scripts/audit-identities');
+  const parasite = { title: 'Parazit', originalTitle: '기생충', year: 2019, duration: '2s 12dk', imdbID: 'tt6751668' };
+  assert.equal(omdbIdentityMatches({ Title: 'Parasite', Year: '2019', Type: 'movie', imdbID: 'tt6751668' }, parasite), true);
+  assert.equal(omdbIdentityMatches({ Title: 'Parasite', Year: '2017', Type: 'movie', imdbID: 'tt6751668' }, parasite), false);
+  assert.equal(omdbIdentityMatches({ Title: 'Parasite', Year: '2019', Type: 'series', imdbID: 'tt6751668' }, parasite), false);
+  const series = { title: 'Sherlock', originalTitle: 'Sherlock', year: 2010, duration: '4 Sezon', imdbID: 'tt1475582' };
+  assert.equal(omdbIdentityMatches({ Title: 'Sherlock', Year: '2010–2017', Type: 'series', imdbID: 'tt1475582' }, series), true);
+});
+console.log(`
+${passed}/${passed} regresyon testi geçti`);

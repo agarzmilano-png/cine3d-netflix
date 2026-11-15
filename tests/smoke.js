@@ -155,7 +155,7 @@ function check(name, ok, detail = '') {
     let appServer = null;
     try {
       appServer = spawn(process.execPath, [path.join(ROOT, 'server.js')], {
-        env: { ...process.env, PORT: String(APP_PORT), HOST: '127.0.0.1', API_RATE_LIMIT: '1000' },
+        env: { ...process.env, PORT: String(APP_PORT), HOST: '127.0.0.1', API_RATE_LIMIT: '3' },
         stdio: 'ignore'
       });
       let appReady = false;
@@ -174,6 +174,13 @@ function check(name, ok, detail = '') {
         const blocked = await httpStatus(APP_BASE + 'api/search?q=matrix', { Origin: 'https://evil.example' });
         const allowed = await httpStatus(APP_BASE + 'api/search?q=matrix', { Origin: 'https://agarzmilano-png.github.io' });
         check('server.js API origin kapısı', blocked === 403 && allowed === 200, `evil ${blocked} / izinli ${allowed}`);
+        // 9.5/1: JSON API sınırı (3) dolar, medya akışı sınırdan muaf kalır.
+        await httpStatus(APP_BASE + 'api/search?q=matrix');
+        await httpStatus(APP_BASE + 'api/search?q=matrix');
+        const limited = await httpStatus(APP_BASE + 'api/search?q=matrix');
+        const audio = [];
+        for (let i = 0; i < 4; i++) audio.push(await httpStatus(APP_BASE + 'api/stream-ost?id=inception'));
+        check('server.js JSON API sınırı + akış muafiyeti', limited === 429 && audio.every(code => code === 200), `api ${limited} / akış ${audio.join(',')}`);
       }
     } finally {
       try { if (appServer) appServer.kill(); } catch (e) { /* yoksay */ }

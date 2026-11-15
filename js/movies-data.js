@@ -1,5 +1,5 @@
 /**
- * CINE3D NETFLIX - Genişletilmiş ve Doğrulanmış Film & Dizi Veritabanı (109 Yapım)
+ * CINE3D NETFLIX - Genişletilmiş ve Doğrulanmış Film & Dizi Veritabanı
  * Gerçek IMDb puanları, kategoriler, detaylı konular, doğrulanmış Türkiye yayıncıları ve Ruh Hali (Mood) eşleşmeleri
  */
 

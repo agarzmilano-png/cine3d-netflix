@@ -134,6 +134,7 @@ try {
   if (health.index.missingAge) warn(`${health.index.missingAge} indeks kaydında kaynak yaş sınıfı yok; çocuk profillerinde engellenir.`);
   if (health.index.missingTrailer) warn(`${health.index.missingTrailer} indeks kaydında doğrulanmış doğrudan fragman yok; açıkça etiketlenmiş YouTube araması sunulur.`);
   if (health.index.legacyTrailers) warn(`${health.index.legacyTrailers} indeks kaydındaki fragman kaynağı devralınmış (oEmbed kaydı yok); arayüzde “doğrulanmış” diye sunulmuyor.`);
+  if (health.index.weakTrailers) warn(`${health.index.weakTrailers} fragman canlı ama başlık/kanal eşleşmesi zayıf; “resmî/doğrulanmış” diye sunulmuyor.`);
   const savedHealth = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/catalog-health.json'), 'utf8'));
   if (JSON.stringify(savedHealth) !== JSON.stringify(health)) fail('catalog-health.json güncel değil: npm run catalog:health çalıştırın.');
 } catch (e) {

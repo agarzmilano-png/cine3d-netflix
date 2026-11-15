@@ -4,6 +4,16 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 
 ---
 
+## Düzeltme turu — 9.6
+
+- **Akış kotası ayrıldı:** IP başına 60/dk sınırı artık yalnız JSON API'yi (OMDb/JustWatch proxy) kapsar; `/api/stream-ost` Range istekleri sınırdan muaftır. 61. ses isteği de 200 döner, 61. arama isteği 429 alır.
+- **Devralınmış fragmanlar yeniden doğrulandı:** `scripts/verify-trailers.js` (oEmbed, 7 gün önbellek, `--limit`, `--dry-run`) 353 kaydın tamamını denetledi: 195 güçlü, 122 canlı ama zayıf eşleşme, 36 düşürüldü (401/404/400 ölü, fragman olmayan veya başka yıla ait). Legacy kayıt 353 → 0. Zayıf eşleşmeler "resmî/doğrulanmış" diye sunulmaz; sağlık raporunda `weakTrailers` olarak ayrı sayılır ve arayüz metninde belirtilir.
+- **Fragman araması tempolandı:** `catalog:trailers` negatif sonuçları 1 saat, bulunanları 30 gün önbelleğe alır; `--limit`/`--delay` ile YouTube kısıtlamasına takılmadan ilerler. Bu turda **59 yeni doğrulanmış fragman** eklendi (ör. Zeytin Ağacı, The Bear, Yellowstone). Kalan 496 kayıt için etiketli YouTube araması sunulur.
+- **Kimlik denetimi 250/250:** JustWatch/IMDb eşleşmeyen 6 kayıt (Parazit, A.R.O.G., Piyanist, Ateşböceklerinin Mezarı, iki Yüzüklerin Efendisi filmi) OMDb başlık/yıl/tür kaydıyla doğrulandı. Denetim mevcut yaş sınıflandırmasını gevşetmez (R/18 → 15 kabul edilmez).
+- **Sürüm 9.6:** `package.json` (9.6.0), `index.html ?v=9.6` ve `sw.js CACHE_VERSION 9.6` birlikte güncellendi; veri değiştiği için eski service worker önbelleği devre dışı kalır.
+
+Kontroller: `npm run verify` → 26 regresyon + 23 smoke + 34 tarayıcı özellik testi.
+
 ## Düzeltme turu — 9.5
 
 - **"96 Saat / Taken" künyesi onarıldı:** kayıt 5 dakikalık bir kısa filmin verisini (süre, tür, yönetmen, 25 oy, ölü afiş) asıl filmin IMDb kimliğiyle taşıyordu. Süre 1s 34dk, tür Aksiyon/Suç/Gerilim, yönetmen Pierre Morel, oy 681K ve doğrulanmış 592/1280px görsellerle yenilendi. Kısa film karışmasını yakalayan süre denetimi `scripts/audit-identities.js`'e eklendi.
@@ -17,14 +27,12 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 - **Fragman şeffaflığı:** `catalog-health.json` doğrulanmış (7) ve devralınmış (353) fragman kaynağını ayrı raporlar.
 - **Veri hijyeni:** künyelerdeki `&apos;` gibi HTML entity'leri düz metne çevrildi; `verify-data` artık N/A künye ve gömülü entity'yi hata sayar.
 
-Kontroller: `npm run verify` → 23 regresyon + 22 smoke + 34 tarayıcı özellik testi.
-
 ## Veri kalitesi ve yayın düzeltmeleri — 9.4
 
 - İndeks afişleri en az 592px üretilir; daha yüksek çözünürlük korunur. Düşük çözünürlük artık yayın öncesi test hatasıdır.
 - Yapım kimliği eşleştirmesi IMDb kimliğiyle güçlendirildi. Ana katalog kimlikleri/yılları IMDb arama verisi ve JustWatch ile çapraz kontrol edilir; kısa film/making-of sonuçları ana film yerine seçilmez. Kaynak çelişkileri `data/identity-overrides.json` içinde kayıtlıdır.
 - Türkiye’de yaş sınıfı yoksa mevcut US/GB/DE kaynak sınıfı ülke koduyla kullanılır; hiçbir kaynakta bilgi yoksa yaş bilinmiyor olarak kalır ve çocuk profilinde engellenir.
-- Fragman araması başlık, yıl, kanal ve YouTube oEmbed ile doğrulanır. Doğrulanamayan sonuç “hazır/resmî fragman” diye sunulmaz; açıkça YouTube araması olarak etiketlenir.
+- Fragman araması başlık, yıl, kanal ve YouTube oEmbed ile doğrulanır. Devralınmış eski kayıtlar `catalog:verify-trailers` ile yeniden denetlenir; canlı ama zayıf eşleşenler “resmî/doğrulanmış” diye sunulmaz. Doğrulanamayan sonuç “hazır/resmî fragman” diye sunulmaz; açıkça YouTube araması olarak etiketlenir.
 - `data/catalog-health.json` ham boş alanları, indeksle tamamlanan yayıncıları, doğrulanmış boş abonelik listelerini ve gerçek veri eksiklerini ayırır. Aynı bilgi sitedeki “Veri kaynakları ve eksikler” bölümünde açıklanır.
 - GitHub Pages dağıtımı tüm testler geçmeden yayın yapmaz; yalnızca açıkça seçilmiş statik dosyalar paketlenir.
 
@@ -32,8 +40,9 @@ Bakım komutları:
 
 ```bash
 npm run catalog:health       # Veri kalite raporunu güncelle
-npm run catalog:trailers     # Eksik fragmanları doğrulayarak ara
-npm run catalog:identities   # Ana katalog kimliklerini bağımsız IMDb verisiyle karşılaştır
+npm run catalog:trailers -- --limit=150 --delay=800  # Eksik fragmanları tempolu doğrula
+npm run catalog:verify-trailers  # Devralınmış fragmanları oEmbed ile yeniden denetle
+npm run catalog:identities   # Ana katalog kimliklerini bağımsız IMDb/OMDb verisiyle karşılaştır
 node scripts/audit-identities.js --apply-index
 npm run seo
 npm run verify

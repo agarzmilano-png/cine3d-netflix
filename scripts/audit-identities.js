@@ -3,11 +3,56 @@
 const fs = require('fs');
 const path = require('path');
 const { graphql, SEARCH_QUERY, toItem } = require('./build-catalog');
-const { normalize, getText } = require('./catalog-metadata');
+const { normalize, getText, ageRank } = require('./catalog-metadata');
 const { writeHealth } = require('./catalog-health');
 const ROOT = path.join(__dirname, '..');
+
+// .env yükleyici (server.js ile aynı ilke): OMDb anahtarları kaynak kodda tutulmaz.
+try {
+  const envPath = path.join(ROOT, '.env');
+  if (fs.existsSync(envPath)) {
+    for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+      if (!line.trim() || line.trim().startsWith('#')) continue;
+      const m = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
+      if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    }
+  }
+} catch (e) { /* ortam değişkenleriyle devam */ }
+
 const SOURCE = path.join(ROOT, 'js', 'movies-data.js');
 const CACHE = path.join(__dirname, '.identity-matches.json');
+
+// Bağımsız OMDb doğrulaması: JustWatch/IMDb önerisi eşleşemediğinde mevcut
+// IMDb kimliğini OMDb kaydıyla (başlık + yıl + tür) çapraz kontrol eder.
+const OMDB_KEYS = (process.env.OMDB_API_KEYS || 'trilogy').split(',').map(value => value.trim()).filter(Boolean);
+let omdbKeyIndex = 0;
+
+async function omdbLookup(imdbID) {
+  for (let attempt = 0; attempt < OMDB_KEYS.length; attempt++) {
+    const key = OMDB_KEYS[(omdbKeyIndex + attempt) % OMDB_KEYS.length];
+    const response = await getText(`https://www.omdbapi.com/?apikey=${encodeURIComponent(key)}&i=${encodeURIComponent(imdbID)}&plot=short`, 0, 12000);
+    if (response.status !== 200) continue;
+    try {
+      const json = JSON.parse(response.body);
+      if (json && json.Response !== 'False') { omdbKeyIndex = (omdbKeyIndex + attempt) % OMDB_KEYS.length; return json; }
+    } catch (e) { /* sonraki anahtar */ }
+  }
+  return null;
+}
+
+function omdbIdentityMatches(json, movie) {
+  if (!json || !json.Title) return false;
+  const titles = [movie.title, movie.originalTitle].map(normalize).filter(Boolean);
+  const candidate = normalize(json.Title);
+  const titleOk = titles.some(name => name === candidate || candidate.includes(name) || name.includes(candidate));
+  const year = parseInt(String(json.Year || '').slice(0, 4), 10);
+  const yearOk = Number.isFinite(year) && Math.abs(year - Number(movie.year)) <= 1;
+  const isSeries = movie.isSeries === true || /Sezon/.test(String(movie.duration || ''));
+  const typeOk = isSeries ? /series/i.test(json.Type || '') : /movie/i.test(json.Type || '');
+  // Başlık yerelleştirilmiş olabilir (ör. Parasite → Parazit); bu yüzden yıl (±1)
+  // ve tür eşleşmesi yeterli, başlık yalnızca ek doğrulama sağlar.
+  return yearOk && typeOk && (titleOk || String(json.imdbID || '').toLowerCase() === String(movie.imdbID || '').toLowerCase());
+}
 
 // Yerel "1s 34dk" biçimini dakikaya çevirir (dizi kayıtlarında null).
 // 9.5: JustWatch süresiyle iki kat fark eden kayıtlar (ör. 5 dk'lık kısa film
@@ -62,6 +107,7 @@ async function auditIdentities() {
   const matches = [];
   const changes = [];
   const suspects = [];
+  const confirmedByImdb = [];
   const unresolved = [];
   let overrides = {};
   try { overrides = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/identity-overrides.json'), 'utf8')); } catch (e) { /* ilk denetim */ }
@@ -85,7 +131,15 @@ async function auditIdentities() {
           try { confirmed = selectImdbIdentity(JSON.parse(response.body).d, movie, item); } catch (e) { /* doğrulama yok */ }
         }
       }
-      if (!item || !confirmed) unresolved.push({ id: movie.id, title: movie.title });
+      if (!item || !confirmed) {
+        // JustWatch/IMDb önerisi eşleşmediyse mevcut kimliği OMDb ile doğrula.
+        const json = movie.imdbID ? await omdbLookup(movie.imdbID) : null;
+        if (omdbIdentityMatches(json, movie)) {
+          confirmedByImdb.push({ id: movie.id, title: movie.title, imdbID: movie.imdbID, source: 'OMDb başlık/yıl/tür' });
+        } else {
+          unresolved.push({ id: movie.id, title: movie.title });
+        }
+      }
       else {
         const checkedAt = new Date().toISOString();
         const vendorImdbID = item.imdbID;
@@ -101,9 +155,15 @@ async function auditIdentities() {
         movie.year = item.y;
         movie.platforms = item.platforms;
         if (item.ageRating) {
-          movie.ageRating = item.ageRating;
-          movie.ageRatingCountry = item.ageRatingCountry;
-          movie.ageRatingSource = item.ageRatingSource;
+          // Mevcut yaş sınıflandırması gevşetilmez; yalnızca boşsa doldurulur
+          // veya daha sıkı bir sınıflandırma varsa güncellenir.
+          const currentRank = ageRank(movie.ageRating);
+          const nextRank = ageRank(item.ageRating);
+          if (currentRank == null || (nextRank != null && nextRank >= currentRank)) {
+            movie.ageRating = item.ageRating;
+            movie.ageRatingCountry = item.ageRatingCountry;
+            movie.ageRatingSource = item.ageRatingSource;
+          }
         }
         const localMinutes = durationMinutes(movie.duration);
         if (item.runtime && localMinutes && item.type !== 'series') {
@@ -126,8 +186,8 @@ async function auditIdentities() {
   fs.writeFileSync(SOURCE, updated);
   fs.writeFileSync(CACHE, JSON.stringify(matches));
   fs.writeFileSync(path.join(ROOT, 'data/identity-overrides.json'), JSON.stringify(overrides, null, 2) + '\n');
-  fs.writeFileSync(path.join(ROOT, 'data/identity-audit.json'), JSON.stringify({ checkedAt: new Date().toISOString(), verified: matches.length, total: movies.length, changes, suspects, unresolved }, null, 2) + '\n');
-  console.log(JSON.stringify({ verified: matches.length, corrected: changes.length, suspects, unresolved }, null, 2));
+  fs.writeFileSync(path.join(ROOT, 'data/identity-audit.json'), JSON.stringify({ checkedAt: new Date().toISOString(), verified: matches.length + confirmedByImdb.length, total: movies.length, changes, confirmedByImdb, suspects, unresolved }, null, 2) + '\n');
+  console.log(JSON.stringify({ verified: matches.length + confirmedByImdb.length, corrected: changes.length, confirmedByImdb: confirmedByImdb.length, suspects, unresolved }, null, 2));
 }
 if (require.main === module) auditIdentities().catch(error => { console.error(error.message); process.exitCode = 1; });
-module.exports = { selectIdentity, selectImdbIdentity, durationMinutes };
+module.exports = { selectIdentity, selectImdbIdentity, durationMinutes, omdbIdentityMatches };

@@ -149,6 +149,13 @@ function rateLimited(req) {
   return bucket.count > API_RATE_LIMIT;
 }
 
+// Ses/video akışı Range istekleriyle parça parça okunur; JSON API kotasına dahil
+// edilmez (seek/yeniden yükleme aynı IP'de 60/dk sınırını aşabiliyordu).
+// OMDb/JustWatch proxy'leri ise sınırlı kalır.
+function isRateLimitedPath(reqPath) {
+  return reqPath.startsWith('/api/') && reqPath !== '/api/health' && reqPath !== '/api/stream-ost';
+}
+
 function sendText(res, status, message, extraHeaders = {}) {
   const body = Buffer.from(message, 'utf8');
   res.writeHead(status, {
@@ -800,7 +807,7 @@ const server = http.createServer(async (req, res) => {
     if (!originAllowed(req)) {
       return sendText(res, 403, 'Bu origin için API erişimi kapalı.', { 'Access-Control-Allow-Origin': 'null' });
     }
-    if (rateLimited(req)) {
+    if (isRateLimitedPath(reqPath) && rateLimited(req)) {
       return sendText(res, 429, 'Çok fazla istek. Bir dakika sonra tekrar deneyin.', { 'Retry-After': '60' });
     }
   }
@@ -1289,4 +1296,4 @@ server.on('clientError', (err, socket) => {
   if (socket.writable) socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
-module.exports = { isPublicAsset, originAllowed, rateLimited, MIME, PUBLIC_EXT, server };
+module.exports = { isPublicAsset, originAllowed, rateLimited, isRateLimitedPath, MIME, PUBLIC_EXT, server };

@@ -1145,7 +1145,8 @@ class Cine3DApp {
     if (quality) {
       const missingAge = index.items.filter(item => !item.ageRating).length;
       const missingTrailer = index.items.filter(item => !item.yt).length;
-      quality.textContent = `${index.items.length} kayıtlık arama indeksinde ${missingAge} yapımın kaynak yaş bilgisi, ${missingTrailer} yapımın doğrulanmış doğrudan fragmanı eksik. Bilinmeyen yaşlar çocuk profilinde engellenir; farklı ülkelere ait yaş sınıfları ülke koduyla belirtilir. Eksik fragmanda doğrudan oynatma yerine açıkça etiketlenmiş YouTube araması sunulur. Yayıncı kontrolü abonelik/ücretsiz seçenekleri kapsar; kiralama/satın alma ayrıca kontrol edilmelidir.`;
+      const weakTrailer = index.items.filter(item => item.yt && item.trailerVerification && item.trailerVerification.match === 'weak').length;
+      quality.textContent = `${index.items.length} kayıtlık arama indeksinde ${missingAge} yapımın kaynak yaş bilgisi, ${missingTrailer} yapımın doğrulanmış doğrudan fragmanı eksik${weakTrailer ? `; ${weakTrailer} fragman canlı ama başlık/kanal eşleşmesi zayıf olduğu için resmî diye etiketlenmez` : ''}. Bilinmeyen yaşlar çocuk profilinde engellenir; farklı ülkelere ait yaş sınıfları ülke koduyla belirtilir. Eksik fragmanda doğrudan oynatma yerine açıkça etiketlenmiş YouTube araması sunulur. Yayıncı kontrolü abonelik/ücretsiz seçenekleri kapsar; kiralama/satın alma ayrıca kontrol edilmelidir.`;
     }
     this.applyFilters();
     this.renderHeroBanner();

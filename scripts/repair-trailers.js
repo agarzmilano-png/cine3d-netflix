@@ -9,23 +9,37 @@ const ROOT = path.join(__dirname, '..');
 const FILE = path.join(ROOT, 'data/catalog.json');
 const CACHE = path.join(__dirname, '.trailer-cache.json');
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
+const arg = name => {
+  const hit = process.argv.find(value => value.startsWith(`--${name}=`));
+  return hit ? hit.slice(name.length + 3) : null;
+};
+const LIMIT = Number(arg('limit')) > 0 ? Number(arg('limit')) : Infinity;
+const DELAY = Number(arg('delay')) >= 0 ? Number(arg('delay')) : 450;
+const POSITIVE_TTL = 30 * 86400000;
+// Olumsuz sonuç kısa süre tutulur: YouTube kısıtlaması geçince kayıt yeniden denenebilsin.
+const NEGATIVE_TTL = 3600000;
 
 async function repairTrailers() {
   const original = fs.readFileSync(FILE, 'utf8');
   const catalog = JSON.parse(original);
-  const missing = catalog.items.filter(item => !item.yt);
+  const allMissing = catalog.items.filter(item => !item.yt);
   let cache = {};
   try { cache = JSON.parse(fs.readFileSync(CACHE, 'utf8')); } catch (e) { /* ilk tarama */ }
+  const keyOf = item => `${item.imdbID || item.id}|${item.y}|${item.type}`;
+  const stampOf = item => { const cached = cache[keyOf(item)]; return cached ? Date.parse(cached.at) : 0; };
+  // Hiç denenmemiş kayıtlar önce gelir; böylece --limit'li turlar ilerler.
+  const missing = allMissing.slice().sort((a, b) => stampOf(a) - stampOf(b)).slice(0, LIMIT);
   let cursor = 0;
   let completed = 0;
   let found = 0;
-  console.log(`${missing.length} eksik fragman için başlık, yıl, kanal ve oEmbed doğrulaması`);
+  console.log(`${missing.length}/${allMissing.length} eksik fragman için başlık, yıl, kanal ve oEmbed doğrulaması (gecikme ${DELAY}ms)`);
   async function worker() {
     while (cursor < missing.length) {
       const item = missing[cursor++];
-      const key = `${item.imdbID || item.id}|${item.y}|${item.type}`;
+      const key = keyOf(item);
       const cached = cache[key];
-      const trailer = cached && Date.now() - Date.parse(cached.at) < 86400000
+      const ttl = cached && cached.result ? POSITIVE_TTL : NEGATIVE_TTL;
+      const trailer = cached && Date.now() - Date.parse(cached.at) < ttl
         ? cached.result : await findTrailer(item);
       cache[key] = { at: new Date().toISOString(), result: trailer };
       if (trailer) {
@@ -38,6 +52,7 @@ async function repairTrailers() {
         fs.writeFileSync(CACHE, JSON.stringify(cache));
         console.log(`${completed}/${missing.length} denetlendi · ${found} doğrulanmış fragman bulundu`);
       }
+      await new Promise(resolve => setTimeout(resolve, DELAY));
     }
   }
   await Promise.all(Array.from({ length: 4 }, worker));
