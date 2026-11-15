@@ -276,13 +276,17 @@ class Coverflow3D {
     // Fare tekerleğiyle geçiş (container kalıcı: yalnızca bir kez bağla)
     if (this.container && !this._containerEventsBound) {
       this.container.addEventListener('wheel', (e) => {
-        if (Math.abs(e.deltaY) > 25 || Math.abs(e.deltaX) > 25) {
-          if (e.deltaY > 0 || e.deltaX > 0) {
-            this.next();
-          } else {
-            this.prev();
-          }
-        }
+        // Yalnız yatay gezinme niyeti karuseli kaydırır. Dikey tekerlek sayfayı
+        // kaydırmaya devam eder; aksi halde aşağı inerken filmler de değişiyordu.
+        const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY)
+          ? e.deltaX
+          : (e.shiftKey ? e.deltaY : 0);
+        if (Math.abs(horizontal) < 24) return;
+        // Trackpad tek harekette onlarca wheel olayı üretir; kart atlamasın.
+        if (Date.now() - (this._lastWheelNav || 0) < 220) return;
+        this._lastWheelNav = Date.now();
+        if (horizontal > 0) this.next();
+        else this.prev();
       }, { passive: true });
     }
 
@@ -298,6 +302,7 @@ class Coverflow3D {
       let startX = null;
       let startY = null;
       let moved = false;
+      let captured = false;
       const MAX_FOLLOW = 360;   // aşırı sürüklemede şerit ekrandan çıkmasın
       const STEP_PX = 170;      // bırakışta kaç kart ilerleyeceğini belirleyen mesafe
 
@@ -319,17 +324,21 @@ class Coverflow3D {
       const reset = (animate) => {
         startX = null;
         startY = null;
+        moved = false;
+        captured = false;
         this.container.classList.remove('is-dragging');
         setTrackOffset(0, !!animate);
       };
 
       this.container.addEventListener('pointerdown', (e) => {
         if (e.button != null && e.button !== 0 && e.pointerType === 'mouse') return;
+        // Buton/link üzerinde sürükleme başlatma: pointer capture tıklamayı
+        // container'a taşıyıp yön butonlarını ve kart butonlarını sağır ediyordu.
+        if (e.target.closest('button, a, input, select, textarea')) return;
         startX = e.clientX;
         startY = e.clientY;
         moved = false;
-        this.container.classList.add('is-dragging');
-        try { this.container.setPointerCapture(e.pointerId); } catch (err) { /* sentetik olay */ }
+        captured = false;
       });
 
       this.container.addEventListener('pointermove', (e) => {
@@ -342,6 +351,13 @@ class Coverflow3D {
         // Dikey kaydırma niyeti varsa yatay takibi bırak (sayfa kaydırma bozulmasın)
         if (Math.abs(dy) > Math.abs(dx) * 1.2) return;
         if (!moved) return;
+
+        // Capture yalnız gerçek sürüklemede alınır; hareketsiz tıklamada
+        // pointerup hedefi buton/kart olarak kalır ve click çalışır.
+        if (!captured) {
+          try { this.container.setPointerCapture(e.pointerId); captured = true; } catch (err) { /* sentetik olay */ }
+          this.container.classList.add('is-dragging');
+        }
 
         const clamped = Math.max(-MAX_FOLLOW, Math.min(MAX_FOLLOW, dx));
         setTrackOffset(clamped, false);
@@ -367,7 +383,7 @@ class Coverflow3D {
 
       this.container.addEventListener('pointerup', finish);
       this.container.addEventListener('pointercancel', () => reset(true));
-      this.container.addEventListener('pointerleave', (e) => { if (e.buttons === 0) reset(true); });
+      this.container.addEventListener('pointerleave', () => { if (!captured) reset(true); });
       this.container.addEventListener('lostpointercapture', () => { if (startX != null) reset(true); });
     }
   }

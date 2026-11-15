@@ -629,6 +629,50 @@ function check(name, ok, detail = '') {
     check('mobil: yatay taşma yok, Wrapped/öneri sığıyor', !!mobile && mobile.scrollW <= mobile.docW + 2 && mobile.wrappedFits && mobile.pickFits && mobile.overflowAfter <= mobile.docW + 2, mobile);
     await send('Emulation.clearDeviceMetricsOverride');
 
+    // 17) Coverflow: gerçek fare tıklaması + dikey tekerlek sayfayı kaydırmalı
+    const coverflow = await ev(`
+      window.app.toggleViewMode('coverflow');
+      document.getElementById('coverflow-view-section').scrollIntoView({ block: 'center' });
+      await new Promise(r => setTimeout(r, 600));
+      const b = document.getElementById('coverflow-next').getBoundingClientRect();
+      const c = document.getElementById('coverflow-container').getBoundingClientRect();
+      return {
+        index: app.coverflowInstance.currentIndex,
+        bx: b.x + b.width / 2, by: b.y + b.height / 2,
+        cx: c.x + c.width / 2, cy: c.y + c.height / 2
+      };
+    `);
+    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: coverflow.bx, y: coverflow.by });
+    await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: coverflow.bx, y: coverflow.by, button: 'left', clickCount: 1 });
+    await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: coverflow.bx, y: coverflow.by, button: 'left', clickCount: 1 });
+    await sleep(400);
+    const afterMouse = await ev(`return app.coverflowInstance.currentIndex;`);
+    const beforeWheel = await ev(`return { index: app.coverflowInstance.currentIndex, scrollY: window.scrollY };`);
+    await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: coverflow.cx, y: coverflow.cy, deltaX: 0, deltaY: 260 });
+    await sleep(500);
+    const afterVertical = await ev(`return { index: app.coverflowInstance.currentIndex, scrollY: window.scrollY };`);
+    const center = await ev(`const c = document.getElementById('coverflow-container').getBoundingClientRect(); return { cx: c.x + c.width / 2, cy: c.y + c.height / 2 };`);
+    await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: center.cx, y: center.cy, deltaX: 260, deltaY: 0 });
+    await sleep(500);
+    const afterHorizontal = await ev(`return app.coverflowInstance.currentIndex;`);
+    // Sürükleme hâlâ çalışmalı: karttan sola 180px çekince bir sonraki karta geçer.
+    const dragPoint = await ev(`
+      document.getElementById('coverflow-view-section').scrollIntoView({ block: 'center' });
+      await new Promise(r => setTimeout(r, 400));
+      const c = document.querySelector('.coverflow-card.active .coverflow-card-inner').getBoundingClientRect();
+      return { x: c.x + c.width / 2, y: c.y + c.height * 0.3 };
+    `);
+    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: dragPoint.x, y: dragPoint.y });
+    await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: dragPoint.x, y: dragPoint.y, button: 'left', clickCount: 1 });
+    for (let step = 1; step <= 4; step++) {
+      await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: dragPoint.x - step * 45, y: dragPoint.y, button: 'left', buttons: 1 });
+    }
+    await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: dragPoint.x - 180, y: dragPoint.y, button: 'left', clickCount: 1 });
+    await sleep(450);
+    const afterDrag = await ev(`return app.coverflowInstance.currentIndex;`);
+    await ev(`window.app.toggleViewMode('grid'); window.scrollTo(0, 0); return true;`);
+    check('coverflow: fare butonu + sürükleme ilerletir, dikey tekerlek film değiştirmez', !!coverflow && afterMouse === coverflow.index + 1 && afterVertical.index === afterMouse && afterHorizontal === afterMouse + 1 && afterDrag === afterHorizontal + 1, { start: coverflow.index, afterMouse, vertical: afterVertical, horizontal: afterHorizontal, afterDrag, wheelScroll: afterVertical.scrollY - beforeWheel.scrollY });
+
     // İlk ziyaretin önbelleği ile gerçek çevrimdışı yeniden açılış (ayrı HTTP cache değil).
     const offlineSetup = await ev(`
       await navigator.serviceWorker.ready;

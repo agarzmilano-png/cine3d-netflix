@@ -4,6 +4,15 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 
 ---
 
+## Düzeltme turu — 9.8
+
+- **Coverflow fare tıklaması onarıldı:** sürükleme yüzeyi `pointerdown` anında pointer capture alıyordu; `click` ortak ata olan container'a gidiyor, yön butonları/kart butonları/HUD linkleri fareyle çalışmıyordu. Capture artık yalnız 10px'lik gerçek sürüklemede alınır, buton ve linklerde sürükleme başlamaz.
+- **Dikey tekerlek film değiştirmiyor:** eski `wheel` dinleyicisi her `deltaY` hareketinde karuseli ilerletiyordu. Artık yalnız yatay kaydırma (veya Shift+tekerlek) gezinir; dikey tekerlek sayfayı kaydırır. Trackpad taşmalarına karşı 220 ms debounce eklendi.
+- **Regresyon testi:** gerçek CDP fare olaylarıyla buton tıklaması (0→1), dikey tekerlek (indeks sabit, sayfa +260px), yatay tekerlek (1→2) ve sürükleme (2→3) doğrulanır.
+- **Sürüm 9.8:** `package.json` (9.8.0), `index.html ?v=9.8`, `sw.js CACHE_VERSION 9.8`.
+
+Kontroller: `npm run verify` → 27 regresyon + 23 smoke + 35 tarayıcı özellik testi.
+
 ## Düzeltme turu — 9.7
 
 - **Yenileme akışına doğrulama kapısı:** haftalık `catalog-refresh` artık indeksi ürettikten sonra `verify-trailers` + `verify-data` + regresyon testlerini çalıştırır; kapı geçmezse commit/yayın yapılmaz. Fragman araması bu işten çıkarıldı (`--skip-trailer-search`), böylece 20→30 dk sınırında takılmaz.
