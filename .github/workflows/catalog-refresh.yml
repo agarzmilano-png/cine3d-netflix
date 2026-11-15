@@ -19,10 +19,15 @@ permissions:
   contents: write
   actions: write
 
+# Katalog dosyasını fragman taramasıyla aynı anda değiştirme.
+concurrency:
+  group: catalog-data
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Depoyu al
         uses: actions/checkout@v4
@@ -32,11 +37,20 @@ jobs:
         with:
           node-version: '20'
 
-      - name: İndeksi oluştur
-        run: node scripts/build-catalog.js ${{ github.event.inputs.count || '450' }}
+      # Fragman araması YouTube'u yorup 20 dk sınırını aşabildiği için burada
+      # yapılmaz; bilinenler korunur, yeniler günlük tempolu işte taranır.
+      - name: İndeksi oluştur (fragman araması ayrı işte)
+        run: node scripts/build-catalog.js ${{ github.event.inputs.count || '450' }} --skip-trailer-search
+
+      - name: Devralınmış/küratörlü fragmanları oEmbed ile doğrula
+        run: node scripts/verify-trailers.js
 
       - name: Sitemap'i tazele
         run: node scripts/generate-seo.js
+
+      # Bozuk/eksik yapı otomatik yayına gitmesin.
+      - name: Yayın öncesi veri kapısı
+        run: node scripts/verify-data.js && node tests/regressions.js
 
       - name: Değişiklikleri işle
         id: commit
@@ -50,6 +64,7 @@ jobs:
             exit 0
           fi
           git commit -m "chore: katalog indeksi guncellendi ($(date -u +%Y-%m-%d))"
+          git pull --rebase origin master
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
 

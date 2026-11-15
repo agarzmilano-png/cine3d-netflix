@@ -4,6 +4,15 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 
 ---
 
+## Düzeltme turu — 9.7
+
+- **Yenileme akışına doğrulama kapısı:** haftalık `catalog-refresh` artık indeksi ürettikten sonra `verify-trailers` + `verify-data` + regresyon testlerini çalıştırır; kapı geçmezse commit/yayın yapılmaz. Fragman araması bu işten çıkarıldı (`--skip-trailer-search`), böylece 20→30 dk sınırında takılmaz.
+- **Ayrı tempolu fragman işi:** yeni `trailer-refresh` iş akışı her gün en fazla 300 kaydı 900 ms gecikmeyle tarar, küratörlü kayıtları oEmbed ile doğrular ve yalnız değişiklik varsa commit + Pages tetikler. İki iş `catalog-data` kilidiyle sıraya girer.
+- **Şema tutarlılığı:** yeni doğrulanmış fragman kayıtları artık `match: 'strong'` taşır; mevcut 66 kayıt geriye dönük dolduruldu. Küratörlü eşleşmeler kaynak etiketiyle yazılır ve `verify-trailers` ile doğrulanır.
+- **Sürüm 9.7:** `package.json` (9.7.0), `index.html ?v=9.7`, `sw.js CACHE_VERSION 9.7`.
+
+Kontroller: `npm run verify` → 27 regresyon + 23 smoke + 34 tarayıcı özellik testi.
+
 ## Düzeltme turu — 9.6
 
 - **Akış kotası ayrıldı:** IP başına 60/dk sınırı artık yalnız JSON API'yi (OMDb/JustWatch proxy) kapsar; `/api/stream-ost` Range istekleri sınırdan muaftır. 61. ses isteği de 200 döner, 61. arama isteği 429 alır.

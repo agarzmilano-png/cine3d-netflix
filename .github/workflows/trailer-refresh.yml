@@ -1,0 +1,68 @@
+name: Fragman taraması (tempolu)
+
+# Haftalık katalog yenilemesinden ayrı çalışır: YouTube aramasını yavaş ve
+# sınırlı tutarak eksik fragmanları tamamlar. Negatif sonuçlar 1 saat, bulunanlar
+# 30 gün önbellekte tutulduğu için her tur kaldığı yerden ilerler.
+
+on:
+  schedule:
+    # Her gün 05:00 UTC (08:00 TR)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Bu turda denetlenecek kayıt sayısı'
+        required: false
+        default: '300'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: catalog-data
+  cancel-in-progress: false
+
+jobs:
+  trailers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Depoyu al
+        uses: actions/checkout@v4
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Eksik fragmanları tempolu ara
+        run: node scripts/repair-trailers.js --limit=${{ github.event.inputs.limit || '300' }} --delay=900
+
+      - name: Küratörlü/devralınmış kayıtları doğrula
+        run: node scripts/verify-trailers.js
+
+      - name: Yayın öncesi veri kapısı
+        run: node scripts/verify-data.js
+
+      - name: Değişiklikleri işle
+        id: commit
+        run: |
+          git config user.name "cine3d-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/catalog.json data/catalog-health.json
+          if git diff --cached --quiet; then
+            echo "Yeni doğrulanmış fragman yok."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore: fragman taramasi ($(date -u +%Y-%m-%d))"
+          git pull --rebase origin master
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Pages dağıtımını tetikle
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages.yml --ref master

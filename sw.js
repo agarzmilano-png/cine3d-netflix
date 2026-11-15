@@ -1,5 +1,5 @@
 /**
- * Cine3D Netflix Service Worker (PWA v9.6)
+ * Cine3D Netflix Service Worker (PWA v9.7)
  *
  * - Alt dizinde barındırmayı destekler (ör. GitHub Pages: /cine3d-netflix/).
  *   Tüm önbellek yolları service worker'ın kendi konumuna göre çözümlenir.
@@ -7,7 +7,7 @@
  * - `ignoreSearch`: asset'ler `?v=3.1` sorgusuyla istendiği için eşleşme sorunu yok.
  * - Önbellekte karşılık bulunamayan isteklerde `respondWith(undefined)` hatası giderildi.
  */
-const CACHE_VERSION = '9.6';
+const CACHE_VERSION = '9.7';
 const CACHE_NAME = `cine3d-cache-v${CACHE_VERSION}`;
 
 // Service worker'ın bulunduğu dizin (site kökü veya alt dizin)

@@ -257,7 +257,7 @@ async function attachTrailers(items) {
     if (known) { it.yt = known.yt; it.trailerVerification = known.trailerVerification || { source: 'existing-catalog' }; reused++; continue; }
     const key = `${it.y}|${it.type}|`;
     const curatedId = (it.imdbID && curated.get(it.imdbID)) || curated.get(key + normTitle(it.o)) || curated.get(key + normTitle(it.t));
-    if (curatedId) { it.yt = curatedId; fromCurated++; continue; }
+    if (curatedId) { it.yt = curatedId; it.trailerVerification = { source: 'movies-data küratörlü' }; fromCurated++; continue; }
     missing.push(it);
   }
 
@@ -281,7 +281,7 @@ async function attachTrailers(items) {
       const item = missing[index++];
       const trailer = await metadata.findTrailer(item);
       item.yt = trailer ? trailer.id : null;
-      item.trailerVerification = trailer ? { source: 'YouTube oEmbed', title: trailer.title, author: trailer.author, checkedAt: trailer.checkedAt } : null;
+      item.trailerVerification = trailer ? { source: 'YouTube oEmbed', match: 'strong', title: trailer.title, author: trailer.author, checkedAt: trailer.checkedAt } : null;
       done++;
       if (done % 25 === 0) process.stdout.write(`\r  ${done}/${missing.length}`);
       await new Promise((r) => setTimeout(r, 350));

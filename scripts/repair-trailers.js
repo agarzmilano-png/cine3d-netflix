@@ -19,6 +19,10 @@ const POSITIVE_TTL = 30 * 86400000;
 // Olumsuz sonuç kısa süre tutulur: YouTube kısıtlaması geçince kayıt yeniden denenebilsin.
 const NEGATIVE_TTL = 3600000;
 
+function trailerVerification(trailer) {
+  return { source: 'YouTube oEmbed', match: 'strong', title: trailer.title, author: trailer.author, checkedAt: trailer.checkedAt || new Date().toISOString() };
+}
+
 async function repairTrailers() {
   const original = fs.readFileSync(FILE, 'utf8');
   const catalog = JSON.parse(original);
@@ -44,7 +48,7 @@ async function repairTrailers() {
       cache[key] = { at: new Date().toISOString(), result: trailer };
       if (trailer) {
         item.yt = trailer.id;
-        item.trailerVerification = { source: 'YouTube oEmbed', title: trailer.title, author: trailer.author, checkedAt: trailer.checkedAt };
+        item.trailerVerification = trailerVerification(trailer);
         found++;
       }
       completed++;
@@ -67,4 +71,4 @@ async function repairTrailers() {
   console.log(JSON.stringify({ added: found, remaining: health.index.missingTrailer, index: health.index.total }));
 }
 if (require.main === module) repairTrailers().catch(error => { console.error(error.message); process.exitCode = 1; });
-module.exports = { repairTrailers };
+module.exports = { repairTrailers, trailerVerification };

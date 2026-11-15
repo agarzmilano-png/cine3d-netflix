@@ -290,5 +290,11 @@ test('OMDb kimlik doğrulaması yerelleştirilmiş başlıkta yıl+tür ister', 
   const series = { title: 'Sherlock', originalTitle: 'Sherlock', year: 2010, duration: '4 Sezon', imdbID: 'tt1475582' };
   assert.equal(omdbIdentityMatches({ Title: 'Sherlock', Year: '2010–2017', Type: 'series', imdbID: 'tt1475582' }, series), true);
 });
+test('fragman doğrulama kaydı güçlü eşleşmeyi işaretler', () => {
+  const { trailerVerification } = require('../scripts/repair-trailers');
+  const record = trailerVerification({ title: 'Dune Official Trailer', author: 'Warner Bros.', checkedAt: '2026-11-15T00:00:00.000Z' });
+  assert.deepEqual(record, { source: 'YouTube oEmbed', match: 'strong', title: 'Dune Official Trailer', author: 'Warner Bros.', checkedAt: '2026-11-15T00:00:00.000Z' });
+  assert.ok(trailerVerification({ title: 'X', author: 'Y' }).checkedAt);
+});
 console.log(`
 ${passed}/${passed} regresyon testi geçti`);
