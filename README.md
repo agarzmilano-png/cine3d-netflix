@@ -4,6 +4,16 @@ Netflix tarzı karanlık ve modern kullanıcı deneyimini, **Three.js WebGL 3D e
 
 ---
 
+## Düzeltme turu — 9.9
+
+- **Coverflow klavye koruması:** global ok tuşu dinleyicisi arama kutusu/form alanı ve açık modal/çekmece varken devre dışı. Arama yaparken ok tuşları artık imleci oynatır, arkadaki karuseli değil. İlk/son kartta ok butonları görünür biçimde devre dışı.
+- **Günlük fragman işi ilerliyor:** `trailer-refresh` artık `actions/cache` ile `scripts/.trailer-cache.json` dosyasını turlar arasında taşır; boş önbellekle her gün aynı 300 kaydın denenmesi engellendi.
+- **Boş commit/deploy sona erdi:** yeni fragman bulunmayan turda `catalog.json` (ve `trailersCheckedAt`) yazılmaz; böylece sırf zaman damgası değiştiği için commit ve Pages tetiklenmez.
+- **Akış koruması:** `/api/stream-ost` JSON kotasından ayrı, IP başına **240 istek/dk** ve **8 eşzamanlı akış** ile sınırlandı (`STREAM_RATE_LIMIT`, `STREAM_MAX_CONCURRENT`). Seek/yeniden yükleme etkilenmez, sınırsız bant genişliği kullanımı engellenir.
+- **Sürüm 9.9:** `package.json` (9.9.0), `index.html ?v=9.9`, `sw.js CACHE_VERSION 9.9`.
+
+Kontroller: `npm run verify` → 29 regresyon + 23 smoke + 35 tarayıcı özellik testi.
+
 ## Düzeltme turu — 9.8
 
 - **Coverflow fare tıklaması onarıldı:** sürükleme yüzeyi `pointerdown` anında pointer capture alıyordu; `click` ortak ata olan container'a gidiyor, yön butonları/kart butonları/HUD linkleri fareyle çalışmıyordu. Capture artık yalnız 10px'lik gerçek sürüklemede alınır, buton ve linklerde sürükleme başlamaz.

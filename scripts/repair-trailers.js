@@ -62,6 +62,13 @@ async function repairTrailers() {
   await Promise.all(Array.from({ length: 4 }, worker));
   fs.writeFileSync(CACHE, JSON.stringify(cache));
   if (hash(fs.readFileSync(FILE, 'utf8')) !== hash(original)) throw new Error('Katalog tarama sırasında değişti; kullanıcı değişiklikleri korunarak işlem durduruldu.');
+  // Yeni fragman yoksa dosyaya yazma: timestamp yüzünden her gün boş commit
+  // oluşup gereksiz yayın tetiklenmesin.
+  if (!found) {
+    const remaining = catalog.items.filter(item => !item.yt).length;
+    console.log(JSON.stringify({ added: 0, remaining, index: catalog.items.length }));
+    return { added: 0, remaining, index: catalog.items.length };
+  }
   // Arama tarihi, yayıncı kontrol tarihini değiştirmez.
   catalog.trailersCheckedAt = new Date().toISOString();
   const temp = FILE + '.tmp';
@@ -69,6 +76,7 @@ async function repairTrailers() {
   fs.renameSync(temp, FILE);
   const health = writeHealth(catalog);
   console.log(JSON.stringify({ added: found, remaining: health.index.missingTrailer, index: health.index.total }));
+  return { added: found, remaining: health.index.missingTrailer, index: health.index.total };
 }
 if (require.main === module) repairTrailers().catch(error => { console.error(error.message); process.exitCode = 1; });
 module.exports = { repairTrailers, trailerVerification };

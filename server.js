@@ -124,6 +124,10 @@ const DEFAULT_ALLOWED_ORIGINS = ['https://agarzmilano-png.github.io'];
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
   .split(',').map(value => value.trim()).filter(Boolean);
 const API_RATE_LIMIT = Number(process.env.API_RATE_LIMIT || 60);
+// Ses akışı JSON API'den ayrı sayılır: seek/yeniden yükleme çok istek üretir,
+// ama tamamen limitsiz de bırakılmaz (bant genişliği kötüye kullanımı).
+const STREAM_RATE_LIMIT = Number(process.env.STREAM_RATE_LIMIT || 240);
+const STREAM_MAX_CONCURRENT = Number(process.env.STREAM_MAX_CONCURRENT || 8);
 const API_RATE_WINDOW_MS = 60 * 1000;
 const rateBuckets = new Map();
 
@@ -135,9 +139,9 @@ function originAllowed(req) {
   return list.includes('*') || list.includes(origin);
 }
 
-function rateLimited(req) {
-  if (!(API_RATE_LIMIT > 0)) return false;
-  const key = req.socket.remoteAddress || 'unknown';
+function rateLimited(req, limit = API_RATE_LIMIT, namespace = 'api') {
+  if (!(limit > 0)) return false;
+  const key = `${namespace}:${req.socket.remoteAddress || 'unknown'}`;
   const now = Date.now();
   const bucket = rateBuckets.get(key);
   if (!bucket || now - bucket.start > API_RATE_WINDOW_MS) {
@@ -146,7 +150,25 @@ function rateLimited(req) {
     return false;
   }
   bucket.count += 1;
-  return bucket.count > API_RATE_LIMIT;
+  return bucket.count > limit;
+}
+
+// Aynı IP'den aynı anda açık akış sayısı (uzun süreli Range istekleri).
+const streamActive = new Map();
+function streamSlotFree(req) {
+  if (!(STREAM_MAX_CONCURRENT > 0)) return true;
+  const ip = req.socket.remoteAddress || 'unknown';
+  const count = streamActive.get(ip) || 0;
+  if (count >= STREAM_MAX_CONCURRENT) return false;
+  streamActive.set(ip, count + 1);
+  return true;
+}
+
+function releaseStreamSlot(req) {
+  const ip = req.socket.remoteAddress || 'unknown';
+  const count = streamActive.get(ip) || 0;
+  if (count <= 1) streamActive.delete(ip);
+  else streamActive.set(ip, count - 1);
 }
 
 // Ses/video akışı Range istekleriyle parça parça okunur; JSON API kotasına dahil
@@ -807,7 +829,12 @@ const server = http.createServer(async (req, res) => {
     if (!originAllowed(req)) {
       return sendText(res, 403, 'Bu origin için API erişimi kapalı.', { 'Access-Control-Allow-Origin': 'null' });
     }
-    if (isRateLimitedPath(reqPath) && rateLimited(req)) {
+    if (reqPath === '/api/stream-ost') {
+      if (rateLimited(req, STREAM_RATE_LIMIT, 'stream') || !streamSlotFree(req)) {
+        return sendText(res, 429, 'Çok fazla eşzamanlı ses isteği. Birkaç saniye sonra tekrar deneyin.', { 'Retry-After': '5' });
+      }
+      res.on('close', () => releaseStreamSlot(req));
+    } else if (isRateLimitedPath(reqPath) && rateLimited(req)) {
       return sendText(res, 429, 'Çok fazla istek. Bir dakika sonra tekrar deneyin.', { 'Retry-After': '60' });
     }
   }
@@ -1296,4 +1323,4 @@ server.on('clientError', (err, socket) => {
   if (socket.writable) socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
 });
 
-module.exports = { isPublicAsset, originAllowed, rateLimited, isRateLimitedPath, MIME, PUBLIC_EXT, server };
+module.exports = { isPublicAsset, originAllowed, rateLimited, streamSlotFree, releaseStreamSlot, isRateLimitedPath, MIME, PUBLIC_EXT, server };

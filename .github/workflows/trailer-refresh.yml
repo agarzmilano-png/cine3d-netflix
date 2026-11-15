@@ -36,6 +36,15 @@ jobs:
         with:
           node-version: '20'
 
+      # Önbellek turlar arasında taşınmazsa her gün aynı 300 kayıt denenir.
+      - name: Fragman önbelleğini geri yükle
+        uses: actions/cache@v4
+        with:
+          path: scripts/.trailer-cache.json
+          key: trailer-cache-${{ github.run_id }}
+          restore-keys: |
+            trailer-cache-
+
       - name: Eksik fragmanları tempolu ara
         run: node scripts/repair-trailers.js --limit=${{ github.event.inputs.limit || '300' }} --delay=900
 

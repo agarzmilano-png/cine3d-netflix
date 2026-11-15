@@ -629,11 +629,23 @@ function check(name, ok, detail = '') {
     check('mobil: yatay taşma yok, Wrapped/öneri sığıyor', !!mobile && mobile.scrollW <= mobile.docW + 2 && mobile.wrappedFits && mobile.pickFits && mobile.overflowAfter <= mobile.docW + 2, mobile);
     await send('Emulation.clearDeviceMetricsOverride');
 
-    // 17) Coverflow: gerçek fare tıklaması + dikey tekerlek sayfayı kaydırmalı
-    const coverflow = await ev(`
+    // 17) Coverflow: klavye koruması + gerçek fare tıklaması + tekerlek/sürükleme
+    const guard = await ev(`
       window.app.toggleViewMode('coverflow');
+      await new Promise(r => setTimeout(r, 500));
+      const input = document.getElementById('search-input');
+      input.focus(); input.value = 'mat'; input.setSelectionRange(3, 3);
+      return { index: app.coverflowInstance.currentIndex, prevDisabled: document.getElementById('coverflow-prev').disabled };
+    `);
+    for (const type of ['rawKeyDown', 'keyUp']) {
+      await send('Input.dispatchKeyEvent', { type, key: 'ArrowRight', code: 'ArrowRight', windowsVirtualKeyCode: 39, nativeVirtualKeyCode: 39 });
+    }
+    await sleep(250);
+    const afterTyping = await ev(`return { index: app.coverflowInstance.currentIndex, caret: document.getElementById('search-input').selectionStart };`);
+    const coverflow = await ev(`
+      document.getElementById('search-input').blur();
       document.getElementById('coverflow-view-section').scrollIntoView({ block: 'center' });
-      await new Promise(r => setTimeout(r, 600));
+      await new Promise(r => setTimeout(r, 500));
       const b = document.getElementById('coverflow-next').getBoundingClientRect();
       const c = document.getElementById('coverflow-container').getBoundingClientRect();
       return {
@@ -670,8 +682,17 @@ function check(name, ok, detail = '') {
     await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: dragPoint.x - 180, y: dragPoint.y, button: 'left', clickCount: 1 });
     await sleep(450);
     const afterDrag = await ev(`return app.coverflowInstance.currentIndex;`);
+    const endState = await ev(`
+      const inst = app.coverflowInstance;
+      inst.goTo(inst.movies.length - 1);
+      const atEnd = document.getElementById('coverflow-next').disabled;
+      inst.goTo(0);
+      return { atEnd, atStart: document.getElementById('coverflow-prev').disabled };
+    `);
     await ev(`window.app.toggleViewMode('grid'); window.scrollTo(0, 0); return true;`);
-    check('coverflow: fare butonu + sürükleme ilerletir, dikey tekerlek film değiştirmez', !!coverflow && afterMouse === coverflow.index + 1 && afterVertical.index === afterMouse && afterHorizontal === afterMouse + 1 && afterDrag === afterHorizontal + 1, { start: coverflow.index, afterMouse, vertical: afterVertical, horizontal: afterHorizontal, afterDrag, wheelScroll: afterVertical.scrollY - beforeWheel.scrollY });
+    check('coverflow: klavye aramayı çalmaz, oklar uçta kapalı, fare/tekerlek/sürükleme çalışır',
+      !!coverflow && guard.index === 0 && guard.prevDisabled === true && afterTyping.index === guard.index && afterTyping.caret === 3 && endState.atEnd && endState.atStart && afterMouse === coverflow.index + 1 && afterVertical.index === afterMouse && afterHorizontal === afterMouse + 1 && afterDrag === afterHorizontal + 1,
+      { start: coverflow.index, typingIndex: afterTyping.index, caret: afterTyping.caret, afterMouse, vertical: afterVertical, horizontal: afterHorizontal, afterDrag, endState, wheelScroll: afterVertical.scrollY - beforeWheel.scrollY });
 
     // İlk ziyaretin önbelleği ile gerçek çevrimdışı yeniden açılış (ayrı HTTP cache değil).
     const offlineSetup = await ev(`

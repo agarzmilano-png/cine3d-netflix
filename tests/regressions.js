@@ -296,5 +296,26 @@ test('fragman doğrulama kaydı güçlü eşleşmeyi işaretler', () => {
   assert.deepEqual(record, { source: 'YouTube oEmbed', match: 'strong', title: 'Dune Official Trailer', author: 'Warner Bros.', checkedAt: '2026-11-15T00:00:00.000Z' });
   assert.ok(trailerVerification({ title: 'X', author: 'Y' }).checkedAt);
 });
+test('API ve akış kotaları ayrı sayılır', () => {
+  const { rateLimited } = require('../server');
+  const req = { socket: { remoteAddress: '203.0.113.88' } };
+  assert.equal(rateLimited(req, 2, 'unit-a'), false);
+  assert.equal(rateLimited(req, 2, 'unit-a'), false);
+  assert.equal(rateLimited(req, 2, 'unit-a'), true);
+  assert.equal(rateLimited(req, 2, 'unit-b'), false);
+});
+
+test('akış eşzamanlılık yuvası serbest bırakılır', () => {
+  const { streamSlotFree, releaseStreamSlot } = require('../server');
+  const req = { socket: { remoteAddress: '203.0.113.89' } };
+  let acquired = 0;
+  while (acquired < 50 && streamSlotFree(req)) acquired++;
+  assert.ok(acquired >= 1 && acquired <= 32, `acquired=${acquired}`);
+  assert.equal(streamSlotFree(req), false);
+  releaseStreamSlot(req);
+  assert.equal(streamSlotFree(req), true);
+  releaseStreamSlot(req);
+  for (let i = 0; i < acquired - 1; i++) releaseStreamSlot(req);
+});
 console.log(`
 ${passed}/${passed} regresyon testi geçti`);

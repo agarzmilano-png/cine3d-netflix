@@ -2341,6 +2341,12 @@ body {
 .coverflow-nav-btn.prev { left: 4%; }
 .coverflow-nav-btn.next { right: 4%; }
 
+.coverflow-nav-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
+}
+
 /* Coverflow Alt Bilgi Barı (HUD) */
 .coverflow-active-info {
   margin-top: 24px;

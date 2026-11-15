@@ -133,6 +133,12 @@ class Coverflow3D {
     });
 
     this.updateActiveInfo();
+
+    // Uçlarda ok butonları sessizce ölü kalmasın: görünür devre dışı durumu.
+    const prevBtn = document.getElementById('coverflow-prev');
+    const nextBtn = document.getElementById('coverflow-next');
+    if (prevBtn) prevBtn.disabled = this.currentIndex <= 0;
+    if (nextBtn) nextBtn.disabled = this.currentIndex >= total - 1;
   }
 
   updateActiveInfo() {
@@ -264,9 +270,15 @@ class Coverflow3D {
       Coverflow3D._keysBound = true;
       window.addEventListener('keydown', (e) => {
         if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        // Arama kutusu/form alanında ok tuşları imleci oynatır, karuseli değil.
+        const target = e.target;
+        if (target && target.closest && target.closest('input, textarea, select, [contenteditable="true"]')) return;
+        // Açık modal/çekmece varken arka plandaki coverflow gezinmesin.
+        const app = window.app;
+        if (app && typeof app.getActiveFocusLayer === 'function' && app.getActiveFocusLayer()) return;
         const wrapper = document.getElementById('coverflow-view-section');
         if (!wrapper || wrapper.classList.contains('hidden')) return;
-        const inst = (window.app && window.app.coverflowInstance) || null;
+        const inst = (app && app.coverflowInstance) || null;
         if (!inst) return;
         if (e.key === 'ArrowRight') inst.next();
         else inst.prev();

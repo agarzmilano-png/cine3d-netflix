@@ -155,7 +155,7 @@ function check(name, ok, detail = '') {
     let appServer = null;
     try {
       appServer = spawn(process.execPath, [path.join(ROOT, 'server.js')], {
-        env: { ...process.env, PORT: String(APP_PORT), HOST: '127.0.0.1', API_RATE_LIMIT: '3' },
+        env: { ...process.env, PORT: String(APP_PORT), HOST: '127.0.0.1', API_RATE_LIMIT: '3', STREAM_RATE_LIMIT: '5' },
         stdio: 'ignore'
       });
       let appReady = false;
@@ -179,8 +179,9 @@ function check(name, ok, detail = '') {
         await httpStatus(APP_BASE + 'api/search?q=matrix');
         const limited = await httpStatus(APP_BASE + 'api/search?q=matrix');
         const audio = [];
-        for (let i = 0; i < 4; i++) audio.push(await httpStatus(APP_BASE + 'api/stream-ost?id=inception'));
-        check('server.js JSON API sınırı + akış muafiyeti', limited === 429 && audio.every(code => code === 200), `api ${limited} / akış ${audio.join(',')}`);
+        for (let i = 0; i < 5; i++) audio.push(await httpStatus(APP_BASE + 'api/stream-ost?id=inception'));
+        const audioLimited = await httpStatus(APP_BASE + 'api/stream-ost?id=inception');
+        check('server.js JSON API sınırı + ayrı akış kotası', limited === 429 && audio.every(code => code === 200) && audioLimited === 429, `api ${limited} / akış ${audio.join(',')} / 6. ${audioLimited}`);
       }
     } finally {
       try { if (appServer) appServer.kill(); } catch (e) { /* yoksay */ }
